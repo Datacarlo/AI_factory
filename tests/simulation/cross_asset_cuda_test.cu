@@ -70,6 +70,13 @@ void markov_rate() {
     require(std::abs(one.prices[0]-four.prices[0])<2e-6f
         &&std::abs(one.standard_errors[0]-four.standard_errors[0])<2e-6f,
         "rate basket depends on path team size");
+    const auto initially_out=wb::offline::pricing::execute_cross_asset_prices<
+        TwoBS,NoRough,Rate,Barrier>(equities,rough,rates,
+            {{0.0f,1.0f,32U,4U}},matrices,factors,factors,plan,
+            1024U,1024U,1.0f/252.0f,1U,32U,4511U);
+    require(initially_out.prices[0]==0.0f
+        &&initially_out.standard_errors[0]==0.0f,
+        "basket barrier touched at inception must knock out");
 }
 
 void rough_rate() {

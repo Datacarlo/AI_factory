@@ -93,6 +93,23 @@ class ArtifactContractTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             check_outputs(job, catalog, document)
 
+    def test_filtered_durable_launch_uses_its_batch_size(self):
+        job = copy.deepcopy(self.job)
+        job["rows"] = 2
+        job["launch_plan"].update(
+            price_count=2, prices_per_launch=None,
+            durable_prices_per_launch=16, block_count=64,
+        )
+        catalog = copy.deepcopy(self.catalog)
+        catalog["row_selection"] = {"method": "resolved_rate_strike_above_minimum"}
+        catalog["summary"] = {
+            **job["launch_plan"], "price_count": 1, "seed": 719,
+        }
+        check_outputs(job, catalog, self.document)
+        catalog["summary"]["durable_prices_per_launch"] = 8
+        with self.assertRaises(ValueError):
+            check_outputs(job, catalog, self.document)
+
 
 if __name__ == "__main__":
     unittest.main()

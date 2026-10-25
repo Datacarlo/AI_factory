@@ -46,7 +46,12 @@ __global__ void monte_carlo_price_kernel(
                 result_index,
                 time_configuration
             );
-            key = philox::make_key(base_seed + result_index);
+            const auto candidate_index = [&] {
+                if constexpr (requires { inputs.source_row(result_index); })
+                    return inputs.source_row(result_index);
+                else return result_index;
+            }();
+            key = philox::make_key(base_seed + candidate_index);
         }
         __syncthreads();
 
@@ -127,7 +132,10 @@ inline void validate_monte_carlo_launch(
     validate_reduction_block_size(threads_per_block);
     validate_block_count(launch_result_count, block_count);
     validate_grid_x_size(block_count);
-    validate_row_seed_range(result_count, base_seed);
+    if constexpr (requires { inputs.source_row_count(); })
+        validate_row_seed_range(inputs.source_row_count(), base_seed);
+    else
+        validate_row_seed_range(result_count, base_seed);
 }
 
 template<ScalarMonteCarloPricingPolicy PricingPolicy>

@@ -13,13 +13,20 @@ from typing import Iterator, Mapping
 
 import numpy as np
 
+from .conventions import (
+    business_days_to_years,
+    ratio_strike_gradient_to_absolute,
+    ratio_strike_to_absolute,
+)
 from .contracts import (
     DiagonalHessianTarget,
     GradientTarget,
     PricingTensorSchema,
 )
 from .json_stream import open_object_array
-from .references import EntityTable, find_repository_root, load_entity_tables
+from .references import (
+    EntityTable, find_repository_root, load_dataset_recipe, load_entity_tables,
+)
 
 
 _CACHE_SCHEMA_VERSION = 3
@@ -56,25 +63,32 @@ def _infer_gradients(
             )
         return matches[0]
 
-    if "gradients" in outputs:
+    flat_gradient_names = [name for name in outputs if name.startswith("model.") or name.startswith("product.")]
+    if "gradients" in outputs or flat_gradient_names:
         if "delta" in outputs:
             raise ValueError("A pricing row cannot mix delta and gradients contracts")
-        values = outputs["gradients"]
         sensitivity = header.get("sensitivity")
         parameters = sensitivity.get("parameters") if isinstance(sensitivity, dict) else None
-        if not isinstance(values, dict) or not isinstance(parameters, list) or not parameters:
-            raise ValueError(
-                "Gradient outputs require sensitivity.parameters metadata"
+        if "gradients" in outputs:
+            values = outputs["gradients"]
+            if not isinstance(values, dict) or not values:
+                raise ValueError("Gradient outputs must be a non-empty mapping")
+            names = (
+                [str(item.get("parameter", "")) if isinstance(item, dict) else "" for item in parameters]
+                if isinstance(parameters, list) and parameters
+                else list(values)
             )
-        names = [
-            str(item.get("parameter", "")) if isinstance(item, dict) else ""
-            for item in parameters
-        ]
+            errors = outputs.get("gradient_standard_errors")
+        else:
+            names = list(flat_gradient_names)
+            values = {name: outputs[name] for name in names}
+            errors = outputs.get("gradient_standard_errors")
+            if not isinstance(errors, dict):
+                errors = None
         if any(not name for name in names) or len(set(names)) != len(names):
             raise ValueError("Gradient sensitivity parameters must be non-empty and unique")
         if list(values) != names:
             raise ValueError("Gradient outputs disagree with sensitivity parameter order")
-        errors = outputs.get("gradient_standard_errors")
         if errors is not None and (not isinstance(errors, dict) or list(errors) != names):
             raise ValueError("Gradient standard errors disagree with sensitivity parameter order")
         targets = []
@@ -82,7 +96,7 @@ def _infer_gradients(
             index, name = resolve(parameter)
             targets.append(
                 GradientTarget(
-                    source_name=f"gradients:{parameter}",
+                    source_name=(parameter if "gradients" not in outputs else f"gradients:{parameter}"),
                     value_name="price",
                     wrt_name=name,
                     wrt_index=index,
@@ -306,7 +320,32 @@ def _feature_row(row: dict, tables: tuple[EntityTable, ...]) -> tuple[list[float
         entity = table.rows.get(entity_id)
         if entity is None:
             raise ValueError(f"Unknown {field} {entity_id!r}")
-        features.extend(entity.values)
+        row_values = list(entity.values)
+        if table.role == "product":
+            names = table.feature_names
+            time = table.conventions.get("time_convention")
+            if isinstance(time, dict) and time.get("unit") == "business_day":
+                days_per_year = float(time.get("days_per_year", 0))
+                if days_per_year <= 0:
+                    raise ValueError("Business-day convention requires days_per_year")
+                for index, name in enumerate(names):
+                    if name.endswith("maturity_years"):
+                        row_values[index] = business_days_to_years(row_values[index], days_per_year)
+            quote = table.conventions.get("quote_convention")
+            strike = quote.get("strike") if isinstance(quote, dict) else None
+            if isinstance(strike, dict) and strike.get("mode") == "ratio_to_central_spot":
+                row_values = [
+                    ratio_strike_to_absolute(
+                        value,
+                        next(
+                            model_value for model_table in tables if model_table.role == "model"
+                            for model_name, model_value in zip(model_table.feature_names, model_table.rows[str(row.get("model_id"))].values)
+                            if model_name == "model.spot"
+                        ),
+                    ) if name == "product.strike" else value
+                    for name, value in zip(names, row_values)
+                ]
+        features.extend(row_values)
         ordinals.append(entity.ordinal)
     return features, ordinals
 
@@ -352,9 +391,16 @@ def prepare_pricing_dataset(
     tables = load_entity_tables(dataset_path, header, reference_paths)
     feature_names = tuple(name for table in tables for name in table.feature_names)
     outputs = first.get("outputs")
+    if outputs is None and "price" in first:
+        outputs = first
     if not isinstance(outputs, dict) or "price" not in outputs:
-        raise ValueError("Price result rows must contain outputs.price")
-    gradients = _infer_gradients(header, outputs, feature_names)
+        raise ValueError("Price result rows must contain price")
+    contract_header = dict(header)
+    if "sensitivity" not in contract_header:
+        recipe = load_dataset_recipe(dataset_path)
+        if "sensitivity" in recipe:
+            contract_header["sensitivity"] = recipe["sensitivity"]
+    gradients = _infer_gradients(contract_header, outputs, feature_names)
     diagonal_hessians = _infer_diagonal_hessians(header, outputs, feature_names)
     schema = PricingTensorSchema(
         database_id=str(header.get("database_id", "")),
@@ -427,8 +473,17 @@ def prepare_pricing_dataset(
                 if index >= row_count:
                     raise ValueError("Dataset contains more rows than row_count")
                 row_outputs = row.get("outputs")
+                if row_outputs is None and "price" in row:
+                    row_outputs = row
                 if not isinstance(row_outputs, dict):
                     raise ValueError(f"Row {index}: missing outputs object")
+                if gradients:
+                    gradient_mapping = row_outputs.get("gradients")
+                    if isinstance(gradient_mapping, dict) and list(gradient_mapping) != [g.wrt_name for g in gradients]:
+                        raise ValueError(f"Row {index}: gradients disagree with recipe coordinate order")
+                    standard_errors = row_outputs.get("gradient_standard_errors")
+                    if isinstance(standard_errors, dict) and list(standard_errors) != [g.wrt_name for g in gradients]:
+                        raise ValueError(f"Row {index}: gradient standard errors disagree with recipe coordinate order")
                 features, ordinals = _feature_row(row, tables)
                 feature_array[index] = features
                 ordinal_array[index] = ordinals
@@ -437,12 +492,19 @@ def prepare_pricing_dataset(
                     row_outputs, "standard_error", index
                 )
                 for gradient_index, gradient in enumerate(gradients):
-                    gradient_array[index, gradient_index] = _finite_output(
-                        row_outputs, gradient.source_name, index
-                    )
-                    gradient_se_array[index, gradient_index] = _optional_standard_error(
-                        row_outputs, gradient.standard_error_name, index
-                    )
+                    gradient_value = _finite_output(row_outputs, gradient.source_name, index)
+                    gradient_error = _optional_standard_error(row_outputs, gradient.standard_error_name, index)
+                    if gradient.wrt_name == "product.strike":
+                        model_table = next(table for table in tables if table.role == "model")
+                        model_id = str(row.get("model_id", ""))
+                        spot = model_table.rows[model_id].values[model_table.feature_names.index("model.spot")]
+                        if spot == 0.0:
+                            raise ValueError("Cannot convert ratio strike derivative with zero central spot")
+                        gradient_value = ratio_strike_gradient_to_absolute(gradient_value, spot)
+                        if math.isfinite(gradient_error):
+                            gradient_error = ratio_strike_gradient_to_absolute(gradient_error, abs(spot))
+                    gradient_array[index, gradient_index] = gradient_value
+                    gradient_se_array[index, gradient_index] = gradient_error
                 for hessian_index, hessian in enumerate(diagonal_hessians):
                     diagonal_hessian_array[index, hessian_index] = _finite_output(
                         row_outputs, hessian.source_name, index

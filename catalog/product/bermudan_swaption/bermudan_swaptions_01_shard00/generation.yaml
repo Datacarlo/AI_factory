@@ -1,0 +1,16 @@
+schema_version: 4
+status: complete
+inputs:
+  source_product:
+    path: datasets/product/bermudan_swaption/bermudan_swaptions_01.json
+    sha256: af04015b2627875baebab5bf3bea502383955dcc0217e5311a87c20d4bf5ec2c
+output:
+  path: datasets/product/bermudan_swaption/bermudan_swaptions_01_shard00.json
+  sha256: 60647bdc898be7ad768c7a8f0f31471aa653c7cf430211707cdf9a4a7938915e
+hardware:
+  device: cpu
+  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
+software:
+  cmake: cmake version 3.22.1
+  cxx_compiler: g++-14 (Ubuntu 14.3.0-12ubuntu1~22~ppa2) 14.3.0
+  nlohmann_json: 3.10.5

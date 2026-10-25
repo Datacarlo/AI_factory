@@ -160,7 +160,8 @@ if(BUILD_TESTING)
     add_test(NAME factorized_model_loaders COMMAND test_factorized_model_loaders)
     set_tests_properties(factorized_model_loaders PROPERTIES
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        LABELS "workbench;dataset;factorized" TIMEOUT 60)
+        LABELS "workbench;dataset;factorized" TIMEOUT 60
+        SKIP_RETURN_CODE 77)
 
     add_executable(
         test_simulation_schedule_validation

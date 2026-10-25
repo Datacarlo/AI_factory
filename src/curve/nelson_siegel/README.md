@@ -48,7 +48,3 @@ No term-structure grid is stored. Near `T=0`, `(1-exp(-x))/x` uses a short
 series; elsewhere it uses `expm1f` to avoid cancellation. Log discounts are
 computed before exponentiation so ratios remain stable. All curve values are
 FP32 and fast-math is forbidden.
-
-Related navigation: [curve catalog](../../../catalog/curve/nelson_siegel/),
-[analytics contract](../../../project_journal/reference/cuda/model-analytics-contract.md), and
-[capability manifest](../../../tools/codegen/pricing_bindings/capability_manifest.py).

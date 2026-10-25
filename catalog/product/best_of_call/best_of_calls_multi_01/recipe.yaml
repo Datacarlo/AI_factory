@@ -21,7 +21,6 @@ parameters:
 payoff:
   expression: "max(max_i(S_i(T)/S_i(0)) - strike, 0)"
   notional: "one normalized basket unit"
-  discounting: "stochastic CIR short-rate integral"
 construction:
   method: "ten maturities times ten exponential strikes"
   maturities_business_days:

@@ -748,12 +748,16 @@ def reconstructible_sensitivities(model, product):
                 "formula": "price / model.spot",
                 "standard_error": "standard_error / model.spot",
             }
-        elif product in {"cliquet", "range_accrual"}:
-            rules["model.spot"] = {
-                "formula": "0",
-                "standard_error": "0",
-            }
     return rules
+
+
+def inactive_sensitivities(model, product):
+    """Coordinates absent from the payoff under the selected model parametrization."""
+    if model in SPOT_HOMOGENEOUS_MODELS and product in {
+        "cliquet", "range_accrual"
+    }:
+        return frozenset({"model.spot"})
+    return frozenset()
 
 
 def default_sensitivities(

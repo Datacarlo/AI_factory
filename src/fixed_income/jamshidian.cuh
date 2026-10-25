@@ -147,6 +147,42 @@ __device__ __forceinline__ float checked_jamshidian_boundary(
         : nanf("");
 }
 
+// At a negative-rate root, signed coupons can leave a one-ULP FP32
+// bracket whose endpoint residuals exceed the strict absolute tolerance.
+// Accept only a nearby sign crossing and a residual bounded by the
+// roundoff scale of the coupon bond; otherwise keep reporting failure.
+template<typename Evaluator>
+__device__ __forceinline__ float roundoff_limited_jamshidian_boundary(
+    float lower, float upper, float fixed_rate,
+    std::uint32_t payment_count, Evaluator evaluate
+) {
+    if (!(fixed_rate < 0.0f) || !(lower < upper)
+        || nextafterf(lower, INFINITY) != upper) return nanf("");
+    const float roundoff = 8.0f * FLT_EPSILON
+        * (1.0f + fabsf(fixed_rate) * static_cast<float>(payment_count));
+    // The compensated FP32 coupon sum may put both adjacent endpoint
+    // residuals on the same side of zero. Search only a few neighbouring
+    // representable states and accept a crossing under the roundoff bound.
+    for (unsigned int neighbour = 0U; neighbour < 5U; ++neighbour) {
+        const auto left = evaluate(lower);
+        const auto right = evaluate(upper);
+        if (!isfinite(left.residual) || !isfinite(right.residual)
+            || !isfinite(left.derivative) || !isfinite(right.derivative)
+            || !(left.derivative < 0.0f) || !(right.derivative < 0.0f))
+            return nanf("");
+        if (left.residual >= 0.0f && right.residual <= 0.0f
+            && fminf(fabsf(left.residual), fabsf(right.residual)) <= roundoff)
+            return fabsf(left.residual) <= fabsf(right.residual) ? lower : upper;
+        if (left.residual < 0.0f && right.residual < 0.0f)
+            lower = nextafterf(lower, -INFINITY);
+        else if (left.residual > 0.0f && right.residual > 0.0f)
+            upper = nextafterf(upper, INFINITY);
+        else
+            return nanf("");
+    }
+    return nanf("");
+}
+
 // Solve sum_i c_i P(T_e,T_i;x*) = 1 with safeguarded Newton iterations.
 template<
     typename Provider,
@@ -317,6 +353,16 @@ __device__ __forceinline__ float jamshidian_state_boundary(
                 );
                 if (isfinite(checked)) return checked;
             }
+            const float roundoff_boundary = roundoff_limited_jamshidian_boundary(
+                lower_state, upper_state, fixed_rate, payment_count,
+                [&](float candidate) {
+                    return evaluate_jamshidian_boundary(
+                        provider, parameters, exercise_time, fixed_rate,
+                        schedule, candidate
+                    );
+                }
+            );
+            if (isfinite(roundoff_boundary)) return roundoff_boundary;
             if (state_correction != nullptr) {
                 return refine_jamshidian_boundary(
                     midpoint, lower_state - midpoint, upper_state - midpoint,

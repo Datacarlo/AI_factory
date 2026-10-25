@@ -6,10 +6,10 @@ inputs:
     sha256: 661c88ef80a938cd9ddcddcbaa6f408cfa7f706b1580313cbf8636a0c8281e57
   product:
     path: datasets/product/european_option/european_options_01_shard00.json
-    sha256: 257b714d294fb76a2731f481ee8fc9275804258d4d5e7175aaed6229ff44dc59
+    sha256: 6da8587ed4a9435a4d8d58bb9353bcce68ee3575afcba18cbee5d28b71d20a27
 output:
   path: datasets/model/equity/markovian/schobel_zhu/prices/european_calls/schobel_zhu_01__european_calls_01__01_cartesian_shard00.json
-  sha256: 167eb4435d8329facd113fe7d97ad4323ad642b35085d97f16ca1425834182f6
+  sha256: a0cb3d4c189f4684e89ffa074dc2890e8912b0d7e9a0a0cb005492a0baa84376
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu
@@ -21,8 +21,8 @@ software:
   cmake: cmake version 3.31.6
   cxx_compiler: g++-14 (Debian 14.2.0-19) 14.2.0
   cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
-  mathdx: 25.12.1
   nlohmann_json: 3.10.5
+  mathdx: 25.12.1
 timing:
   wall_seconds: 1586.3306780648418
   duration: 26 min 26 s 331 ms

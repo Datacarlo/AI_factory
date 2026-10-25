@@ -1,46 +1,15 @@
 # Offline tools
 
-`tools` owns offline construction, generation, publication, and code generation.
-Runtime code under `src` never depends on this tree. Maintainer-only audits,
-references, benchmarks, and performance campaigns live under `maintainer/`.
+`tools/` contains reusable dataset and code-generation utilities. Runtime code under [`src/`](../src/README.md) does not depend on this directory.
 
-## Find a tool
+| Task | Entry point |
+| --- | --- |
+| Generate and check model-product bindings | [Pricing and sampling codegen](codegen/pricing_bindings/README.md) |
+| Select, compile and execute a dataset campaign | [`datasets/generate_catalog.py`](datasets/generate_catalog.py) |
+| Run one configured generator | [`run_generator.py`](run_generator.py) |
+| Check a dataset and its receipt | [`datasets/check_dataset_compatibility.py`](datasets/check_dataset_compatibility.py) |
+| Read metadata schemas | [Dataset schemas](datasets/schemas/README.md) |
 
-| Task | Owner |
-|---|---|
-| Generate or verify pricing and sampling bindings | [`codegen/pricing_bindings`](codegen/pricing_bindings/README.md) |
-| Compile or run a dataset campaign | [`datasets/generate_catalog.py`](datasets/generate_catalog.py) |
-| Assemble parameter, sample, or price artifacts | `datasets/` |
-| Validate dataset metadata contracts | [`datasets/schemas`](datasets/schemas/README.md) |
-| Inspect dataset provenance and reuse | [`datasets/check_dataset_compatibility.py`](datasets/check_dataset_compatibility.py) |
-| Run CUDA pricing from an offline recipe | `cuda/pricing_runner.cuh` |
-| Compose product-specific price generation | `pricing/` |
-| Generate model parameters and samples | `sampling/` |
+`datasets/` owns row construction, JSON/YAML I/O, provenance and publication. `sampling/` owns parameter and sample generation; `pricing/` owns offline price-generation orchestration. `cuda/` holds reusable CUDA launch support. `codegen/` owns generated bindings, recipes and manifest drift checks. Tool tests belong under [`tests/`](../tests/README.md).
 
-## Ownership boundaries
-
-- `datasets/sampling.*` owns pure row, grid, and stress sampling.
-- `datasets/*_dataset.*` owns dataset assembly and publication by artifact
-  family.
-- `datasets/artifact_io.*` owns JSON/YAML serialization.
-- `datasets/schemas/` owns recipe, generation and validation document schemas.
-- `experiments/schemas/` owns the optional local experiment metadata contract.
-- `cuda/` owns reusable offline CUDA execution and architecture checks.
-- `pricing/` owns product-specific price-generation orchestration.
-- `sampling/parameters/` owns model, curve, and product parameter construction.
-- `sampling/generated/` owns generated model-sample compositions.
-- The other files in `sampling/` own shared Philox and sample orchestration.
-- `codegen/` owns generated bindings, recipes, manifests, and drift checks.
-
-Add a filter to `datasets/generate_catalog.py` when a new campaign needs a
-different selection. Do not add a campaign-specific controller. Keep tool
-tests under `tests/`.
-
-Catalogue `generator.cpp` files are thin executable recipes. They select
-inputs, launch arguments, and publication metadata; they do not own generic
-CUDA resources, serialization, or numerical implementations.
-
-The [typed capability manifest](codegen/pricing_bindings/capability_manifest.py)
-is the source of truth for declared recipes and generated compositions.
-Maintainer-only source-layout and catalogue-boundary audits live under
-`maintainer/tools/cuda/`.
+Catalogue `generator.cpp` files select inputs and launch settings. Shared serialization and numerical algorithms belong in `tools/` and `src/`, respectively.

@@ -250,14 +250,25 @@ def attach_generation(work: Path, job: dict, state: dict) -> None:
 def _check_published_json(recipe: dict, generation: dict, document: dict) -> None:
     if not isinstance(document, dict):
         raise ValueError("Dataset JSON must be an object")
-    rows = recipe.get("row_count")
-    if (type(rows) is not int or rows < 1
-            or document.get("row_count") != rows
+    rows = recipe.get("row_count")  # candidate rows before optional selection
+    kind = recipe.get("kind")
+    selected_rows = document.get("row_count")
+    selection = recipe.get("row_selection")
+    selected_contract = (kind in {"prices", "price_gradients"}
+                         and isinstance(selection, dict)
+                         and selection.get("method") in {
+                             "resolved_rate_strike_above_minimum",
+                             "resolved_bond_nonzero_support",
+                         })
+    valid_rows = (type(rows) is int and rows > 0
+                  and type(selected_rows) is int
+                  and (0 < selected_rows <= rows if selected_contract
+                       else selected_rows == rows))
+    if (not valid_rows
             or (generation.get("schema_version") not in (3, 4)
-                and generation["artifact"].get("row_count") != rows)
+                and generation["artifact"].get("row_count") != selected_rows)
             or document.get("database_id") != recipe.get("dataset_id")):
         raise ValueError("Dataset identity or row count contradicts recipe")
-    kind = recipe.get("kind")
     if kind == "price_gradients":
         from tools.datasets.price_gradients.contract import (
             _check_compact_outputs, _mixed_pairs, _selected_names)
@@ -280,7 +291,7 @@ def _check_published_json(recipe: dict, generation: dict, document: dict) -> Non
                                recipe.get("option_side"))
     elif kind == "prices":
         results = document.get("results")
-        if not isinstance(results, list) or len(results) != rows:
+        if not isinstance(results, list) or len(results) != selected_rows:
             raise ValueError("Price result count contradicts recipe")
         expected_keys = {"model_id", "product_id", "price"}
         if "curve" in recipe.get("inputs", {}):

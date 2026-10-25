@@ -45,6 +45,7 @@ struct DevicePreparedSensitivityPlan {
     std::vector<SensitivitySpec> sensitivities;
     std::size_t result_count;
     SensitivityGraphPlan sensitivity_graph;
+    std::vector<std::uint32_t> candidate_rows;
     bool relative_quotes = false;
 
     std::size_t sensitivity_count() const noexcept {
@@ -87,6 +88,7 @@ struct CurveDevicePreparedSensitivityPlan {
     std::vector<SensitivitySpec> sensitivities;
     std::size_t result_count;
     SensitivityGraphPlan sensitivity_graph;
+    std::vector<std::uint32_t> candidate_rows;
     bool relative_quotes = false;
 
     std::size_t sensitivity_count() const noexcept {

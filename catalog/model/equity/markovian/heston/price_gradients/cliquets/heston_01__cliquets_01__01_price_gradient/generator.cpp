@@ -25,7 +25,6 @@ int main() {
         {"product.global_cap", {0.002, pg::BumpScale::absolute}},
         {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
             }}, {1.0f/504.0f, 2U}, false};
-        recipe.reconstructible_sensitivities = {{"model.spot", "0", "0"}};
         const auto models = model::equity::heston::load_models(recipe.model_input);
         const auto products = product::load_cliquets(recipe.product_input);
         return offline::pricing::price_gradients::execute_dataset<true>(recipe,

@@ -1,232 +1,29 @@
 # Pricing and model-sample code generation
 
-This directory generates thin model-product pricing bindings, model-only
-sampling bindings, catalogue recipes, and their CMake registration. Numerical
-algorithms, dynamics, schedules, and product payoffs remain hand-written in
-`src`.
+This directory generates thin model-product pricing bindings, model-only sampling bindings, catalogue recipes, and their CMake registration. Numerical algorithms, schedules and payoffs remain in [`src/`](../../../src/README.md).
 
-## Run and verify code generation
+## Generate and verify
 
-Regenerate every owned artifact in place:
-
-```bash
+```sh
+python3 tools/codegen/pricing_bindings/generate.py --family all --output .
 python3 tools/codegen/pricing_bindings/generate.py \
-  --family all \
-  --output .
+  --family all --output /tmp/ai_factory-pricing-bindings --compare-root .
 ```
 
-Check the repository without modifying it:
+The comparison checks generated files in the repository. Handwritten model, curve, product and correlation parameter generators are outside this codegen inventory. The generator preserves timestamps for unchanged files.
 
-```bash
-python3 tools/codegen/pricing_bindings/generate.py \
-  --family all \
-  --output /tmp/ai_factory-pricing-bindings \
-  --compare-root .
-```
+## Sources of truth
 
-The comparison covers generated files in the public checkout. Campaign
-recipes under `work/catalog` are local scratch and are excluded even when that
-directory exists. Handwritten parameter, factor, product and correlation
-generators are outside this codegen inventory. Regeneration preserves the
-timestamps of unchanged outputs, avoiding needless CUDA rebuilds.
+| Responsibility | File |
+| --- | --- |
+| Render artifacts and compare outputs | [`generate.py`](generate.py) |
+| Declare models and sample generators | [`sample_manifest.py`](sample_manifest.py) |
+| Declare equity products and bindings | [`manifest.py`](manifest.py) |
+| Resolve model, curve, product, engine and recipe capabilities | [`capability_manifest.py`](capability_manifest.py) |
+| Declare first-order sensitivities and selected strategies | [`price_gradients/manifest.py`](price_gradients/manifest.py) |
+| Supply C++ and recipe bodies | [`templates/`](templates/) |
+| Record generated-file hashes | [`cmake/generated/PricingCapabilityManifest.json`](../../../cmake/generated/PricingCapabilityManifest.json) |
 
-## Find the source of truth
+The capability manifest rejects missing and ambiguous compositions. Generated C++ and recipe bodies live in templates; renderers supply bounded substitutions. Parameter and product quote conventions are resolved before a price or gradient calculation. A `recipe.yaml` describes the intended computation and bump coordinates; a `generation.yaml` receipt appears only after a real execution.
 
-| Responsibility | File or directory |
-|---|---|
-| Render artifacts and enforce bounded substitutions | `generate.py` |
-| Define canonical model and sample specifications | `sample_manifest.py` |
-| Define equity pricing products, variants, and bindings | `manifest.py` |
-| Compose models, curves, products, engines, recipes, and CMake targets | `capability_manifest.py` |
-| Define selected-gradient bindings and datasets | `price_gradients/manifest.py` |
-| Store complete C++ and recipe templates | `templates/` |
-| Record generated-file fingerprints | `PricingCapabilityManifest.json` |
-| Test manifest composition | [`tests/codegen/test_capability_manifest.py`](../../../maintainer/tests/codegen/test_capability_manifest.py) |
-
-`EQUITY_PRODUCT_BINDINGS` in `manifest.py` is the single declaration of
-shared equity products. It feeds Markovian, Black-Scholes and rough bindings;
-engine-specific behavior stays in each binding resolution.
-
-`capability_manifest.py` is the public inventory. It resolves each declared
-`(model, curve, product, variant)` to one engine, binding, target, and recipe,
-and rejects absent or ambiguous compositions.
-
-## Template layout
-
-Templates are grouped first by generated artifact and then by numerical
-engine. New templates must follow this map:
-
-```text
-templates/
-|-- pricing/
-|   |-- markovian/
-|   |   `-- fixed_income/{standalone,curve_fitted}/
-|   |-- rough/markovian_n_factor/
-|   |-- rough/volterra_fft/
-|   |-- longstaff_schwartz/equity/
-|   |-- longstaff_schwartz/fixed_income/terminal_forward/curve_fitted/
-|   `-- closed_form/
-|       |-- black_scholes/
-|       `-- fixed_income/
-|           |-- affine_one_factor/{cir,gaussian}/
-|           |-- affine_two_factor/
-|           |-- curve_fitted_one_factor/
-|           `-- curve_fitted_two_factor/
-|-- sampling/
-|   |-- markovian/
-|   |-- rough/markovian_n_factor/
-|   |-- rough/volterra_fft/
-|   `-- catalog/
-`-- catalog/pricing/
-    |-- price_delta/
-    |-- markovian/
-    |-- rough/markovian_n_factor/
-    |-- rough/volterra_fft/
-    |-- black_scholes_closed_form/
-    |-- fixed_income/
-    |   |-- longstaff_schwartz/terminal_forward/curve_fitted/
-    |   `-- monte_carlo/{standalone,curve_fitted}/
-    `-- american_longstaff_schwartz/
-```
-
-Every complete `.cuh`, `.cu`, and `generator.cpp` body lives in a template
-file. Renderer code computes paths, substitutions, and bounded instantiation
-fragments; it does not hide C++ in multiline Python strings.
-
-## Generated outputs
-
-`PRICE_DELTA_BINDING_SPECS` derives separate
-`<product>_price_delta.cuh/.cu` launchers from existing pricing contracts.
-Its strategies are explicit and validated; the generator does not infer
-homogeneity from a model name. MC templates live beside their price-only
-counterparts, and Black-Scholes closed-form templates stay in their engine
-folder. Shared BS product formula policies live in generated `<product>_impl.cuh`
-headers beside their launchers, so price and delta use the same formula body.
-All nine American bindings use templates under
-`pricing/longstaff_schwartz/equity/`, composing the common frozen-date policy.
-The legacy delta launchers remain implementation references until rough-model
-migration is complete. They no longer own catalogue recipes. Spot-only and
-first-order-only requests remain available to the gradient code generator for
-experiments, without owning permanent catalogue recipes. CRN aliases preserve
-price-only seeds, and production MC/LSM uses 2^20 paths.
-See the
-[implementation contract](../../../project_journal/reference/cuda/equity-price-delta-contract.md).
-`PRICE_GRADIENT_BINDING_SPECS` also declares its preparation strategy. Equity
-European terminal bindings select one of the compact device-prepared closed
-form, fixed-step MC, or exact-terminal MC templates. Heston American and CIR
-Jamshidian retain their explicit host-prepared strategies. The renderer rejects
-an undeclared strategy instead of falling back to a model-specific template.
-The binding manifest records derivative capabilities separately from public
-dataset recipes. The public catalogue currently emits `price_gradient` recipes
-with first derivatives only for fixed income, Markovian equity and rough equity. Second-order
-variants remain available in reusable binding code for local qualification,
-but no Hessian recipe is published. CIR standalone Jamshidian declares only
-`first` even at the binding level. The public American selection uses
-`frozen_exercise_time`; fitted-rate Bermudan swaptions use
-`frozen_regression_policy`. Validated per-coordinate bump adjustments are
-recorded in `price_gradients/bump_overrides.json` and applied to both generated
-C++ and `recipe.yaml`.
-When a diagonal or full-Hessian variant is selected later, it uses the same
-compact price-gradient writer as first order. Its JSON contains identity and
-input references followed by per-row `price`, `gradients`,
-`diagonal_hessians` and, for full Hessians, `mixed_hessians`. Monte Carlo rows
-also contain the corresponding standard errors. Bump rules, selected orders
-and mixed pairs belong in `recipe.yaml`; execution and hardware provenance
-belong in the receipt created by the actual run. No stencil nodes or URL are
-repeated in the dataset JSON. These variants remain outside the public
-catalogue until explicitly selected for publication.
-Run
-`python3 tools/codegen/pricing_bindings/price_gradients/coverage.py` to inspect
-every Markovian pricing binding and the gradient orders currently exposed by
-its launcher. Coordinate-level exclusions remain in the model and product
-adapters; this is a coverage inventory, not numerical certification.
-Stochastic equity Markovian gradient generators expose both `mono` and
-`node_graph` through `--sensitivity-strategy`. With no argument, each generator
-uses the strategy declared in its `recipe.yaml`, selected by the versioned
-`price_gradients/strategy_map.py`; the command-line argument overrides it for
-measurements. These first-order recipes select every model and product coordinate
-supported by their adapters (Kmax). Closed-form Black–Scholes generators do
-not use an MC strategy. The node-graph workspace is sized by the generated
-binding and owned by the shared offline runner.
-Every public price and gradient recipe uses aligned rows. Experimental Cartesian
-recipes remain available in the local work catalogue; their rows use
-model-major/product-fastest order, or model-major/curve/product order for fitted
-rates. Use `tools/datasets/generate_catalog.py --construction cartesian` to
-compile, inspect, execute or resume either family.
-
-- Pricing bindings are written below each model's `product/` directory.
-- Model-sample bindings are written as `<model>/sample.cuh` and `sample.cu`.
-- Price, first-order gradient, and sample recipes are written below `catalog/model/**`.
-- Model, curve, product, binding, and recipe registration is written to
-  `cmake/generated/CapabilityManifest.cmake`.
-- Output hashes are written to `PricingCapabilityManifest.json`.
-
-Generated files compose existing policies and instantiate public launchers.
-They must not contain hand-written numerical branches or product exceptions.
-Sample parameter-law descriptions live beside their factories in
-`sample_manifest.py`; validation rejects an undocumented derived scalar or
-public parameter. FFT bindings also expose a host-only block-dimensions query
-from the compiled sampling specialization, used for truthful recipe metadata
-and grid-count replay without changing FFT tuning.
-Price recipe execution writes both JSON and YAML because timing metadata is
-known only at runtime. `recipe.yaml` is the readable dataset identity card: it
-contains the inputs, output, URL, promised `row_count`, numerical engine and
-requested values. It names the random generator simply as `philox`. Exact RNG
-mapping versions, aligned/Cartesian construction, compiled profiles, launch
-plans and timings belong to the post-generation `generation.yaml` receipt.
-
-Pricing recipes take their production path count (`2^20`) and launch settings
-from `tools/cuda/tuning_profile.hpp`, through the shared host launch planner.
-`pricing_launch_family()` derives each binding's family from its declared
-engine and dynamics. The generated `pricing_launch_families` inventory is
-consumed by `inspect_pricing_launch_plan`; it contains no tuning numbers.
-See the [launch-plan contract](../../../project_journal/reference/cuda/launch-validation-and-kernel-diagnostics.md#planifier-le-pricing-du-catalogue)
-for inspection and native memory ownership. Regeneration changes source
-recipes, not already-published datasets or their truthful historical YAML.
-
-Fixed-income European swaptions select their engine per binding: existing
-one-factor Jamshidian providers remain closed form; the two-factor standalone
-and fitted families select the common terminal MC kernel. Each family has
-explicit `.cuh/.cu` and recipe templates at the paths shown above. The shared
-product policy, not these templates, owns the calendar and payoff.
-
-CIR++ composes the one-factor fitted closed-form templates and the fitted
-terminal-forward LSM templates. Its sample specification inherits the CIR
-factor law; its supported curve entries declare the same underlying forward dynamics.
-No new product algorithm belongs in these bindings.
-
-Philox reservations are append-only by extension epoch. New models declare
-their epoch in the canonical sample specification; immutable prefix hashes
-test that adding a model does not rekey any existing recipe.
-
-## Minimum hand-written extension
-
-For an ordinary model:
-
-1. implement its parameter, dataset, dynamics, analytics, and optional
-   preparation contracts under `src/model`;
-2. add its canonical model specification and parameter law;
-3. regenerate and run the zero-diff check.
-
-For an ordinary product:
-
-1. implement its parameter, dataset, schedule, and pricing policy under
-   `src/product`;
-2. add one product/variant specification;
-3. regenerate and run the zero-diff check.
-
-The generator then owns model-product bindings, catalogue recipes, CMake
-registration, and provenance. Specialized analytical algorithms and
-Longstaff--Schwartz implementations remain explicit templates or hand-written
-owners when their contracts differ.
-
-## Family selection
-
-`--family all` is the normal complete operation. Narrow selectors exist for
-development: `markovian`, rough families, `fixed_income`, `catalog`, and
-sampling. Use `--help` for the current accepted values rather than copying the
-list into another document.
-
-Any generated diff must be explained by a manifest or template change. A
-manual edit to an output is invalid because the next regeneration will replace
-it.
+The public catalogue includes aligned and selected Cartesian recipes. Price-only and first-order price-gradient generators are selected for publication; second-order bindings may be present in source without a published dataset. Monte Carlo recipes use 2^20 paths per price. Fixed-income Bermudan sensitivities use `frozen_regression_policy`.

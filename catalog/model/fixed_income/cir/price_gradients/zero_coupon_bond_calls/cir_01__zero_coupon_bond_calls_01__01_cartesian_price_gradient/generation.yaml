@@ -1,0 +1,28 @@
+schema_version: 4
+status: complete
+inputs:
+  model:
+    path: datasets/model/fixed_income/cir/parameters/cir_01.json
+    sha256: fed757eaebe17e53f542816e9b65dffed06c2dacfd9d692d6461879b70710afa
+  product:
+    path: datasets/product/zero_coupon_bond_option/zero_coupon_bond_options_01.json
+    sha256: f5e7d2e4d34d3cfab6cd2ed2662751c77efef9b0431bdcaadf8c32be5b4763a9
+output:
+  path: datasets/model/fixed_income/cir/price_gradients/zero_coupon_bond_calls/cir_01__zero_coupon_bond_calls_01__01_cartesian_price_gradient.json
+  sha256: 00022d07ccb1467121a39f2e7c1459de45310e764e1b590fa2fe478912cbea37
+hardware:
+  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
+  device: gpu
+  name: NVIDIA GeForce RTX 4090 Laptop GPU
+  uuid: GPU-214a7d0d-e7b0-ded2-983c-0c960ec5bcd4
+  compute_capability: '8.9'
+  driver_version: '610.60'
+software:
+  cmake: cmake version 3.22.1
+  cxx_compiler: g++-14 (Ubuntu 14.3.0-12ubuntu1~22~ppa2) 14.3.0
+  cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1
+timing:
+  wall_seconds: 1.884652
+  duration: 1 s 885 ms

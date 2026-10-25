@@ -59,12 +59,6 @@ This joint approximation is not used by the Bermudan pricer. Finite-precision
 sampling errors can accumulate over many short steps, so refinement alone does
 not guarantee a more accurate GPU price.
 
-For Bermudan swaptions, `forward_measure.cuh` supplies exact transitions under
-the last-exercise bond measure. Only exercise dates are simulated; payoffs are
-normalized by `P(0,T*) / P(t,T*)`. The product binding composes the shared LSM
-engine and a scalar-rate continuation state, with no short-rate integral.
-See the [early-exercise contract](../../../../project_journal/reference/cuda/american-and-bermudan-pricing-contract.md#numéraire-terminal-pour-cir).
-
 | Symbol | Dataset field | Meaning |
 |---:|---|---|
 | $`r_0`$ | `initial_state` | Initial short rate |
@@ -114,15 +108,6 @@ D(0,t)=e^{-I_t}.
 Shared rate and swap identities: [fixed-income rate reference](../../../fixed_income/fixed-income-rate-identities-reference.md).
 
 ## Jamshidian sensitivities
-
-European payer and receiver swaptions expose prices and first derivatives
-through the CIR closed-form Jamshidian binding. Diagonal and mixed Hessians
-are unsupported in its FP32 pricing path. The sensitivity preparation and
-launchers reject second-order requests explicitly. Small finite-difference
-bumps amplify nodal-price roundoff; an independent CIR T-forward reference
-and QuantLib cross-check established incorrect second-order outputs on both
-ordinary and stress cases. See the
-[fixed-income sensitivity contract](../../../../project_journal/reference/cuda/fixed-income-price-gradients-contract.md).
 
 ## Related contracts
 

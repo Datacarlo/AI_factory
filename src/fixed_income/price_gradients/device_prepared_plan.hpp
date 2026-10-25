@@ -2,6 +2,7 @@
 #pragma once
 
 #include "fixed_income/price_gradients/device_preparation.cuh"
+#include "fixed_income/resolved_strike_filter.hpp"
 #include "price_gradients/device_prepared_plan.hpp"
 
 #include <algorithm>
@@ -52,6 +53,12 @@ Plan prepare_device_sensitivities(
     Base base = pg::prepare_device_sensitivities<Base>(
         models, products, construction, time, configuration, request
     );
+    base.candidate_rows = strike_filter::accepted_rows(
+        models, products, construction, time,
+        configuration.option_is_call.value_or(false),
+        configuration.select_nontrivial_bond);
+    if (!base.candidate_rows.empty())
+        base.result_count = base.candidate_rows.size();
     std::uint32_t maximum_payment_count = 0U;
     std::uint32_t maximum_exercise_count = 0U;
     for (const auto& product : products) {
@@ -102,6 +109,12 @@ Plan prepare_curve_device_sensitivities(
         configuration,
         request
     );
+    base.candidate_rows = strike_filter::accepted_rows(
+        models, curves, products, construction, time,
+        configuration.option_is_call.value_or(false),
+        configuration.select_nontrivial_bond);
+    if (!base.candidate_rows.empty())
+        base.result_count = base.candidate_rows.size();
     std::uint32_t maximum_payment_count = 0U;
     std::uint32_t maximum_exercise_count = 0U;
     for (const auto& product : products) {

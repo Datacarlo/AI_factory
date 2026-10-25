@@ -15,6 +15,7 @@
 
 # Full generated datasets live locally or on external storage.
 /datasets/
+/artifacts/
 
 
 # Personal derivations and research notes are not published with the library.

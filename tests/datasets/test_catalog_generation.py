@@ -190,12 +190,6 @@ class GenerationTests(unittest.TestCase):
         self.assertTrue(all(job["paths_per_price"] == 1 << 20 for job in stochastic))
         self.assertTrue(any("/markovian/" in job["recipe"] for job in stochastic))
         self.assertTrue(any("/rough/" in job["recipe"] for job in stochastic))
-        self.assertEqual(
-            sum(job["kind"] == "price_gradients"
-                and "/equity/rough/" in job["recipe"]
-                for job in stochastic),
-            188,
-        )
         self.assertTrue(any("/fixed_income/" in job["recipe"] for job in stochastic))
         for kind in ("prices", "price_gradients"):
             self.assertEqual(

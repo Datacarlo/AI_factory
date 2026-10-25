@@ -216,6 +216,15 @@ jamshidian_state_boundary_from_coefficients(
                 );
                 if (isfinite(checked)) return checked;
             }
+            const float roundoff_boundary = roundoff_limited_jamshidian_boundary(
+                lower_state, upper_state, fixed_rate, payment_count,
+                [&](float candidate) {
+                    return evaluate_jamshidian_boundary_from_coefficients(
+                        fixed_rate, schedule, workspace, candidate
+                    );
+                }
+            );
+            if (isfinite(roundoff_boundary)) return roundoff_boundary;
             if (state_correction != nullptr) {
                 return refine_jamshidian_boundary(
                     midpoint, lower_state - midpoint, upper_state - midpoint,

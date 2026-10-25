@@ -42,8 +42,8 @@ int main() {
         ) / (2.0f * regime_slope * maturity_years);
         row.erase("strike");
         row["barrier"] = stress
-            ? expf(0.01f + grid_position
-                * (0.80f + 0.40f * sqrtf(maturity_years / 7.0f)))
+            ? expf(0.01f + grid_position * 0.75f
+                * fminf(sqrtf(maturity_years), 1.25f))
             : expf(0.05f + grid_position
                 * (0.10f + 0.20f * sqrtf(maturity_years / 3.0f)));
         row["cash_payoff"] = 1.0f;
@@ -59,9 +59,18 @@ int main() {
         }},
         {"stress", {
             {"count_per_maturity", 10},
-            {"conditional_bounds", "[exp(0.01), exp(0.81 + 0.40 sqrt((T/252) / 7))]"},
+            {"conditional_bounds", "[exp(0.01), exp(0.01 + 0.75 min(sqrt(T/252), 1.25))]"},
         }},
     };
+    for (const char* regime : {"core", "stress"}) {
+        const auto maturity =
+            rows.construction[regime]["generation"]["grid"]["maturity"];
+        rows.construction[regime]["generation"] = {
+            {"method", "maturity-dependent log-barrier grid"},
+            {"maturity", maturity},
+            {"barrier", rows.construction["grid"]["barrier"][regime]},
+        };
+    }
     rows.construction["cash_payoff"] = 1.0f;
 
     write_spot_relative_equity_product_dataset(

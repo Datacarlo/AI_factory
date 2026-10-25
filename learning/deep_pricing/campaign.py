@@ -226,6 +226,10 @@ def _selection(prepared, config: dict[str, Any]):
         core_group_count=(
             None if data.get("core_groups") is None else int(data["core_groups"])
         ),
+        train_group_count=(
+            None if data.get("train_group_count") is None
+            else int(data["train_group_count"])
+        ),
     )
 
 

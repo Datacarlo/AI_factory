@@ -26,7 +26,7 @@ int main() {
         data::Recipe recipe{directory/"models.json",directory/"products.json",directory/"gradients.json",directory/"generation.yaml",
             "source/generator.cpp",PriceConstruction::Aligned,
             {{{"model.rho",{.125,pg::BumpScale::absolute}}}}, {}};
-        data::Results result{{.1f},{.01f},{.2f},{.02f},
+        data::Results result{{.1f},{.01f},{.2f},{.02f},{},
             {pg::prepare_stencil(1.f,{.125,pg::BumpScale::absolute},[](float p){return p>=-1 && p<=1;})},
             {{"paths_per_price",32},{"sensitivity_count",1},{"scenario_count",3},{"seed",719}}};
         data::write_dataset(recipe,result);

@@ -35,7 +35,3 @@ functions have `kernel` in their filename.
 
 `sample.cuh` is the public sampling facade. The small cross-cutting primitives
 `compensated_sum.cuh` and `workspace_layout.hpp` remain at the root.
-
-Use the [CUDA documentation map](../project_journal/reference/cuda/README.md)
-for normative interfaces. Shared mathematical notes are indexed in the
-[model and curve reference index](../project_journal/reference/model-and-curve-reference-index.md).

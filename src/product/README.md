@@ -73,17 +73,5 @@ The authoritative model-product matrix is
 Generated composition units use the templates documented in the
 [code-generation entry point](../../tools/codegen/pricing_bindings/README.md).
 
-Use the relevant contract for implementation details:
-
-- [closed-form and Monte Carlo pricing](../../project_journal/reference/cuda/closed-form-and-monte-carlo-pricing-contract.md);
-- [American and Bermudan pricing](../../project_journal/reference/cuda/american-and-bermudan-pricing-contract.md);
-- [complete policy composition](../../project_journal/reference/cuda/pricing-policy-composition.md).
-
 Product availability, model support, and generated target names are not copied
 into this README because they are derived from the capability manifest.
-
-For one product, `parameters.hpp` and `pricing_policy.cuh` are the executable
-contract for its terms and payoff. Equation sheets in the separately
-maintained website are a derived presentation and must remain consistent with
-that source; the repository boundary is documented by the
-[protected-download proposal](../../project_journal/reference/proposed-protected-dataset-download-design.md).

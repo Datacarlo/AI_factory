@@ -1,255 +1,57 @@
 # AI Factory
 
-AI Factory is a C++20/CUDA workbench for quantitative model simulation,
-financial-product pricing, and reproducible dataset generation. It provides
-shared CUDA engines for Markovian, rough-volatility, closed-form, Monte Carlo, early-exercise and multi-asset workloads.
+AI Factory is a C++20/CUDA library for model simulation, financial-product pricing, sensitivity calculation, and dataset generation. It provides shared engines for Markovian and rough equity models, fixed-income models, early exercise, and correlated multi-asset products.
 
-The repository contains source code and versioned dataset recipes. Large JSON
-datasets are generated locally or downloaded separately; they are not stored
-in Git.
-
-## Start here
-
-Choose the shortest path for your task. Links into `project_journal/` refer
-to local development notes, which are ignored by Git and absent from a fresh
-clone. Build and source guides in this repository remain available below.
-
-| Goal | Entry point |
-|---|---|
-| Use a price, Greek, SE or dataset as a reference | [Unresolved closures](project_journal/audits/unresolved-closures.md) and [open findings](project_journal/audits/response.md) |
-| Build and run a first test | [Quick start](#quick-start) |
-| Understand CMake and the `build/` folder | [CMake build guide](project_journal/reference/cmake-build-workflow.md) |
-| Understand the repository | [Documentation map](project_journal/reference/README.md) |
-| Understand CUDA composition | [Pricing-policy composition](project_journal/reference/cuda/pricing-policy-composition.md) |
-| Add a model, curve, product, or dataset | [Catalogue extension workflow](project_journal/reference/catalog-extension-and-validation-workflow.md) |
-| Generate model parameters or product rows | [Parameter-dataset contract](project_journal/reference/model-and-product-parameter-dataset-generation.md) |
-| Generate model-only samples | [Model-sample contract](project_journal/reference/model-sample-dataset-generation.md) |
-| Train or compare deep pricers | [Learning guide](learning/README.md) |
-| Organize local studies | [Local workspaces](project_journal/reference/local-workspaces.md) |
-| Run or resume price/sample generation | [Dataset-generation workflow](project_journal/reference/dataset-generation-workflow.md) |
-| Validate generated prices independently | [Price-validation pipeline](project_journal/reference/independent-price-validation-pipeline.md) |
-| Diagnose or tune CUDA kernels | [Kernel diagnostics](project_journal/reference/cuda/launch-validation-and-kernel-diagnostics.md) and [performance protocol](project_journal/reference/performance-regression-protocol.md) |
-| Modify generated bindings | [Code-generation guide](tools/codegen/pricing_bindings/README.md) |
-
-## Capabilities
-
-- Exact and fixed-step Markovian simulation.
-- Gaussian-Volterra FFT simulation and Markovian N-factor rough lifts.
-- Closed-form equity and fixed-income pricing.
-- Standard Monte Carlo and Longstaff--Schwartz pricing.
-- Model-only sample generation for generative-model training.
-- Reproducible parameter, product, sample, and price datasets.
-- Independent cached price validation through Premia and QuantLib adapters.
-- Architecture-specific CUDA diagnostics and performance baselines.
-
-The typed capability manifest is the authoritative inventory of models,
-products, engines, generated bindings, and catalogue recipes:
-[`tools/codegen/pricing_bindings/capability_manifest.py`](tools/codegen/pricing_bindings/capability_manifest.py).
-Documentation does not duplicate that evolving matrix.
-
-## Quick start
-
-### Requirements
-
-- CMake 3.20 or newer and a build tool;
-- A CUDA-compatible C++20 host compiler (GCC 10 through 14 with CUDA 12.9);
-- CUDA Toolkit 12.9.x;
-- `nlohmann-json3-dev`;
-- Python 3 with PyYAML and `jsonschema` for catalogue workflows and their tests;
-- an NVIDIA GPU for CUDA runtime tests.
-
-The Volterra FFT targets use the separate mathDx/cuFFTDx package. Use the
-[CUDA 12 archive of mathDx 25.12.1](https://developer.nvidia.com/cufftdx-downloads)
-with CUDA 12.9.
-
-### Local RTX 4090 build
-
-Use C++20/CUDA 12.9.0 (nvcc 12.9.41) and mathDx in an SM89 build directory.
-With CUDA 12.9 installed, configure an isolated build using its `nvcc`:
-
-```bash
-cmake -S . -B build -G Ninja \
-  -DCMAKE_CUDA_COMPILER=/path/to/cuda-12.9/bin/nvcc \
-  -DCUDA_WORKBENCH_ARCHITECTURES=89
-cmake --build build --target ai_factory_host_tests
-ctest --test-dir build -R '^dataset_catalog$' --output-on-failure
-# Optional: compile a catalogue generator by target name.
-cmake --build build --target generate_black_scholes_01
-```
-
-The `local-sm89` preset additionally selects the developer's pinned toolchain
-and mathDx paths when those are available. `CUDA_VISIBLE_DEVICES` selects a GPU that can run the compiled
-binary. The default `all` target builds libraries; `local-tests` and
-`local-generators` cover the test and catalogue aggregates explicitly.
-Experimental Cartesian recipes in `work/catalog/` remain buildable by target
-name when present locally, but are excluded from the public aggregates.
-Model-only sample recipes are part of the public catalogue.
-
-### Run one catalog generator
-
-The local preset can compile and run any public catalogue generator
-by CMake target name. The launcher keeps outputs in a new directory under
-`work/generation/runs/`, so an existing dataset is never overwritten. It
-copies required parameter inputs and builds missing parameter generators when
-needed. The native generator writes to relative `catalog/` and `datasets/`
-paths in that run directory. The launcher prints the dataset and receipt paths
-when finished.
-
-```bash
-./tools/run_generator.py local-sm89 --list
-./tools/run_generator.py local-sm89 generate_black_scholes_european_calls_01 --gpu 0
-./tools/run_generator.py local-sm89 generate_black_scholes_samples_01 --gpu 0 --smoke-test
-```
-
-A notebook can create a unique directory under `work/` and pass it as
-`--run-dir`. Write its `run.log` and optional `progress.json` there as well;
-then the journal, dataset, metadata, recipe and inputs stay under the same run
-directory. The launcher accepts an existing run directory only if it contains
-those journal or progress files. Compilation updates the selected CMake build
-directory under `builds/`; generation does not modify the root `catalog/` or
-`datasets/` unless `--publish` is explicitly requested.
-
-A completed run writes a compact `generation.yaml` beside its JSON dataset.
-It records the current input and output SHA-256, the observed CPU or GPU, and
-available CMake, C++ and CUDA compiler versions. The recipe describes the
-current JSON and its requested sensitivities. After a documented curation,
-`tools/datasets/refresh_generation.py` updates the hashes and migrates a legacy
-receipt without rerunning the Monte Carlo calculation. The publication command
-creates a new pair; it does not overwrite an existing published pair implicitly.
-
-
-### Another GPU
-
-With the local CUDA 12.9 toolchain installed, reuse the shared preset in a
-separate build directory and set that GPU's compute capability and tuning ID:
-
-```bash
-cmake --preset local-sm89 -B builds/sm_XX \
-  -DCUDA_WORKBENCH_ARCHITECTURES=<compute-capability> \
-  -DAI_FACTORY_CUDA_TUNING_PROFILE_ID=smXX_unqualified_v1
-cmake --build builds/sm_XX --target ai_factory_host_tests -j2
-ctest --test-dir builds/sm_XX --output-on-failure -R '^dataset_catalog$'
-```
-
-On another machine, also set `CMAKE_CUDA_COMPILER`,
-`CMAKE_CUDA_HOST_COMPILER`, `CMAKE_CXX_COMPILER`, and
-`AI_FACTORY_MATHDX_ROOT` to its CUDA 12.9/C++20/mathDx CUDA 12 installation.
-
-Before publishing tuning values for another GPU, follow the
-[performance regression protocol](project_journal/reference/performance-regression-protocol.md) and
-record a separate architecture profile.
+This repository contains the code and the [catalogue](catalog/README.md) of generators and recipes. Large generated JSON datasets are distributed separately. A `generation.yaml` in the catalogue records a completed generation; a recipe alone does not imply that its dataset has been generated.
 
 ## Repository map
 
-```text
-src/          Runtime C++/CUDA models, products, curves, and shared primitives
-learning/     Python/PyTorch training, shared data contracts and evaluation
-tools/        Offline generation, publication, code generation, and diagnostics
-work/         Ignored, local recipes, generation campaigns and experiments
-catalog/      Published recipes and generation metadata
-datasets/     Published or downloaded dataset artifacts only; ignored by Git
-build/        Legacy local CMake build; ignored by Git
-builds/       Separate CMake builds per CUDA architecture; ignored by Git
-project_journal/  Ignored local decisions, dated reports and retained evidence
-maintainer/   Ignored reusable investigation code and reference tools
-tests/        Host, CUDA, architecture, and performance tests
-cmake/        Build ownership by runtime, catalogue, tests, and performance
-project_journal/reference/  Local development contracts and workflows; ignored by Git
+| Directory | Contents |
+| --- | --- |
+| [`src/`](src/README.md) | C++/CUDA models, products, curves, simulation and pricing engines |
+| [`catalog/`](catalog/README.md) | Dataset generators, recipes, completed-generation receipts and inventory |
+| [`tools/`](tools/README.md) | Dataset orchestration, sampling and code generation |
+| [`tests/`](tests/README.md) | Host and CUDA contract tests |
+| [`cmake/`](cmake/README.md) | Build and test registration |
+| [`learning/`](learning/README.md) | Python readers, GANs and deep-pricing training |
+
+The [capability manifest](tools/codegen/pricing_bindings/capability_manifest.py) defines supported model-product compositions. The [catalogue manifest](catalog/manifest.json) lists selected dataset recipes and their readiness. A `ready` entry does not prove that its JSON has been generated; check for the JSON and its `generation.yaml` receipt.
+
+## Build
+
+Requirements: CMake 3.20+, a C++20 compiler compatible with the chosen CUDA Toolkit, NVIDIA GPU for CUDA tests, nlohmann-json, Python 3, PyYAML and `jsonschema`. Volterra FFT targets also require a compatible mathDx/cuFFTDx installation.
+
+Configure with your own compiler, GPU architecture and mathDx paths. For example:
+
+```sh
+cmake -S . -B build -G Ninja \
+  -DCMAKE_CUDA_COMPILER=/path/to/cuda/bin/nvcc \
+  -DCUDA_WORKBENCH_ARCHITECTURES=89 \
+  -DAI_FACTORY_MATHDX_ROOT=/path/to/mathdx
+cmake --build build --target ai_factory_host_tests
+ctest --test-dir build -R '^dataset_catalog$' --output-on-failure
 ```
 
-The reusable code under `src`, `learning`, and `tools` never depends on a
-concrete experiment. Experiment-specific datasets, seeds, training budgets,
-notebooks, and reports live under `work/experiments/<asset_class>/<model>/`.
-Frozen generation campaigns live under `work/generation/`; a result enters
-`datasets/` only through explicit publication. `generation.yaml` is created
-only by a real generator execution and is published with its JSON output.
-The runtime under `src` never depends on `tools`, `catalog`, or `validation`.
-Model-product launch units live under each model's `product/` directory.
-`catalog` and `datasets` mirror the canonical model, curve, and product paths
-defined by `src`.
+[`CMakePresets.json`](CMakePresets.json) also contains machine-specific examples. Adapt compiler, dependency and architecture paths to the target machine before using a preset.
 
-For the detailed ownership and file conventions, use the
-[documentation map](project_journal/reference/README.md) rather than inferring them from this
-summary.
+## Generate a dataset
 
-## Common workflows
+Every catalogue leaf has a `generator.cpp` and `recipe.yaml`. Build the selected generator target, then run it through the [campaign controller](tools/datasets/generate_catalog.py). For example, to inspect the available selections:
 
-Build the narrowest target for the change. These examples select the local
-SM89 build:
-
-```bash
-cmake --build --preset local-core
-cmake --build --preset local-equity
-cmake --build --preset local-fixed-income
-cmake --build --preset local-tests
-ctest --preset local-tests
+```sh
+python3 tools/datasets/generate_catalog.py --help
+python3 tools/datasets/generate_catalog.py --build build --kind all --catalog-only
 ```
 
-Inspect registered targets and tests in the active local build:
+Add `--compile --execute --run-dir /path/to/new/run` to build and execute a selected campaign. The controller stages inputs and results in that run directory. `--publish` explicitly publishes complete dataset and receipt pairs; it rejects conflicting existing files. The [generator launcher](tools/run_generator.py) offers a shorter interface for one target when one of its configured machine presets applies.
 
-```bash
-cmake --build builds/local-cuda12-9-0-sm89 --target help | rg 'generate_heston_'
-ctest --test-dir builds/local-cuda12-9-0-sm89 -N
-```
+A completed dataset has a JSON output and a `generation.yaml` receipt. The recipe specifies the numerical method, input datasets and sensitivity coordinates; the receipt records the actual execution and input/output hashes. Use the [catalogue inventory test](tests/datasets/test_public_catalog_inventory.py) and the [metadata compatibility tool](tools/datasets/check_dataset_compatibility.py) to inspect a publication.
 
-To compile and run a single recipe while keeping its outputs under `work/`, use
-the generator launcher shown above, for example:
+Generated bindings must match their templates:
 
-```bash
-./tools/run_generator.py local-sm89 generate_heston_01 --gpu 0
-```
-
-The generator owns its JSON and adjacent YAML output; do not edit generated
-metadata by hand. Use the
-[catalogue extension workflow](project_journal/reference/catalog-extension-and-validation-workflow.md)
-for the complete publication and validation sequence.
-
-Generated pricing and sampling bindings must round-trip without a diff:
-
-```bash
+```sh
 python3 tools/codegen/pricing_bindings/generate.py \
-  --family all \
-  --output /tmp/ai_factory-pricing-bindings \
-  --compare-root .
+  --family all --output /tmp/ai_factory-pricing-bindings --compare-root .
 ```
 
-## Reproducibility and portability
-
-- CUDA fast math is intentionally disabled.
-- Philox keys and counters are independent of batching and launch geometry.
-- Contractual dates use integer business-day counts; discretized models derive
-  their fixed step from the declared global time grid.
-- Performance evidence is scoped to the recorded GPU, toolchain, binary, and
-  power state. Other GPUs require their own measurements.
-- Independent validation normally reads versioned caches. External engines run
-  only during explicit reference regeneration.
-
-Numerical and CUDA invariants are normative in the contracts under
-[`project_journal/reference/cuda`](project_journal/reference/cuda/README.md).
-
-## Current limitations
-
-Before using numerical outputs or datasets as references, read the
-[unresolved closures](project_journal/audits/unresolved-closures.md),
-[open audit findings](project_journal/audits/response.md) and the relevant
-[resolved contract](project_journal/audits/closed.md). NUM-037 and PERF-027 remain numerically unresolved despite their exclusion
-mask or withdrawn Hessian. Accepted capability limits and tradeoffs are
-recorded with the resolved findings.
-
-- Equity pricing can also compute spot delta, the price sensitivity to the
-  initial asset level. Markovian and six rough models have separate paired
-  launchers and recipes. Tests cover selected cases. Catalogue-wide delta
-  bias and production performance still need qualification. Rough early
-  exercise is not implemented.
-  See the [price-delta contract](project_journal/reference/cuda/equity-price-delta-contract.md) and
-  [open audit work](project_journal/audits/response.md).
-- Catalogue URLs using `datasets.ai-factory.example` are placeholders until a
-  production data host is configured.
-- The checked-in runtime performance baseline covers only the RTX 4090 Laptop
-  `sm_89` profile.
-- CUDA tests require compatible NVIDIA hardware; host-only tests remain
-  available without running GPU kernels.
-
-For every substantial change, start from the relevant workflow in
-[`project_journal/reference/README.md`](project_journal/reference/README.md) and build only the affected targets before
-running the broader suites.
+CUDA fast math is disabled by default. Philox streams and contractual time grids are part of the numerical contract; numerical comparisons across GPU architectures still require qualification.

@@ -101,7 +101,7 @@ __global__ void terminal_price_kernel(
             valid_row = inputs.make_central(row, plan, central);
             if (valid_row) {
                 prepared = Policy::prepare(central, plan.time);
-                key = philox::make_key(base_seed + row);
+                key = philox::make_key(base_seed + inputs.source_row(row));
             } else {
                 preparation::record_error(
                     preparation_outputs.error,

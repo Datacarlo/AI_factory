@@ -188,7 +188,7 @@ __global__ void kernel(
                 computes_central_price,
                 stencil_outputs
             );
-            if (row_valid) key = philox::make_key(base_seed + row);
+            if (row_valid) key = philox::make_key(base_seed + inputs.source_row(row));
         }
         __syncthreads();
         if (!row_valid) {

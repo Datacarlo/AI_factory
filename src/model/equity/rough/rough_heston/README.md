@@ -37,13 +37,6 @@ contract.
 
 ## Causal FFT experiment
 
-The [causal Volterra FFT engine](../../../../../project_journal/reference/cuda/causal-volterra-fft.md)
-provides a path-dependent convolution without an N-factor approximation. Its
-FFT result has been checked against direct convolution of the same hybrid
-Euler cell. The time-discretization bias relative to the current N-factor
-pricer is still under study, so the causal binding is separate from the
-catalogue pricing recipes.
-
 ## N-factor approximation
 
 `prepare_dynamics<N>` runs on the host once per model and `dt`. It stores the
@@ -87,7 +80,3 @@ Host and CUDA tests cover the exponential rule, preparation coefficients,
 sampling layouts, finite pricing results, path diversity, and deterministic
 replay. Discover the current test and product inventory from CTest and the
 capability manifest rather than from a copied list in this page.
-
-Shared schedules, product policies and runtime composition are documented by
-the [rough-family entry point](../README.md) and the
-[pricing composition](../../../../../project_journal/reference/cuda/pricing-policy-composition.md).

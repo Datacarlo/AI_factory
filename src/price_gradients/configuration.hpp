@@ -2,6 +2,7 @@
 #pragma once
 
 #include <cmath>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <unordered_set>
@@ -28,6 +29,9 @@ struct Sensitivity {
 struct PriceGradientConfiguration {
     // Order is public: output column i belongs to sensitivities[i].
     std::vector<Sensitivity> sensitivities;
+    // Only selection of model-dependent call support uses this on the host.
+    std::optional<bool> option_is_call;
+    bool select_nontrivial_bond = false;
 
     void validate(std::size_t maximum_count) const {
         if (sensitivities.size() > maximum_count)

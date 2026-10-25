@@ -90,6 +90,7 @@ struct BermudanSwaptionDevicePreparedSensitivityPolicy
         std::size_t result_offset;
         std::size_t total_result_count;
         std::size_t sensitivity_count;
+        const std::vector<std::uint32_t>* candidate_rows = nullptr;
 
         void validate(std::size_t results) const {
             if (products == nullptr || product_count == 0U || results == 0U
@@ -102,7 +103,9 @@ struct BermudanSwaptionDevicePreparedSensitivityPolicy
         }
 
         const ProductParameters& product(std::size_t local_row) const {
-            const std::size_t row = result_offset + local_row;
+            const std::size_t compact = result_offset + local_row;
+            const std::size_t row = candidate_rows && !candidate_rows->empty()
+                ? (*candidate_rows)[compact] : compact;
             const std::size_t product_index = is_cartesian(construction)
                 ? row % product_count
                 : row;
@@ -123,6 +126,12 @@ struct BermudanSwaptionDevicePreparedSensitivityPolicy
         std::size_t sensitivity_count;
         std::uint32_t maximum_exercise_count;
         pg::SensitivityOutputs outputs;
+
+        __device__ __forceinline__ std::size_t source_row(
+            std::size_t local_row) const {
+            return primary.source_row(input_result_offset + local_row)
+                - input_result_offset;
+        }
 
         std::size_t maximum_batch_size(std::size_t maximum_grid_y) const {
             return longstaff_schwartz::price_gradients::maximum_batch_size(
@@ -286,6 +295,7 @@ struct BermudanSwaptionDevicePreparedSensitivityPolicy
             result_offset,
             host.result_count,
             host.sensitivity_count(),
+            &host.candidate_rows,
         };
     }
 

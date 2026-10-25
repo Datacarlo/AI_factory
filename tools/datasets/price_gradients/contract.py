@@ -181,6 +181,10 @@ def check_outputs(job, catalog, document):
         raise ValueError("Duplicate selected gradient parameter")
 
     paths = job["launch_plan"]["paths_per_price"]
+    selected_rows = document.get("row_count")
+    filtered_rows = (catalog.get("row_selection") is not None
+                     and type(selected_rows) is int
+                     and selected_rows < job["rows"])
     for artifact in (catalog,):
         if (
             artifact.get("sensitivity") != job["sensitivity"]
@@ -200,6 +204,7 @@ def check_outputs(job, catalog, document):
             "materialized_scenario_count",
             "gradient_layout",
             "prices_per_launch",
+            "durable_prices_per_launch",
             "block_count",
             "sensitivity_batch_size",
             "sensitivity_batches_per_price",
@@ -220,11 +225,31 @@ def check_outputs(job, catalog, document):
         ):
             if (
                 key in job["launch_plan"]
+                and not (filtered_rows and key in {"prices_per_launch", "block_count"})
                 and execution.get(key) != job["launch_plan"][key]
             ):
                 raise ValueError(
                     "Gradient execution contradicts compiled plan: " + key
                 )
+        if filtered_rows:
+            maximum_prices = job["launch_plan"]["prices_per_launch"]
+            actual_prices = execution.get("prices_per_launch")
+            durable_prices = job["launch_plan"].get("durable_prices_per_launch")
+            maximum_blocks = job["launch_plan"]["block_count"]
+            actual_blocks = execution.get("block_count")
+            if maximum_prices is None:
+                valid_prices = (actual_prices is None
+                                and type(durable_prices) is int
+                                and durable_prices > 0)
+            else:
+                valid_prices = (type(maximum_prices) is int
+                                and type(actual_prices) is int
+                                and 0 < actual_prices <= min(selected_rows, maximum_prices))
+            if (execution.get("price_count") != selected_rows
+                    or not valid_prices
+                    or type(actual_blocks) is not int
+                    or not 0 < actual_blocks <= maximum_blocks):
+                raise ValueError("Filtered gradient launch cardinality is inconsistent")
         if (
             paths
             and execution.get("seed")

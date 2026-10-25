@@ -11,7 +11,7 @@ row_count: 100
 selection:
   rule: one seeded permutation position per consecutive ten-row block
   seed: ai-factory-product-shards-20261014-v1
-  source_sha256: c2493bc9495ab7c17bdaa8852b8b1a23fa3f9ecb2c5e86c7da84c46d372a0142
+  source_sha256: 840980fb99457f4a06c4dbeef5161f2e20e374dfed99618b8893f0a97794350c
   shard_index: 0
   total_shards: 10
   core_rows: 90

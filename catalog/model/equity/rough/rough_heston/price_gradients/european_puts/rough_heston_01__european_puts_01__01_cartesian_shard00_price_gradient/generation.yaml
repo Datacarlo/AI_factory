@@ -1,0 +1,21 @@
+schema_version: 4
+status: complete
+inputs:
+  model:
+    path: datasets/model/equity/rough/rough_heston/parameters/rough_heston_01.json
+    sha256: afa7eeb075673353fe28b27aa447f917777f4c83bae12d51e59a2bef841d7631
+  product:
+    path: datasets/product/european_option/european_options_01_shard00.json
+    sha256: 6da8587ed4a9435a4d8d58bb9353bcce68ee3575afcba18cbee5d28b71d20a27
+output:
+  path: datasets/model/equity/rough/rough_heston/price_gradients/european_puts/rough_heston_01__european_puts_01__01_cartesian_shard00_price_gradient.json
+  sha256: bf376cb3a4e7ba1116b60a902fac85e7a5bcd5324e4d4d8f24e36725a8915f21
+hardware:
+  device: gpu
+  name: NVIDIA GeForce RTX 5090
+  uuid: GPU-11b9a6f1-3f11-a2b5-400c-0eee5c2089c6
+  compute_capability: '12.0'
+  driver_version: 615.71.09
+timing:
+  wall_seconds: 28448.098545277026
+  duration: 7 h 54 min 8 s 99 ms

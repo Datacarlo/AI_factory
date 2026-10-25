@@ -108,6 +108,12 @@
     },
     "reference_policy": "Resolved at the unbumped model and initial curve; absolute contract levels stay fixed for model and curve bumps."
   },
+  "row_selection": {
+    "method": "resolved_rate_strike_above_minimum",
+    "minimum_annualized_decimal_rate": 0.00001,
+    "reference": "initial_unbumped_model_and_curve",
+    "order": "stable_candidate_index"
+  },
   "option_side": "call",
   "curve_assignment": {
     "method": "splitmix64_modulo",

@@ -81,11 +81,6 @@
     "source_price_recipe": "catalog/model/equity/rough/rough_stein_stein/prices/range_accruals/rough_stein_stein_01__range_accruals_01__01/recipe.yaml",
     "reconstructible_from_price": [
       {
-        "parameter": "model.spot",
-        "formula": "0",
-        "standard_error": "0"
-      },
-      {
         "parameter": "product.coupon_rate",
         "formula": "(price - exp(-model.risk_free_rate * product.maturity / 252)) / product.coupon_rate",
         "standard_error": "standard_error / product.coupon_rate"
