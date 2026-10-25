@@ -1,5 +1,8 @@
 // Regression for the published quadratic rough-Heston samples_02 path 77.
 #include "cuda/check_cuda.cuh"
+#include <sample.cuh>
+#include "model/equity/rough/quadratic_rough_heston/dynamics_impl.cuh"
+#include "model/equity/rough/quadratic_rough_heston/sample_device_preparation.cuh"
 #include "model/equity/rough/quadratic_rough_heston/markovian_n_factor_preparation.hpp"
 #include "model/equity/rough/quadratic_rough_heston/sample.cuh"
 #include "tools/sampling/host_philox.hpp"
@@ -136,6 +139,99 @@ void exercise_domain_corners() {
     );
 }
 
+void check_generated_shared_fit() {
+    using Dynamics = quadratic::DynamicsPolicy<7U>;
+    using Policy = sample::ModelSamplingPolicy<
+        simulation::FixedStepTerminalSchedule<Dynamics>,
+        sample::SpotSampleObservation<Dynamics>>;
+    constexpr std::size_t rows = 2U;
+    constexpr std::size_t paths_per_parameter = 250U;
+    constexpr std::size_t samples = rows * paths_per_parameter;
+    const quadratic::SampleParameterSampler::Configuration bounds{{
+        {1.0f, 1.0f}, {0.03f, 0.20f}, {0.1f, 0.8f},
+        {0.02f, 0.20f}, {0.0005f, 0.015f}, {0.1f, 0.8f},
+        {0.1f, 0.6f}, {0.05f, 0.20f}}};
+    quadratic::ModelParameters *fused_parameters = nullptr,
+                               *split_parameters = nullptr;
+    std::uint32_t *fused_days = nullptr, *split_days = nullptr;
+    float *fused_spots = nullptr, *split_spots = nullptr;
+    check_cuda(cudaMalloc(&fused_parameters,
+        rows * sizeof(quadratic::ModelParameters)),
+        "quadratic fused parameters allocation");
+    check_cuda(cudaMalloc(&split_parameters,
+        rows * sizeof(quadratic::ModelParameters)),
+        "quadratic split parameters allocation");
+    check_cuda(cudaMalloc(&fused_days,
+        samples * sizeof(std::uint32_t)),
+        "quadratic fused days allocation");
+    check_cuda(cudaMalloc(&split_days,
+        samples * sizeof(std::uint32_t)),
+        "quadratic split days allocation");
+    check_cuda(cudaMalloc(&fused_spots,
+        samples * sizeof(float)),
+        "quadratic fused samples allocation");
+    check_cuda(cudaMalloc(&split_spots,
+        samples * sizeof(float)),
+        "quadratic split samples allocation");
+
+    constexpr std::uint64_t parameter_seed = 4920011U;
+    constexpr std::uint64_t schedule_seed = 4920012U;
+    constexpr std::uint64_t dynamics_seed = 4920013U;
+    sample::launch_prepared_samples_cuda<Policy>(
+        sample::GeneratedPreparedInputSource<
+            quadratic::SampleParameterSampler,
+            quadratic::SampleDevicePreparer<7U>>{
+            bounds, {2.0f, sample::kSampleFixedStepDt}, fused_parameters},
+        sample::UniformMaturityCalendarSource{{2U, 4U}, fused_days},
+        {rows, paths_per_parameter, 0U, samples},
+        sample::kFixedStepSampleTimeConfiguration, {256U, rows},
+        {parameter_seed, schedule_seed, dynamics_seed},
+        {fused_spots}, "quadratic_rough_heston.samples",
+        "generated.fused.reference", "quadratic fused reference");
+    quadratic::launch_quadratic_rough_heston_generated_random_terminal_samples_cuda<7U>(
+        split_parameters, bounds, rows, paths_per_parameter,
+        2U, 4U, 0U, samples, 256U, rows,
+        parameter_seed, schedule_seed, dynamics_seed,
+        split_days, split_spots);
+    check_cuda(cudaDeviceSynchronize(), "quadratic generated replay");
+    std::vector<quadratic::ModelParameters> a_parameters(rows),
+                                             b_parameters(rows);
+    std::vector<std::uint32_t> a_days(samples), b_days(samples);
+    std::vector<float> a_spots(samples), b_spots(samples);
+    check_cuda(cudaMemcpy(a_parameters.data(), fused_parameters,
+        rows * sizeof(quadratic::ModelParameters), cudaMemcpyDeviceToHost),
+        "quadratic fused parameters copy");
+    check_cuda(cudaMemcpy(b_parameters.data(), split_parameters,
+        rows * sizeof(quadratic::ModelParameters), cudaMemcpyDeviceToHost),
+        "quadratic split parameters copy");
+    check_cuda(cudaMemcpy(a_days.data(), fused_days,
+        samples * sizeof(std::uint32_t), cudaMemcpyDeviceToHost),
+        "quadratic fused days copy");
+    check_cuda(cudaMemcpy(b_days.data(), split_days,
+        samples * sizeof(std::uint32_t), cudaMemcpyDeviceToHost),
+        "quadratic split days copy");
+    check_cuda(cudaMemcpy(a_spots.data(), fused_spots,
+        samples * sizeof(float), cudaMemcpyDeviceToHost),
+        "quadratic fused samples copy");
+    check_cuda(cudaMemcpy(b_spots.data(), split_spots,
+        samples * sizeof(float), cudaMemcpyDeviceToHost),
+        "quadratic split samples copy");
+    require(std::memcmp(a_parameters.data(), b_parameters.data(),
+        rows * sizeof(quadratic::ModelParameters)) == 0,
+        "separate quadratic lift changed model parameters");
+    require(a_days == b_days,
+        "separate quadratic lift changed maturity days");
+    require(std::memcmp(a_spots.data(), b_spots.data(),
+        samples * sizeof(float)) == 0,
+        "separate quadratic lift changed samples");
+    check_cuda(cudaFree(fused_parameters), "quadratic fused parameters free");
+    check_cuda(cudaFree(split_parameters), "quadratic split parameters free");
+    check_cuda(cudaFree(fused_days), "quadratic fused days free");
+    check_cuda(cudaFree(split_days), "quadratic split days free");
+    check_cuda(cudaFree(fused_spots), "quadratic fused samples free");
+    check_cuda(cudaFree(split_spots), "quadratic split samples free");
+}
+
 }  // namespace
 
 int main() {
@@ -250,6 +346,7 @@ int main() {
     exercise_domain_corners<2U>();
     exercise_domain_corners<3U>();
     exercise_domain_corners<7U>();
+    check_generated_shared_fit();
 
     check_cuda(
         cudaFree(device_replay),

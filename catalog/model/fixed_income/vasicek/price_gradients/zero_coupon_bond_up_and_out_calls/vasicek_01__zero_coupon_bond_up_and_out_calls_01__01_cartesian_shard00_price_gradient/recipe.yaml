@@ -57,6 +57,12 @@ quote_convention:
     effective_level: barrier = barrier_ratio * P(0,U)
   reference_policy: Resolved at the unbumped model and initial curve; absolute K and
     B stay fixed for model and curve bumps.
+row_selection:
+  method: resolved_bond_nonzero_support
+  criteria:
+  - strike_below_barrier
+  reference: initial_unbumped_model_and_curve
+  order: stable_candidate_index
 option_side: call
 standard_error_scope: paired Monte Carlo sampling error; excludes bump and discretization
   bias

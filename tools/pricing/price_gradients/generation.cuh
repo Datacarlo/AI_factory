@@ -18,6 +18,16 @@ namespace ai_factory::workbench::offline::pricing::price_gradients {
 namespace pg = ::ai_factory::workbench::price_gradients;
 namespace mcpg = ::ai_factory::workbench::monte_carlo::price_gradients;
 
+inline pg::PriceGradientConfiguration selection_configuration(
+    const datasets::price_gradients::Recipe& recipe
+) {
+    auto configuration = recipe.configuration;
+    if (recipe.option_side == "call") configuration.option_is_call = true;
+    else if (recipe.option_side == "put") configuration.option_is_call = false;
+    configuration.select_nontrivial_bond = recipe.select_nontrivial_bond;
+    return configuration;
+}
+
 template<typename Plan>
 inline constexpr bool has_curve_inputs_v = requires(const Plan& plan) {
     typename Plan::Curve;
@@ -40,12 +50,16 @@ auto make_device_inputs(const Plan& plan, Execution& execution) {
             execution.template input<1U>(), plan.curves.size(),
             execution.template input<2U>(), plan.products.size(),
             execution.template input<3U>(), plan.sensitivities.size(),
+            plan.candidate_rows.empty() ? nullptr
+                : execution.template input<6U>(),
         };
     } else {
         return typename Plan::DeviceInputs{
             execution.template input<0U>(), plan.models.size(),
             execution.template input<1U>(), plan.products.size(),
             execution.template input<2U>(), plan.sensitivities.size(),
+            plan.candidate_rows.empty() ? nullptr
+                : execution.template input<5U>(),
         };
     }
 }
@@ -76,7 +90,8 @@ auto make_host_inputs(
             plan.products,
             plan.sensitivities,
             stencils,
-            preparation_status
+            preparation_status,
+            plan.candidate_rows
         );
     } else {
         return cuda::inputs(
@@ -84,7 +99,8 @@ auto make_host_inputs(
             plan.products,
             plan.sensitivities,
             stencils,
-            preparation_status
+            preparation_status,
+            plan.candidate_rows
         );
     }
 }
@@ -406,6 +422,7 @@ int execute_prepared_dataset(
             );
         }
         datasets::price_gradients::Results result;
+        result.candidate_rows = prepared.candidate_rows;
         result.prices = std::move(run.prices);
         if constexpr (first_requested) {
             result.gradients.resize(rows*k);
@@ -581,7 +598,7 @@ int execute_dataset(const datasets::price_gradients::Recipe& recipe, cuda_tuning
         products,
         recipe.construction,
         recipe.time,
-        recipe.configuration
+        selection_configuration(recipe)
     );
     return execute_prepared_dataset<Stochastic, Orders>(
         recipe,
@@ -621,7 +638,7 @@ int execute_first_node_graph_dataset(
     }
     const auto prepared = prepare(
         models, products, recipe.construction, recipe.time,
-        recipe.configuration
+        selection_configuration(recipe)
     );
     static_assert(decltype(prepared)::kDevicePreparedSensitivities);
     return execute_prepared_dataset<true, orders>(
@@ -681,7 +698,7 @@ int execute_node_graph_dataset(
         products,
         recipe.construction,
         recipe.time,
-        recipe.configuration
+        selection_configuration(recipe)
     );
     return execute_prepared_dataset<true, Orders>(
         recipe,
@@ -756,7 +773,7 @@ int execute_curve_node_graph_dataset(
         products,
         recipe.construction,
         recipe.time,
-        recipe.configuration
+        selection_configuration(recipe)
     );
     return execute_prepared_dataset<true, Orders>(
         recipe,
@@ -829,7 +846,7 @@ int execute_curve_dataset(
         products,
         recipe.construction,
         recipe.time,
-        recipe.configuration
+        selection_configuration(recipe)
     );
     return execute_prepared_dataset<Stochastic, Orders>(
         recipe,

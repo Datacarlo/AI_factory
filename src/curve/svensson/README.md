@@ -51,7 +51,3 @@ No term-structure grid is stored. Both `(1-exp(-x))/x` loadings use a short
 series near zero and `expm1f` elsewhere. Log discounts are evaluated before
 exponentiation for stable ratios. All curve values are FP32 and fast-math is
 forbidden.
-
-Related navigation: [curve catalog](../../../catalog/curve/svensson/),
-[analytics contract](../../../project_journal/reference/cuda/model-analytics-contract.md), and
-[capability manifest](../../../tools/codegen/pricing_bindings/capability_manifest.py).

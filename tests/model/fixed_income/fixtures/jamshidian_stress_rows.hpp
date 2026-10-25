@@ -35,7 +35,7 @@ inline constexpr std::array<Row<ai_factory::workbench::model::fixed_income::cir:
         {1.0f, 0.0f, 0.25f, 12600U, 63U, 200U}},
 }};
 
-inline constexpr std::array<Row<ai_factory::workbench::model::fixed_income::vasicek::ModelParameters>, 4> vasicek_rows = {{
+inline constexpr std::array<Row<ai_factory::workbench::model::fixed_income::vasicek::ModelParameters>, 5> vasicek_rows = {{
     {950U, {{0.6310370564460754f, 0.022618891671299934f, 0.01836942695081234f}, 0.10835930705070496f},
         {1.0f, 0.0010000000474974513f, 0.0833333358168602f, 21U, 21U, 600U}},
     {951U, {{0.009088853374123573f, 0.062236517667770386f, 0.0022070237901061773f}, 0.0971875935792923f},
@@ -44,6 +44,11 @@ inline constexpr std::array<Row<ai_factory::workbench::model::fixed_income::vasi
         {1.0f, 0.0010000000474974513f, 0.25f, 7560U, 63U, 200U}},
     {997U, {{1.069475769996643f, 0.1271408647298813f, 0.04266421124339104f}, -0.04122953861951828f},
         {1.0f, 0.0f, 1.0f, 12600U, 252U, 50U}},
+    // Vasicek model row 905 × swaption quote row 913: the relative quote
+    // resolves to this negative fixed rate. FP64 has a regular root; FP32
+    // coupon cancellation can collapse the bracket by one representable state.
+    {905U, {{0.5695042610168457f, -0.01970048062503338f, 0.024894176051020622f}, 0.09781058132648468f},
+        {1.0f, -0.0300916657f, 1.0f, 21U, 252U, 30U}},
 }};
 
 }  // namespace jamshidian_stress_fixtures

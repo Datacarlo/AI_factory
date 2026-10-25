@@ -15,5 +15,5 @@ software:
   cmake: cmake version 3.31.6
   cxx_compiler: g++-14 (Debian 14.2.0-19) 14.2.0
   cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
-  mathdx: 25.12.1
   nlohmann_json: 3.10.5
+  mathdx: 25.12.1

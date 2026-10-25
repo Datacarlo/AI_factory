@@ -330,6 +330,66 @@ void compare_policy(
     check_cuda(cudaFree(device_product), "free factorization product");
 }
 
+void compare_filtered_price_candidate(
+    const heston::ModelParameters* device_model
+) {
+    using Policy = product::EuropeanOptionPricingPolicy<
+        TerminalSchedule, OptionSide::call>;
+    const product::EuropeanOptionParameters products[2]{
+        {0.85f, 63U}, {1.10f, 63U},
+    };
+    product::EuropeanOptionParameters* device_products = nullptr;
+    std::uint32_t* device_selected = nullptr;
+    float* device_prices = nullptr;
+    float* device_errors = nullptr;
+    check_cuda(cudaMalloc(&device_products, sizeof(products)),
+               "allocate filtered-price products");
+    check_cuda(cudaMalloc(&device_selected, sizeof(std::uint32_t)),
+               "allocate filtered-price selection");
+    check_cuda(cudaMalloc(&device_prices, 3U*sizeof(float)),
+               "allocate filtered-price values");
+    check_cuda(cudaMalloc(&device_errors, 3U*sizeof(float)),
+               "allocate filtered-price errors");
+    const std::uint32_t selected = 1U;
+    check_cuda(cudaMemcpy(device_products, products, sizeof(products),
+                          cudaMemcpyHostToDevice),
+               "copy filtered-price products");
+    check_cuda(cudaMemcpy(device_selected, &selected, sizeof(selected),
+                          cudaMemcpyHostToDevice),
+               "copy filtered-price selection");
+    auto inputs = ai_factory::workbench::make_model_product_device_inputs(
+        device_model, 1U, device_products, 2U,
+        PriceConstruction::CartesianProduct);
+    const typename Policy::HostInputs host_inputs{
+        products, 2U, PriceConstruction::CartesianProduct};
+    constexpr std::uint64_t seed = 8'765'432'100ULL;
+    monte_carlo::launch_monte_carlo_cuda<Policy>(
+        inputs, host_inputs, 2U, 0U, 2U, kPathsPerPrice,
+        kTimeConfiguration, kThreadsPerBlock, kBlockCount, seed,
+        device_prices, device_errors, "filtered_price", "full",
+        "full price candidate replay");
+    inputs.candidate_rows = device_selected;
+    monte_carlo::launch_monte_carlo_cuda<Policy>(
+        inputs, host_inputs, 1U, 0U, 1U, kPathsPerPrice,
+        kTimeConfiguration, kThreadsPerBlock, kBlockCount, seed,
+        device_prices+2U, device_errors+2U,
+        "filtered_price", "selected", "filtered price candidate replay");
+    check_cuda(cudaDeviceSynchronize(), "synchronize filtered-price parity");
+    float prices[3]{}, errors[3]{};
+    check_cuda(cudaMemcpy(prices, device_prices, sizeof(prices),
+                          cudaMemcpyDeviceToHost),
+               "copy filtered-price values");
+    check_cuda(cudaMemcpy(errors, device_errors, sizeof(errors),
+                          cudaMemcpyDeviceToHost),
+               "copy filtered-price errors");
+    require(prices[1] == prices[2] && errors[1] == errors[2],
+            "Filtering changed the candidate contract or Philox stream.");
+    check_cuda(cudaFree(device_errors), "free filtered-price errors");
+    check_cuda(cudaFree(device_prices), "free filtered-price values");
+    check_cuda(cudaFree(device_selected), "free filtered-price selection");
+    check_cuda(cudaFree(device_products), "free filtered-price products");
+}
+
 }  // namespace
 
 int main() {
@@ -542,6 +602,8 @@ int main() {
 #undef SELECT_COMPARE_PRODUCT
 #undef COMPARE_PRODUCT_5
 #undef COMPARE_PRODUCT_4
+
+        compare_filtered_price_candidate(device_model);
 
         std::cout << "PATH_PRODUCT_FACTORIZATION products=21"
                   << " paths_per_product=" << kPathsPerPrice

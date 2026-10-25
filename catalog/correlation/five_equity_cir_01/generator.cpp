@@ -63,11 +63,8 @@ int main() {
     }
     constexpr auto path=
         "datasets/correlation/five_equity_cir_01.json";
-    constexpr auto catalog=
-        "catalog/correlation/five_equity_cir_01";
     datasets::write_json_file(path,{
         {"database_id","five_equity_cir_01"},
-        {"catalog",catalog},
         {"row_count",rows.size()},
         {"correlations",rows}});
     correlation::load_matrices(path);
@@ -78,8 +75,6 @@ int main() {
             {"dataset_id","five_equity_cir_01"},
             {"generator","catalog/correlation/five_equity_cir_01/generator.cpp"},
             {"output",{{"path",path},{"format","json"}}},
-            {"generation_details",
-                "catalog/correlation/five_equity_cir_01/generation.yaml"},
             {"row_count",10},
             {"factor_order",factors},
             {"construction",{

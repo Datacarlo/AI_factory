@@ -3,6 +3,7 @@
 #include "tools/datasets/artifact_io.hpp"
 #include "pricing_rows/result_index.cuh"
 
+#include <algorithm>
 #include <cmath>
 #include <limits>
 #include <string>
@@ -88,11 +89,6 @@ std::pair<double, double> reconstruct_from_price(
         const double spot = positive_parameter(model, "spot");
         value = price / spot;
         error = standard_error / spot;
-    } else if (sensitivity.parameter == "model.spot"
-        && sensitivity.formula == "0"
-        && sensitivity.standard_error == "0") {
-        value = 0.0;
-        error = 0.0;
     } else {
         throw std::invalid_argument("Unknown analytic gradient formula.");
     }
@@ -253,7 +249,7 @@ void write_dataset(const Recipe& recipe, const Results& result) {
     }
     const auto& model_rows = models.at("models");
     const auto& product_rows = products.at("products");
-    const auto count = curve_rows == nullptr
+    const auto candidate_count = curve_rows == nullptr
         ? price_row_count(
             model_rows.size(), product_rows.size(), recipe.construction
         )
@@ -263,6 +259,21 @@ void write_dataset(const Recipe& recipe, const Results& result) {
             product_rows.size(),
             recipe.construction
         );
+
+    const auto count = result.candidate_rows.empty()
+        ? candidate_count : result.candidate_rows.size();
+    if (!result.candidate_rows.empty()) {
+        if (result.candidate_rows.size() >= candidate_count)
+            throw std::invalid_argument("Noncompact candidate row map.");
+        std::uint32_t previous = 0U;
+        bool first = true;
+        for (const auto candidate : result.candidate_rows) {
+            if (candidate >= candidate_count || (!first && candidate <= previous))
+                throw std::invalid_argument("Candidate row map is not ordered.");
+            previous = candidate;
+            first = false;
+        }
+    }
 
     const auto sensitivity_count =
         recipe.configuration.sensitivities.size();
@@ -325,24 +336,27 @@ void write_dataset(const Recipe& recipe, const Results& result) {
         );
     }
 
-    for (const auto* values : {
-             &result.prices,
-             &result.gradients,
-             &result.price_errors,
-             &result.gradient_errors,
-             &result.diagonal_hessians,
-             &result.diagonal_hessian_errors,
-             &result.mixed_hessians,
-             &result.mixed_hessian_errors,
-         }) {
-        for (const float value : *values) {
-            if (!std::isfinite(value)) {
+    const auto require_finite = [&](const std::vector<float>& values,
+                                    const char* field, std::size_t width) {
+        for (std::size_t index = 0U; index < values.size(); ++index) {
+            if (!std::isfinite(values[index])) {
                 throw std::invalid_argument(
-                    "Non-finite gradient artifact value."
+                    "Non-finite gradient artifact value in "
+                    + std::string(field) + " at row "
+                    + std::to_string(index / width) + ", column "
+                    + std::to_string(index % width) + "."
                 );
             }
         }
-    }
+    };
+    require_finite(result.prices, "prices", 1U);
+    require_finite(result.gradients, "gradients", std::max(first_count, std::size_t{1}));
+    require_finite(result.price_errors, "price_errors", 1U);
+    require_finite(result.gradient_errors, "gradient_errors", std::max(first_count, std::size_t{1}));
+    require_finite(result.diagonal_hessians, "diagonal_hessians", std::max(diagonal_count, std::size_t{1}));
+    require_finite(result.diagonal_hessian_errors, "diagonal_hessian_errors", std::max(diagonal_count, std::size_t{1}));
+    require_finite(result.mixed_hessians, "mixed_hessians", std::max(mixed_count, std::size_t{1}));
+    require_finite(result.mixed_hessian_errors, "mixed_hessian_errors", std::max(mixed_count, std::size_t{1}));
     for (const auto* errors : {
              &result.price_errors,
              &result.gradient_errors,
@@ -576,7 +590,8 @@ void write_dataset(const Recipe& recipe, const Results& result) {
         const nlohmann::ordered_json* product_parameters = nullptr;
         if (curve_rows == nullptr) {
             const auto indices = decode_model_product_result_index(
-                row, product_rows.size(), recipe.construction
+                result.candidate_rows.empty() ? row : result.candidate_rows[row],
+                product_rows.size(), recipe.construction
             );
             const auto& model_row = model_rows.at(indices.model_index);
             const auto& product_row = product_rows.at(indices.product_index);
@@ -586,7 +601,7 @@ void write_dataset(const Recipe& recipe, const Results& result) {
             output_row["product_id"] = product_row.at("id");
         } else {
             const auto indices = decode_model_curve_product_result_index(
-                row,
+                result.candidate_rows.empty() ? row : result.candidate_rows[row],
                 curve_rows->size(),
                 product_rows.size(),
                 recipe.construction

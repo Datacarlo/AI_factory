@@ -53,6 +53,3 @@ The model convention follows the rough-SABR formulation of Fukasawa and
 Gatheral. There is no parameter conversion for `eta`: their log-variance
 coefficient becomes `eta/2` in `alpha=sqrt(xi)`, which also preserves the
 exact rough-Bergomi `beta=1` limit.
-
-Related contracts: [rough-family entry point](../README.md) ·
-[pricing composition](../../../../../project_journal/reference/cuda/pricing-policy-composition.md).

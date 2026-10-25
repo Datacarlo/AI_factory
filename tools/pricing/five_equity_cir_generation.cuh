@@ -124,11 +124,13 @@ int generate_five_equity_cir_prices(
             throw std::invalid_argument("Invalid five-equity pilot selection");
         products={products[product_index]};
         correlations={correlations[correlation_index]};
-        plan=compile_row_index_plan(Expression::aligned({
-            Expression::source(0U,100U),Expression::source(1U,100U),
-            Expression::source(2U,100U),Expression::source(3U,100U),
-            Expression::source(4U,100U),Expression::source(5U,100U),
-            Expression::source(6U,1U),Expression::source(7U,1U)}),8U);
+        plan=compile_row_index_plan(Expression::cartesian({
+            Expression::source(6U,1U),Expression::source(7U,1U),
+            Expression::aligned({
+                Expression::source(0U,100U),Expression::source(1U,100U),
+                Expression::source(2U,100U),Expression::source(3U,100U),
+                Expression::source(4U,100U),Expression::source(5U,100U)})
+        }),8U);
         plan.result_count=static_cast<std::uint32_t>(pilot_rows);
     } else {
         plan=compile_row_index_plan(Expression::cartesian({

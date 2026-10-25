@@ -102,6 +102,10 @@ def main() -> int:
             if group_ids is None or data.get("core_groups") is None
             else int(data["core_groups"])
         ),
+        train_group_count=(
+            None if data.get("train_group_count") is None
+            else int(data["train_group_count"])
+        ),
     )
     if arguments.run_dir is None:
         stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")

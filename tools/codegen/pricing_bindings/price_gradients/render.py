@@ -11,6 +11,7 @@ from .manifest import (
     american_lsm_metadata,
     default_sensitivities,
     reconstructible_sensitivities,
+    inactive_sensitivities,
     terminal_product_metadata,
     path_product_metadata,
 )
@@ -1117,6 +1118,13 @@ def render_recipes(
                     + ", ".join(missing)
                 )
             selected = [by_name[name] for name in spec.sensitivity_parameters]
+        inactive = (
+            inactive_sensitivities(spec.model, spec.product)
+            if spec.asset_class == "equity" else frozenset()
+        )
+        selected = [
+            item for item in selected if item["parameter"] not in inactive
+        ]
         reconstructible = (
             reconstructible_sensitivities(spec.model, spec.product)
             if spec.asset_class == "equity"
@@ -1307,6 +1315,12 @@ def render_recipes(
                     "bermudan_swaption": "additive_to_initial_first_exercise_par_swap_rate",
                 }[spec.product] + '";\n        datasets::price_gradients::require_product_quote_convention(recipe);'
                 if spec.asset_class == "fixed_income" else ""
+            ) + (
+                "\n        recipe.select_nontrivial_bond = true;"
+                if (spec.product == "zero_coupon_bond_up_and_out"
+                    or (spec.product == "zero_coupon_bond_option"
+                        and spec.model == "cir" and option_side == "call"))
+                else ""
             ) + reconstructible_assignment,
             "price_template_arguments": (
                 f"<OptionSide::{side}>" if variant.side is not None else ""
@@ -1414,6 +1428,30 @@ def render_recipes(
         }
         if spec.asset_class == "fixed_income":
             metadata["quote_convention"] = quote_convention(spec.product)
+            if spec.product in {"rate_option", "european_swaption", "bermudan_swaption"}:
+                metadata["row_selection"] = {
+                    "method": "resolved_rate_strike_above_minimum",
+                    "minimum_annualized_decimal_rate": 0.00001,
+                    "reference": "initial_unbumped_model_and_curve",
+                    "order": "stable_candidate_index",
+                }
+            if spec.product == "zero_coupon_bond_up_and_out":
+                metadata["row_selection"] = {
+                    "method": "resolved_bond_nonzero_support",
+                    "criteria": (["strike_below_barrier", "strike_below_one"]
+                                 if spec.model == "cir"
+                                 else ["strike_below_barrier"]),
+                    "reference": "initial_unbumped_model_and_curve",
+                    "order": "stable_candidate_index",
+                }
+            elif (spec.product == "zero_coupon_bond_option"
+                  and spec.model == "cir" and option_side == "call"):
+                metadata["row_selection"] = {
+                    "method": "resolved_bond_nonzero_support",
+                    "criteria": ["strike_below_one"],
+                    "reference": "initial_unbumped_model_and_curve",
+                    "order": "stable_candidate_index",
+                }
             if any(item["parameter"] == "product.maturity_years"
                    for item in selected):
                 metadata["sensitivity"]["maturity_coordinate"] = {
@@ -1498,6 +1536,11 @@ def render_recipes(
         else:
             metadata["time_grid"] = {"steps_per_year":504,"simulation_steps_per_day":2,"delta_t":"1 / 504"}
         recipe_path = destination.with_name("recipe.yaml")
-        write_generated(recipe_path, json.dumps(metadata, indent=2) + "\n")
+        recipe_text = json.dumps(metadata, indent=2) + "\n"
+        recipe_text = recipe_text.replace(
+            '"minimum_annualized_decimal_rate": 1e-05',
+            '"minimum_annualized_decimal_rate": 0.00001',
+        )
+        write_generated(recipe_path, recipe_text)
         generated.append(recipe_path)
     return generated

@@ -6,6 +6,9 @@
 #include "model/$source_folder/dynamics_impl.cuh"
 #include "model/$source_folder/sample_device_preparation.cuh"
 
+#include <algorithm>
+#include <memory>
+
 namespace ai_factory::workbench::$namespace {
 namespace {
 template<std::size_t FactorCount>
@@ -70,23 +73,62 @@ void launch_${model_name}_generated_random_terminal_samples_cuda(
     std::uint64_t schedule_seed, std::uint64_t dynamics_seed,
     std::uint32_t* device_maturity_days$output_declarations
 ) {
+    using Prepared=PreparedDynamics<FactorCount>;
+    const sample::GeneratedPreparedInputSource<
+        SampleParameterSampler,SampleDevicePreparer<FactorCount>> source{
+            bounds,{2.0f,sample::kSampleFixedStepDt},
+            device_generated_parameters};
+    const sample::UniformMaturityCalendarSource calendar{
+        {minimum_maturity_days,maximum_maturity_days},
+        device_maturity_days};
+    const sample::SampleRange range{
+        parameter_count,paths_per_parameter,sample_offset,
+        launch_sample_count};
+    const sample::SampleLaunchConfiguration configuration{
+        threads_per_block,block_count};
+    const sample::SamplingSeeds seeds{
+        parameter_seed,schedule_seed,dynamics_seed};
+    const typename TerminalPolicy<FactorCount>::Output output{
+        $output_values};
+    // A separate 32-thread preparation kernel allows more independent lifts
+    // to run concurrently than the 256-thread path simulation kernel.
+    const auto strategy=sample::resolve_execution_strategy(
+        sample::SampleExecutionStrategy::automatic,paths_per_parameter);
+    if(strategy==sample::SampleExecutionStrategy::thread_grid_stride) {
+        sample::launch_prepared_samples_cuda<TerminalPolicy<FactorCount>>(
+            source,calendar,range,
+            sample::kFixedStepSampleTimeConfiguration,configuration,seeds,
+            output,"$model_name.samples",
+            "random_terminal.generated_prepared_parameters",
+            "$display generated terminal sample kernel");
+        return;
+    }
+    sample::validate_sample_launch_common<TerminalPolicy<FactorCount>>(
+        source,calendar,range,sample::kFixedStepSampleTimeConfiguration,
+        configuration,seeds,output,strategy);
+    const std::size_t first=sample_offset/paths_per_parameter;
+    const std::size_t last=(sample_offset+launch_sample_count-1U)
+        /paths_per_parameter;
+    const std::size_t count=last-first+1U;
+    Prepared* allocation=nullptr;
+    check_cuda(cudaMalloc(&allocation,count*sizeof(Prepared)),
+        "quadratic rough-Heston prepared sample allocation");
+    std::unique_ptr<Prepared,decltype(&cudaFree)> prepared(
+        allocation,&cudaFree);
+    const unsigned prep_blocks=static_cast<unsigned>(
+        std::min(block_count,count));
+    sample::prepare_sample_input_rows_kernel<Prepared,decltype(source)>
+        <<<prep_blocks,32U>>>(
+            source,first,count,parameter_seed,prepared.get());
+    check_cuda(cudaGetLastError(),
+        "quadratic rough-Heston generated parameter and lift preparation");
     sample::launch_prepared_samples_cuda<TerminalPolicy<FactorCount>>(
-        sample::GeneratedPreparedInputSource<
-            SampleParameterSampler, SampleDevicePreparer<FactorCount>>{
-            bounds,
-            {2.0f, sample::kSampleFixedStepDt},
-            device_generated_parameters},
-        sample::UniformMaturityCalendarSource{
-            {minimum_maturity_days, maximum_maturity_days},
-            device_maturity_days},
-        {parameter_count, paths_per_parameter, sample_offset,
-         launch_sample_count},
-        sample::kFixedStepSampleTimeConfiguration,
-        {threads_per_block, block_count},
-        {parameter_seed, schedule_seed, dynamics_seed},
-        {$output_values}, "$model_name.samples",
-        "random_terminal.generated_prepared_parameters",
-        "$display generated and prepared random terminal sample kernel");
+        sample::PreparedInputWindowSource<Prepared>{
+            prepared.get(),first,count},calendar,range,
+        sample::kFixedStepSampleTimeConfiguration,configuration,seeds,
+        output,"$model_name.samples",
+        "random_terminal.separate_preparation",
+        "$display random terminal sample kernel");
 }
 
 template<std::size_t FactorCount>

@@ -27,6 +27,13 @@ struct DevicePreparedInputs {
     std::size_t product_capacity;
     const pg::SensitivitySpec<typename Preparation::Parameter>* sensitivities;
     std::size_t sensitivity_capacity;
+    const std::uint32_t* candidate_rows = nullptr;
+
+    __device__ __forceinline__ std::uint32_t source_row(
+        std::size_t row) const {
+        return candidate_rows ? candidate_rows[row]
+                              : static_cast<std::uint32_t>(row);
+    }
 
     template<typename Plan>
     __device__ __forceinline__ bool make_central(
@@ -34,8 +41,7 @@ struct DevicePreparedInputs {
         const Plan& plan,
         typename Preparation::Scenario& central
     ) const {
-        const auto indices = plan.model_product_rows.select(
-            static_cast<std::uint32_t>(row));
+        const auto indices = plan.model_product_rows.select(source_row(row));
         const auto product = equity::spot_relative::selected_central_product(
             models[indices.model_index], products[indices.product_index],
             plan.relative_quotes);
@@ -56,6 +62,13 @@ struct CurveDevicePreparedInputs {
     std::size_t product_capacity;
     const pg::SensitivitySpec<typename Preparation::Parameter>* sensitivities;
     std::size_t sensitivity_capacity;
+    const std::uint32_t* candidate_rows = nullptr;
+
+    __device__ __forceinline__ std::uint32_t source_row(
+        std::size_t row) const {
+        return candidate_rows ? candidate_rows[row]
+                              : static_cast<std::uint32_t>(row);
+    }
 
     template<typename Plan>
     __device__ __forceinline__ bool make_central(
@@ -63,8 +76,7 @@ struct CurveDevicePreparedInputs {
         const Plan& plan,
         typename Preparation::Scenario& central
     ) const {
-        const auto indices = plan.model_curve_product_rows.select(
-            static_cast<std::uint32_t>(row));
+        const auto indices = plan.model_curve_product_rows.select(source_row(row));
         return Preparation::make_central(
             models[indices.model_index],
             curves[indices.curve_index],

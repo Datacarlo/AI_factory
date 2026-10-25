@@ -1,0 +1,31 @@
+schema_version: 4
+status: complete
+inputs:
+  model:
+    path: datasets/model/fixed_income/g2_plus_plus/parameters/g2_plus_plus_01.json
+    sha256: b42de4237ad138de56bd90bb24147cbb4c89c9eee08b1adcf48eec23a5268c4c
+  product:
+    path: datasets/product/european_swaption/european_swaptions_01_shard00.json
+    sha256: 1693d62ac3cf66ae61d811db7c08397cc878c60a7c0dc9325c0c185c71016ba9
+  curve:
+    path: datasets/curve/nelson_siegel/nelson_siegel_01.json
+    sha256: 0c39fa02d5ad755655cf9f9fedf3d127ac453e4ab7c8ff1027a8e58959f93ca8
+output:
+  path: datasets/model/fixed_income/g2_plus_plus/price_gradients/nelson_siegel/european_receiver_swaptions/g2_plus_plus_01__nelson_siegel_01__european_receiver_swaptions_01__01_cartesian_shard00_price_gradient.json
+  sha256: c902b898034f36ec0535eac54a8a23bf708254e2eeef9f2b367c8f2488db90d1
+hardware:
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+  device: gpu
+  name: Tesla V100-SXM2-32GB
+  uuid: GPU-eb05268b-e265-c927-124b-f944b18caf0c
+  compute_capability: '7.0'
+  driver_version: 580.178.04
+software:
+  cmake: cmake version 3.31.6
+  cxx_compiler: g++-14 (Debian 14.2.0-19) 14.2.0
+  cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1
+timing:
+  wall_seconds: 10459.374377256026
+  duration: 2 h 54 min 19 s 374 ms

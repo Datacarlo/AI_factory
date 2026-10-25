@@ -25,22 +25,40 @@ struct ModelProductDeviceInputs {
     std::size_t product_count;
     PriceConstruction construction;
     ModelProductRowPlan row_plan;
+    const std::uint32_t* candidate_rows = nullptr;
+
+    __device__ __forceinline__ std::uint32_t source_row(
+        std::size_t result_index
+    ) const {
+        return candidate_rows ? candidate_rows[result_index]
+                              : static_cast<std::uint32_t>(result_index);
+    }
 
     __device__ __forceinline__ ModelProductIndices indices(
         std::size_t result_index
     ) const {
-        return row_plan.select(static_cast<std::uint32_t>(result_index));
+        return row_plan.select(source_row(result_index));
+    }
+
+    inline std::size_t source_row_count() const {
+        return price_row_count(model_count, product_count, construction);
     }
 
     inline void validate(std::size_t result_count) const {
         validate_device_pointer(models, "device_models");
         validate_device_pointer(products, "device_products");
+        const std::size_t candidates = source_row_count();
         validate_model_product_construction(
-            model_count,
-            product_count,
-            construction,
-            result_count
-        );
+            model_count, product_count, construction, candidates);
+        if (candidate_rows) {
+            validate_device_pointer(candidate_rows, "candidate_rows");
+            if (result_count == 0U || result_count > candidates)
+                throw std::invalid_argument(
+                    "Selected results must fit within the candidate rows.");
+        } else if (result_count != candidates) {
+            throw std::invalid_argument(
+                "Unfiltered results must contain every candidate row.");
+        }
     }
 
     template<
@@ -92,6 +110,16 @@ struct PreparedModelProductDeviceInputs {
     ModelProductDeviceInputs<Model, Product> primary;
     const PreparedDynamics* prepared_models;
     std::size_t prepared_model_count;
+
+    __device__ __forceinline__ std::uint32_t source_row(
+        std::size_t result_index
+    ) const {
+        return primary.source_row(result_index);
+    }
+
+    inline std::size_t source_row_count() const {
+        return primary.source_row_count();
+    }
 
     inline void validate(std::size_t result_count) const {
         primary.validate(result_count);
@@ -158,24 +186,42 @@ struct ModelCurveProductDeviceInputs {
     std::size_t product_count;
     PriceConstruction construction;
     ModelCurveProductRowPlan row_plan;
+    const std::uint32_t* candidate_rows = nullptr;
+
+    __device__ __forceinline__ std::uint32_t source_row(
+        std::size_t result_index
+    ) const {
+        return candidate_rows ? candidate_rows[result_index]
+                              : static_cast<std::uint32_t>(result_index);
+    }
 
     __device__ __forceinline__ ModelCurveProductIndices indices(
         std::size_t result_index
     ) const {
-        return row_plan.select(static_cast<std::uint32_t>(result_index));
+        return row_plan.select(source_row(result_index));
+    }
+
+    inline std::size_t source_row_count() const {
+        return price_row_count(
+            model_count, curve_count, product_count, construction);
     }
 
     inline void validate(std::size_t result_count) const {
         validate_device_pointer(models, "device_models");
         validate_device_pointer(curves, "device_curves");
         validate_device_pointer(products, "device_products");
+        const std::size_t candidates = source_row_count();
         validate_model_curve_product_construction(
-            model_count,
-            curve_count,
-            product_count,
-            construction,
-            result_count
-        );
+            model_count, curve_count, product_count, construction, candidates);
+        if (candidate_rows) {
+            validate_device_pointer(candidate_rows, "candidate_rows");
+            if (result_count == 0U || result_count > candidates)
+                throw std::invalid_argument(
+                    "Selected results must fit within the candidate rows.");
+        } else if (result_count != candidates) {
+            throw std::invalid_argument(
+                "Unfiltered results must contain every candidate row.");
+        }
     }
 
     template<
@@ -211,6 +257,16 @@ template<typename PrimaryInputs, typename Context>
 struct DeviceInputsWithContext {
     PrimaryInputs primary;
     Context context;
+
+    __device__ __forceinline__ std::uint32_t source_row(
+        std::size_t result_index
+    ) const {
+        return primary.source_row(result_index);
+    }
+
+    inline std::size_t source_row_count() const {
+        return primary.source_row_count();
+    }
 
     inline void validate(std::size_t result_count) const {
         primary.validate(result_count);

@@ -72,6 +72,7 @@ def make_dataset_selection(
     validation_group_count: int | None = None,
     test_group_count: int | None = None,
     core_group_count: int | None = None,
+    train_group_count: int | None = None,
 ) -> DatasetSelection:
     """Keep validation/test fixed while choosing a nested random train prefix.
 
@@ -174,7 +175,41 @@ def make_dataset_selection(
 
     candidates = indices[codes == TRAIN]
     requested = train_size
-    if train_size is None:
+    if train_group_count is not None:
+        if group_ids is None:
+            raise ValueError("train_group_count requires group_ids")
+        if train_group_count <= 0:
+            raise ValueError("train_group_count must be positive")
+        candidate_groups = np.unique(groups[codes == TRAIN])
+        if train_group_count > candidate_groups.size:
+            raise ValueError(
+                f"train_group_count={train_group_count} exceeds the {candidate_groups.size} training groups"
+            )
+
+        def choose(group_candidates: np.ndarray, count: int) -> np.ndarray:
+            priorities = _splitmix64(group_candidates.astype(np.uint64), selection_seed)
+            order = np.argsort(priorities, kind="stable")
+            return group_candidates[order[:count]]
+
+        if core_group_count is None:
+            selected_groups = choose(candidate_groups, train_group_count)
+        else:
+            core_candidates = candidate_groups[candidate_groups < core_group_count]
+            stress_candidates = candidate_groups[candidate_groups >= core_group_count]
+            core_count = int(round(train_group_count * core_candidates.size / candidate_groups.size))
+            stress_count = train_group_count - core_count
+            selected_groups = np.concatenate((choose(core_candidates, core_count), choose(stress_candidates, stress_count)))
+        selected = indices[np.isin(groups, selected_groups) & (codes == TRAIN)]
+        if train_size is not None and selected.size != train_size:
+            raise ValueError(
+                f"Selected {selected.size} rows from {train_group_count} complete groups, expected train_size={train_size}"
+            )
+        if group_manifest is not None:
+            group_manifest["selected_train"] = int(selected_groups.size)
+            group_manifest["selected_train_core"] = int(np.count_nonzero(selected_groups < core_group_count)) if core_group_count is not None else None
+            group_manifest["selected_train_stress"] = int(np.count_nonzero(selected_groups >= core_group_count)) if core_group_count is not None else None
+            group_manifest["selected_train_digest"] = _digest(np.sort(selected_groups))
+    elif train_size is None:
         selected = candidates
     else:
         if train_size <= 0:

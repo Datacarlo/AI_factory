@@ -48,7 +48,7 @@ int main() {
         "Short expiry grid with all core upper barriers above the initial bond price.");
     auto stress = regime(
         {1U, 5U, 21U, 42U, 63U}, {21U, 252U},
-        {0.75f, 1.01f}, {1.008f, 1.012f, 1.025f, 1.06f, 1.30f},
+        {0.75f, 1.01f}, {1.015f, 1.025f, 1.06f, 1.15f, 1.30f},
         "Longer expiries and near or remote upper-barrier ratios.");
     const auto rows = core_stress_rows(std::move(core), std::move(stress));
     write_fixed_income_product_dataset(

@@ -330,9 +330,21 @@ def check_outputs(work: Path, job: dict) -> list[dict]:
             or recipe.get("generator") != job["generator"]
 ):
         raise ValueError("Recipe identity/output contradicts the frozen selection")
+    selected_rows = generation.get("artifact", {}).get("row_count")
+    row_selection = recipe.get("row_selection")
+    if row_selection is None:
+        valid_row_count = selected_rows == job["rows"]
+    else:
+        valid_row_count = (
+            ((row_selection.get("method") == "resolved_rate_strike_above_minimum"
+              and row_selection.get("minimum_annualized_decimal_rate") == 0.00001)
+             or row_selection.get("method") == "resolved_bond_nonzero_support")
+            and type(selected_rows) is int
+            and 0 < selected_rows <= job["rows"]
+        )
     if (generation.get("schema_version") != 1
             or generation.get("status") != "complete"
-            or generation.get("artifact", {}).get("row_count") != job["rows"]
+            or not valid_row_count
             or not isinstance(generation.get("execution"), dict)
             or not isinstance(generation.get("timing"), dict)):
         raise ValueError("Invalid native generation receipt")
@@ -388,6 +400,7 @@ def check_outputs(work: Path, job: dict) -> list[dict]:
                 job["time_key"]: recipe.get(job["time_key"]),
                 "exercise_replay": recipe.get("exercise_replay"),
                 "summary": generation["execution"],
+                "row_selection": row_selection,
             }
             check_gradients(job, frozen, document)
             input_documents = {
@@ -399,7 +412,7 @@ def check_outputs(work: Path, job: dict) -> list[dict]:
                 return (isinstance(reference, dict)
                         and reference.get("id") == input_documents[name]["database_id"])
             if (document["database_id"] != recipe["dataset_id"]
-                    or document["row_count"] != job["rows"]
+                    or document["row_count"] != selected_rows
                     or document["model_family"] != input_documents["model"]["model_family"]
                     or document["product_family"] != input_documents["product"]["product_family"]
                     or ("curve" in input_documents and document["curve_family"]

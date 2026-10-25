@@ -94,6 +94,18 @@ class ProvenanceTests(unittest.TestCase):
         self.recipe["output"]["path"] = "datasets/another.json"
         self.assertEqual(self.assess()["status"], "invalid")
 
+    def test_selected_result_count_is_bounded_by_candidate_count(self):
+        self.recipe["row_count"] = 2
+        self.recipe["row_selection"] = {
+            "method": "resolved_bond_nonzero_support"}
+        self.assertEqual(self.assess()["status"], "compatible")
+        self.recipe.pop("row_selection")
+        self.assertEqual(self.assess()["status"], "invalid")
+        self.recipe["row_selection"] = {
+            "method": "resolved_bond_nonzero_support"}
+        self.recipe["row_count"] = 0
+        self.assertEqual(self.assess()["status"], "invalid")
+
     def test_input_sha_is_current_metadata_not_an_immutable_gate(self):
         relative = "datasets/model/example.json"
         parameter = self.root / relative

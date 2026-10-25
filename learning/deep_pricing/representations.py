@@ -91,6 +91,19 @@ class UnitSpotHomogeneousModel(nn.Module):
         return (price - self.value_mean) / self.value_scale
 
 
+class UnitSpotSliceModel(nn.Module):
+    """Learn the call surface on the fixed S0=1 slice without a spot input."""
+
+    def __init__(self, core: nn.Module, *, spot_index: int):
+        super().__init__()
+        self.core = core
+        self.spot_index = int(spot_index)
+
+    def forward(self, normalized_inputs: torch.Tensor) -> torch.Tensor:
+        retained = [i for i in range(normalized_inputs.shape[1]) if i != self.spot_index]
+        return self.core(normalized_inputs[:, retained])
+
+
 def _feature_index(schema: PricingTensorSchema, name: str) -> int:
     matches = [
         index for index, candidate in enumerate(schema.feature_names) if candidate == name
@@ -122,10 +135,25 @@ def build_pricing_model(
             input_dimension=input_dimension,
             output_dimension=output_dimension,
         )
+    if name == "unit_spot_slice":
+        spot_index = _feature_index(
+            prepared.schema, str(representation.get("spot_feature", "model.spot"))
+        )
+        training_spots = np.asarray(
+            prepared.features[train_indices, spot_index], dtype=np.float64
+        )
+        if not np.allclose(training_spots, 1.0, rtol=0.0, atol=1e-7):
+            raise ValueError("unit_spot_slice requires every selected spot to equal 1")
+        core = build_network(
+            network_specification,
+            input_dimension=input_dimension - 1,
+            output_dimension=output_dimension,
+        )
+        return UnitSpotSliceModel(core, spot_index=spot_index)
     if name != "unit_spot_homogeneous":
         raise ValueError(
             "Unknown pricing representation "
-            f"{name!r}; choose identity or unit_spot_homogeneous"
+            f"{name!r}; choose identity, unit_spot_slice or unit_spot_homogeneous"
         )
     if output_dimension != 1:
         raise ValueError("unit_spot_homogeneous requires one scalar price target")

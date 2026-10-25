@@ -31,7 +31,6 @@ int main() {
             pg::SensitivityOrders::first, {},
             pg::SensitivityStrategy::node_graph
         };
-        recipe.reconstructible_sensitivities = {{"model.spot", "0", "0"}};
         const auto models = binding::load_models(recipe.model_input);
         const auto products = product::load_cliquets(recipe.product_input);
         using Graph = binding::CliquetNodeGraph<

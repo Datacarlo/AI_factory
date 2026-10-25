@@ -1,0 +1,13 @@
+schema_version: 4
+status: complete
+inputs: {}
+output:
+  path: datasets/curve/svensson/svensson_01.json
+  sha256: c21299e6ea6e15703d33d2dbc1fe803b359043ff8a2590f69772af796646ce77
+hardware:
+  device: cpu
+  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
+software:
+  cmake: cmake version 3.22.1
+  cxx_compiler: g++-14 (Ubuntu 14.3.0-12ubuntu1~22~ppa2) 14.3.0
+  nlohmann_json: 3.10.5

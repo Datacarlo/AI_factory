@@ -1,0 +1,13 @@
+schema_version: 4
+status: complete
+inputs: {}
+output:
+  path: datasets/model/fixed_income/hull_white/parameters/hull_white_01.json
+  sha256: 51a8588e01c164b4458d61fc048842f3d6a4c5b5f2628fb405bbd256f41dcbeb
+hardware:
+  device: cpu
+  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
+software:
+  cmake: cmake version 3.22.1
+  cxx_compiler: g++-14 (Ubuntu 14.3.0-12ubuntu1~22~ppa2) 14.3.0
+  nlohmann_json: 3.10.5

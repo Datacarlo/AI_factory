@@ -20,8 +20,8 @@ if a published input JSON is normalized or replaced, update the dependent
 input SHA-256 only after checking that the intended numerical input rows are
 unchanged. See `tools/datasets/refresh_generation.py`.
 
-Version 1–3 receipts remain readable. `campaign.schema.yaml` governs the
-separate frozen checkpoint contract in `work/generation/`.
+Version 1–3 receipts remain readable. `campaign.schema.yaml` governs
+separately staged campaign checkpoints.
 
 The publication checks require coherent IDs, row counts, finite prices and
 standard errors, and the sensitivity columns named by the recipe. They do not

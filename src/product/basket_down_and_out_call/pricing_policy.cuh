@@ -70,7 +70,11 @@ struct BasketDownAndOutCallPathPolicy {
     }
     __device__ __forceinline__ static Handler make_handler(
         const PreparedProduct& product
-    ) { return {product.lower_barrier}; }
+    ) {
+        // The normalized basket starts at one; equality touches the barrier.
+        return {product.lower_barrier,0.0f,
+                product.lower_barrier>=1.0f};
+    }
 
     template<typename Pack, unsigned int TeamSize>
     __device__ __forceinline__ static float observe(

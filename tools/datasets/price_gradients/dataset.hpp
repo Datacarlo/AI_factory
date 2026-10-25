@@ -45,6 +45,7 @@ struct Recipe {
     bool exact_schedule_transition = false;
     bool barrier_grid_monitoring = false;
     std::optional<std::string> option_side;
+    bool select_nontrivial_bond = false;
     std::optional<std::string> product_quote_mode;
     std::vector<ReconstructibleSensitivity> reconstructible_sensitivities;
 };
@@ -55,6 +56,7 @@ void append_exercise_replay_metadata(
 );
 struct Results {
     std::vector<float> prices, price_errors, gradients, gradient_errors;
+    std::vector<std::uint32_t> candidate_rows;
     std::vector<::ai_factory::workbench::price_gradients::Stencil> stencils;
     nlohmann::ordered_json execution;
     double wall_seconds = 0, kernel_seconds = 0;

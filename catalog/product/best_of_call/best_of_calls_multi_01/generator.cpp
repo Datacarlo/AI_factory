@@ -36,8 +36,7 @@ int main() {
         {{"strike","Dimensionless strike on the terminal basket of initial-spot-normalized assets."},
           {"maturity","Business days from valuation; 252 days per year."}},
         {{"expression","max(max_i(S_i(T)/S_i(0)) - strike, 0)"},
-          {"notional","one normalized basket unit"},
-          {"discounting","stochastic CIR short-rate integral"}},
+          {"notional","one normalized basket unit"}},
         rows,
         {
             {"strike", {{"mode", "strike_on_max_normalized_spot"},

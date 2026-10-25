@@ -65,13 +65,6 @@ recipes and CMake registration. Each Bermudan recipe uses `2^20`
 trajectories per price. Parameters follow the ordered 900 core / 100 stress
 policy. Launch profiles remain defaults to measure on the user's GPU.
 
-Build `model_cir_plus_plus` and `test_cir_plus_plus_cuda` with CMake, then run
-the `cir_plus_plus_cuda` CTest. An explicit independent diagnostic consumes
-the test's JSON-lines output through
-`validation/quantlib/model/fixed_income/cir_plus_plus/check_cuda_output.py`.
-It checks conditional analytics against QuantLib CIR with deterministic-shift
-scaling, and Bermudans against a refined risk-neutral PDE.
-
 These checks are not catalogue certification. Price recipes retain
 `verified: false` until all core and stress rows have persistent independent
 references. Premia exposes `CirPP1D/STDi`: bond and swaption closed forms,

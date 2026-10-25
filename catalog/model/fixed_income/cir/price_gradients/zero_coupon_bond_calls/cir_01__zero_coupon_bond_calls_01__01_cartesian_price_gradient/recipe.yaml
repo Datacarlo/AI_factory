@@ -65,6 +65,14 @@
     },
     "reference_policy": "Resolved at the unbumped model and initial curve; absolute contract levels stay fixed for model and curve bumps."
   },
+  "row_selection": {
+    "method": "resolved_bond_nonzero_support",
+    "criteria": [
+      "strike_below_one"
+    ],
+    "reference": "initial_unbumped_model_and_curve",
+    "order": "stable_candidate_index"
+  },
   "option_side": "call",
   "time_representation": {
     "kind": "exact_terminal_transition",

@@ -401,6 +401,7 @@ def train_experiment(
                     raw_predicted_gradients=raw_predicted_gradients,
                     raw_target_gradients=raw_target_gradients,
                     batch={name: value.to(device) for name, value in batch.items()},
+                    gradient_names=tuple(item.wrt_name for item in prepared.schema.gradients),
                     epoch=epoch,
                     global_step=global_step,
                     normalized_predicted_diagonal_hessians=(

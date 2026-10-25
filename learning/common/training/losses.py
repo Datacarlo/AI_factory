@@ -24,6 +24,7 @@ class LossContext:
     raw_predicted_gradients: torch.Tensor | None
     raw_target_gradients: torch.Tensor | None
     batch: dict[str, torch.Tensor]
+    gradient_names: tuple[str, ...]
     epoch: int
     global_step: int
     normalized_predicted_diagonal_hessians: torch.Tensor | None = None
@@ -69,18 +70,36 @@ class _GradientMSE:
     requires_input_gradients = True
     requires_input_hessians = False
 
+    def __init__(self, specification: dict[str, Any]):
+        self.coordinate_weights = {
+            str(name): float(weight)
+            for name, weight in specification.get("coordinate_weights", {}).items()
+        }
+        if any(weight < 0 for weight in self.coordinate_weights.values()):
+            raise ValueError("Gradient coordinate weights must be nonnegative")
+
     def __call__(self, context: LossContext) -> torch.Tensor:
         if (
             context.normalized_predicted_gradients is None
             or context.normalized_target_gradients is None
         ):
             raise ValueError("gradient_mse requires published gradient targets")
-        return torch.mean(
-            torch.square(
-                context.normalized_predicted_gradients
-                - context.normalized_target_gradients
-            )
+        unknown = set(self.coordinate_weights).difference(context.gradient_names)
+        if unknown:
+            raise ValueError(f"Unknown gradient coordinates in loss: {sorted(unknown)}")
+        errors = torch.square(
+            context.normalized_predicted_gradients
+            - context.normalized_target_gradients
         )
+        if not self.coordinate_weights:
+            return torch.mean(errors)
+        weights = torch.as_tensor(
+            [self.coordinate_weights.get(name, 1.0) for name in context.gradient_names],
+            dtype=errors.dtype, device=errors.device,
+        )
+        if not torch.any(weights > 0):
+            raise ValueError("At least one gradient coordinate must have positive weight")
+        return torch.sum(errors * weights.unsqueeze(0)) / (errors.shape[0] * weights.sum())
 
 
 class _DiagonalHessianMSE:
@@ -126,7 +145,7 @@ def _build_value_mse(specification: dict[str, Any]) -> LossTerm:
 
 @register_loss("gradient_mse")
 def _build_gradient_mse(specification: dict[str, Any]) -> LossTerm:
-    return _GradientMSE()
+    return _GradientMSE(specification)
 
 
 @register_loss("diagonal_hessian_mse")

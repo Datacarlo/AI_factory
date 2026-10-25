@@ -24,6 +24,7 @@ int main() {
         recipe.option_side = "call";
         recipe.product_quote_mode = "ratio_to_initial_forward_bond_price";
         datasets::price_gradients::require_product_quote_convention(recipe);
+        recipe.select_nontrivial_bond = true;
         recipe.barrier_grid_monitoring = true;
         const auto models =
             model::fixed_income::ornstein_uhlenbeck::load_models(recipe.model_input);

@@ -1,6 +1,8 @@
 // First-order CRN checks for a grid-monitored zero-coupon bond barrier call.
 #include "model/fixed_income/ornstein_uhlenbeck/product/zero_coupon_bond_up_and_out_price_gradients.cuh"
 #include "model/fixed_income/ornstein_uhlenbeck/product/zero_coupon_bond_up_and_out.cuh"
+#include "model/fixed_income/cir/parameters.hpp"
+#include "product/zero_coupon_bond_option/parameters.hpp"
 #include "tests/price_gradients/cuda_test_support.cuh"
 
 #include <cuda_runtime.h>
@@ -158,6 +160,44 @@ int main() {
             "Relative bond price-only and gradient paths disagree");
 
     product.barrier=0.5f;
+    const std::vector<Model> selection_models{model};
+    const std::vector<Product> selection_products{product, relative};
+    const auto selected_barriers = fixed_income::strike_filter::accepted_rows(
+        std::span<const Model>(selection_models),
+        std::span<const Product>(selection_products),
+        PriceConstruction::CartesianProduct,
+        pg::TimeConfiguration{1.0f / 504.0f, 2U}, true, true);
+    price_gradient_test::require(
+        selected_barriers == std::vector<std::uint32_t>{1U},
+        "Barrier dataset selection must preserve the original candidate index."
+    );
+    const auto unfiltered_barriers = fixed_income::strike_filter::accepted_rows(
+        std::span<const Model>(selection_models),
+        std::span<const Product>(selection_products),
+        PriceConstruction::CartesianProduct,
+        pg::TimeConfiguration{1.0f / 504.0f, 2U});
+    price_gradient_test::require(unfiltered_barriers.empty(),
+        "Direct pricing must retain a contract with zero payoff.");
+    using CirModel = model::fixed_income::cir::ModelParameters;
+    using BondOption = product::ZeroCouponBondOptionParameters;
+    const std::vector<CirModel> cir_models{{{0.5f, 0.03f, 0.1f}, 0.03f}};
+    const std::vector<BondOption> bond_options{
+        {1.0f, 1.2f, 21U, 252U}, {1.0f, 0.9f, 21U, 252U}};
+    const auto selected_calls = fixed_income::strike_filter::accepted_rows(
+        std::span<const CirModel>(cir_models),
+        std::span<const BondOption>(bond_options),
+        PriceConstruction::CartesianProduct,
+        pg::TimeConfiguration{1.0f / 504.0f, 2U}, true, true);
+    const auto selected_puts = fixed_income::strike_filter::accepted_rows(
+        std::span<const CirModel>(cir_models),
+        std::span<const BondOption>(bond_options),
+        PriceConstruction::CartesianProduct,
+        pg::TimeConfiguration{1.0f / 504.0f, 2U}, false, true);
+    price_gradient_test::require(
+        selected_calls == std::vector<std::uint32_t>{1U}
+            && selected_puts.empty(),
+        "The CIR bond support filter applies to calls, not puts."
+    );
     const auto knocked=evaluate(model,product);
     price_gradient_test::require(
         knocked.price[0] == 0.0f && knocked.price_error[0] == 0.0f,

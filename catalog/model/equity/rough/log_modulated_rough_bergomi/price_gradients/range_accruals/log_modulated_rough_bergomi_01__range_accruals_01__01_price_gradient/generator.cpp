@@ -28,7 +28,7 @@ int main() {
             pg::SensitivityOrders::first, {},
             pg::SensitivityStrategy::node_graph
         };
-        recipe.reconstructible_sensitivities = {{"model.spot", "0", "0"}, {"product.coupon_rate", "(price - exp(-model.risk_free_rate * product.maturity / 252)) / product.coupon_rate", "standard_error / product.coupon_rate"}};
+        recipe.reconstructible_sensitivities = {{"product.coupon_rate", "(price - exp(-model.risk_free_rate * product.maturity / 252)) / product.coupon_rate", "standard_error / product.coupon_rate"}};
         const auto models = binding::load_models(recipe.model_input);
         const auto products = product::load_range_accruals(recipe.product_input);
         using Graph = binding::RangeAccrualNodeGraph<

@@ -1,0 +1,13 @@
+schema_version: 4
+status: complete
+inputs: {}
+output:
+  path: datasets/product/rate_option/rate_options_01.json
+  sha256: f62468ce286b1a5b684a4ef551aa63cd6375517861af2952925ad76ebb1b6caf
+hardware:
+  device: cpu
+  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
+software:
+  cmake: cmake version 3.22.1
+  cxx_compiler: g++-14 (Ubuntu 14.3.0-12ubuntu1~22~ppa2) 14.3.0
+  nlohmann_json: 3.10.5

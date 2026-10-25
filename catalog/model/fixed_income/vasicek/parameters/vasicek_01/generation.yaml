@@ -1,0 +1,13 @@
+schema_version: 4
+status: complete
+inputs: {}
+output:
+  path: datasets/model/fixed_income/vasicek/parameters/vasicek_01.json
+  sha256: 193a3732c42d36f5fb0fbd2cd3d50ec0b0cc2cdad88175404867dada6e4c4dc8
+hardware:
+  device: cpu
+  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
+software:
+  cmake: cmake version 3.22.1
+  cxx_compiler: g++-14 (Ubuntu 14.3.0-12ubuntu1~22~ppa2) 14.3.0
+  nlohmann_json: 3.10.5

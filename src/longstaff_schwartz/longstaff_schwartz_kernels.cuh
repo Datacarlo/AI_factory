@@ -46,11 +46,14 @@ __global__ void prepare_rows_kernel(
     if (batch_price >= batch_size) return;
 
     const std::size_t result_index = result_offset + batch_price;
+    std::size_t seed_row = result_index;
+    if constexpr (requires { inputs.source_row(result_index); })
+        seed_row = inputs.source_row(result_index);
     prepared_rows[batch_price] =
         inputs.template prepare_row<PricingPolicy>(
             result_index,
             time_configuration,
-            philox::make_key(base_seed + result_index),
+            philox::make_key(base_seed + seed_row),
             result_index,
             state_offsets[batch_price],
             paths_per_price

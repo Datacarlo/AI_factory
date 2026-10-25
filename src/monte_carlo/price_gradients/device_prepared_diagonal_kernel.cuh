@@ -198,7 +198,7 @@ __device__ __forceinline__ void kernel_body(
                 &prepared,
                 stencil_outputs
             );
-            if (valid_row) key = philox::make_key(base_seed + row);
+            if (valid_row) key = philox::make_key(base_seed + inputs.source_row(row));
         }
         __syncthreads();
         if (!valid_row) {
