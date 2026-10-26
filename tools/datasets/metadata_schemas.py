@@ -1,4 +1,4 @@
-"""Validate catalogue, campaign, and experiment metadata with shared schemas."""
+"""Validate catalogue and generation-campaign metadata."""
 
 from __future__ import annotations
 
@@ -15,13 +15,10 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 DATASET_SCHEMA_ROOT = ROOT / "tools" / "datasets" / "schemas"
-EXPERIMENT_SCHEMA_ROOT = ROOT / "tools" / "experiments" / "schemas"
 SCHEMA_PATHS = {
     "recipe": DATASET_SCHEMA_ROOT / "recipe.schema.yaml",
     "generation": DATASET_SCHEMA_ROOT / "generation.schema.yaml",
-    "validation": DATASET_SCHEMA_ROOT / "validation.schema.yaml",
     "campaign": DATASET_SCHEMA_ROOT / "campaign.schema.yaml",
-    "experiment": EXPERIMENT_SCHEMA_ROOT / "experiment.schema.yaml",
 }
 
 
@@ -70,7 +67,7 @@ def validate_path(path: Path, kind: str) -> None:
 def catalogue_documents(root: Path) -> Iterable[tuple[str, Path]]:
     """Enumerate every versioned catalogue document governed by a schema."""
 
-    for kind in ("recipe", "generation", "validation"):
+    for kind in ("recipe", "generation"):
         folder = root / "catalog"
         yield from ((kind, path) for path in sorted(folder.rglob(f"{kind}.yaml")))
 
@@ -79,14 +76,12 @@ def validate_repository(
     root: Path,
     *,
     campaigns: Iterable[Path] = (),
-    experiments: Iterable[Path] = (),
 ) -> Counter[str]:
-    """Validate the catalogue plus explicitly selected ignored local documents."""
+    """Validate the catalogue plus explicitly selected generation campaigns."""
 
     counts: Counter[str] = Counter()
     documents = list(catalogue_documents(root))
     documents.extend(("campaign", path) for path in campaigns)
-    documents.extend(("experiment", path) for path in experiments)
     for kind, path in documents:
         validate_path(path, kind)
         counts[kind] += 1
@@ -99,12 +94,10 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=ROOT)
     parser.add_argument("--campaign", type=Path, action="append", default=[])
-    parser.add_argument("--experiment", type=Path, action="append", default=[])
     arguments = parser.parse_args()
     counts = validate_repository(
         arguments.root.resolve(),
         campaigns=arguments.campaign,
-        experiments=arguments.experiment,
     )
     summary = ", ".join(f"{kind}={counts[kind]}" for kind in sorted(counts))
     print(f"Metadata schemas valid: {summary}")

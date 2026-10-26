@@ -15,6 +15,7 @@
 | `learning/` | Python dataset-reader and training contracts |
 
 Keep fixtures with their owning test domain and name tests by subject.
+This suite checks supported behavior and regressions; it does not include performance campaigns or comparisons of experimental implementations.
 The factorized-model loader integration test is skipped when its separately
 distributed factor datasets are unavailable. To inspect and run a configured build:
 

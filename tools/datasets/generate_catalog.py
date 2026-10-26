@@ -687,8 +687,7 @@ def freeze(root: Path, build: Path, run: Path, jobs: list[dict], publish: bool,
                      "tools/datasets/metadata_schemas.py",
                      "tools/datasets/schemas/campaign.schema.yaml",
                      "tools/datasets/schemas/generation.schema.yaml",
-                     "tools/datasets/schemas/recipe.schema.yaml",
-                     "tools/datasets/schemas/validation.schema.yaml")}
+                     "tools/datasets/schemas/recipe.schema.yaml")}
     state["source_archive_sha256"] = snapshot_sources(root, run / "sources.tar.gz")
     if any(job["kind"] in {"prices", "price_gradients"} for job in jobs):
         state["inspector_sha256"] = copy_frozen(build / "inspect_pricing_launch_plan",
