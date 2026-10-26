@@ -196,7 +196,7 @@ class GenerationTests(unittest.TestCase):
                 sum(job["kind"] == kind
                     and "zero_coupon_bond_up_and_out_calls" in job["target"]
                     for job in stochastic),
-                26 if kind == "price_gradients" else 13,
+                26,
             )
 
     def test_price_plan_uses_recipe_path_count(self):

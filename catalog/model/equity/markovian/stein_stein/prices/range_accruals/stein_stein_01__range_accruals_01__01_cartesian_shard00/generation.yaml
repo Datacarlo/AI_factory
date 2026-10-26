@@ -1,0 +1,28 @@
+schema_version: 4
+status: complete
+inputs:
+  model:
+    path: datasets/model/equity/markovian/stein_stein/parameters/stein_stein_01.json
+    sha256: 7f35091735d43789f6a233306df9cce57cffc96b8b732f1a4f00bfcd9a3d5f9f
+  product:
+    path: datasets/product/range_accrual/range_accruals_01_shard00.json
+    sha256: 4410b02bdbed74d7b1a8569c01f482f2d6cfb088883984e11386be5d62638f92
+output:
+  path: datasets/model/equity/markovian/stein_stein/prices/range_accruals/stein_stein_01__range_accruals_01__01_cartesian_shard00.json
+  sha256: 7c73bf391f7a03656ef956ccd04c462b0764a0a12d94f4b1f098bb62f70f05d8
+hardware:
+  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
+  device: gpu
+  name: NVIDIA A100 80GB PCIe
+  uuid: GPU-5102f6b2-92ef-1ca5-849f-649cb3851bf6
+  compute_capability: '8.0'
+  driver_version: 590.48.01
+software:
+  cmake: cmake version 3.31.6
+  cxx_compiler: g++-14 (Debian 14.2.0-19) 14.2.0
+  cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1
+timing:
+  wall_seconds: 3092.861304102931
+  duration: 51 min 32 s 861 ms

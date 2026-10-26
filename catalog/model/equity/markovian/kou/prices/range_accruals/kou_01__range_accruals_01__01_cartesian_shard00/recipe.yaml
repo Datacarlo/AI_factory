@@ -1,0 +1,27 @@
+schema_version: 1
+kind: prices
+dataset_id: kou_01__range_accruals_01__01_cartesian_shard00
+generator: catalog/model/equity/markovian/kou/prices/range_accruals/kou_01__range_accruals_01__01_cartesian_shard00/generator.cpp
+inputs:
+  model: datasets/model/equity/markovian/kou/parameters/kou_01.json
+  product: datasets/product/range_accrual/range_accruals_01_shard00.json
+output:
+  path: datasets/model/equity/markovian/kou/prices/range_accruals/kou_01__range_accruals_01__01_cartesian_shard00.json
+  format: json
+row_count: 100000
+numerical_method:
+  engine: equity_markovian
+outputs:
+- price
+- standard_error
+paths_per_price: 1048576
+seeds:
+  dynamics: 11668827373251330048
+random_number_generator: philox
+product_shard:
+  index: 0
+  total_shards: 10
+  source_dataset: datasets/product/range_accrual/range_accruals_01.json
+  selection: one seeded permutation position per contiguous ten-row block
+  core_products: 90
+  stress_products: 10

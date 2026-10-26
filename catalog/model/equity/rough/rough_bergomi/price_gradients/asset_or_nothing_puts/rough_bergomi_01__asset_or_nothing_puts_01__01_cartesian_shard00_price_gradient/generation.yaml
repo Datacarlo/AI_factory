@@ -1,0 +1,28 @@
+schema_version: 4
+status: complete
+inputs:
+  model:
+    path: datasets/model/equity/rough/rough_bergomi/parameters/rough_bergomi_01.json
+    sha256: dc8640a9dd704a06dfcc4c4c2cb134d423220f41744c363959daeeb840d48372
+  product:
+    path: datasets/product/asset_or_nothing_option/asset_or_nothing_options_01_shard00.json
+    sha256: 0b80ab764b5f790c7b5a51889543063c0c83dfe31553080a75dc7acaff4ff769
+output:
+  path: datasets/model/equity/rough/rough_bergomi/price_gradients/asset_or_nothing_puts/rough_bergomi_01__asset_or_nothing_puts_01__01_cartesian_shard00_price_gradient.json
+  sha256: 89142a4b1857f8422b64a68f8904f1d86edf60f1de597e5be3b2e065dcbef74c
+hardware:
+  cpu_model: Intel(R) Core(TM) Ultra 9 285K
+  device: gpu
+  name: NVIDIA GeForce RTX 5090
+  uuid: GPU-58db2f59-3fa0-ca58-6a4c-4acfbbe0d532
+  compute_capability: '12.0'
+  driver_version: 615.71.09
+software:
+  cmake: cmake version 3.31.6
+  cxx_compiler: g++-14 (Debian 14.2.0-19) 14.2.0
+  cuda_compiler: Cuda compilation tools, release 13.2, V13.2.86
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1
+timing:
+  wall_seconds: 42376.39713249914
+  duration: 11 h 46 min 16 s 397 ms

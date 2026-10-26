@@ -48,6 +48,8 @@ struct Recipe {
     bool select_nontrivial_bond = false;
     std::optional<std::string> product_quote_mode;
     std::vector<ReconstructibleSensitivity> reconstructible_sensitivities;
+    // Evaluate the same central path, but publish only price channels.
+    bool price_only_output = false;
 };
 void require_product_quote_convention(const Recipe&);
 void append_exercise_replay_metadata(

@@ -1,45 +1,84 @@
-// Generated Generate Ornstein-Uhlenbeck European payer-swaption prices.
-#include "fixed_income/swaption_side.cuh"
-#include "model/fixed_income/ornstein_uhlenbeck/product/european_swaption.cuh"
+// Generated fixed-income central-price mirror of ornstein_uhlenbeck_01__european_payer_swaptions_01__01_price_gradient.
+#include "model/fixed_income/ornstein_uhlenbeck/product/european_swaption_price_gradients.cuh"
 #include "model/fixed_income/ornstein_uhlenbeck/dataset.hpp"
 #include "product/european_swaption/dataset.hpp"
-#include "tools/pricing/european_swaption_price_generation.cuh"
-
-#include <filesystem>
+#include "tools/pricing/price_gradients/generation.cuh"
 
 int main() {
     using namespace ai_factory::workbench;
-    namespace ou = model::fixed_income::ornstein_uhlenbeck;
-
-    const std::filesystem::path model_path =
-        "datasets/model/fixed_income/ornstein_uhlenbeck/parameters/ornstein_uhlenbeck_01.json";
-    const std::filesystem::path product_path =
-        "datasets/product/european_swaption/"
-        "european_swaptions_01.json";
-    const auto product_dataset = product::load_european_swaptions(product_path);
-    datasets::generate_regular_european_swaption_prices(
-        model_path,
-        product_path,
-        ou::load_models(model_path),
-        product_dataset,
-        [maximum_payment_count = product_dataset.maximum_payment_count](
-            const offline::cuda_tuning::PricingLaunchPlan& plan, auto... arguments) {
-            ou::launch_ornstein_uhlenbeck_european_swaption_cuda<SwaptionSide::payer>(
-                arguments..., maximum_payment_count,
-                plan.profile.distribution == offline::cuda_tuning::PriceWorkDistribution::block
-                    ? closed_form::WorkDistribution::cooperative : closed_form::WorkDistribution::scalar
-            );
-        },
-        "datasets/model/fixed_income/ornstein_uhlenbeck/prices/european_payer_swaptions/"
-        "ornstein_uhlenbeck_01__european_payer_swaptions_01__01.json",
-        "catalog/model/fixed_income/ornstein_uhlenbeck/prices/european_payer_swaptions/"
-        "ornstein_uhlenbeck_01__european_payer_swaptions_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v1/model/fixed_income/ornstein_uhlenbeck/"
-        "prices/european_payer_swaptions/"
-        "ornstein_uhlenbeck_01__european_payer_swaptions_01__01.json",
-        "Closed-form Jamshidian decomposition into zero-coupon bond puts",
-        "Ornstein-Uhlenbeck European payer swaption",
-        ::ai_factory::workbench::offline::cuda_tuning::PricingIdentity{::ai_factory::workbench::offline::cuda_tuning::PricingFamily::jamshidian, "ornstein_uhlenbeck", "european_swaption", ""},
-        PriceConstruction::Aligned
-    );
+    namespace pg = price_gradients;
+    namespace model_namespace = model::fixed_income::ornstein_uhlenbeck;
+    try {
+        datasets::price_gradients::Recipe recipe{
+            "datasets/model/fixed_income/ornstein_uhlenbeck/parameters/ornstein_uhlenbeck_01.json", "datasets/product/european_swaption/european_swaptions_01.json", "datasets/model/fixed_income/ornstein_uhlenbeck/prices/european_payer_swaptions/ornstein_uhlenbeck_01__european_payer_swaptions_01__01.json", "catalog/model/fixed_income/ornstein_uhlenbeck/prices/european_payer_swaptions/ornstein_uhlenbeck_01__european_payer_swaptions_01__01/generation.yaml",
+            "catalog/model/fixed_income/ornstein_uhlenbeck/prices/european_payer_swaptions/ornstein_uhlenbeck_01__european_payer_swaptions_01__01/recipe.yaml", PriceConstruction::Aligned,
+            {{
+        {"model.mean_reversion", {0.005, pg::BumpScale::relative}},
+        {"model.volatility", {0.005, pg::BumpScale::relative}},
+        {"model.initial_state", {0.0005, pg::BumpScale::absolute}},
+        {"product.strike", {0.0005, pg::BumpScale::absolute}},
+        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
+            }}, {1.0f / 504.0f, 2U}, true
+        };
+        recipe.price_only_output = true;
+        recipe.option_side = "payer";
+        recipe.product_quote_mode = "additive_to_initial_par_swap_rate";
+        datasets::price_gradients::require_product_quote_convention(recipe);
+        const auto models =
+            model::fixed_income::ornstein_uhlenbeck::load_models(recipe.model_input);
+        const auto product_dataset =
+            product::load_european_swaptions(recipe.product_input);
+        const auto& products = product_dataset.products;
+        const auto prepare = [](
+            const auto& model_rows,
+            const auto& product_rows,
+            PriceConstruction construction,
+            pg::TimeConfiguration time,
+            const pg::PriceGradientConfiguration& configuration
+        ) {
+            return model_namespace::
+                prepare_ornstein_uhlenbeck_european_swaption_price_gradients(
+                    model_rows, product_rows,
+                    construction, time, configuration
+                );
+        };
+        const auto launch = [](
+            const auto& plan,
+            auto inputs,
+            auto stencils,
+            const auto& configuration,
+            auto outputs
+        ) {
+            return model_namespace::
+                launch_ornstein_uhlenbeck_european_swaption_price_gradients_cuda<
+                    SwaptionSide::payer
+                >(
+                    plan, inputs, stencils, configuration, outputs,
+                    closed_form::WorkDistribution::cooperative
+                );
+        };
+        return offline::pricing::price_gradients::execute_dataset<
+            false,
+            pg::SensitivityOrders::first
+        >(
+            recipe,
+            {
+                offline::cuda_tuning::PricingFamily::jamshidian,
+                "ornstein_uhlenbeck",
+                "european_swaption",
+                "",
+            },
+            0ULL,
+            models,
+            products,
+            prepare,
+            launch,
+            0U,
+            model_namespace::
+                prepare_european_swaption_price_gradient_stencils_cuda
+        );
+    } catch (const std::exception& error) {
+        std::cerr << error.what() << '\n';
+        return 1;
+    }
 }

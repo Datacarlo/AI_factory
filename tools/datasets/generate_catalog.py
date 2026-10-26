@@ -662,13 +662,21 @@ def freeze(root: Path, build: Path, run: Path, jobs: list[dict], publish: bool,
     if set(input_overrides) - declared_inputs:
         raise ValueError("Input override is not used by the selected generators")
     require_current_build(root, build, jobs, input_overrides)
-    revision = subprocess.check_output(
-        ["git", "rev-parse", "HEAD"], cwd=root, text=True
-    ).strip()
-    worktree = subprocess.check_output(
-        ["git", "status", "--porcelain"], cwd=root, text=True
-    )
-    if publish and worktree:
+    try:
+        revision = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=root, text=True,
+            stderr=subprocess.DEVNULL,
+        ).strip()
+        worktree = subprocess.check_output(
+            ["git", "status", "--porcelain"], cwd=root, text=True,
+            stderr=subprocess.DEVNULL,
+        )
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        # PPTI campaigns run from source copies without Git metadata. The
+        # frozen source archive and controller hashes still identify this run.
+        revision = None
+        worktree = None
+    if publish and (revision is None or worktree):
         raise ValueError(
             "Publishing requires a clean Git worktree; commit the exact sources first"
         )

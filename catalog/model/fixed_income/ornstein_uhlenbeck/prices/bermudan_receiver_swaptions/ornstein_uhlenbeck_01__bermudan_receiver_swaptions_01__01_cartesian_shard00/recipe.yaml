@@ -1,0 +1,80 @@
+schema_version: 1
+kind: prices
+dataset_id: ornstein_uhlenbeck_01__bermudan_receiver_swaptions_01__01_cartesian_shard00
+generator: catalog/model/fixed_income/ornstein_uhlenbeck/prices/bermudan_receiver_swaptions/ornstein_uhlenbeck_01__bermudan_receiver_swaptions_01__01_cartesian_shard00/generator.cpp
+inputs:
+  model: datasets/model/fixed_income/ornstein_uhlenbeck/parameters/ornstein_uhlenbeck_01.json
+  product: datasets/product/bermudan_swaption/bermudan_swaptions_01_shard00.json
+output:
+  path: datasets/model/fixed_income/ornstein_uhlenbeck/prices/bermudan_receiver_swaptions/ornstein_uhlenbeck_01__bermudan_receiver_swaptions_01__01_cartesian_shard00.json
+  format: json
+row_count: 100000
+paths_per_price: 1048576
+quote_convention:
+  strike:
+    mode: additive_to_initial_first_exercise_par_swap_rate
+    unit: annualized_decimal_rate
+    effective_level: strike = initial_first_exercise_par_swap_rate + strike_spread
+  reference_policy: Resolved at the unbumped model and initial curve; absolute contract
+    levels stay fixed for model and curve bumps.
+row_selection:
+  method: resolved_rate_strike_above_minimum
+  minimum_annualized_decimal_rate: 1.0e-05
+  reference: initial_unbumped_model_and_curve
+  order: stable_candidate_index
+option_side: receiver
+numerical_method:
+  engine: fixed_income_lsm
+  algorithm: longstaff_schwartz
+  regression:
+    basis: hermite_probabilists_one_factor_degree_3
+    feature_normalization: central_lsm_row
+    solver: ridge_regularized_fp64_normal_equations_cholesky
+    refinement: none
+exercise_replay: frozen_regression_policy
+standard_error_scope: paired path dispersion conditional on the central in-sample
+  LSM fit; excludes fit variability, policy bias, stencil bias and discretization
+  bias
+fit_and_valuation_paths: same paths
+seeds:
+  dynamics: 11668829129892954112
+random_number_generator: philox
+time_grid:
+  steps_per_year: 504
+  simulation_steps_per_day: 2
+  delta_t: 1 / 504
+product_shard:
+  index: 0
+  total_shards: 10
+  source_dataset: datasets/product/bermudan_swaption/bermudan_swaptions_01.json
+  selection: one seeded permutation position per contiguous ten-row block
+  core_products: 90
+  stress_products: 10
+internal_sensitivity_plan:
+  method: finite_difference_shared_innovations
+  parameters:
+  - parameter: model.mean_reversion
+    displacement: 0.005
+    scale: relative
+    boundary: central_then_one_sided_order2
+  - parameter: model.volatility
+    displacement: 0.005
+    scale: relative
+    boundary: central_then_one_sided_order2
+  - parameter: model.initial_state
+    displacement: 0.0005
+    scale: absolute
+    boundary: central_then_one_sided_order2
+  - parameter: product.strike
+    displacement: 0.0005
+    scale: absolute
+    boundary: central_then_one_sided_order2
+  bump_rule: h = displacement (absolute) or displacement * abs(x) (relative); centered
+    when valid, otherwise second-order one-sided.
+central_price_engine:
+  gradient_dataset_id: ornstein_uhlenbeck_01__bermudan_receiver_swaptions_01__01_cartesian_shard00_price_gradient_frozen_policy
+  output_channels:
+  - price
+  - standard_error
+  calculation: identical central evaluation, candidate rows, seeds and replay as the
+    first-order price-gradient generator

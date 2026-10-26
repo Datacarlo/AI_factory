@@ -109,7 +109,7 @@ def main() -> int:
     )
     if arguments.run_dir is None:
         stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-        run_directory = Path("artifacts/learning/runs") / f"{prepared.schema.database_id}-{config['method']}-{stamp}"
+        run_directory = Path("work/learning/runs") / f"{prepared.schema.database_id}-{config['method']}-{stamp}"
     else:
         run_directory = arguments.run_dir
     result = train_experiment(

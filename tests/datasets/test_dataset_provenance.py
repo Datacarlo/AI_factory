@@ -181,6 +181,26 @@ class ProvenanceTests(unittest.TestCase):
         self.generation["output"]["sha256"] = digest(self.dataset)
         self.assertEqual(self.assess()["status"], "invalid")
 
+    def test_reconstructed_gradient_is_declared_and_present(self):
+        self.recipe["kind"] = "price_gradients"
+        self.recipe["sensitivity"] = {
+            "parameters": [{"parameter": "model.variance"}],
+            "reconstructible_from_price": [
+                {"parameter": "model.spot", "formula": "price / model.spot"}],
+        }
+        row = self.document["results"][0]
+        row["gradients"] = {"model.variance": .2, "model.spot": 1.25}
+        row["gradient_standard_errors"] = {
+            "model.variance": .03, "model.spot": .01}
+        self.save_dataset()
+        self.generation["output"]["sha256"] = digest(self.dataset)
+        self.assertEqual(self.assess()["status"], "compatible")
+        row["gradients"].pop("model.spot")
+        row["gradient_standard_errors"].pop("model.spot")
+        self.save_dataset()
+        self.generation["output"]["sha256"] = digest(self.dataset)
+        self.assertEqual(self.assess()["status"], "invalid")
+
     def test_legacy_receipt_does_not_lock_recipe_or_execution(self):
         old = {**self.native, "recipe": {"path": self.recipe_rel,
                                           "sha256": "a" * 64},
@@ -256,6 +276,25 @@ class ProvenanceTests(unittest.TestCase):
         self.assertEqual(checksum, digest(archive))
         with tarfile.open(archive) as snapshot:
             self.assertEqual(snapshot.extractfile("src/changed.cuh").read(), source.read_bytes())
+
+    def test_source_archive_from_copy_without_git(self):
+        (self.root / "src").mkdir()
+        (self.root / "src/engine.cuh").write_text("// copied source\n")
+        cache = self.root / "tools/__pycache__"
+        cache.mkdir(parents=True)
+        (self.root / "tools/controller.py").write_text("# controller\n")
+        (cache / "controller.pyc").write_bytes(b"temporary bytecode")
+        (self.root / "CMakeLists.txt").write_text("# build configuration\n")
+        archive = self.root / "sources-no-git.tar.gz"
+        with patch.object(
+            provenance.subprocess, "check_output",
+            side_effect=provenance.subprocess.CalledProcessError(128, "git"),
+        ):
+            provenance.snapshot_sources(self.root, archive)
+        with tarfile.open(archive) as snapshot:
+            self.assertEqual(snapshot.getnames(), [
+                "CMakeLists.txt", "src/engine.cuh", "tools/controller.py",
+            ])
 
     def test_cli_is_read_only_and_does_not_need_build(self):
         args = ["checker", "--recipe", str(self.recipe_path),

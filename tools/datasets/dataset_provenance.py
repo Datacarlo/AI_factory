@@ -53,10 +53,23 @@ def snapshot_sources(root: Path, destination: Path) -> str:
     This broad archive is provenance, never a semantic-compatibility fingerprint.
     SDKs, drivers and external libraries are not bundled.
     """
-    names = subprocess.check_output([
-        "git", "ls-files", "-z", "--cached", "--others", "--exclude-standard", "--",
-        "src", "tools", "cmake", "CMakeLists.txt", "CMakePresets.json",
-    ], cwd=root).decode().split("\0")
+    try:
+        names = subprocess.check_output([
+            "git", "ls-files", "-z", "--cached", "--others", "--exclude-standard", "--",
+            "src", "tools", "cmake", "CMakeLists.txt", "CMakePresets.json",
+        ], cwd=root, stderr=subprocess.DEVNULL).decode().split("\0")
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        # Source copies on the PPTI omit .git. Snapshot the maintained tree
+        # directly while excluding Python bytecode created during this run.
+        names = []
+        for directory in ("src", "tools", "cmake"):
+            source = root / directory
+            if source.is_dir():
+                names.extend(str(path.relative_to(root)) for path in source.rglob("*")
+                             if path.is_file() and "__pycache__" not in path.parts
+                             and path.suffix != ".pyc")
+        names.extend(name for name in ("CMakeLists.txt", "CMakePresets.json")
+                     if (root / name).is_file())
     with tarfile.open(destination, "x:gz") as archive:
         for name in sorted(set(names) - {""}):
             path = contained_path(root, name)
@@ -115,6 +128,10 @@ def software_versions(build: Path) -> dict[str, str]:
         "cxx_compiler": _version([cxx, "--version"]) if cxx else "unavailable",
         "cuda_compiler": _version([nvcc, "--version"]) if nvcc else "unavailable",
     }
+    cuda_architectures = (cache.get("CUDA_WORKBENCH_ARCHITECTURES")
+                          or cache.get("CMAKE_CUDA_ARCHITECTURES"))
+    if cuda_architectures:
+        versions["cuda_target_architectures"] = cuda_architectures
     json_config = Path(cache.get("nlohmann_json_DIR", "/nonexistent")) / "nlohmann_jsonConfigVersion.cmake"
     if json_config.is_file():
         match = re.search(r'PACKAGE_VERSION\s+"([^"]+)"', json_config.read_text())
@@ -281,6 +298,18 @@ def _check_published_json(recipe: dict, generation: dict, document: dict) -> Non
                for order in orders) or len(set(orders)) != len(orders):
             raise ValueError("Invalid derivative orders in recipe")
         first = _selected_names(sensitivity, "first", names, "first" in orders)
+        reconstructed = sensitivity.get("reconstructible_from_price", [])
+        if reconstructed:
+            if "first" not in orders or not isinstance(reconstructed, list):
+                raise ValueError("Analytic gradients require first-order output")
+            derived = [item.get("parameter") for item in reconstructed
+                       if isinstance(item, dict)]
+            if (len(derived) != len(reconstructed)
+                    or any(not isinstance(name, str) or not name for name in derived)
+                    or len(set(derived)) != len(derived)
+                    or set(derived) & set(names)):
+                raise ValueError("Invalid analytic gradient declaration")
+            first = first + derived
         diagonal = _selected_names(sensitivity, "diagonal_second", names,
                                    "diagonal_second" in orders)
         mixed = ([a + "|" + b for a, b in _mixed_pairs(sensitivity, names)]

@@ -28,4 +28,4 @@ python3 -m learning.deep_pricing.train --config /path/to/training-config.yaml
 python3 -m learning.deep_pricing.compare /path/to/run-a /path/to/run-b
 ```
 
-Training outputs and caches should be stored outside this source tree or in a Git-ignored directory. The source code under `learning/` contains no bundled generated datasets.
+By default, training runs and prepared caches are written under the Git-ignored `work/learning/` directory. Explicit run and cache paths can still be supplied. The source code under `learning/` contains no bundled generated datasets.

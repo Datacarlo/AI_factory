@@ -1,36 +1,89 @@
-// Generated Hull-White/Nelson-Siegel grid-monitored zero-coupon bond barrier recipe.
-#include "model/fixed_income/hull_white/product/nelson_siegel/zero_coupon_bond_up_and_out.cuh"
+// Generated fixed-income central-price mirror of hull_white_01__nelson_siegel_01__zero_coupon_bond_up_and_out_calls_01__01_price_gradient.
+#include "model/fixed_income/hull_white/product/nelson_siegel/zero_coupon_bond_up_and_out_price_gradients.cuh"
 #include "model/fixed_income/hull_white/dataset.hpp"
 #include "curve/nelson_siegel/dataset.hpp"
 #include "product/zero_coupon_bond_up_and_out/dataset.hpp"
-#include "tools/pricing/zero_coupon_bond_up_and_out_generation.cuh"
+#include "tools/pricing/price_gradients/generation.cuh"
 
 int main() {
     using namespace ai_factory::workbench;
-    namespace rates = model::fixed_income::hull_white;
-    namespace fitted = rates::nelson_siegel;
-    const datasets::ZeroCouponBondUpAndOutRecipe recipe{
-        "datasets/model/fixed_income/hull_white/parameters/hull_white_01.json",
-        "datasets/product/zero_coupon_bond_up_and_out/zero_coupon_bond_up_and_outs_01.json",
-        "datasets/model/fixed_income/hull_white/prices/nelson_siegel/zero_coupon_bond_up_and_out_calls/hull_white_01__nelson_siegel_01__zero_coupon_bond_up_and_out_calls_01__01.json", "catalog/model/fixed_income/hull_white/prices/nelson_siegel/zero_coupon_bond_up_and_out_calls/hull_white_01__nelson_siegel_01__zero_coupon_bond_up_and_out_calls_01__01/generation.yaml", "https://datasets.ai-factory.example/v2/model/fixed_income/hull_white/prices/nelson_siegel/zero_coupon_bond_up_and_out_calls/hull_white_01__nelson_siegel_01__zero_coupon_bond_up_and_out_calls_01__01.json",
-        11668829288806744064ULL, ::ai_factory::workbench::offline::cuda_tuning::PricingIdentity{::ai_factory::workbench::offline::cuda_tuning::PricingFamily::fixed_income_mc, "hull_white", "zero_coupon_bond_up_and_out", "nelson_siegel"}, PriceConstruction::Aligned,
-        1'048'576U, 1U, "datasets/curve/nelson_siegel/nelson_siegel_01.json",
-        "exact joint Gaussian factor and stochastic rate-integral transitions",
-    };
-    const auto models = rates::load_models(recipe.model_dataset_path);
-    const auto curves = curve::nelson_siegel::load_curves(recipe.curve_dataset_path);
-    const auto products = product::load_zero_coupon_bond_up_and_outs(recipe.product_dataset_path);
-    const auto count = price_row_count(models.size(), curves.size(), products.size(), recipe.construction);
-    datasets::generate_zero_coupon_bond_up_and_out_prices(
-        recipe, offline::cuda::inputs(models, curves, products), count,
-        [&](auto& execution, std::size_t offset, std::size_t batch, std::size_t paths,
-            const offline::cuda_tuning::PricingLaunchPlan& plan) {
-            fitted::launch_hull_white_nelson_siegel_zero_coupon_bond_up_and_out_cuda(
-                execution.template input<0U>(), models.size(),
-                execution.template input<1U>(), curves.size(), products.data(),
-                execution.template input<2U>(), products.size(), recipe.construction,
-                count, offset, batch, paths, recipe.simulation_steps_per_day,
-                plan.profile.threads_per_block, plan.blocks_for(batch),
-                recipe.seed, execution.prices(), execution.standard_errors());
-        });
+    namespace pg = price_gradients;
+    namespace model_namespace = model::fixed_income::hull_white::nelson_siegel;
+    try {
+        datasets::price_gradients::Recipe recipe{
+            "datasets/model/fixed_income/hull_white/parameters/hull_white_01.json", "datasets/product/zero_coupon_bond_up_and_out/zero_coupon_bond_up_and_outs_01.json", "datasets/model/fixed_income/hull_white/prices/nelson_siegel/zero_coupon_bond_up_and_out_calls/hull_white_01__nelson_siegel_01__zero_coupon_bond_up_and_out_calls_01__01.json", "catalog/model/fixed_income/hull_white/prices/nelson_siegel/zero_coupon_bond_up_and_out_calls/hull_white_01__nelson_siegel_01__zero_coupon_bond_up_and_out_calls_01__01/generation.yaml",
+            "catalog/model/fixed_income/hull_white/prices/nelson_siegel/zero_coupon_bond_up_and_out_calls/hull_white_01__nelson_siegel_01__zero_coupon_bond_up_and_out_calls_01__01/recipe.yaml", PriceConstruction::Aligned,
+            {{
+        {"model.mean_reversion", {0.005, pg::BumpScale::relative}},
+        {"model.volatility", {0.005, pg::BumpScale::relative}},
+        {"curve.beta0", {0.0005, pg::BumpScale::absolute}},
+        {"curve.beta1", {0.0005, pg::BumpScale::absolute}},
+        {"curve.beta2", {0.0005, pg::BumpScale::absolute}},
+        {"curve.tau", {0.005, pg::BumpScale::relative}},
+        {"product.strike", {0.005, pg::BumpScale::relative}},
+        {"product.barrier", {0.005, pg::BumpScale::relative}},
+        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
+            }}, {1.0f / 504.0f, 2U}, true
+        };
+        recipe.price_only_output = true;
+        recipe.option_side = "call";
+        recipe.product_quote_mode = "ratio_to_initial_forward_bond_price";
+        datasets::price_gradients::require_product_quote_convention(recipe);
+        recipe.select_nontrivial_bond = true;
+        recipe.barrier_grid_monitoring = true;
+        recipe.curve_input = "datasets/curve/nelson_siegel/nelson_siegel_01.json";
+        const auto models =
+            model::fixed_income::hull_white::load_models(recipe.model_input);
+        const auto curves = curve::nelson_siegel::load_curves(recipe.curve_input);
+        const auto products =
+            product::load_zero_coupon_bond_up_and_outs(recipe.product_input);
+        const auto prepare = [](
+            const auto& model_rows,
+            const auto& curve_rows, const auto& product_rows,
+            PriceConstruction construction,
+            pg::TimeConfiguration time,
+            const pg::PriceGradientConfiguration& configuration
+        ) {
+            return model_namespace::
+                prepare_hull_white_nelson_siegel_zero_coupon_bond_up_and_out_price_gradients(
+                    model_rows, curve_rows, product_rows,
+                    construction, time, configuration
+                );
+        };
+        const auto launch = [](
+            const auto& plan,
+            auto inputs,
+            auto stencils,
+            const auto& configuration,
+            auto outputs
+        ) {
+            model_namespace::
+                launch_hull_white_nelson_siegel_zero_coupon_bond_up_and_out_price_gradients_cuda(
+                    plan, inputs, stencils, configuration, outputs
+                );
+        };
+        return offline::pricing::price_gradients::execute_curve_dataset<
+            true,
+            pg::SensitivityOrders::first
+        >(
+            recipe,
+            {
+                offline::cuda_tuning::PricingFamily::fixed_income_mc,
+                "hull_white",
+                "zero_coupon_bond_up_and_out",
+                "nelson_siegel",
+            },
+            11668829288806744064ULL,
+            models,
+            curves, products,
+            prepare,
+            launch,
+            offline::cuda_tuning::kProductionPathsPerPrice,
+            model_namespace::
+                prepare_zero_coupon_bond_up_and_out_price_gradient_stencils_cuda
+        );
+    } catch (const std::exception& error) {
+        std::cerr << error.what() << '\n';
+        return 1;
+    }
 }

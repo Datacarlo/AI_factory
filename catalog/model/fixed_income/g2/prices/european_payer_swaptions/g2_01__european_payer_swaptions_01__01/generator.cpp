@@ -1,37 +1,87 @@
-// Generated G2 European payer swaption MC recipe.
-#include "model/fixed_income/g2/product/european_swaption.cuh"
+// Generated fixed-income central-price mirror of g2_01__european_payer_swaptions_01__01_price_gradient.
+#include "model/fixed_income/g2/product/european_swaption_price_gradients.cuh"
 #include "model/fixed_income/g2/dataset.hpp"
 #include "product/european_swaption/dataset.hpp"
-#include "tools/pricing/european_swaption_monte_carlo_generation.cuh"
+#include "tools/pricing/price_gradients/generation.cuh"
 
 int main() {
     using namespace ai_factory::workbench;
-    namespace rates = model::fixed_income::g2;
-    const datasets::EuropeanSwaptionMonteCarloRecipe recipe{
-        "datasets/model/fixed_income/g2/parameters/g2_01.json",
-        "",
-        "datasets/product/european_swaption/european_swaptions_01.json",
-        "datasets/model/fixed_income/g2/prices/european_payer_swaptions/g2_01__european_payer_swaptions_01__01.json",
-        "catalog/model/fixed_income/g2/prices/european_payer_swaptions/g2_01__european_payer_swaptions_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/fixed_income/g2/prices/european_payer_swaptions/g2_01__european_payer_swaptions_01__01.json",
-        11668829159957725184ULL,
-        ::ai_factory::workbench::offline::cuda_tuning::PricingIdentity{::ai_factory::workbench::offline::cuda_tuning::PricingFamily::fixed_income_mc, "g2", "european_swaption", ""},
-        PriceConstruction::Aligned,
-    };
-    const auto models = rates::load_models(recipe.model_dataset_path);
-    const auto product_dataset = product::load_european_swaptions(recipe.product_dataset_path);
-    const auto& products = product_dataset.products;
-    const auto count = price_row_count(models.size(), products.size(), recipe.construction);
-    datasets::generate_european_swaption_monte_carlo_prices(
-        recipe, offline::cuda::inputs(models, products), count,
-        [&](auto& execution, std::size_t offset, std::size_t batch, std::size_t paths,
-            const offline::cuda_tuning::PricingLaunchPlan& plan) {
-            rates::launch_g2_european_swaption_cuda<SwaptionSide::payer>(
-                execution.template input<0U>(), models.size(),
-                products.data(), execution.template input<1U>(), products.size(),
-                recipe.construction, count, offset, batch, paths, 1.0f / 252.0f,
-                plan.profile.threads_per_block, plan.blocks_for(batch), recipe.seed, execution.prices(), execution.standard_errors()
-            );
-        }
-    );
+    namespace pg = price_gradients;
+    namespace model_namespace = model::fixed_income::g2;
+    try {
+        datasets::price_gradients::Recipe recipe{
+            "datasets/model/fixed_income/g2/parameters/g2_01.json", "datasets/product/european_swaption/european_swaptions_01.json", "datasets/model/fixed_income/g2/prices/european_payer_swaptions/g2_01__european_payer_swaptions_01__01.json", "catalog/model/fixed_income/g2/prices/european_payer_swaptions/g2_01__european_payer_swaptions_01__01/generation.yaml",
+            "catalog/model/fixed_income/g2/prices/european_payer_swaptions/g2_01__european_payer_swaptions_01__01/recipe.yaml", PriceConstruction::Aligned,
+            {{
+        {"model.mean_reversion_x", {0.005, pg::BumpScale::relative}},
+        {"model.volatility_x", {0.005, pg::BumpScale::relative}},
+        {"model.mean_reversion_y", {0.005, pg::BumpScale::relative}},
+        {"model.volatility_y", {0.005, pg::BumpScale::relative}},
+        {"model.correlation", {0.002, pg::BumpScale::absolute}},
+        {"model.initial_state_x", {0.0005, pg::BumpScale::absolute}},
+        {"model.initial_state_y", {0.0005, pg::BumpScale::absolute}},
+        {"product.strike", {0.0005, pg::BumpScale::absolute}},
+        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
+            }}, {1.0f / 504.0f, 2U}, true
+        };
+        recipe.price_only_output = true;
+        recipe.option_side = "payer";
+        recipe.product_quote_mode = "additive_to_initial_par_swap_rate";
+        datasets::price_gradients::require_product_quote_convention(recipe);
+        const auto models =
+            model::fixed_income::g2::load_models(recipe.model_input);
+        const auto product_dataset =
+            product::load_european_swaptions(recipe.product_input);
+        const auto& products = product_dataset.products;
+        const auto prepare = [](
+            const auto& model_rows,
+            const auto& product_rows,
+            PriceConstruction construction,
+            pg::TimeConfiguration time,
+            const pg::PriceGradientConfiguration& configuration
+        ) {
+            return model_namespace::
+                prepare_g2_european_swaption_price_gradients(
+                    model_rows, product_rows,
+                    construction, time, configuration
+                );
+        };
+        const auto launch = [](
+            const auto& plan,
+            auto inputs,
+            auto stencils,
+            const auto& configuration,
+            auto outputs
+        ) {
+            return model_namespace::
+                launch_g2_european_swaption_price_gradients_cuda<
+                    SwaptionSide::payer
+                >(
+                    plan, inputs, stencils, configuration, outputs
+                );
+        };
+        return offline::pricing::price_gradients::execute_dataset<
+            true,
+            pg::SensitivityOrders::first
+        >(
+            recipe,
+            {
+                offline::cuda_tuning::PricingFamily::fixed_income_mc,
+                "g2",
+                "european_swaption",
+                "",
+            },
+            11668829159957725184ULL,
+            models,
+            products,
+            prepare,
+            launch,
+            offline::cuda_tuning::kProductionPathsPerPrice,
+            model_namespace::
+                prepare_european_swaption_price_gradient_stencils_cuda
+        );
+    } catch (const std::exception& error) {
+        std::cerr << error.what() << '\n';
+        return 1;
+    }
 }

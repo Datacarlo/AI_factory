@@ -125,8 +125,12 @@ function(add_price_generator target source)
         CUDA_STANDARD 20
         CUDA_STANDARD_REQUIRED YES
     )
-    if(source MATCHES "/price_gradients/")
+    file(READ "${CMAKE_CURRENT_SOURCE_DIR}/${source}" generator_source_text)
+    if(source MATCHES "/price_gradients/"
+        OR generator_source_text MATCHES "tools/pricing/price_gradients/generation.cuh")
         target_link_libraries(${target} PRIVATE ai_factory_price_gradient_dataset)
+    endif()
+    if(source MATCHES "/price_gradients/")
         if(NOT AI_FACTORY_REGISTERING_LOCAL_EXPERIMENTS)
             add_dependencies(price_gradient_generators ${target})
         endif()

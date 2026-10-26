@@ -1722,6 +1722,78 @@ def generate_price_recipe_metadata(output_root: Path) -> list[Path]:
     return generated
 
 
+
+def generate_fixed_income_price_central_mirrors(output_root: Path) -> list[Path]:
+    """Use the corresponding first-order engine for bitwise central-price parity.
+
+    Fixed-income Cartesian gradients may reject resolved contracts. Reusing
+    their plan preserves the candidate order, Philox keys and frozen Bermudan
+    replay. The price recipe writes only the central channels.
+    """
+    generated: list[Path] = []
+    sources = set()
+    for gradient in ALL_PRICE_GRADIENT_DATASET_SPECS:
+        if (gradient.asset_class != "fixed_income"
+                or gradient.sensitivity_orders != ("first",)):
+            continue
+        if gradient.product == "bermudan_swaption":
+            if gradient.exercise_replay != "frozen_regression_policy":
+                continue
+        elif gradient.exercise_replay is not None:
+            continue
+        price = PRICE_GRADIENT_SOURCE_BY_GENERATOR[gradient.generator_path]
+        if price.generator_path in sources:
+            raise ValueError(f"Duplicate fixed-income price mirror: {price.generator_path}")
+        sources.add(price.generator_path)
+        source = output_root / layout_relative(gradient.generator_path)
+        destination = output_root / layout_relative(price.generator_path)
+        body = source.read_text()
+        for old, new in (
+            (gradient.dataset_path, price.dataset_path),
+            (gradient.generation_yaml_path, price.generation_yaml_path),
+        ):
+            if body.count(old) != 1:
+                raise ValueError(f"Expected one gradient output path in {source}: {old}")
+            body = body.replace(old, new)
+        start = body.index("datasets::price_gradients::Recipe recipe{")
+        marker = "\n        };"
+        end = body.index(marker, start) + len(marker)
+        body = body[:end] + "\n        recipe.price_only_output = true;" + body[end:]
+        first_line, newline, remainder = body.partition("\n")
+        if not first_line.startswith("// Generated ") or not newline:
+            raise ValueError(f"Unexpected gradient entry point: {source}")
+        _write_generated(
+            destination,
+            f"// Generated fixed-income central-price mirror of {gradient.dataset_id}.\n"
+            + remainder,
+        )
+        generated.append(destination)
+
+        source_recipe = output_root / layout_relative(gradient.recipe_yaml_path)
+        destination_recipe = output_root / layout_relative(price.recipe_yaml_path)
+        metadata = yaml.safe_load(source_recipe.read_text())
+        metadata["kind"] = "prices"
+        metadata["dataset_id"] = price.dataset_id
+        metadata["generator"] = price.generator_path
+        metadata["output"]["path"] = price.dataset_path
+        internal = metadata.pop("sensitivity", None)
+        if internal is not None:
+            internal.pop("source_price_recipe", None)
+            metadata["internal_sensitivity_plan"] = internal
+        metadata["central_price_engine"] = {
+            "gradient_dataset_id": gradient.dataset_id,
+            "output_channels": ["price", "standard_error"]
+                if gradient.engine != "fixed_income_closed_form"
+                else ["price"],
+            "calculation": "identical central evaluation, candidate rows, seeds and replay as the first-order price-gradient generator",
+        }
+        _write_generated(destination_recipe, yaml.safe_dump(
+            metadata, sort_keys=False, allow_unicode=True
+        ))
+        generated.append(destination_recipe)
+    return generated
+
+
 def cmake_list(name: str, values: list[str]) -> str:
     body = "\n".join(f"    {value}" for value in values)
     return f"set({name}\n{body}\n)\n"
@@ -2218,6 +2290,7 @@ def main() -> int:
         ))
         generated.extend(generate_price_recipe_metadata(arguments.output))
         apply_product_shard_inputs(arguments.output)
+        generated.extend(generate_fixed_income_price_central_mirrors(arguments.output))
     if arguments.family in ("samples", "all"):
         generated.extend(generate_samples(arguments.output))
     if arguments.family == "all":

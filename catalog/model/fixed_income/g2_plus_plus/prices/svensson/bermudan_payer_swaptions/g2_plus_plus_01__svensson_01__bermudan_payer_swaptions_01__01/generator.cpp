@@ -1,36 +1,94 @@
-// Generated G2++/Svensson Bermudan-payer-swaption price recipe.
-#include "model/fixed_income/g2_plus_plus/product/svensson/bermudan_swaption.cuh"
+// Generated fixed-income central-price mirror of g2_plus_plus_01__svensson_01__bermudan_payer_swaptions_01__01_price_gradient_frozen_policy.
+#include "model/fixed_income/g2_plus_plus/product/svensson/bermudan_swaption_price_gradients.cuh"
 #include "model/fixed_income/g2_plus_plus/dataset.hpp"
 #include "curve/svensson/dataset.hpp"
 #include "product/bermudan_swaption/dataset.hpp"
-#include "tools/pricing/bermudan_swaption_price_generation.cuh"
+#include "tools/pricing/price_gradients/generation.cuh"
 
 int main() {
     using namespace ai_factory::workbench;
-    namespace rates = model::fixed_income::g2_plus_plus;
-    namespace fitted = rates::svensson;
-    const std::filesystem::path model_path =
-        "datasets/model/fixed_income/g2_plus_plus/parameters/g2_plus_plus_01.json";
-    const std::filesystem::path curve_path =
-        "datasets/curve/svensson/svensson_01.json";
-    const std::filesystem::path product_path =
-        "datasets/product/bermudan_swaption/bermudan_swaptions_01.json";
-    const auto models = rates::load_models(model_path);
-    const auto curves = curve::svensson::load_curves(curve_path);
-    const auto products = product::load_bermudan_swaptions(product_path);
-    constexpr std::size_t paths =
-        offline::cuda_tuning::kProductionPathsPerPrice;
-    constexpr std::uint64_t seed = 11668829082648313856ULL;
-    auto configuration = datasets::make_fitted_bermudan_swaption_generation_configuration(
-        "g2_plus_plus", "svensson", "payer", paths, seed,
-        "Exact fitted two-factor Gaussian joint transition + Longstaff-Schwartz",
-        "two-factor Hermite degree 2", "two standardized rate factors",
-        PriceConstruction::Aligned
-    );
-    datasets::generate_exact_fitted_bermudan_swaption_prices(
-        model_path, curve_path, product_path, models, curves, products,
-        &fitted::launch_g2_plus_plus_svensson_bermudan_swaption_cuda<
-            SwaptionSide::payer>,
-        configuration
-    );
+    namespace lspg = longstaff_schwartz::price_gradients;
+    namespace pg = price_gradients;
+    namespace model_namespace = model::fixed_income::g2_plus_plus::svensson;
+    try {
+        datasets::price_gradients::Recipe recipe{
+            "datasets/model/fixed_income/g2_plus_plus/parameters/g2_plus_plus_01.json", "datasets/product/bermudan_swaption/bermudan_swaptions_01.json", "datasets/model/fixed_income/g2_plus_plus/prices/svensson/bermudan_payer_swaptions/g2_plus_plus_01__svensson_01__bermudan_payer_swaptions_01__01.json", "catalog/model/fixed_income/g2_plus_plus/prices/svensson/bermudan_payer_swaptions/g2_plus_plus_01__svensson_01__bermudan_payer_swaptions_01__01/generation.yaml",
+            "catalog/model/fixed_income/g2_plus_plus/prices/svensson/bermudan_payer_swaptions/g2_plus_plus_01__svensson_01__bermudan_payer_swaptions_01__01/recipe.yaml", PriceConstruction::Aligned,
+            {{
+        {"model.mean_reversion_x", {0.005, pg::BumpScale::relative}},
+        {"model.volatility_x", {0.005, pg::BumpScale::relative}},
+        {"model.mean_reversion_y", {0.005, pg::BumpScale::relative}},
+        {"model.volatility_y", {0.005, pg::BumpScale::relative}},
+        {"model.correlation", {0.002, pg::BumpScale::absolute}},
+        {"curve.beta0", {0.0005, pg::BumpScale::absolute}},
+        {"curve.beta1", {0.0005, pg::BumpScale::absolute}},
+        {"curve.beta2", {0.0005, pg::BumpScale::absolute}},
+        {"curve.beta3", {0.0005, pg::BumpScale::absolute}},
+        {"curve.tau1", {0.005, pg::BumpScale::relative}},
+        {"curve.tau2", {0.005, pg::BumpScale::relative}},
+        {"product.strike", {3.125e-05, pg::BumpScale::absolute}}
+            }}, {1.0f / 504.0f, 2U}, true
+        };
+        recipe.price_only_output = true;
+        recipe.option_side = "payer";
+        recipe.product_quote_mode = "additive_to_initial_first_exercise_par_swap_rate";
+        datasets::price_gradients::require_product_quote_convention(recipe);
+        constexpr auto exercise_replay =
+            lspg::ExerciseReplayStrategy::frozen_regression_policy;
+        recipe.exercise_replay = exercise_replay;
+        recipe.curve_input = "datasets/curve/svensson/svensson_01.json";
+        const auto models =
+            model::fixed_income::g2_plus_plus::load_models(recipe.model_input);
+        const auto curves = curve::svensson::load_curves(recipe.curve_input);
+        const auto products =
+            product::load_bermudan_swaptions(recipe.product_input);
+        const auto prepare = [](
+            const auto& model_rows,
+            const auto& curve_rows, const auto& product_rows,
+            PriceConstruction construction,
+            pg::TimeConfiguration time,
+            const pg::PriceGradientConfiguration& configuration
+        ) {
+            return model_namespace::
+                prepare_g2_plus_plus_svensson_bermudan_swaption_price_gradients(
+                    model_rows, curve_rows, product_rows,
+                    construction, time, configuration
+                );
+        };
+        const auto launch = [exercise_replay](
+            const auto& plan,
+            auto inputs,
+            auto stencils,
+            const auto& configuration,
+            auto outputs
+        ) {
+            return model_namespace::
+                launch_g2_plus_plus_svensson_bermudan_swaption_price_gradients_with_replay_cuda<
+                    SwaptionSide::payer
+                >(plan, inputs, stencils, configuration, outputs, exercise_replay);
+        };
+        return offline::pricing::price_gradients::execute_curve_dataset<
+            true,
+            pg::SensitivityOrders::first
+        >(
+            recipe,
+            {
+                offline::cuda_tuning::PricingFamily::gaussian_rate_lsm,
+                "g2_plus_plus",
+                "bermudan_swaption",
+                "svensson",
+            },
+            11668829082648313856ULL,
+            models,
+            curves, products,
+            prepare,
+            launch,
+            offline::cuda_tuning::kProductionPathsPerPrice,
+            model_namespace::
+                prepare_bermudan_swaption_price_gradient_stencils_cuda
+        );
+    } catch (const std::exception& error) {
+        std::cerr << error.what() << '\n';
+        return 1;
+    }
 }
