@@ -136,29 +136,15 @@ void exercise_gpu(
         "rough-Heston copy product"
     );
 
-    auto launch = [&](auto side_tag, float& milliseconds) {
+    auto launch = [&](auto side_tag) {
         constexpr OptionSide side = decltype(side_tag)::value;
-        cudaEvent_t start = nullptr;
-        cudaEvent_t stop = nullptr;
-        check_cuda(cudaEventCreate(&start), "rough-Heston create start event");
-        check_cuda(cudaEventCreate(&stop), "rough-Heston create stop event");
-        check_cuda(cudaEventRecord(start), "rough-Heston record start event");
         launch_rough_heston_european_option_cuda<side, FactorCount>(
             device_model, 1U, device_prepared, 1U, &product, device_product, 1U,
             ai_factory::workbench::PriceConstruction::Aligned, 1U, 0U, 1U, path_count, dt,
             steps_per_day, threads, 1U,
             seed, device_price, device_error
         );
-        check_cuda(cudaEventRecord(stop), "rough-Heston record stop event");
-        check_cuda(
-            cudaEventSynchronize(stop), "rough-Heston wait for stop event"
-        );
-        check_cuda(
-            cudaEventElapsedTime(&milliseconds, start, stop),
-            "rough-Heston elapsed time"
-        );
-        check_cuda(cudaEventDestroy(stop), "rough-Heston destroy stop event");
-        check_cuda(cudaEventDestroy(start), "rough-Heston destroy start event");
+        check_cuda(cudaDeviceSynchronize(), "rough-Heston wait for pricing");
         float price = 0.0f;
         float error = 0.0f;
         check_cuda(
@@ -180,21 +166,15 @@ void exercise_gpu(
         );
         return price;
     };
-    float call_milliseconds = 0.0f;
-    float replay_milliseconds = 0.0f;
-    float put_milliseconds = 0.0f;
     const float call = launch(
-        std::integral_constant<OptionSide, OptionSide::call>{},
-        call_milliseconds
+        std::integral_constant<OptionSide, OptionSide::call>{}
     );
     const float replay = launch(
-        std::integral_constant<OptionSide, OptionSide::call>{},
-        replay_milliseconds
+        std::integral_constant<OptionSide, OptionSide::call>{}
     );
     require(call == replay, "rough-Heston pricing is not bitwise reproducible");
     const float put = launch(
-        std::integral_constant<OptionSide, OptionSide::put>{},
-        put_milliseconds
+        std::integral_constant<OptionSide, OptionSide::put>{}
     );
     const float maturity = static_cast<float>(product.maturity_days)
         * static_cast<float>(steps_per_day) * dt;
@@ -207,18 +187,6 @@ void exercise_gpu(
         ) < 4.0e-3f,
         "rough-Heston call-put parity indicates an unstable lifted scheme"
     );
-    std::printf(
-        "ROUGH_HESTON_BENCH,N=%zu,steps=360,paths=%zu,call_ms=%.6f,"
-        "replay_ms=%.6f,put_ms=%.6f,call=%.8f,put=%.8f\n",
-        FactorCount,
-        path_count,
-        call_milliseconds,
-        replay_milliseconds,
-        put_milliseconds,
-        call,
-        put
-    );
-
     check_cuda(cudaFree(device_error), "rough-Heston free error");
     check_cuda(cudaFree(device_price), "rough-Heston free price");
     check_cuda(cudaFree(device_product), "rough-Heston free product");

@@ -200,106 +200,6 @@ void event_coupling_contract() {
 
 }  // namespace
 
-__global__ void legacy_factorization_kernel(merton::ModelParameters parameters,float maturity,
-                                             std::uint64_t seed,float* output,std::size_t paths) {
-    for (std::size_t path=std::size_t(blockIdx.x)*blockDim.x+threadIdx.x;path<paths;
-         path+=std::size_t(gridDim.x)*blockDim.x) {
-        const auto prepared_model=merton::prepare_model(parameters);
-        const auto prepared_transition=merton::prepare_transition(prepared_model,maturity);
-        auto state=merton::initial_state(prepared_model);
-        philox::NormalRandomContext random(philox::make_key(seed),path);
-        constexpr float threshold=10.f;
-        const std::uint32_t count=prepared_transition.poisson_mean<threshold
-            ? philox::poisson_from_uniform(random.uniforms.next(),prepared_transition.poisson_mean,
-                                           prepared_transition.zero_jump_probability)
-            : philox::poisson_from_uniform_sequence(random.uniforms,prepared_transition.poisson_mean);
-        const float diffusion=philox::next_normal(random.uniforms,random.normals);
-        const float jump=count==0U ? 0.f : philox::next_normal(random.uniforms,random.normals);
-        merton::one_step_transition(
-            prepared_model, prepared_transition, count, diffusion,
-            sqrtf(static_cast<float>(count)) * jump, state
-        );
-        output[path]=state.log_spot;
-    }
-}
-
-__global__ void canonical_factorization_kernel(merton::ModelParameters parameters,float maturity,
-                                                std::uint64_t seed,float* output,std::size_t paths) {
-    for (std::size_t path=std::size_t(blockIdx.x)*blockDim.x+threadIdx.x;path<paths;
-         path+=std::size_t(gridDim.x)*blockDim.x) {
-        const auto prepared_model=merton::prepare_model(parameters);
-        const auto prepared_transition=merton::prepare_transition(prepared_model,maturity);
-        auto state=merton::initial_state(prepared_model);
-        philox::DomainRandomContext random(philox::make_key(seed),path);
-        const auto innovations=merton::draw_transition_innovations(prepared_transition,random);
-        merton::one_step_transition(
-            prepared_model, prepared_transition, innovations.jump_count,
-            innovations.diffusion_normal,
-            innovations.jump_standard_normal_sum, state
-        );
-        output[path]=state.log_spot;
-    }
-}
-
-void factorization_benchmark() {
-    constexpr std::size_t paths=1U<<20U;
-    constexpr unsigned threads=256U, iterations=20U, rounds=10U;
-    const unsigned blocks=unsigned((paths+threads-1U)/threads);
-    const merton::ModelParameters parameters{1.05f,.03f,.01f,.2f,25.f,-.1f,.25f};
-    DeviceArray<float> legacy(paths),canonical(paths);
-    legacy_factorization_kernel<<<blocks,threads>>>(parameters,2.f,719U,legacy.data,paths);
-    canonical_factorization_kernel<<<blocks,threads>>>(parameters,2.f,719U,canonical.data,paths);
-    check_cuda(cudaDeviceSynchronize(),"Merton factorization warmup");
-    const auto before=legacy.read(),after=canonical.read();
-    double old_sum=0.,new_sum=0.,old_square=0.,new_square=0.;
-    for (std::size_t i=0;i<paths;++i) {
-        old_sum+=before[i];new_sum+=after[i];
-        old_square+=double(before[i])*before[i];
-        new_square+=double(after[i])*after[i];
-    }
-    const double old_mean=old_sum/paths,new_mean=new_sum/paths;
-    const double old_variance=old_square/paths-old_mean*old_mean;
-    const double new_variance=new_square/paths-new_mean*new_mean;
-    const double mean_budget=6.*std::sqrt((old_variance+new_variance)/paths);
-    const double variance_budget=9.*std::sqrt(2./paths)*std::max(old_variance,new_variance);
-    if (!(std::abs(old_mean-new_mean)<mean_budget
-          && std::abs(old_variance-new_variance)<variance_budget)) {
-        throw std::runtime_error("Merton domain mapping changed the terminal law");
-    }
-    cudaEvent_t start{},stop{};check_cuda(cudaEventCreate(&start),"factorization event");
-    check_cuda(cudaEventCreate(&stop),"factorization event");
-    auto elapsed=[&](bool use_legacy) {
-        check_cuda(cudaEventRecord(start),"factorization start");
-        for (unsigned i=0;i<iterations;++i) {
-            if (use_legacy) legacy_factorization_kernel<<<blocks,threads>>>(parameters,2.f,719U+i,legacy.data,paths);
-            else canonical_factorization_kernel<<<blocks,threads>>>(parameters,2.f,719U+i,canonical.data,paths);
-        }
-        check_cuda(cudaEventRecord(stop),"factorization stop");check_cuda(cudaEventSynchronize(stop),"factorization sync");
-        float milliseconds=0;check_cuda(cudaEventElapsedTime(&milliseconds,start,stop),"factorization time");
-        return milliseconds/iterations;
-    };
-    float legacy_ms=0.f,canonical_ms=0.f;
-    for (unsigned round=0;round<rounds;++round) {
-        if ((round&1U)==0U) { legacy_ms+=elapsed(true);canonical_ms+=elapsed(false); }
-        else { canonical_ms+=elapsed(false);legacy_ms+=elapsed(true); }
-    }
-    legacy_ms/=rounds;canonical_ms/=rounds;
-    cudaFuncAttributes legacy_attributes{},canonical_attributes{};
-    check_cuda(cudaFuncGetAttributes(&legacy_attributes,legacy_factorization_kernel),"legacy attributes");
-    check_cuda(cudaFuncGetAttributes(&canonical_attributes,canonical_factorization_kernel),"canonical attributes");
-    cudaEventDestroy(start);cudaEventDestroy(stop);
-    std::cout << "{\"paths\":" << paths << ",\"iterations_per_round\":" << iterations
-              << ",\"rounds\":" << rounds
-              << ",\"legacy_ms\":" << legacy_ms << ",\"canonical_ms\":" << canonical_ms
-              << ",\"legacy_registers\":" << legacy_attributes.numRegs
-              << ",\"canonical_registers\":" << canonical_attributes.numRegs
-              << ",\"legacy_local_bytes\":" << legacy_attributes.localSizeBytes
-              << ",\"canonical_local_bytes\":" << canonical_attributes.localSizeBytes
-              << ",\"old_mean\":" << old_mean << ",\"new_mean\":" << new_mean
-              << ",\"old_variance\":" << old_variance
-              << ",\"new_variance\":" << new_variance << "}\n";
-}
-
 double normal_cdf(double value) { return .5 * std::erfc(-value/std::sqrt(2.)); }
 
 template<OptionSide Side,typename Scenario>
@@ -382,7 +282,8 @@ template<OptionSide Side> void check(std::size_t paths) {
         {1.05f,.03f,.01f,.2f,.5f,-.1f,.25f},
         {1.f,-.01f,0.f,.35f,25.f,.02f,.4f},
         {100.f,.08f,.02f,.1f,0.f,-.2f,.1f}};
-    const std::vector<product::EuropeanOptionParameters> products{{1.f,126U},{1.1f,126U},{95.f,504U}};
+    // Strike inputs are ratios of each central spot (K=95 for S0=100).
+    const std::vector<product::EuropeanOptionParameters> products{{1.f,126U},{1.1f,126U},{.95f,504U}};
     const pg::Sensitivity spot{"model.spot",{.005f}};
     const pg::PriceGradientConfiguration full{{spot,
         {"model.risk_free_rate",{.0005,pg::BumpScale::absolute}},
@@ -399,14 +300,20 @@ template<OptionSide Side> void check(std::size_t paths) {
     const auto plan=prepare(full);
     double maximum_independent_error=0.,maximum_independent_budget_fraction=0.;
     DeviceArray<merton::ModelParameters> dm(models);
-    DeviceArray<product::EuropeanOptionParameters> dp(products);
+    // The historical launcher takes absolute strikes; freeze the same central
+    // contracts as the gradient plan, whose input products carry spot ratios.
+    auto absolute_products = products;
+    for (std::size_t row = 0; row < products.size(); ++row) {
+        absolute_products[row] = central_scenario(plan, row).product;
+    }
+    DeviceArray<product::EuropeanOptionParameters> dp(absolute_products);
     for (unsigned threads : {128U,256U}) {
         pg::LaunchConfiguration launch{pg::PricingMethod::monte_carlo,0U,3U,paths,threads,3U,719U};
         const auto solo=execute(prepare({{spot}}),launch,launcher);
         const auto price_only=execute(prepare({}),launch,launcher);
         DeviceArray<float> old(12);
         merton::launch_merton_european_option_price_delta_cuda<Side>(models.data(),dm.data,3U,
-            products.data(),dp.data,3U,PriceConstruction::Aligned,3U,0U,3U,paths,
+            absolute_products.data(),dp.data,3U,PriceConstruction::Aligned,3U,0U,3U,paths,
             1.f/252.f,threads,3U,719U,{.01f},old.data,old.data+3,old.data+6,old.data+9);
         const auto reference=old.read();
         for (unsigned row=0;row<3;++row) {
@@ -500,9 +407,6 @@ int main(int argc,char** argv) {
     try {
         std::size_t paths=65537;
         if (argc==2 && std::string_view(argv[1])=="--sanitizer") paths=513;
-        else if (argc==2 && std::string_view(argv[1])=="--factorization-benchmark") {
-            factorization_benchmark();return 0;
-        }
         else if (argc!=1) throw std::invalid_argument("Usage: test [--sanitizer]");
         int devices=0;
         if (cudaGetDeviceCount(&devices)!=cudaSuccess || devices==0) return 77;

@@ -232,23 +232,6 @@ def _sample_bounds_json(model: SampleModelSpec) -> str:
     return "{\n                " + entries + "\n            }"
 
 
-def _sample_parameter_factory(model: SampleModelSpec) -> str:
-    uniforms = "\n        ".join(
-        f"const float {name} = uniform({{{_cpp_float(minimum)}, "
-        f"{_cpp_float(maximum)}}}, uniforms);"
-        for name, minimum, maximum in model.uniforms
-    )
-    derived = f"\n        {model.derived}" if model.derived else ""
-    return _render_cpp_fragment_template(
-        "sampling/catalog/model_parameter_factory.cuh.tpl",
-        {
-            "uniforms": uniforms,
-            "derived": derived,
-            "acceptance": model.acceptance,
-            "constructor": model.constructor,
-        },
-    ).rstrip()
-
 
 def _sample_device_expression(expression: str) -> str:
     """Map manifest float arithmetic to the CUDA device math functions."""
@@ -294,34 +277,6 @@ def _sample_parameter_json(model: SampleModelSpec) -> str:
         "sampling/catalog/model_parameter_json.cuh.tpl",
         {"entries": entries},
     ).rstrip()
-
-
-def _sample_launch_lambda(model: SampleModelSpec) -> str:
-    pointers = ",\n            ".join(
-        f"outputs[{index}]" for index in range(len(model.outputs))
-    )
-    launcher = f"model_binding::launch_{model.name}_random_terminal_samples_cuda"
-    if model.backend == "volterra":
-        geometry = "block_count,"
-    else:
-        geometry = "threads_per_block, block_count,"
-    template = "<factor_count>" if model.backend == "n_factor" else ""
-    return _render_cpp_fragment_template(
-        "sampling/catalog/sample_launch_lambda.cuh.tpl",
-        {
-            "output_count": f"{len(model.outputs)}U",
-            "display": model.display,
-            "launcher": launcher,
-            "template_arguments": template,
-            "geometry": geometry,
-            "thread_argument": (
-                "/* cuFFTDx fixes the block dimensions */"
-                if model.backend == "volterra" else "threads_per_block"
-            ),
-            "output_pointers": pointers,
-        },
-    ).rstrip()
-
 
 
 

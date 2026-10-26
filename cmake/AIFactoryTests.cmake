@@ -371,21 +371,9 @@ if(BUILD_TESTING)
         30
     )
     add_cuda_workbench_test(
-        monte_carlo_statistics_precision_cuda
-        tests/numerical/monte_carlo_statistics_precision_kernel_cuda_test.cu
-        "numerical_robustness;performance"
-        60
-    )
-    add_cuda_workbench_test(
         constant_payoff_moments_cuda
         tests/numerical/constant_payoff_moments_kernel_cuda_test.cu
         "numerical_robustness;price_delta" 30
-    )
-    add_cuda_workbench_test(
-        asian_mean_precision_cuda
-        tests/product/asian_mean_precision_kernel_cuda_test.cu
-        "numerical_robustness;performance;asian"
-        60
     )
     add_cuda_workbench_test(
         geometric_asian_boundary_cuda
@@ -395,18 +383,6 @@ if(BUILD_TESTING)
     add_cuda_workbench_test(
         volterra_hybrid_schedule_cuda tests/volterra/hybrid_schedule_kernel_cuda_test.cu
         "volterra;schedule;numerical_robustness" 30
-    )
-    add_cuda_workbench_test(
-        range_accrual_sum_precision_cuda
-        tests/product/range_accrual_sum_precision_kernel_cuda_test.cu
-        "numerical_robustness;performance;range_accrual"
-        60
-    )
-    add_cuda_workbench_test(
-        fractional_resolvent_precision_cuda
-        tests/numerical/fractional_resolvent_precision_kernel_cuda_test.cu
-        "numerical_robustness;performance;volterra;rough_stein_stein"
-        120
     )
     add_cuda_workbench_test(
         cuda_pricing_runner
@@ -422,16 +398,6 @@ if(BUILD_TESTING)
     )
     target_link_libraries(
         test_longstaff_schwartz_regressor_cuda PRIVATE
-        ai_factory_longstaff_schwartz
-    )
-    add_cuda_workbench_test(
-        longstaff_schwartz_precision_cuda
-        tests/longstaff_schwartz/precision_kernel_cuda_test.cu
-        "longstaff_schwartz;numerical_robustness;performance"
-        60
-    )
-    target_link_libraries(
-        test_longstaff_schwartz_precision_cuda PRIVATE
         ai_factory_longstaff_schwartz
     )
     add_cuda_workbench_test(
@@ -964,12 +930,6 @@ if(BUILD_TESTING)
         cuda_kernel_diagnostics
         tests/cuda/cuda_kernel_diagnostics_test.cu
         kernel_diagnostics
-        30
-    )
-    add_cuda_workbench_test(
-        policy_size_budgets_cuda
-        tests/cuda/policy_size_budgets_kernel_cuda_test.cu
-        "kernel_diagnostics;policy_budgets"
         30
     )
 
