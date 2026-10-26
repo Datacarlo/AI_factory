@@ -1,31 +1,66 @@
-{
-  "schema_version": 1,
-  "kind": "prices",
-  "dataset_id": "vasicek_01__floorlets_01__01",
-  "generator": "catalog/model/fixed_income/vasicek/prices/floorlets/vasicek_01__floorlets_01__01/generator.cpp",
-  "inputs": {
-    "model": "datasets/model/fixed_income/vasicek/parameters/vasicek_01.json",
-    "product": "datasets/product/rate_option/rate_options_01.json"
-  },
-  "output": {
-    "path": "datasets/model/fixed_income/vasicek/prices/floorlets/vasicek_01__floorlets_01__01.json",
-    "format": "json"
-  },
-  "row_count": 1000,
-  "numerical_method": {
-    "engine": "fixed_income_closed_form"
-  },
-  "outputs": [
-    "price"
-  ],
-  "paths_per_price": 0,
-  "quote_convention": {
-    "strike": {
-      "mode": "additive_to_initial_simple_forward_rate",
-      "unit": "annualized_decimal_rate",
-      "effective_level": "strike = initial_simple_forward_rate + strike_spread"
-    },
-    "reference_policy": "Resolved at the unbumped model and initial curve; absolute contract levels stay fixed for model and curve bumps."
-  },
-  "option_side": "put"
-}
+schema_version: 1
+kind: prices
+dataset_id: vasicek_01__floorlets_01__01
+generator: catalog/model/fixed_income/vasicek/prices/floorlets/vasicek_01__floorlets_01__01/generator.cpp
+inputs:
+  model: datasets/model/fixed_income/vasicek/parameters/vasicek_01.json
+  product: datasets/product/rate_option/rate_options_01.json
+output:
+  path: datasets/model/fixed_income/vasicek/prices/floorlets/vasicek_01__floorlets_01__01.json
+  format: json
+row_count: 1000
+paths_per_price: 0
+quote_convention:
+  strike:
+    mode: additive_to_initial_simple_forward_rate
+    unit: annualized_decimal_rate
+    effective_level: strike = initial_simple_forward_rate + strike_spread
+  reference_policy: Resolved at the unbumped model and initial curve; absolute contract
+    levels stay fixed for model and curve bumps.
+row_selection:
+  method: resolved_rate_strike_above_minimum
+  minimum_annualized_decimal_rate: 1.0e-05
+  reference: initial_unbumped_model_and_curve
+  order: stable_candidate_index
+option_side: put
+time_representation:
+  kind: exact_terminal_transition
+  contractual_days_per_year: 252
+  maturity_bump_steps_per_year: 504
+internal_sensitivity_plan:
+  method: finite_difference
+  parameters:
+  - parameter: model.mean_reversion
+    displacement: 0.005
+    scale: relative
+    boundary: central_then_one_sided_order2
+  - parameter: model.long_term_mean
+    displacement: 0.0005
+    scale: absolute
+    boundary: central_then_one_sided_order2
+  - parameter: model.volatility
+    displacement: 0.005
+    scale: relative
+    boundary: central_then_one_sided_order2
+  - parameter: model.initial_state
+    displacement: 0.0005
+    scale: absolute
+    boundary: central_then_one_sided_order2
+  - parameter: product.strike
+    displacement: 0.0005
+    scale: absolute
+    boundary: central_then_one_sided_order2
+  - parameter: product.maturity_years
+    displacement: 0.001984126984126984
+    scale: absolute
+    boundary: central_then_one_sided_order2
+  bump_rule: h = displacement (absolute) or displacement * abs(x) (relative); centered
+    when valid, otherwise second-order one-sided.
+  maturity_coordinate: Payment time T2; fixing T1 and the contractual accrual period
+    stay fixed.
+central_price_engine:
+  gradient_dataset_id: vasicek_01__floorlets_01__01_price_gradient
+  output_channels:
+  - price
+  calculation: identical central evaluation, candidate rows, seeds and replay as the
+    first-order price-gradient generator

@@ -1662,6 +1662,10 @@ CARTESIAN_SOURCE_DATASET_SPECS = ALIGNED_PRICE_DATASET_SPECS
 
 
 def cartesian_suffix(dataset: DatasetSpec) -> str:
+    if dataset.model == "black_scholes" and dataset.variant in {
+        "european_calls", "range_accruals",
+    }:
+        return "_cartesian_shard00"
     if dataset.engine in {"equity_closed_form", "fixed_income_closed_form"}:
         return "_cartesian"
     return "_cartesian_shard00"

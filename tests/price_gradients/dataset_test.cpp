@@ -48,6 +48,18 @@ int main() {
         require(valid["results"][0]["standard_error"] == .01f);
         require(valid["results"][0]["gradient_standard_errors"]["model.rho"] == .02f);
         require(!valid["results"][0].contains("stencils"));
+        // A central-price mirror preserves the same numerical channels and IDs.
+        auto price_recipe = recipe;
+        price_recipe.price_only_output = true;
+        price_recipe.dataset = directory / "prices.json";
+        data::write_dataset(price_recipe, result);
+        auto expected_price_row = valid["results"][0];
+        expected_price_row.erase("gradients");
+        expected_price_row.erase("gradient_standard_errors");
+        const auto prices = datasets::read_json_file(price_recipe.dataset);
+        require(prices["database_id"] == "prices");
+        require(prices["row_count"] == valid["row_count"]);
+        require(prices["results"][0] == expected_price_row);
         auto call_recipe = recipe;
         call_recipe.dataset = directory / "call_gradients.json";
         call_recipe.source_price_recipe =

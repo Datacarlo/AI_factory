@@ -1,0 +1,28 @@
+schema_version: 4
+status: complete
+inputs:
+  model:
+    path: datasets/model/equity/rough/rough_heston/parameters/rough_heston_01.json
+    sha256: afa7eeb075673353fe28b27aa447f917777f4c83bae12d51e59a2bef841d7631
+  product:
+    path: datasets/product/athena_autocall/athena_autocalls_01_shard00.json
+    sha256: 37da5c5d72940d08a3811c033284f091a016eac535fce1ff605dc40fb663591e
+output:
+  path: datasets/model/equity/rough/rough_heston/prices/athena_autocalls/rough_heston_01__athena_autocalls_01__01_cartesian_shard00.json
+  sha256: 8400dbad1ce2a5ca63019380cbb56c777ec367de69647325360843b61adf7028
+hardware:
+  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
+  device: gpu
+  name: NVIDIA A100 80GB PCIe
+  uuid: GPU-5102f6b2-92ef-1ca5-849f-649cb3851bf6
+  compute_capability: '8.0'
+  driver_version: 590.48.01
+software:
+  cmake: cmake version 3.31.6
+  cxx_compiler: g++-14 (Debian 14.2.0-19) 14.2.0
+  cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1
+timing:
+  wall_seconds: 8752.90707451012
+  duration: 2 h 25 min 52 s 907 ms

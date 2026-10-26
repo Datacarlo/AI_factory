@@ -185,7 +185,7 @@ def prepare_terminal_dataset(
         "observables": list(selected),
     }
     key = _identity_key(identity)
-    root = Path(cache_root or "artifacts/learning/cache/terminal")
+    root = Path(cache_root or "work/learning/cache/terminal")
     root.mkdir(parents=True, exist_ok=True)
     destination = root / key
     if (destination / "manifest.json").is_file():

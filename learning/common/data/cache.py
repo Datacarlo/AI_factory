@@ -414,7 +414,7 @@ def prepare_pricing_dataset(
     identity = _cache_identity(dataset_path, tables)
     key = _identity_key(identity)
     if cache_root is None:
-        cache_root = find_repository_root(dataset_path) / "artifacts" / "learning" / "cache"
+        cache_root = find_repository_root(dataset_path) / "work" / "learning" / "cache"
     root = Path(cache_root)
     directory = root / key
     if directory.is_dir() and not force:

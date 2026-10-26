@@ -35,11 +35,6 @@ _FACTOR_MODELS = {
 }
 
 REFERENCE_DATASET_SPECS = (
-    ReferenceDatasetSpec(
-        "generate_worst_of_calls_01", "product_parameters",
-        "catalog/product/worst_of_call/worst_of_calls_01/generator.cpp",
-        "datasets/product/worst_of_call/worst_of_calls_01.json",
-    ),
     *(
         ReferenceDatasetSpec(
             f"generate_{model}_factors_01", "model_parameters",

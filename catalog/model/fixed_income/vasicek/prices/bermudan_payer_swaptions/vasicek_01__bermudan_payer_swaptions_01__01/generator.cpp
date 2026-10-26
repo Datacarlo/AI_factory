@@ -1,32 +1,84 @@
-// Generated Vasicek Bermudan-payer-swaption price recipe.
-#include "model/fixed_income/vasicek/product/bermudan_swaption.cuh"
+// Generated fixed-income central-price mirror of vasicek_01__bermudan_payer_swaptions_01__01_price_gradient_frozen_policy.
+#include "model/fixed_income/vasicek/product/bermudan_swaption_price_gradients.cuh"
 #include "model/fixed_income/vasicek/dataset.hpp"
 #include "product/bermudan_swaption/dataset.hpp"
-#include "tools/pricing/bermudan_swaption_price_generation.cuh"
+#include "tools/pricing/price_gradients/generation.cuh"
 
 int main() {
     using namespace ai_factory::workbench;
-    namespace rates = model::fixed_income::vasicek;
-    const std::filesystem::path model_path =
-        "datasets/model/fixed_income/vasicek/parameters/vasicek_01.json";
-    const std::filesystem::path product_path =
-        "datasets/product/bermudan_swaption/bermudan_swaptions_01.json";
-    const auto models = rates::load_models(model_path);
-    const auto products = product::load_bermudan_swaptions(product_path);
-    constexpr std::size_t paths =
-        offline::cuda_tuning::kProductionPathsPerPrice;
-    constexpr std::uint64_t seed = 11668829142777856000ULL;
-    auto configuration = datasets::make_bermudan_swaption_generation_configuration(
-        "vasicek", "payer", paths, seed,
-        "Exact Gaussian joint transition + Longstaff-Schwartz",
-        "Hermite degree 3", "standardized short-rate factor", "",
-        {{"time_day_fraction", "1 / 252"}},
-        PriceConstruction::Aligned
-    );
-    datasets::generate_exact_bermudan_swaption_prices(
-        model_path, product_path, models, products,
-        &rates::launch_vasicek_bermudan_swaption_cuda<
-            SwaptionSide::payer>,
-        configuration
-    );
+    namespace lspg = longstaff_schwartz::price_gradients;
+    namespace pg = price_gradients;
+    namespace model_namespace = model::fixed_income::vasicek;
+    try {
+        datasets::price_gradients::Recipe recipe{
+            "datasets/model/fixed_income/vasicek/parameters/vasicek_01.json", "datasets/product/bermudan_swaption/bermudan_swaptions_01.json", "datasets/model/fixed_income/vasicek/prices/bermudan_payer_swaptions/vasicek_01__bermudan_payer_swaptions_01__01.json", "catalog/model/fixed_income/vasicek/prices/bermudan_payer_swaptions/vasicek_01__bermudan_payer_swaptions_01__01/generation.yaml",
+            "catalog/model/fixed_income/vasicek/prices/bermudan_payer_swaptions/vasicek_01__bermudan_payer_swaptions_01__01/recipe.yaml", PriceConstruction::Aligned,
+            {{
+        {"model.mean_reversion", {0.005, pg::BumpScale::relative}},
+        {"model.long_term_mean", {0.0005, pg::BumpScale::absolute}},
+        {"model.volatility", {0.005, pg::BumpScale::relative}},
+        {"model.initial_state", {0.0005, pg::BumpScale::absolute}},
+        {"product.strike", {0.0005, pg::BumpScale::absolute}}
+            }}, {1.0f / 504.0f, 2U}, true
+        };
+        recipe.price_only_output = true;
+        recipe.option_side = "payer";
+        recipe.product_quote_mode = "additive_to_initial_first_exercise_par_swap_rate";
+        datasets::price_gradients::require_product_quote_convention(recipe);
+        constexpr auto exercise_replay =
+            lspg::ExerciseReplayStrategy::frozen_regression_policy;
+        recipe.exercise_replay = exercise_replay;
+        const auto models =
+            model::fixed_income::vasicek::load_models(recipe.model_input);
+        const auto products =
+            product::load_bermudan_swaptions(recipe.product_input);
+        const auto prepare = [](
+            const auto& model_rows,
+            const auto& product_rows,
+            PriceConstruction construction,
+            pg::TimeConfiguration time,
+            const pg::PriceGradientConfiguration& configuration
+        ) {
+            return model_namespace::
+                prepare_vasicek_bermudan_swaption_price_gradients(
+                    model_rows, product_rows,
+                    construction, time, configuration
+                );
+        };
+        const auto launch = [exercise_replay](
+            const auto& plan,
+            auto inputs,
+            auto stencils,
+            const auto& configuration,
+            auto outputs
+        ) {
+            return model_namespace::
+                launch_vasicek_bermudan_swaption_price_gradients_with_replay_cuda<
+                    SwaptionSide::payer
+                >(plan, inputs, stencils, configuration, outputs, exercise_replay);
+        };
+        return offline::pricing::price_gradients::execute_dataset<
+            true,
+            pg::SensitivityOrders::first
+        >(
+            recipe,
+            {
+                offline::cuda_tuning::PricingFamily::gaussian_rate_lsm,
+                "vasicek",
+                "bermudan_swaption",
+                "",
+            },
+            11668829142777856000ULL,
+            models,
+            products,
+            prepare,
+            launch,
+            offline::cuda_tuning::kProductionPathsPerPrice,
+            model_namespace::
+                prepare_bermudan_swaption_price_gradient_stencils_cuda
+        );
+    } catch (const std::exception& error) {
+        std::cerr << error.what() << '\n';
+        return 1;
+    }
 }

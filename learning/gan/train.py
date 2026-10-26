@@ -117,7 +117,7 @@ def main() -> int:
             prepared.schema.observable_names
         )
         run_directory = (
-            Path("artifacts/learning/gan-runs")
+            Path("work/learning/gan-runs")
             / (
                 f"{prepared.schema.database_id}-{observable_id}-"
                 f"{stamp}"

@@ -653,6 +653,14 @@ void write_dataset(const Recipe& recipe, const Results& result) {
                 output_row["mixed_hessian_standard_errors"] = mixed_errors;
             }
         }
+        if (recipe.price_only_output) {
+            output_row.erase("gradients");
+            output_row.erase("gradient_standard_errors");
+            output_row.erase("diagonal_hessians");
+            output_row.erase("diagonal_hessian_standard_errors");
+            output_row.erase("mixed_hessians");
+            output_row.erase("mixed_hessian_standard_errors");
+        }
         rows.push_back(std::move(output_row));
     }
 

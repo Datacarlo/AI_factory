@@ -24,5 +24,5 @@ software:
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
 timing:
-  wall_seconds: 44067.62082027993
-  duration: 12 h 14 min 27 s 621 ms
+  wall_seconds: 44067.61929399194
+  duration: 12 h 14 min 27 s 619 ms

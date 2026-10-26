@@ -1,34 +1,84 @@
-// Generated CIR Bermudan-receiver-swaption price recipe.
-#include "model/fixed_income/cir/product/bermudan_swaption.cuh"
+// Generated fixed-income central-price mirror of cir_01__bermudan_receiver_swaptions_01__01_price_gradient_frozen_policy.
+#include "model/fixed_income/cir/product/bermudan_swaption_price_gradients.cuh"
 #include "model/fixed_income/cir/dataset.hpp"
 #include "product/bermudan_swaption/dataset.hpp"
-#include "tools/pricing/bermudan_swaption_price_generation.cuh"
+#include "tools/pricing/price_gradients/generation.cuh"
 
 int main() {
     using namespace ai_factory::workbench;
-    namespace rates = model::fixed_income::cir;
-    const std::filesystem::path model_path =
-        "datasets/model/fixed_income/cir/parameters/cir_01.json";
-    const std::filesystem::path product_path =
-        "datasets/product/bermudan_swaption/bermudan_swaptions_01.json";
-    const auto models = rates::load_models(model_path);
-    const auto products = product::load_bermudan_swaptions(product_path);
-    constexpr std::size_t paths =
-        offline::cuda_tuning::kProductionPathsPerPrice;
-    constexpr std::uint64_t seed = 11668829043993608192ULL;
-    auto configuration = datasets::make_bermudan_swaption_generation_configuration(
-        "cir", "receiver", paths, seed,
-        "Exact CIR terminal-forward transitions + Longstaff-Schwartz",
-        "Hermite degree 3", "standardized short-rate factor", "",
-        {{"time_day_fraction", "1 / 252"}},
-        PriceConstruction::Aligned
-    );
-    configuration.pricing_measure = "last_exercise_bond_forward";
-    configuration.regression_target = "next policy cashflow in P(0,T*) / P(t,T*) units";
-    datasets::generate_exact_bermudan_swaption_prices(
-        model_path, product_path, models, products,
-        &rates::launch_cir_bermudan_swaption_cuda<
-            SwaptionSide::receiver>,
-        configuration
-    );
+    namespace lspg = longstaff_schwartz::price_gradients;
+    namespace pg = price_gradients;
+    namespace model_namespace = model::fixed_income::cir;
+    try {
+        datasets::price_gradients::Recipe recipe{
+            "datasets/model/fixed_income/cir/parameters/cir_01.json", "datasets/product/bermudan_swaption/bermudan_swaptions_01.json", "datasets/model/fixed_income/cir/prices/bermudan_receiver_swaptions/cir_01__bermudan_receiver_swaptions_01__01.json", "catalog/model/fixed_income/cir/prices/bermudan_receiver_swaptions/cir_01__bermudan_receiver_swaptions_01__01/generation.yaml",
+            "catalog/model/fixed_income/cir/prices/bermudan_receiver_swaptions/cir_01__bermudan_receiver_swaptions_01__01/recipe.yaml", PriceConstruction::Aligned,
+            {{
+        {"model.mean_reversion", {0.005, pg::BumpScale::relative}},
+        {"model.long_term_mean", {0.005, pg::BumpScale::relative}},
+        {"model.volatility", {0.005, pg::BumpScale::relative}},
+        {"model.initial_state", {0.0005, pg::BumpScale::absolute}},
+        {"product.strike", {0.0005, pg::BumpScale::absolute}}
+            }}, {1.0f / 504.0f, 2U}, true
+        };
+        recipe.price_only_output = true;
+        recipe.option_side = "receiver";
+        recipe.product_quote_mode = "additive_to_initial_first_exercise_par_swap_rate";
+        datasets::price_gradients::require_product_quote_convention(recipe);
+        constexpr auto exercise_replay =
+            lspg::ExerciseReplayStrategy::frozen_regression_policy;
+        recipe.exercise_replay = exercise_replay;
+        const auto models =
+            model::fixed_income::cir::load_models(recipe.model_input);
+        const auto products =
+            product::load_bermudan_swaptions(recipe.product_input);
+        const auto prepare = [](
+            const auto& model_rows,
+            const auto& product_rows,
+            PriceConstruction construction,
+            pg::TimeConfiguration time,
+            const pg::PriceGradientConfiguration& configuration
+        ) {
+            return model_namespace::
+                prepare_cir_bermudan_swaption_price_gradients(
+                    model_rows, product_rows,
+                    construction, time, configuration
+                );
+        };
+        const auto launch = [exercise_replay](
+            const auto& plan,
+            auto inputs,
+            auto stencils,
+            const auto& configuration,
+            auto outputs
+        ) {
+            return model_namespace::
+                launch_cir_bermudan_swaption_price_gradients_with_replay_cuda<
+                    SwaptionSide::receiver
+                >(plan, inputs, stencils, configuration, outputs, exercise_replay);
+        };
+        return offline::pricing::price_gradients::execute_dataset<
+            true,
+            pg::SensitivityOrders::first
+        >(
+            recipe,
+            {
+                offline::cuda_tuning::PricingFamily::terminal_forward_lsm,
+                "cir",
+                "bermudan_swaption",
+                "",
+            },
+            11668829043993608192ULL,
+            models,
+            products,
+            prepare,
+            launch,
+            offline::cuda_tuning::kProductionPathsPerPrice,
+            model_namespace::
+                prepare_bermudan_swaption_price_gradient_stencils_cuda
+        );
+    } catch (const std::exception& error) {
+        std::cerr << error.what() << '\n';
+        return 1;
+    }
 }

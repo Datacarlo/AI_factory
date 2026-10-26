@@ -1,157 +1,77 @@
-// Generated Build one G2++ Flat caplet price dataset.
-#include "model/fixed_income/g2_plus_plus/product/flat/rate_option.cuh"
-#include "curve/flat/dataset.hpp"
+// Generated fixed-income central-price mirror of g2_plus_plus_01__flat_01__caplets_01__01_price_gradient.
+#include "model/fixed_income/g2_plus_plus/product/flat/rate_option_price_gradients.cuh"
 #include "model/fixed_income/g2_plus_plus/dataset.hpp"
+#include "curve/flat/dataset.hpp"
 #include "product/rate_option/dataset.hpp"
-#include "tools/datasets/price_dataset.hpp"
-#include "tools/cuda/pricing_runner.cuh"
-#include "tools/cuda/pricing_launch_plan.hpp"
-#include "datasets/validation.hpp"
+#include "tools/pricing/price_gradients/generation.cuh"
 
-#include <algorithm>
-#include <filesystem>
-#include <string>
-#include <vector>
-
-namespace {
-
-// Full input datasets and rule used to construct the price rows.
-const std::filesystem::path model_dataset_path =
-    "datasets/model/fixed_income/g2_plus_plus/parameters/g2_plus_plus_01.json";
-const std::filesystem::path curve_dataset_path =
-    "datasets/curve/flat/flat_01.json";
-const std::filesystem::path product_dataset_path =
-    "datasets/product/rate_option/rate_options_01.json";
-
-constexpr ai_factory::workbench::PriceConstruction construction =
-    ai_factory::workbench::PriceConstruction::Aligned;
-
-// CUDA configuration for the one-thread-per-price analytical kernel.
-constexpr unsigned int threads_per_block =
-    ::ai_factory::workbench::offline::cuda_tuning::kAnalyticalThreadsPerBlock;
-constexpr float day_fraction = 1.0f / 252.0f;
-
-// Artifact locations and descriptive metadata used after pricing.
-const std::filesystem::path dataset_path =
-    "datasets/model/fixed_income/g2_plus_plus/prices/flat/caplets/"
-    "g2_plus_plus_01__flat_01__caplets_01__01.json";
-const std::filesystem::path catalog_path =
-    "catalog/model/fixed_income/g2_plus_plus/prices/flat/caplets/"
-    "g2_plus_plus_01__flat_01__caplets_01__01/generation.yaml";
-const std::string url =
-    "https://datasets.ai-factory.example/v1/model/fixed_income/g2_plus_plus/prices/"
-    "flat/caplets/"
-    "g2_plus_plus_01__flat_01__caplets_01__01.json";
-const std::string numerical_method =
-    "G2++ closed-form zero-coupon bond put";
-
-}  // namespace
-
-// Execute the configured pricing pipeline and write all dataset artifacts.
 int main() {
     using namespace ai_factory::workbench;
-    namespace g2pp = model::fixed_income::g2_plus_plus;
-    namespace fitted = g2pp::flat;
-
-    // 1. Load model, curve, and product rows into contiguous FP32 vectors.
-    const std::vector<g2pp::ModelParameters> models =
-        g2pp::load_models(model_dataset_path);
-    const std::vector<curve::flat::FlatCurveParameters> curves =
-        curve::flat::load_curves(curve_dataset_path);
-    const std::vector<product::RateOptionParameters> products =
-        product::load_rate_options(product_dataset_path);
-
-    // 2. Count the rows in the final price dataset.
-    const std::size_t result_count = ai_factory::workbench::price_row_count(
-        models.size(), curves.size(), products.size(), construction
-    );
-    const auto launch_plan = offline::cuda_tuning::make_pricing_launch_plan(
-        ::ai_factory::workbench::offline::cuda_tuning::PricingIdentity{::ai_factory::workbench::offline::cuda_tuning::PricingFamily::closed_form, "g2_plus_plus", "rate_option", "flat"}, result_count, 0U
-    );
-    const auto block_count_for = [&](std::size_t row_count) {
-        return launch_plan.blocks_for(row_count);
-    };
-    const std::size_t block_count = block_count_for(result_count);
-
-    // Allocate the analytical price output in host memory.
-
-    // Declare the four device arrays and CUDA timing events.
-    const auto run = offline::cuda::run_analytical(
-        offline::cuda::inputs(models, curves, products),
-        result_count,
-        [&](auto& execution) {
-        const auto* device_models = execution.template input<0U>();
-        const auto* device_curves = execution.template input<1U>();
-        const auto* device_products = execution.template input<2U>();
-        auto* device_prices = execution.prices();
-        const std::size_t warmup_count = std::min<std::size_t>(
-            64U,
-            std::min(models.size(), std::min(curves.size(), products.size()))
-        );
-        fitted::launch_g2_plus_plus_flat_rate_option_cuda<OptionSide::call>(
-            device_models,
-            warmup_count,
-            device_curves,
-            warmup_count,
-            device_products,
-            warmup_count,
-            ai_factory::workbench::PriceConstruction::Aligned,
-            warmup_count,
+    namespace pg = price_gradients;
+    namespace model_namespace = model::fixed_income::g2_plus_plus::flat;
+    try {
+        datasets::price_gradients::Recipe recipe{
+            "datasets/model/fixed_income/g2_plus_plus/parameters/g2_plus_plus_01.json", "datasets/product/rate_option/rate_options_01.json", "datasets/model/fixed_income/g2_plus_plus/prices/flat/caplets/g2_plus_plus_01__flat_01__caplets_01__01.json", "catalog/model/fixed_income/g2_plus_plus/prices/flat/caplets/g2_plus_plus_01__flat_01__caplets_01__01/generation.yaml",
+            "catalog/model/fixed_income/g2_plus_plus/prices/flat/caplets/g2_plus_plus_01__flat_01__caplets_01__01/recipe.yaml", PriceConstruction::Aligned,
+            {{
+        {"model.mean_reversion_x", {0.005, pg::BumpScale::relative}},
+        {"model.volatility_x", {0.005, pg::BumpScale::relative}},
+        {"model.mean_reversion_y", {0.005, pg::BumpScale::relative}},
+        {"model.volatility_y", {0.005, pg::BumpScale::relative}},
+        {"model.correlation", {0.002, pg::BumpScale::absolute}},
+        {"curve.rate", {0.0005, pg::BumpScale::absolute}},
+        {"product.strike", {0.0005, pg::BumpScale::absolute}},
+        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
+            }}, {1.0f / 504.0f, 2U}, true
+        };
+        recipe.price_only_output = true;
+        recipe.option_side = "call";
+        recipe.product_quote_mode = "additive_to_initial_simple_forward_rate";
+        datasets::price_gradients::require_product_quote_convention(recipe);
+        recipe.curve_input = "datasets/curve/flat/flat_01.json";
+        const auto models =
+            model::fixed_income::g2_plus_plus::load_models(recipe.model_input);
+        const auto curves = curve::flat::load_curves(recipe.curve_input);
+        const auto products =
+            product::load_rate_options(recipe.product_input);
+        const auto prepare = [](
+            const auto& model_rows,
+            const auto& curve_rows, const auto& product_rows,
+            PriceConstruction construction,
+            pg::TimeConfiguration time,
+            const pg::PriceGradientConfiguration& configuration
+        ) {
+            return model_namespace::
+                prepare_g2_plus_plus_flat_rate_option_price_gradients(
+                    model_rows, curve_rows, product_rows,
+                    construction, time, configuration
+                );
+        };
+        return offline::pricing::price_gradients::execute_curve_dataset<
+            false,
+            pg::SensitivityOrders::first
+        >(
+            recipe,
+            {
+                offline::cuda_tuning::PricingFamily::closed_form,
+                "g2_plus_plus",
+                "rate_option",
+                "flat",
+            },
+            0ULL,
+            models,
+            curves, products,
+            prepare,
+            model_namespace::
+                launch_g2_plus_plus_flat_rate_option_price_gradients_cuda<
+                    OptionSide::call
+                >,
             0U,
-            warmup_count,
-            day_fraction,
-            threads_per_block,
-            block_count_for(warmup_count),
-            device_prices
+            model_namespace::
+                prepare_rate_option_price_gradient_stencils_cuda
         );
-
-        },
-        [&](auto& execution) {
-        const auto* device_models = execution.template input<0U>();
-        const auto* device_curves = execution.template input<1U>();
-        const auto* device_products = execution.template input<2U>();
-        auto* device_prices = execution.prices();
-        fitted::launch_g2_plus_plus_flat_rate_option_cuda<OptionSide::call>(
-            device_models,
-            models.size(),
-            device_curves,
-            curves.size(),
-            device_products,
-            products.size(),
-            construction,
-            result_count,
-            0U,
-            result_count,
-            day_fraction,
-            threads_per_block,
-            block_count,
-            device_prices
-        );
-
-
-        }
-    );
-
-    // 5. Write the complete analytical price dataset and catalog YAML.
-    datasets::write_analytical_price_dataset(
-        model_dataset_path,
-        curve_dataset_path,
-        product_dataset_path,
-        construction,
-        run.prices,
-        dataset_path,
-        catalog_path,
-        url,
-        numerical_method,
-        nlohmann::ordered_json{
-            {"block_count", block_count},
-            {"launch_plan", offline::cuda_tuning::pricing_launch_metadata(launch_plan)},
-            {"threads_per_block", threads_per_block},
-            {"kernel_launch_count", 1U},
-            {"work_distribution", "one price per thread"},
-        },
-        run.wall_seconds,
-        run.kernel_seconds
-    );
-    datasets::validate_price_dataset_file(dataset_path);
+    } catch (const std::exception& error) {
+        std::cerr << error.what() << '\n';
+        return 1;
+    }
 }

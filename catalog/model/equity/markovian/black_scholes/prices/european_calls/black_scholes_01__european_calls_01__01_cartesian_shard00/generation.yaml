@@ -1,0 +1,29 @@
+schema_version: 4
+status: complete
+inputs:
+  model:
+    path: datasets/model/equity/markovian/black_scholes/parameters/black_scholes_01.json
+    sha256: ee10ae56e0b040ea8215a306d78de38332bf0a091ce6161814620a8b19ce96a3
+  product:
+    path: datasets/product/european_option/european_options_01_shard00.json
+    sha256: 6da8587ed4a9435a4d8d58bb9353bcce68ee3575afcba18cbee5d28b71d20a27
+output:
+  path: datasets/model/equity/markovian/black_scholes/prices/european_calls/black_scholes_01__european_calls_01__01_cartesian_shard00.json
+  sha256: 06c02eeed3b253c3d8db56e989c1aa6e3769986db0cf45b7ddbee3902e298507
+hardware:
+  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
+  device: gpu
+  name: NVIDIA GeForce RTX 4090 Laptop GPU
+  uuid: GPU-214a7d0d-e7b0-ded2-983c-0c960ec5bcd4
+  compute_capability: '8.9'
+  driver_version: '610.60'
+software:
+  cmake: cmake version 3.22.1
+  cxx_compiler: g++-14 (Ubuntu 14.3.0-12ubuntu1~22~ppa2) 14.3.0
+  cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
+  cuda_target_architectures: '89'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1
+timing:
+  wall_seconds: 0.523378629
+  duration: 523.379 ms

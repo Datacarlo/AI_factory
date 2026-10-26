@@ -1,0 +1,28 @@
+schema_version: 4
+status: complete
+inputs:
+  model:
+    path: datasets/model/equity/markovian/variance_gamma/parameters/variance_gamma_01.json
+    sha256: ac15d0efe70e1d173a0ec7dcbc2d7390a4dd419715a675804e76ed5de4a5a92f
+  product:
+    path: datasets/product/geometric_asian_option/geometric_asian_options_01_shard00.json
+    sha256: 0c4e306a34b114cfecaaec9982473edaa158f755d59202ea5250da5b14cb4b6b
+output:
+  path: datasets/model/equity/markovian/variance_gamma/price_gradients/geometric_asian_calls/variance_gamma_01__geometric_asian_calls_01__01_cartesian_shard00_price_gradient.json
+  sha256: 682a9eb0cde556883438e9ff9e3e4d532a30df70f03410091f203cef7725a202
+hardware:
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+  device: gpu
+  name: Tesla V100-SXM2-32GB
+  uuid: GPU-c2c5b606-4c26-00bb-857d-e5e0eb7eda00
+  compute_capability: '7.0'
+  driver_version: 580.178.04
+software:
+  cmake: cmake version 3.31.6
+  cxx_compiler: g++-14 (Debian 14.2.0-19) 14.2.0
+  cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1
+timing:
+  wall_seconds: 133154.99470834108
+  duration: 1 j 12 h 59 min 14 s 995 ms

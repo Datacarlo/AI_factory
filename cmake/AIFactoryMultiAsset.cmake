@@ -22,14 +22,6 @@ target_link_libraries(ai_factory_multi_asset_price_dataset PUBLIC
     ai_factory_artifact_io ai_factory_dataset_validation
 )
 
-add_executable(generate_worst_of_calls_01 EXCLUDE_FROM_ALL
-    catalog/product/worst_of_call/worst_of_calls_01/generator.cpp
-)
-target_link_libraries(generate_worst_of_calls_01 PRIVATE
-    ai_factory_parameter_dataset ai_factory_dataset_validation
-)
-add_dependencies(parameter_generators generate_worst_of_calls_01)
-
 # Factorized scenarios reuse model loaders and the existing correlated kernels.
 ai_factory_add_dataset_library(
     ai_factory_fixed_income_constant_rate_dataset
