@@ -4,6 +4,7 @@
 #include "tools/datasets/sampling.hpp"
 
 #include <filesystem>
+#include <optional>
 #include <string>
 
 namespace ai_factory::workbench::datasets {
@@ -39,7 +40,8 @@ void write_core_factorized_model_dataset(
     const std::string& url,
     std::size_t core_prefix_count,
     std::size_t row_count,
-    std::uint64_t seed
+    std::uint64_t seed,
+    std::optional<float> spot_override = std::nullopt
 );
 
 void write_curve_dataset(

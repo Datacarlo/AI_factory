@@ -14,6 +14,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <stdexcept>
+#include <limits>
 
 namespace ai_factory::workbench::monte_carlo {
 
@@ -137,7 +138,7 @@ __global__ void cross_asset_price_kernel(
     std::uint32_t steps_per_day,float dt,std::uint64_t base_seed,
     const float* volatility_path,reductions::MomentSums* moments,
     float* path_payoffs,float* prices,float* standard_errors,
-    bool use_shared_normals
+    bool use_shared_normals, unsigned jobs_per_team, std::size_t moment_offset, std::size_t volatility_row_stride
 ) {
     constexpr std::size_t rough_count=RoughPack::kAssetCount;
     constexpr std::size_t dimension=rough_count+EquityPack::kFactorCount
@@ -174,6 +175,7 @@ __global__ void cross_asset_price_kernel(
         reinterpret_cast<unsigned char*>(shared)+normal_offset)
         +team*dimension;
     const std::size_t result_index=result_offset+blockIdx.y;
+    if constexpr (rough_count>0U) volatility_path+=blockIdx.y*volatility_row_stride;
     if(threadIdx.x==0U) {
         constexpr std::size_t rate_slot =
             EquityPack::kAssetCount + RoughPack::kAssetCount;
@@ -222,11 +224,12 @@ __global__ void cross_asset_price_kernel(
     __syncthreads();
     const auto steps=product_parameters.maturity_days*steps_per_day;
     double sum=0.0,sumsq=0.0;
-    const std::size_t path_tiles=(path_count+blockDim.x-1U)/blockDim.x;
-    for(std::size_t tile=blockIdx.x;tile<path_tiles;tile+=gridDim.x) {
-        for(unsigned iteration=0U;iteration<TeamSize;++iteration) {
-            const auto local_path=tile*blockDim.x
-                +iteration*teams_per_block+team;
+    const unsigned jobs = jobs_per_team == 0U ? TeamSize : jobs_per_team;
+    const std::size_t tile_width = teams_per_block * jobs;
+    const auto path_tiles = (path_count + tile_width - 1U) / tile_width;
+    for (std::size_t tile = blockIdx.x; tile < path_tiles; tile += gridDim.x) {
+        for (unsigned iteration=0U; iteration<jobs; ++iteration) {
+            const auto local_path=tile*tile_width+iteration*teams_per_block+team;
             if(local_path>=path_count) continue;
             const auto path=path_offset+local_path;
             float payoff=0.0f;
@@ -266,7 +269,7 @@ __global__ void cross_asset_price_kernel(
             prices[result_index]=static_cast<float>(price);
             standard_errors[result_index]=static_cast<float>(error);
         } else moments[blockIdx.y*moment_stride
-            +path_offset/blockDim.x+blockIdx.x]=total;
+            +moment_offset+blockIdx.x]=total;
     }
 }
 
@@ -281,7 +284,7 @@ void launch_cross_asset_batch_cuda(
     std::uint64_t base_seed,const float* volatility_path,
     reductions::MomentSums* moments,float* path_payoffs=nullptr,
     float* prices=nullptr,float* standard_errors=nullptr,
-    cudaStream_t stream=0
+    cudaStream_t stream=0, unsigned jobs_per_team=0U, std::size_t moment_offset=std::numeric_limits<std::size_t>::max(), std::size_t volatility_row_stride=0U
 ) {
     static_assert(EquityPack::kAssetCount+RoughPack::kAssetCount>0U);
     static_assert(RoughPack::kAssetCount+EquityPack::kFactorCount
@@ -309,8 +312,8 @@ void launch_cross_asset_batch_cuda(
         || RoughPack::kAssetCount>0U))
         throw std::invalid_argument("invalid direct cross-asset result");
     if constexpr (RoughPack::kAssetCount>0U) {
-        if(!volatility_path || result_count!=1U
-            || threads_per_block!=128U || path_count%128U!=0U)
+        if(!volatility_path || (result_count>1U && !volatility_row_stride)
+            || (threads_per_block!=128U && threads_per_block!=256U) || path_count%128U!=0U)
             throw std::invalid_argument("invalid cross-asset rough launch");
     }
     if constexpr (RecordPaths)
@@ -366,6 +369,10 @@ void launch_cross_asset_batch_cuda(
         >properties.sharedMemPerBlockOptin)
         throw std::invalid_argument(
             "cross-asset block exceeds available shared memory");
+    if (moment_offset == std::numeric_limits<std::size_t>::max())
+        moment_offset = path_offset / threads_per_block;
+    if (result_count > 1U && (moment_offset > moment_stride || blocks_per_result > moment_stride - moment_offset))
+        throw std::invalid_argument("cross-asset partial-moment buffer too small");
     const dim3 grid(blocks_per_result,
         static_cast<unsigned>(result_count));
     if(use_shared_states) {
@@ -382,7 +389,7 @@ void launch_cross_asset_batch_cuda(
             <<<grid,threads_per_block,shared_bytes,stream>>>(
                 inputs,result_offset,path_offset,path_count,moment_stride,
                 steps_per_day,dt,base_seed,volatility_path,moments,
-                path_payoffs,prices,standard_errors,use_shared_normals);
+                path_payoffs,prices,standard_errors,use_shared_normals,jobs_per_team,moment_offset,volatility_row_stride);
     } else {
         cudaFuncAttributes local_attributes{};
         check_cuda(cudaFuncGetAttributes(&local_attributes,
@@ -406,7 +413,7 @@ void launch_cross_asset_batch_cuda(
             <<<grid,threads_per_block,shared_bytes,stream>>>(
                 inputs,result_offset,path_offset,path_count,moment_stride,
                 steps_per_day,dt,base_seed,volatility_path,moments,
-                path_payoffs,prices,standard_errors,use_shared_normals);
+                path_payoffs,prices,standard_errors,use_shared_normals,jobs_per_team,moment_offset,volatility_row_stride);
     }
     check_cuda(cudaGetLastError(),"cross-asset price launch");
 }
@@ -422,14 +429,19 @@ void launch_cross_asset_cuda(
     float* path_payoffs=nullptr,cudaStream_t stream=0
 ) {
     (void)steps;
-    launch_cross_asset_batch_cuda<EquityPack,RoughPack,RatePolicy,
-        Product,RecordPaths,TeamSize>(
-            inputs,result_index,1U,path_offset,path_count,
-            (path_count+127U)/128U,
-            static_cast<unsigned>((path_count+127U)/128U),
-            128U,steps_per_day,dt,base_seed,
-            volatility_path,moments,path_payoffs,
-            nullptr,nullptr,stream);
+    const auto get=[](const char* name,unsigned fallback) {
+        const char* v=std::getenv(name);return v?static_cast<unsigned>(std::stoul(v)):fallback;};
+    const unsigned threads=get("BENCH_THREADS",128U),jobs=get("BENCH_JOBS",TeamSize);
+    const std::size_t chunk=get("BENCH_CHUNK",65536U);
+    const std::size_t paths_per_block=(threads/TeamSize)*static_cast<std::size_t>(jobs);
+    if(!jobs || !paths_per_block || chunk%128U || path_offset%chunk)
+        throw std::invalid_argument("invalid prototype geometry");
+    const auto blocks=static_cast<unsigned>((path_count+paths_per_block-1U)/paths_per_block);
+    const auto stride=(chunk+paths_per_block-1U)/paths_per_block;
+    launch_cross_asset_batch_cuda<EquityPack,RoughPack,RatePolicy,Product,RecordPaths,TeamSize>(
+        inputs,result_index,1U,path_offset,path_count,blocks,blocks,threads,
+        steps_per_day,dt,base_seed,volatility_path,moments,path_payoffs,
+        nullptr,nullptr,stream,jobs,(path_offset/chunk)*stride);
 }
 
 }  // namespace ai_factory::workbench::monte_carlo

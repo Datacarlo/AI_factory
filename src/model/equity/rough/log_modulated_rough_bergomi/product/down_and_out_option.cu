@@ -25,7 +25,8 @@ void launch_log_modulated_rough_bergomi_down_and_out_option_cuda(
     std::size_t workspace_bytes,
     std::uint64_t base_seed,
     float* device_prices,
-    float* device_standard_errors
+    float* device_standard_errors,
+    std::size_t row_count
 ) {
     using ProductPolicy = product::DownAndOutOptionPathPolicy<Side>;
     launch_log_modulated_rough_bergomi_hybrid_fft_cuda<
@@ -49,7 +50,7 @@ void launch_log_modulated_rough_bergomi_down_and_out_option_cuda(
         device_prices,
         device_standard_errors,
         "log_modulated_rough_bergomi.down_and_out_option",
-        option_side_name(Side)
+        option_side_name(Side), row_count
     );
 }
 
@@ -60,7 +61,7 @@ template void launch_log_modulated_rough_bergomi_down_and_out_option_cuda<
     const product::DownAndOutOptionParameters*, std::size_t,
     PriceConstruction, std::size_t, std::size_t, std::size_t,
     float, float, std::size_t, std::size_t,
-    void*, std::size_t, std::uint64_t, float*, float*
+    void*, std::size_t, std::uint64_t, float*, float*, std::size_t
 );
 
 template void launch_log_modulated_rough_bergomi_down_and_out_option_cuda<
@@ -70,7 +71,7 @@ template void launch_log_modulated_rough_bergomi_down_and_out_option_cuda<
     const product::DownAndOutOptionParameters*, std::size_t,
     PriceConstruction, std::size_t, std::size_t, std::size_t,
     float, float, std::size_t, std::size_t,
-    void*, std::size_t, std::uint64_t, float*, float*
+    void*, std::size_t, std::uint64_t, float*, float*, std::size_t
 );
 
 }  // namespace ai_factory::workbench::model::equity::log_modulated_rough_bergomi

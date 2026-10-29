@@ -1,0 +1,29 @@
+schema_version: 4
+status: complete
+inputs:
+  model:
+    path: datasets/model/equity/markovian/kou/parameters/kou_01.json
+    sha256: 3353abca9238231c7ffca99205097933c7be025a9935b556bf1e63b46b93eea5
+  product:
+    path: datasets/product/phoenix_memory_autocall/phoenix_memory_autocalls_01_shard00.json
+    sha256: 714c41fc5c8c95dfce642775f681336569ac3c81098ac81f50c6b85f62a8408e
+output:
+  path: datasets/model/equity/markovian/kou/prices/phoenix_memory_autocalls/kou_01__phoenix_memory_autocalls_01__01_cartesian_shard00.json
+  sha256: fe3f2610921579d35f4c939f6646f2273993e3b76b64ed3454cb2726ac0c0bbd
+hardware:
+  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
+  device: gpu
+  name: NVIDIA A100 80GB PCIe
+  uuid: GPU-5102f6b2-92ef-1ca5-849f-649cb3851bf6
+  compute_capability: '8.0'
+  driver_version: 590.48.01
+software:
+  cmake: cmake version 3.31.6
+  cxx_compiler: g++-14 (Debian 14.2.0-19) 14.2.0
+  cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
+  cuda_target_architectures: '80'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1
+timing:
+  wall_seconds: 66.34697162383236
+  duration: 1 min 6 s 347 ms

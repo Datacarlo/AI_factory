@@ -48,7 +48,7 @@ int main() {
             {offline::cuda_tuning::PricingFamily::rough_n_factor,
              "quadratic_rough_heston", "range_accrual", ""},
             11668828472762957824ULL, models, products, prepare,
-            offline::cuda_tuning::kProductionPathsPerPrice);
+            offline::cuda_tuning::kProductionPathsPerPrice, 0U); // Historical row geometry.
     } catch (const std::exception& error) {
         std::cerr << error.what() << '\n';
         return 1;

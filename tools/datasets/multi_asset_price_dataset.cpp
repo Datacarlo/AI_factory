@@ -126,6 +126,7 @@ void write_dataset(
     }
     nlohmann::ordered_json document{
         {"database_id",recipe.dataset_path.stem().string()},
+        {"option_side",recipe.option_side},
         {"row_count",result_count},
         {"time_convention",product.at("time_convention")},
         {"model_datasets",model_references},

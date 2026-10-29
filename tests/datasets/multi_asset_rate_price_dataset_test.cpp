@@ -56,12 +56,14 @@ int main() {
     }
     auto compact_recipe=recipe;
     compact_recipe.dataset_path=directory/"price_compact.json";
+    compact_recipe.option_side="put";
     datasets::write_multi_asset_price_dataset(
         compact_recipe,plan,prices,errors,128U,42U,
         {{"engine","cross_asset_mc"}},0.01,0.005);
     const auto compact_document=datasets::read_json_file(
         compact_recipe.dataset_path);
-    if(compact_document.at("results").size()!=1000U
+    if(compact_document.at("option_side")!="put"
+        ||compact_document.at("results").size()!=1000U
         ||compact_document.at("results").at(999).at("model_ids").size()!=2U
         ||compact_document.at("rate_model_dataset").at("id")
             !="g2_plus_plus_01"

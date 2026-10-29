@@ -1381,6 +1381,7 @@ def render_recipes(
                 "offline::cuda_tuning::kProductionPathsPerPrice"
                 if stochastic else "0U"
             ),
+            "rough_rows_per_launch": "1U" if spec.engine == "equity_volterra_fft" else "0U",
             "rough_construction_label": "aligned " if spec.construction == "aligned" else "",
             "rough_product_type": "".join(
                 part.capitalize() for part in spec.product.split("_")

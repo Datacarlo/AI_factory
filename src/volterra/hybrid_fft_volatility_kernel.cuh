@@ -1,3 +1,4 @@
+#include "volterra/row_workspace.cuh"
 // Product-independent Gaussian-Volterra FFT driven by correlated Brownian cells.
 #pragma once
 
@@ -75,8 +76,12 @@ __global__ void prepare_correlated_volatility_row(
     float dt,std::uint64_t seed,
     CorrelatedVolatilityRow<Policy>* output,
     const RowIndexSelector* row_selectors,
-    std::size_t model_slot,std::size_t correlation_slot
+    std::size_t model_slot,std::size_t correlation_slot,
+    std::size_t workspace_stride=0U
 ) {
+    result_index+=blockIdx.y;
+    output=::ai_factory::workbench::volterra::row_workspace_pointer(output,workspace_stride);
+
     if(threadIdx.x!=0U) return;
     const auto model_index=row_selectors[model_slot].select(
         static_cast<std::uint32_t>(result_index));
@@ -97,8 +102,13 @@ __global__ void prepare_correlated_volatility_row(
 template<typename Policy,unsigned int Length,typename Forward>
 __global__ void prepare_correlated_hybrid_spectrum(
     const CorrelatedVolatilityRow<Policy>* rows,
-    std::uint32_t steps,float2* spectrum,float* variances
+    std::uint32_t steps,float2* spectrum,float* variances,
+    std::size_t workspace_stride=0U
 ) {
+    rows=::ai_factory::workbench::volterra::row_workspace_pointer(rows,workspace_stride);
+    spectrum=::ai_factory::workbench::volterra::row_workspace_pointer(spectrum,workspace_stride);
+    variances=::ai_factory::workbench::volterra::row_workspace_pointer(variances,workspace_stride);
+
     using Complex=typename Forward::value_type;
     __shared__ CorrelatedVolatilityRow<Policy> row;
     if(threadIdx.x==0U) row=*rows;
@@ -138,8 +148,13 @@ __global__ void convolve_correlated_hybrid_paths(
     std::size_t path_offset,std::size_t path_count,
     std::uint32_t steps,std::size_t volatility_factor,
     const CorrelatedVolatilityRow<Policy>* rows,
-    const float2* spectrum,float2* convolutions
+    const float2* spectrum,float2* convolutions,
+    std::size_t workspace_stride=0U
 ) {
+    rows=::ai_factory::workbench::volterra::row_workspace_pointer(rows,workspace_stride);
+    spectrum=::ai_factory::workbench::volterra::row_workspace_pointer(spectrum,workspace_stride);
+    convolutions=::ai_factory::workbench::volterra::row_workspace_pointer(convolutions,workspace_stride);
+
     using Complex=typename Forward::value_type;
     constexpr unsigned ffts_per_block=Forward::ffts_per_block;
     __shared__ CorrelatedVolatilityRow<Policy> row;
@@ -189,8 +204,14 @@ __global__ void reconstruct_correlated_hybrid_volatility(
     std::uint32_t steps,std::size_t volatility_factor,
     std::uint32_t auxiliary_source,
     const float* variances,const float2* convolutions,
-    float* volatility_path
+    float* volatility_path,
+    std::size_t workspace_stride=0U,std::size_t output_stride=0U
 ) {
+    rows=::ai_factory::workbench::volterra::row_workspace_pointer(rows,workspace_stride);
+    variances=::ai_factory::workbench::volterra::row_workspace_pointer(variances,workspace_stride);
+    convolutions=::ai_factory::workbench::volterra::row_workspace_pointer(convolutions,workspace_stride);
+    volatility_path+=blockIdx.y*output_stride;
+
     const auto path=blockIdx.x*blockDim.x+threadIdx.x;
     __shared__ CorrelatedVolatilityRow<Policy> row;
     if(threadIdx.x==0U) row=*rows;
@@ -228,7 +249,8 @@ void launch_correlated_hybrid_volatility_cuda(
     std::uint32_t auxiliary_source,
     cudaStream_t stream,
     const RowIndexSelector* row_selectors,
-    std::size_t model_slot,std::size_t correlation_slot
+    std::size_t model_slot,std::size_t correlation_slot,
+    std::size_t batch_rows=1U,std::size_t workspace_stride=0U,std::size_t output_stride=0U
 ) {
     if(!models || !row_selectors || !packed_factors
         || !workspace || !volatility_path || path_count==0U
@@ -245,9 +267,9 @@ void launch_correlated_hybrid_volatility_cuda(
     auto* variances=reinterpret_cast<float*>(bytes+plan.variance_offset);
     auto* convolutions=reinterpret_cast<float2*>(
         bytes+plan.convolution_offset);
-    prepare_correlated_volatility_row<Policy,Dimension><<<1U,1U,0U,stream>>>(
+    prepare_correlated_volatility_row<Policy,Dimension><<<dim3(1U,batch_rows),1U,0U,stream>>>(
         models,packed_factors,result_index,dt,seed,row,
-        row_selectors,model_slot,correlation_slot);
+        row_selectors,model_slot,correlation_slot,workspace_stride);
     check_cuda(cudaGetLastError(),"hybrid volatility row preparation");
     tuning::dispatch_hybrid_fft_specialization<8192U>(
         steps,[&]<typename Specialization>() {
@@ -272,22 +294,22 @@ void launch_correlated_hybrid_volatility_cuda(
                 static_cast<int>(shared)),
                 "hybrid volatility convolution shared opt-in");
             prepare_correlated_hybrid_spectrum<Policy,Length,Prep>
-                <<<1U,Prep::block_dim,Prep::shared_memory_size,stream>>>(
-                    row,steps,spectrum,variances);
+                <<<dim3(1U,batch_rows),Prep::block_dim,Prep::shared_memory_size,stream>>>(
+                    row,steps,spectrum,variances,workspace_stride);
             check_cuda(cudaGetLastError(),"hybrid volatility spectrum");
             const auto pairs=path_count/2U;
             convolve_correlated_hybrid_paths<
                 Policy,Dimension,Length,Forward,Inverse
-            ><<<static_cast<unsigned>((pairs+FPB-1U)/FPB),
+            ><<<dim3(static_cast<unsigned>((pairs+FPB-1U)/FPB),batch_rows),
                  Forward::block_dim,shared,stream>>>(
                     path_offset,path_count,steps,volatility_factor,
-                    row,spectrum,convolutions);
+                    row,spectrum,convolutions,workspace_stride);
             check_cuda(cudaGetLastError(),"hybrid volatility convolution");
         });
     reconstruct_correlated_hybrid_volatility<Policy>
-        <<<static_cast<unsigned>((path_count+127U)/128U),128U,0U,stream>>>(
+        <<<dim3(static_cast<unsigned>((path_count+127U)/128U),batch_rows),128U,0U,stream>>>(
             row,path_offset,path_count,steps,volatility_factor,
-            auxiliary_source,variances,convolutions,volatility_path);
+            auxiliary_source,variances,convolutions,volatility_path,workspace_stride,output_stride);
     check_cuda(cudaGetLastError(),"hybrid volatility reconstruction");
 }
 

@@ -65,9 +65,8 @@ inline PriceGradientLaunchPlan make_price_gradient_launch_plan(
         );
     }
     if (rows > 1000U && identity.family == PricingFamily::rough_fft) {
-        // The FFT graph still evaluates one row at a time in a fixed-size
-        // workspace. Grouping sixteen rows only amortizes CUDA synchronization
-        // and one durable fsync per row on the remote filesystem.
+        // Bound the durable checkpoint interval independently of the graph's
+        // configurable number of simultaneously evaluated rows.
         profile.prices_per_launch = 16U;
     }
     if (identity.family != PricingFamily::closed_form

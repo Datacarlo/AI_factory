@@ -16,6 +16,7 @@
 #include "volterra/hybrid_path_simulation.cuh"
 #include "monte_carlo/pricing_moments_kernel.cuh"
 #include "volterra/pricing_row.cuh"
+#include "volterra/row_workspace.cuh"
 
 #include <cuda_runtime.h>
 
@@ -61,8 +62,13 @@ __global__ void prepare_direct_row_kernel(
         ModelPathPolicy,
         ProductPolicy,
         SchedulePolicy
-    >* __restrict__ prepared_row
+    >* __restrict__ prepared_row,
+    std::size_t row_workspace_stride = 0U
 ) {
+    result_index += blockIdx.y;
+    volterra_variances = row_workspace_pointer(volterra_variances, row_workspace_stride);
+    prepared_row = row_workspace_pointer(prepared_row, row_workspace_stride);
+
     using Row = PreparedRow<
         KernelPolicy,
         ModelPathPolicy,
@@ -146,8 +152,14 @@ __global__ void prepare_row_kernel(
         ModelPathPolicy,
         ProductPolicy,
         SchedulePolicy
-    >* __restrict__ prepared_row
+    >* __restrict__ prepared_row,
+    std::size_t row_workspace_stride = 0U
 ) {
+    result_index += blockIdx.y;
+    volterra_variances = row_workspace_pointer(volterra_variances, row_workspace_stride);
+    prepared_row = row_workspace_pointer(prepared_row, row_workspace_stride);
+    kernel_spectrum = row_workspace_pointer(kernel_spectrum, row_workspace_stride);
+
     using Row = PreparedRow<
         KernelPolicy,
         ModelPathPolicy,
@@ -266,8 +278,15 @@ __global__ void convolve_paths_kernel(
         SchedulePolicy
     >* __restrict__ prepared_row,
     const float2* __restrict__ kernel_spectrum,
-    float2* __restrict__ convolutions
+    float2* __restrict__ convolutions,
+    std::size_t row_workspace_stride = 0U,
+    const float2* const* row_spectra = nullptr
 ) {
+    kernel_spectrum = row_spectra ? row_spectra[blockIdx.y]
+        : row_workspace_pointer(kernel_spectrum, row_workspace_stride);
+    prepared_row = row_workspace_pointer(prepared_row, row_workspace_stride);
+    convolutions = row_workspace_pointer(convolutions, row_workspace_stride);
+
     using Row = PreparedRow<
         KernelPolicy,
         ModelPathPolicy,
@@ -354,8 +373,14 @@ __global__ void evaluate_paths_kernel(
     >* __restrict__ prepared_row,
     const float* __restrict__ volterra_variances,
     const float2* __restrict__ convolutions,
-    PartialMoments* __restrict__ partial_moments
+    PartialMoments* __restrict__ partial_moments,
+    std::size_t row_workspace_stride = 0U
 ) {
+    prepared_row = row_workspace_pointer(prepared_row, row_workspace_stride);
+    volterra_variances = row_workspace_pointer(volterra_variances, row_workspace_stride);
+    partial_moments = row_workspace_pointer(partial_moments, row_workspace_stride);
+    convolutions = row_workspace_pointer(convolutions, row_workspace_stride);
+
     using Row = PreparedRow<
         KernelPolicy,
         ModelPathPolicy,
@@ -410,8 +435,13 @@ __global__ void evaluate_direct_paths_kernel(
         SchedulePolicy
     >* __restrict__ prepared_row,
     const float* __restrict__ volterra_variances,
-    PartialMoments* __restrict__ partial_moments
+    PartialMoments* __restrict__ partial_moments,
+    std::size_t row_workspace_stride = 0U
 ) {
+    prepared_row = row_workspace_pointer(prepared_row, row_workspace_stride);
+    volterra_variances = row_workspace_pointer(volterra_variances, row_workspace_stride);
+    partial_moments = row_workspace_pointer(partial_moments, row_workspace_stride);
+
     using Row = PreparedRow<
         KernelPolicy,
         ModelPathPolicy,
@@ -525,19 +555,21 @@ void validate_launch(
 
 // Host dispatch only: scalar and paired consumers share preparation and convolution.
 struct PricePathConsumer {
+    std::size_t row_count = 1U;
+    std::size_t row_stride = 0U;
     template<typename Row>
     void evaluate(std::size_t offset, std::size_t count, const Row* row,
         const float* variances, const float2* convolutions, PartialMoments* partials,
         const char* name, const char* variant) const {
         constexpr auto kernel = evaluate_paths_kernel<typename Row::Kernel, typename Row::Path,
             typename Row::Product, typename Row::Schedule>;
-        const dim3 grid(static_cast<unsigned>(hybrid_fft_partial_moment_count(count)));
+        const dim3 grid(static_cast<unsigned>(hybrid_fft_partial_moment_count(count)), static_cast<unsigned>(row_count));
         constexpr std::size_t shared = 2U * (tuning::kPricingPathThreads / 32U) * sizeof(double);
         report_cuda_kernel_phase_launch_if_enabled(name, variant, "path_evaluation", kernel,
             grid, dim3(tuning::kPricingPathThreads), shared);
         evaluate_paths_kernel<typename Row::Kernel, typename Row::Path,
             typename Row::Product, typename Row::Schedule><<<grid, tuning::kPricingPathThreads, shared>>>(
-            offset, count, row, variances, convolutions, partials);
+            offset, count, row, variances, convolutions, partials, row_stride);
         check_cuda(cudaGetLastError(), "Volterra hybrid FFT path evaluation");
     }
 #if AI_FACTORY_VOLTERRA_DIRECT_MAX_STEP_COUNT > 0
@@ -547,12 +579,12 @@ struct PricePathConsumer {
         const char* name, const char* variant) const {
         constexpr auto kernel = evaluate_direct_paths_kernel<typename Row::Kernel, typename Row::Path,
             typename Row::Product, typename Row::Schedule>;
-        const dim3 grid(static_cast<unsigned>(hybrid_fft_partial_moment_count(count)));
+        const dim3 grid(static_cast<unsigned>(hybrid_fft_partial_moment_count(count)), static_cast<unsigned>(row_count));
         constexpr std::size_t shared = 2U * (tuning::kPricingPathThreads / 32U) * sizeof(double);
         report_cuda_kernel_phase_launch_if_enabled(name, variant, "path_evaluation", kernel,
             grid, dim3(tuning::kPricingPathThreads), shared);
         evaluate_direct_paths_kernel<typename Row::Kernel, typename Row::Path,
-            typename Row::Product, typename Row::Schedule><<<grid, tuning::kPricingPathThreads, shared>>>(offset, count, row, variances, partials);
+            typename Row::Product, typename Row::Schedule><<<grid, tuning::kPricingPathThreads, shared>>>(offset, count, row, variances, partials, row_stride);
         check_cuda(cudaGetLastError(), "Volterra direct path evaluation");
     }
 #endif
@@ -561,8 +593,10 @@ struct PricePathConsumer {
         constexpr std::size_t shared = 2U * (tuning::kPricingFinalizationThreads / 32U) * sizeof(double);
         report_cuda_kernel_phase_launch_if_enabled(name, variant, "finalization", monte_carlo::finalize_price_kernel,
             dim3(1U), dim3(tuning::kPricingFinalizationThreads), shared);
+        for (std::size_t row = 0U; row < row_count; ++row)
         monte_carlo::finalize_price_kernel<<<1U, tuning::kPricingFinalizationThreads, shared>>>(
-            partials, hybrid_fft_partial_moment_count(paths), paths, result, prices, errors);
+            reinterpret_cast<const PartialMoments*>(reinterpret_cast<const unsigned char*>(partials) + row * row_stride),
+            hybrid_fft_partial_moment_count(paths), paths, result + row, prices, errors);
         check_cuda(cudaGetLastError(), "Volterra hybrid FFT finalization");
     }
 };
@@ -596,7 +630,8 @@ void launch_fft_length(
     float* device_standard_errors,
     const char* diagnostic_name,
     const char* diagnostic_variant,
-    const PathConsumer& consumer
+    const PathConsumer& consumer,
+    std::size_t row_count = 1U, std::size_t row_workspace_stride = 0U
 ) {
     using ExecutionTypes = FftTypes<
         Length,
@@ -700,7 +735,7 @@ void launch_fft_length(
             Length,
             KernelForward
         >,
-        dim3(1U),
+        dim3(1U, static_cast<unsigned>(row_count)),
         KernelForward::block_dim,
         preparation_shared_bytes
     );
@@ -711,7 +746,7 @@ void launch_fft_length(
         SchedulePolicy,
         Length,
         KernelForward
-    ><<<1U, KernelForward::block_dim, preparation_shared_bytes>>>(
+    ><<<dim3(1U, static_cast<unsigned>(row_count)), KernelForward::block_dim, preparation_shared_bytes>>>(
         device_models,
         device_products,
         product_count,
@@ -722,7 +757,7 @@ void launch_fft_length(
         base_seed,
         kernel_spectrum,
         volterra_variances,
-        prepared_row
+        prepared_row, row_workspace_stride
     );
     check_cuda(cudaGetLastError(), "Volterra hybrid FFT row preparation");
 
@@ -748,7 +783,7 @@ void launch_fft_length(
                 Forward,
                 Inverse
             >,
-            dim3(static_cast<unsigned int>(convolution_block_count)),
+            dim3(static_cast<unsigned int>(convolution_block_count), static_cast<unsigned>(row_count)),
             Forward::block_dim,
             execution_shared_bytes
         );
@@ -761,7 +796,7 @@ void launch_fft_length(
             Forward,
             Inverse
         ><<<
-            static_cast<unsigned int>(convolution_block_count),
+            dim3(static_cast<unsigned int>(convolution_block_count), static_cast<unsigned>(row_count)),
             Forward::block_dim,
             execution_shared_bytes
         >>>(
@@ -769,7 +804,7 @@ void launch_fft_length(
             chunk_path_count,
             prepared_row,
             kernel_spectrum,
-            convolutions
+            convolutions, row_workspace_stride
         );
         check_cuda(cudaGetLastError(), "Volterra hybrid FFT convolution");
 
@@ -808,7 +843,8 @@ void launch_direct(
     float* device_standard_errors,
     const char* diagnostic_name,
     const char* diagnostic_variant,
-    const PathConsumer& consumer
+    const PathConsumer& consumer,
+    std::size_t row_count = 1U, std::size_t row_workspace_stride = 0U
 ) {
     report_cuda_kernel_phase_launch_if_enabled(
         diagnostic_name,
@@ -829,7 +865,7 @@ void launch_direct(
         ModelPathPolicy,
         ProductPolicy,
         SchedulePolicy
-    ><<<1U, tuning::kPricingPathThreads>>>(
+    ><<<dim3(1U, static_cast<unsigned>(row_count)), tuning::kPricingPathThreads>>>(
         device_models,
         device_products,
         product_count,
@@ -839,7 +875,7 @@ void launch_direct(
         time_configuration,
         base_seed,
         volterra_variances,
-        prepared_row
+        prepared_row, row_workspace_stride
     );
     check_cuda(cudaGetLastError(), "Volterra direct row preparation");
 
@@ -879,7 +915,8 @@ void launch_path_pipeline_cuda(
     float* device_standard_errors,
     const char* diagnostic_name,
     const char* diagnostic_variant,
-    const PathConsumer& consumer
+    const PathConsumer& consumer,
+    std::size_t row_count = 1U, std::size_t row_workspace_stride = 0U
 ) {
     static_assert(HybridPathPolicyFor<ModelPathPolicy, KernelPolicy>);
     validate_launch<
@@ -906,6 +943,12 @@ void launch_path_pipeline_cuda(
         device_standard_errors
     );
 
+    const auto row_bytes = required_hybrid_fft_workspace_bytes(step_count, monte_carlo_paths_per_price, path_chunk_size);
+    if (row_count == 0U || row_count > 65535U || row_count > result_count - result_index
+        || (row_count > 1U && row_workspace_stride < row_bytes)
+        || checked_hybrid_fft_sum(checked_hybrid_fft_product(row_count - 1U, row_workspace_stride,
+            "Hybrid row workspace overflow"), row_bytes, "Hybrid row workspace overflow") > workspace_bytes)
+        throw std::invalid_argument("Invalid hybrid FFT row batch workspace.");
     auto* const workspace = static_cast<unsigned char*>(device_workspace);
     auto* const spectrum = reinterpret_cast<float2*>(workspace);
     auto* const volterra_variances = reinterpret_cast<float*>(
@@ -954,7 +997,7 @@ void launch_path_pipeline_cuda(
             device_prices,
             device_standard_errors,
             diagnostic_name,
-            diagnostic_variant, consumer
+            diagnostic_variant, consumer, row_count, row_workspace_stride
         );
     } else
 #endif
@@ -988,7 +1031,7 @@ void launch_path_pipeline_cuda(
                 device_prices,
                 device_standard_errors,
                 diagnostic_name,
-                diagnostic_variant, consumer
+                diagnostic_variant, consumer, row_count, row_workspace_stride
             );
         }
     );
@@ -1014,14 +1057,16 @@ void launch_pricing_cuda(
     float* device_prices,
     float* device_standard_errors,
     const char* diagnostic_name,
-    const char* diagnostic_variant
+    const char* diagnostic_variant,
+    std::size_t row_count = 1U
 ) {
+    const auto stride = required_hybrid_fft_workspace_bytes(step_count, monte_carlo_paths_per_price, path_chunk_size);
     launch_path_pipeline_cuda<KernelPolicy, ModelPathPolicy, ProductPolicy, SchedulePolicy>(
         device_models, model_count, device_products, product_count, construction,
         result_count, result_index, monte_carlo_paths_per_price, time_configuration,
         step_count, path_chunk_size, device_workspace, workspace_bytes, base_seed,
         device_prices, device_standard_errors, diagnostic_name, diagnostic_variant,
-        PricePathConsumer{});
+        PricePathConsumer{row_count, stride}, row_count, stride);
 }
 
 }  // namespace ai_factory::workbench::volterra::hybrid_fft

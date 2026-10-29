@@ -24,7 +24,8 @@ void launch_log_modulated_rough_bergomi_phoenix_memory_autocall_cuda(
     std::size_t workspace_bytes,
     std::uint64_t base_seed,
     float* device_prices,
-    float* device_standard_errors
+    float* device_standard_errors,
+    std::size_t row_count
 ) {
     using ProductPolicy = product::PhoenixMemoryAutocallPathPolicy;
     launch_log_modulated_rough_bergomi_hybrid_fft_cuda<
@@ -48,7 +49,7 @@ void launch_log_modulated_rough_bergomi_phoenix_memory_autocall_cuda(
         device_prices,
         device_standard_errors,
         "log_modulated_rough_bergomi.phoenix_memory_autocall",
-        "default"
+        "default", row_count
     );
 }
 

@@ -35,44 +35,12 @@ target_link_libraries(generate_constant_rates_01 PRIVATE
 )
 add_dependencies(parameter_generators generate_constant_rates_01)
 
-# Each leaf owns its recipe and tiny generator; one loop registers all targets.
-foreach(factor_model IN ITEMS
-    equity/markovian/bates
-    equity/markovian/black_scholes
-    equity/markovian/cev
-    equity/markovian/heston
-    equity/markovian/heston_3_2
-    equity/markovian/kou
-    equity/markovian/merton
-    equity/markovian/normal_inverse_gaussian
-    equity/markovian/sabr
-    equity/markovian/schobel_zhu
-    equity/markovian/stein_stein
-    equity/markovian/variance_gamma
-    equity/rough/log_modulated_rough_bergomi
-    equity/rough/quadratic_rough_heston
-    equity/rough/rough_bergomi
-    equity/rough/rough_heston
-    equity/rough/rough_sabr
-    equity/rough/rough_stein_stein
-    fixed_income/g2
-    fixed_income/g2_plus_plus
-)
-    get_filename_component(model_name "${factor_model}" NAME)
-    set(factor_target generate_${model_name}_factors_01)
-    add_executable(${factor_target} EXCLUDE_FROM_ALL
-        catalog/model/${factor_model}/factor_parameters/${model_name}_factors_01/generator.cpp)
-    target_link_libraries(${factor_target} PRIVATE
-        ai_factory_parameter_dataset ai_factory_dataset_validation)
-    add_dependencies(parameter_generators ${factor_target})
-endforeach()
-
-# Core-only factor bases and terminal basket contracts for the 11-factor study.
+# Core-only factor bases for the five-equity/CIR study.
 foreach(core_model IN ITEMS
     equity/markovian/heston
     equity/markovian/bates
     equity/markovian/sabr
-    equity/rough/rough_heston
+    equity/rough/quadratic_rough_heston
     equity/rough/rough_bergomi
     fixed_income/cir
 )
@@ -85,13 +53,13 @@ foreach(core_model IN ITEMS
     add_dependencies(parameter_generators ${core_target})
 endforeach()
 
-foreach(basket_family IN ITEMS worst_of_call best_of_call basket_call)
-    if(basket_family STREQUAL "worst_of_call")
-        set(basket_dataset worst_of_calls_multi_01)
-    elseif(basket_family STREQUAL "best_of_call")
-        set(basket_dataset best_of_calls_multi_01)
+foreach(basket_family IN ITEMS worst_of_option best_of_option basket_option)
+    if(basket_family STREQUAL "worst_of_option")
+        set(basket_dataset worst_of_options_multi_01)
+    elseif(basket_family STREQUAL "best_of_option")
+        set(basket_dataset best_of_options_multi_01)
     else()
-        set(basket_dataset basket_calls_multi_01)
+        set(basket_dataset basket_options_multi_01)
     endif()
     set(basket_target generate_${basket_dataset})
     add_executable(${basket_target} EXCLUDE_FROM_ALL
@@ -100,6 +68,13 @@ foreach(basket_family IN ITEMS worst_of_call best_of_call basket_call)
         ai_factory_parameter_dataset ai_factory_dataset_validation)
     add_dependencies(parameter_generators ${basket_target})
 endforeach()
+
+add_executable(generate_basket_down_and_out_calls_multi_01 EXCLUDE_FROM_ALL
+    catalog/product/basket_down_and_out_call/basket_down_and_out_calls_multi_01/generator.cpp)
+target_link_libraries(generate_basket_down_and_out_calls_multi_01 PRIVATE
+    ai_factory_parameter_dataset ai_factory_dataset_validation)
+add_dependencies(parameter_generators
+    generate_basket_down_and_out_calls_multi_01)
 
 add_executable(generate_five_equity_cir_correlations_01 EXCLUDE_FROM_ALL
     catalog/correlation/five_equity_cir_01/generator.cpp)

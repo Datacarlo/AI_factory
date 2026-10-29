@@ -29,7 +29,8 @@ namespace ai_factory::workbench::model::equity::{model} {{
     std::size_t workspace_bytes,
     std::uint64_t base_seed,
     float* device_prices,
-    float* device_standard_errors
+    float* device_standard_errors,
+    std::size_t row_count = 1U
 );
 
 }}  // namespace ai_factory::workbench::model::equity::{model}

@@ -29,6 +29,7 @@ int main() {
         11668828356798840832ULL,
         "1 / 504",
         ::ai_factory::workbench::offline::cuda_tuning::PricingIdentity{::ai_factory::workbench::offline::cuda_tuning::PricingFamily::rough_fft, "log_modulated_rough_bergomi", "up_no_touch", ""},
+        1U, // Historical row geometry.
     };
 
     return pricing::generate_volterra_equity_price_dataset(
@@ -69,7 +70,8 @@ int main() {
                         workspace_bytes,
                         context.seed,
                         device_prices,
-                        device_standard_errors
+                        device_standard_errors,
+                        context.row_count
                     );
                 }
             );

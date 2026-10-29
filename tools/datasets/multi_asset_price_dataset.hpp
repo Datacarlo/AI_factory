@@ -21,6 +21,7 @@ struct MultiAssetPriceDatasetRecipe {
     std::filesystem::path catalog_path;
     std::string url;
     std::optional<std::filesystem::path> rate_model_dataset_path;
+    std::string option_side = "call";
 };
 
 void write_multi_asset_price_dataset(

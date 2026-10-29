@@ -67,6 +67,38 @@ void require(bool ok, const char* message) {
     if (!ok) throw std::runtime_error(message);
 }
 
+__global__ void negative_rough_heston_cell(float* result) {
+    using Policy = model::equity::rough_heston::CausalFftPathPolicy;
+    constexpr float dt = 1.0f / 252.0f;
+    const Policy::Parameters parameters{
+        1.0f, 0.0f, 0.0f, 0.04f, 2.0f, 0.08f, 0.4f, 0.12f, -0.4f};
+    const auto model = Policy::prepare_model(parameters, dt);
+    const auto kernel = Policy::KernelPolicy::prepare(
+        Policy::kernel_parameters(parameters), dt);
+    auto state = Policy::initial_volatility_state(model);
+    float raw_variance = 0.0f;
+    const float source = Policy::advance_volatility_cell(
+        model, kernel, -1.0f, 0.0f, 0.0f, 1U, state, raw_variance);
+    result[0] = raw_variance;
+    result[1] = source;
+}
+
+void check_negative_rough_heston_cell() {
+    float* device = nullptr;
+    check_cuda(cudaMalloc(&device, 2U * sizeof(float)),
+               "negative RH cell allocation");
+    negative_rough_heston_cell<<<1U, 1U>>>(device);
+    check_cuda(cudaGetLastError(), "negative RH cell launch");
+    float result[2]{};
+    check_cuda(cudaMemcpy(result, device, sizeof(result),
+                          cudaMemcpyDeviceToHost),
+               "negative RH cell download");
+    cudaFree(device);
+    require(result[0] < 0.0f, "RH test did not reach a negative raw state");
+    require(std::abs(result[1] - 0.08f / 252.0f) < 1.0e-7f,
+            "RH negative state did not truncate mean reversion");
+}
+
 template<typename Policy>
 void exercise(const typename Policy::Parameters& parameters) {
     using Model = typename Policy::Parameters;
@@ -128,6 +160,7 @@ void exercise(const typename Policy::Parameters& parameters) {
 }
 
 int main() {
+    check_negative_rough_heston_cell();
     exercise<model::equity::rough_heston::CausalFftPathPolicy>({
         1.0f, 0.0f, 0.0f, 0.04f, 2.0f, 0.08f, 0.4f, 0.12f, -0.4f
     });

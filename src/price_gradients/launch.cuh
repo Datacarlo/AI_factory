@@ -21,6 +21,7 @@ struct LaunchConfiguration {
     std::size_t block_count = 1U;
     std::uint64_t base_seed = 0U;
     unsigned int sensitivity_batch_size = kSensitivitiesPerBlock;
+    std::size_t rows_per_launch = 0U;  // Zero retains the engine default (FFT: 1, lift: up to 16).
 };
 struct Outputs {
     float* prices;

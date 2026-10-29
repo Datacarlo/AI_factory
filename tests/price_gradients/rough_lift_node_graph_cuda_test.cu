@@ -8,6 +8,7 @@
 #include <cuda_runtime.h>
 
 #include <cmath>
+#include <cstring>
 #include <cstddef>
 #include <cstdint>
 #include <stdexcept>
@@ -106,6 +107,34 @@ void exercise_model(
         gradients.download(gradient, 8U);
         if constexpr (pg::requests_second_v<Orders>)
             hessians.download(hessian, 8U);
+        // Row batching changes neither Philox identities nor partial-sum order.
+        const auto capture = [&] {
+            std::vector<float> values(4U + 16U +
+                (pg::requests_second_v<Orders> ? 16U : 0U));
+            prices.download(values.data(), 2U);
+            price_errors.download(values.data() + 2U, 2U);
+            gradients.download(values.data() + 4U, 8U);
+            gradient_errors.download(values.data() + 12U, 8U);
+            if constexpr (pg::requests_second_v<Orders>) {
+                hessians.download(values.data() + 20U, 8U);
+                hessian_errors.download(values.data() + 28U, 8U);
+            }
+            return values;
+        };
+        const auto baseline = capture();
+        for (const auto row_count : {1U, 2U, 3U, 8U}) {
+            auto grouped = launch;
+            grouped.rows_per_launch = row_count;
+            const auto grouped_plan = Engine::plan(host, cache, grouped);
+            DeviceBuffer<unsigned char> grouped_workspace(grouped_plan.bytes);
+            Engine::launch(host, cache, grouped, outputs, stencil_outputs,
+                grouped_plan, grouped_workspace.value, grouped_plan.bytes);
+            check_cuda(cudaDeviceSynchronize(), "rough grouped graph sync");
+            const auto observed = capture();
+            require(std::memcmp(baseline.data(), observed.data(),
+                        baseline.size() * sizeof(float)) == 0,
+                    "Lift row batching changed output bits.");
+        }
         for (std::size_t row_index = 0U; row_index < 2U; ++row_index) {
             require(std::isfinite(result[row_index])
                     && std::isfinite(error[row_index])

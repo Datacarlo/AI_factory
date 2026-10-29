@@ -24,7 +24,8 @@ void launch_rough_sabr_range_accrual_cuda(
     std::size_t workspace_bytes,
     std::uint64_t base_seed,
     float* device_prices,
-    float* device_standard_errors
+    float* device_standard_errors,
+    std::size_t row_count
 ) {
     using ProductPolicy = product::RangeAccrualPathPolicy;
     launch_rough_sabr_hybrid_fft_cuda<
@@ -48,7 +49,7 @@ void launch_rough_sabr_range_accrual_cuda(
         device_prices,
         device_standard_errors,
         "rough_sabr.range_accrual",
-        "default"
+        "default", row_count
     );
 }
 

@@ -78,13 +78,15 @@ struct CausalFftPathPolicy {
         const float variance = step == 0U ? model.initial_variance
             : model.initial_variance + far_convolution
                 + state.pending_singular_cell;
-        const float root_variance = sqrtf(fmaxf(variance, 0.0f));
+        // Full truncation of the coefficients; the convolution state stays raw.
+        const float positive_variance = fmaxf(variance, 0.0f);
+        const float root_variance = sqrtf(positive_variance);
         variance_at_step = variance;
         state.variance = variance;
         state.pending_singular_cell = model.volatility_of_variance
             * root_variance * kernel.singular_independent_loading
             * singular_normal;
-        return (model.variance_drift - model.mean_reversion * variance)
+        return (model.variance_drift - model.mean_reversion * positive_variance)
             * model.dt
             + model.volatility_of_variance * root_variance
                 * (sqrtf(model.dt) * variance_normal);

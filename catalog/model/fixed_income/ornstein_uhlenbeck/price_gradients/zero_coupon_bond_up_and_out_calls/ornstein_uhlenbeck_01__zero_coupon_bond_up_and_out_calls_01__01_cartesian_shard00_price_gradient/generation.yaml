@@ -1,0 +1,29 @@
+schema_version: 4
+status: complete
+inputs:
+  model:
+    path: datasets/model/fixed_income/ornstein_uhlenbeck/parameters/ornstein_uhlenbeck_01.json
+    sha256: 178ccbc37089fea72cd43879c5f74901cb196ad9422a4713281a7827b1e55714
+  product:
+    path: datasets/product/zero_coupon_bond_up_and_out/zero_coupon_bond_up_and_outs_01_shard00.json
+    sha256: 598d3d5d811f4d0da1520381d2357553d7a86826ff06e2937ae88bb93c676b32
+output:
+  path: datasets/model/fixed_income/ornstein_uhlenbeck/price_gradients/zero_coupon_bond_up_and_out_calls/ornstein_uhlenbeck_01__zero_coupon_bond_up_and_out_calls_01__01_cartesian_shard00_price_gradient.json
+  sha256: 011b426167b6c51fe6117668f96cd3525d410d21229d15ab273443982c64219a
+hardware:
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+  device: gpu
+  name: Tesla V100-SXM2-32GB
+  uuid: GPU-eb05268b-e265-c927-124b-f944b18caf0c
+  compute_capability: '7.0'
+  driver_version: 580.178.04
+software:
+  cmake: cmake version 3.31.6
+  cxx_compiler: g++-14 (Debian 14.2.0-19) 14.2.0
+  cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
+  cuda_target_architectures: '70'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1
+timing:
+  wall_seconds: 924.3710248661228
+  duration: 15 min 24 s 371 ms

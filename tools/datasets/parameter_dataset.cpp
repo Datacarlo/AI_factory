@@ -168,7 +168,8 @@ void write_core_factorized_model_dataset(
     const std::string& url,
     std::size_t core_prefix_count,
     std::size_t row_count,
-    std::uint64_t seed
+    std::uint64_t seed,
+    std::optional<float> spot_override
 ) {
     const auto source = read_json_file(source_dataset_path);
     validate_model_dataset(source);
@@ -189,10 +190,17 @@ void write_core_factorized_model_dataset(
         parameters.erase("risk_free_rate");
         parameters.erase("rho");
         parameters.erase("correlation");
+        if (spot_override) {
+            if (!parameters.contains("spot"))
+                throw std::invalid_argument("Cannot override missing spot");
+            parameters["spot"] = *spot_override;
+        }
         if (parameters.empty())
             throw std::invalid_argument("Empty factorized core row");
         for (const auto& [name, value] : parameters.items())
             descriptions[name] = "Model factor parameter.";
+        if (spot_override)
+            descriptions["spot"] = "Fixed to one for equal initial asset weights.";
         generated.rows.push_back(std::move(parameters));
     }
     generated.construction = {
@@ -203,6 +211,8 @@ void write_core_factorized_model_dataset(
         {"source_row_indices", indices},
         {"excluded", {"risk_free_rate", "rho", "correlation"}}
     };
+    if (spot_override)
+        generated.construction["spot_override"] = *spot_override;
     write_parameter_dataset(
         database_id, source.at("model_family").get<std::string>(),
         "model_family", "models", "dynamics", dataset_path, catalog_path,

@@ -46,7 +46,7 @@ int main() {
             {offline::cuda_tuning::PricingFamily::rough_fft,
              "rough_stein_stein", "european_option", ""},
             11668828962389229568ULL, models, products, prepare,
-            offline::cuda_tuning::kProductionPathsPerPrice);
+            offline::cuda_tuning::kProductionPathsPerPrice, 1U); // Historical row geometry.
     } catch (const std::exception& error) {
         std::cerr << error.what() << '\n';
         return 1;

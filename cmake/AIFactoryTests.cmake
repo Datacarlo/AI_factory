@@ -153,8 +153,7 @@ if(BUILD_TESTING)
     ai_factory_collect_source_dependencies(factorized_loader_dependencies
         tests/datasets/factorized_model_loaders_test.cpp)
     target_link_libraries(test_factorized_model_loaders PRIVATE
-        ${factorized_loader_dependencies}
-        ai_factory_fixed_income_constant_rate_dataset)
+        ${factorized_loader_dependencies})
     target_compile_features(test_factorized_model_loaders PRIVATE cxx_std_20)
     add_dependencies(ai_factory_host_tests test_factorized_model_loaders)
     add_test(NAME factorized_model_loaders COMMAND test_factorized_model_loaders)
@@ -287,7 +286,7 @@ if(BUILD_TESTING)
     )
     add_cuda_workbench_test(
         cross_asset_cuda tests/simulation/cross_asset_cuda_test.cu
-        "multi_asset;fixed_income;rough_heston;cross_asset" 180
+        "multi_asset;fixed_income;quadratic_rough_heston;cross_asset" 180
     )
     target_link_libraries(test_cross_asset_cuda PRIVATE
         ai_factory_causal_fft ai_factory_correlation_dataset

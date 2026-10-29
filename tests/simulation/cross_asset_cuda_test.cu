@@ -1,7 +1,7 @@
 #include "correlation/dataset.hpp"
 #include "multi_asset/rate_adjusted_model_group.cuh"
 #include "model/equity/markovian/black_scholes/dynamics_impl.cuh"
-#include "model/equity/rough/rough_heston/causal_fft_dynamics.cuh"
+#include "model/equity/rough/quadratic_rough_heston/causal_fft_dynamics.cuh"
 #include "model/fixed_income/vasicek/correlated_dynamics.cuh"
 #include "product/basket_down_and_out_call/pricing_policy.cuh"
 #include "product/worst_of_call/pricing_policy.cuh"
@@ -17,7 +17,7 @@
 namespace wb=ai_factory::workbench;
 using BS=wb::model::equity::black_scholes::DynamicsPolicy;
 using Rate=wb::model::fixed_income::vasicek::CorrelatedRatePolicy;
-using Rough=wb::model::equity::rough_heston::CausalFftPathPolicy;
+using Rough=wb::model::equity::quadratic_rough_heston::CausalFftPathPolicy;
 using Worst=wb::product::WorstOfCallPathPolicy;
 using Best=wb::product::BestOfCallPathPolicy;
 using Basket=wb::product::BasketCallPathPolicy;
@@ -83,19 +83,18 @@ void rough_rate() {
     wb::offline::pricing::MultiAssetHostModels<OneBS> equities;
     equities.models={{1.0f,0.0f,0.0f,0.2f}};
     wb::offline::pricing::MultiRoughHostModels<OneRough> rough;
-    rough.models={{1.0f,0.0f,0.0f,0.04f,2.0f,0.08f,
-                   0.3f,0.12f,-0.4f}};
+    rough.models={{1.0f,0.0f,0.0f,0.05f,0.2f,0.0f,
+                   0.04f,1.0f,0.3f,0.12f}};
     const std::vector<Rate::Parameters> rates{{{0.7f,0.025f,0.035f},0.02f}};
     const std::vector<std::string> external{
-        "bs.spot","rough.spot","rough.vol","rate.brownian"};
+        "bs.spot","quadratic_rough_heston.spot","rate.brownian"};
     const std::vector<std::string> internal{
-        "rough.vol","bs.spot","rate.brownian","rough.spot"};
+        "quadratic_rough_heston.spot","bs.spot","rate.brownian"};
     const wb::correlation::MatrixRow raw{
-        "rough_rate",external,wb::correlation::packed_cholesky({
-            1.0,0.0,0.0,0.2,
-            0.0,1.0,-0.4,0.0,
-            0.0,-0.4,1.0,0.0,
-            0.2,0.0,0.0,1.0},4U)};
+        "quadratic_rough_rate",external,wb::correlation::packed_cholesky({
+            1.0,0.2,0.0,
+            0.2,1.0,-0.1,
+            0.0,-0.1,1.0},3U)};
     const auto plan=single_plan(5U);
     const auto full=wb::offline::pricing::execute_cross_asset_prices<
         OneBS,OneRough,Rate,Barrier,1U>(equities,rough,rates,

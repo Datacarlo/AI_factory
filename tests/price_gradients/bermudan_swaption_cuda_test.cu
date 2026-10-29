@@ -1,5 +1,11 @@
 // Frozen-policy Bermudan sensitivities across fixed-income pricing paths.
 #include "longstaff_schwartz/launch.cuh"
+#include "model/fixed_income/cir/analytics_impl.cuh"
+#include "model/fixed_income/cir_plus_plus/flat/analytics_impl.cuh"
+#include "model/fixed_income/cir_plus_plus/nelson_siegel/analytics_impl.cuh"
+#include "model/fixed_income/g2/analytics_impl.cuh"
+#include "model/fixed_income/g2_plus_plus/svensson/analytics_impl.cuh"
+#include "model/fixed_income/vasicek/analytics_impl.cuh"
 #include "model/fixed_income/cir/product/bermudan_swaption.cuh"
 #include "model/fixed_income/cir/product/bermudan_swaption_price_gradients.cuh"
 #include "model/fixed_income/cir_plus_plus/product/flat/bermudan_swaption.cuh"
@@ -475,6 +481,37 @@ void check_cir() {
     require_same_central(
         first, central,
         "CIR gradient pipeline changed the central result bits."
+    );
+    // Cartesian rows must select their own model/product, not the default
+    // selector's first row. This caught the Bermudan-only mapping regression.
+    const auto cartesian_plan = cir::prepare_cir_bermudan_swaption_sensitivities(
+        models, kProducts, PriceConstruction::CartesianProduct,
+        kTime, full, {pg::SensitivityOrders::first}
+    );
+    const Results cartesian_gradient = execute_first(cartesian_plan);
+    DeviceArray<cir::ModelParameters> cartesian_models(models);
+    DeviceArray<product::BermudanSwaptionParameters> cartesian_products(kProducts);
+    DeviceArray<float> cartesian_prices(cartesian_plan.result_count);
+    DeviceArray<float> cartesian_errors(cartesian_plan.result_count);
+    const auto cartesian_launch = cir::launch_cir_bermudan_swaption_cuda<
+        SwaptionSide::payer
+    >(
+        cartesian_models.data, models.size(), kProducts.data(),
+        cartesian_products.data, kProducts.size(),
+        PriceConstruction::CartesianProduct, cartesian_plan.result_count,
+        kPaths, kTime.dt * kTime.simulation_steps_per_day,
+        kThreads, kBlocks, kSeed,
+        cartesian_prices.data, cartesian_errors.data
+    );
+    longstaff_schwartz::validate_regression_diagnostics(
+        cartesian_launch, "Cartesian Bermudan price-only reference"
+    );
+    const Results cartesian_central{
+        cartesian_prices.read(), cartesian_errors.read(), {}, {}, {}, {}
+    };
+    require_same_central(
+        cartesian_gradient, cartesian_central,
+        "Cartesian Bermudan gradients selected the wrong model or product."
     );
     require_same_first_order(
         first, diagonal,
@@ -1060,6 +1097,55 @@ void check_cir_plus_plus_flat() {
         diagonal,
         central,
         "CIR++/Flat gradient pipeline changed central bits."
+    );
+    // A fitted model adds a third row source. Exercise all three selectors
+    // rather than accepting the default first model/curve/product.
+    const auto cartesian_plan =
+        fitted::prepare_cir_plus_plus_flat_bermudan_swaption_sensitivities(
+            models, curves, kProducts, PriceConstruction::CartesianProduct,
+            kTime, selection, {pg::SensitivityOrders::first_and_second}
+        );
+    const Results cartesian_gradient = execute_curve<
+        pg::SensitivityOrders::first_and_second
+    >(
+        cartesian_plan,
+        [](const auto& host, auto inputs, auto stencils,
+           const auto& launch, auto outputs) {
+            return fitted::
+                launch_cir_plus_plus_flat_bermudan_swaption_diagonal_sensitivities_cuda<
+                    SwaptionSide::payer, pg::SensitivityOrders::first_and_second
+                >(host, inputs, stencils, launch, outputs);
+        }
+    );
+    DeviceArray<Model> cartesian_models(models);
+    DeviceArray<Curve> cartesian_curves(curves);
+    DeviceArray<product::BermudanSwaptionParameters> cartesian_products(
+        kProducts
+    );
+    DeviceArray<float> cartesian_prices(cartesian_plan.result_count);
+    DeviceArray<float> cartesian_errors(cartesian_plan.result_count);
+    const auto cartesian_launch =
+        fitted::launch_cir_plus_plus_flat_bermudan_swaption_cuda<
+            SwaptionSide::payer
+        >(
+            cartesian_models.data, models.size(),
+            cartesian_curves.data, curves.size(),
+            kProducts.data(), cartesian_products.data, kProducts.size(),
+            PriceConstruction::CartesianProduct,
+            cartesian_plan.result_count, kPaths,
+            kTime.dt * kTime.simulation_steps_per_day,
+            kThreads, kBlocks, kSeed,
+            cartesian_prices.data, cartesian_errors.data
+        );
+    longstaff_schwartz::validate_regression_diagnostics(
+        cartesian_launch, "Cartesian CIR++/Flat price-only reference"
+    );
+    const Results cartesian_central{
+        cartesian_prices.read(), cartesian_errors.read(), {}, {}, {}, {}
+    };
+    require_same_central(
+        cartesian_gradient, cartesian_central,
+        "Cartesian CIR++/Flat gradients selected the wrong model, curve, or product."
     );
 }
 

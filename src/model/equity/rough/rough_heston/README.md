@@ -37,6 +37,36 @@ contract.
 
 ## Causal FFT experiment
 
+All current single-asset pricing and sensitivity bindings use the N-factor
+lift described below. The separate causal FFT policy remains available for
+numerical experiments, but rough Heston is excluded from the first planned
+five-equity multi-asset basket. That basket uses quadratic rough Heston. The
+multi-asset engine itself does not use the N-factor lift; this is a property
+of its present binding, not a mathematical restriction on correlating a
+lifted model.
+
+The model variance is nonnegative in the continuous-time specification, but
+the time-discrete causal convolution can produce a negative **raw** variance.
+In `CausalFftPathPolicy::advance_volatility_cell`, the stochastic variance
+terms and the mean-reversion term now use `Vplus = max(Vraw, 0)`. In
+`advance_spot_cell`, both the log-spot variance drift and diffusion use
+`Vplus`. The raw state is still retained in the convolution history: this is
+coefficient truncation, not a positivity-preserving variance state scheme.
+
+At the catalogue grid of two steps per day, targeted European-call checks
+find a material price bias against an independent fractional Riccati price.
+Using `Vplus` in mean reversion reduces the bias, but leaves an 11–15 Monte
+Carlo standard-error discrepancy across three core cases at 2^20 paths each.
+Two discrete up-and-out calls are closer to the 7-factor lift under this
+policy; this payoff-specific check does not qualify multi-asset prices or
+continuously monitored barriers. A finer time grid is needed to assess the
+remaining bias for each parameter set and payoff. The FFT convolution itself
+does not remove the scheme bias, and validation of the N-factor lift does not
+qualify this causal policy. See
+`project_journal/audits/rough-heston-causal-variance-ablation-2026-10-27.md`
+for the cases, grids, seeds, numerical references and remaining limits. The
+causal-policy change does not regenerate the published lift datasets.
+
 ## N-factor approximation
 
 `prepare_dynamics<N>` runs on the host once per model and `dt`. It stores the

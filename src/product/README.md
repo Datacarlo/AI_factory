@@ -39,13 +39,15 @@ The observation type is chosen by the product policy: a scalar for these
 contracts, or a compact struct when a payoff needs several basket statistics.
 A terminal product observes only at maturity. A barrier product observes on its
 monitoring calendar and can stop a path early. The pricing kernels do not need
-a product-specific specialization. The worst-of, best-of, and basket calls share
-[`terminal_basket_call_path_policy.cuh`](terminal_basket_call_path_policy.cuh);
-the basket barrier uses the same arithmetic-mean observable.
+a product-specific specialization. The worst-of, best-of, and basket terminal options share
+[`terminal_basket_option_path_policy.cuh`](terminal_basket_option_path_policy.cuh).
+`OptionSide` selects the call or put payoff at compile time; the simulation
+and basket observation are shared. The basket barrier uses the same
+arithmetic-mean observable.
 
 Basket observations use `S_i(t) / S_i(0)`. Worst-of takes their minimum,
-best-of their maximum, and basket call their equally weighted arithmetic
-mean. All three start at one, so their `strike` is dimensionless. The mean
+best-of their maximum, and the basket option their equally weighted
+arithmetic mean. All three start at one, so their `strike` is dimensionless. The mean
 is over normalized assets, not over raw spots with different initial prices.
 Price barriers use the same normalized basket units.
 

@@ -24,7 +24,8 @@ void launch_rough_stein_stein_cliquet_cuda(
     std::size_t workspace_bytes,
     std::uint64_t base_seed,
     float* device_prices,
-    float* device_standard_errors
+    float* device_standard_errors,
+    std::size_t row_count
 ) {
     using ProductPolicy = product::CliquetPathPolicy;
     launch_rough_stein_stein_hybrid_fft_cuda<
@@ -48,7 +49,7 @@ void launch_rough_stein_stein_cliquet_cuda(
         device_prices,
         device_standard_errors,
         "rough_stein_stein.cliquet",
-        "default"
+        "default", row_count
     );
 }
 

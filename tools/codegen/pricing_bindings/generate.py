@@ -769,7 +769,7 @@ def generate_price_delta_bindings(output_root: Path) -> list[Path]:
                       "const ModelParameters*, const ModelParameters*, std::size_t,").replace(
                 f"const product::{binding.product_type}Parameters*, std::size_t,",
                 f"const product::{binding.product_type}Parameters*, const product::{binding.product_type}Parameters*, std::size_t,"
-            ).replace("std::uint64_t, float*, float*", "std::uint64_t, "
+            ).replace("std::uint64_t, float*, float*, std::size_t", "std::uint64_t, "
                       "::ai_factory::workbench::equity::price_delta::SpotBumpConfiguration, "
                       "float*, float*, float*, float*")
             for suffix in ("cuh", "cu"):
@@ -1047,7 +1047,7 @@ def volterra_instantiation(
     const product::{binding.product_type}Parameters*, std::size_t,
     PriceConstruction, std::size_t, std::size_t, std::size_t,
     float, float, std::size_t, std::size_t,
-    void*, std::size_t, std::uint64_t, float*, float*
+    void*, std::size_t, std::uint64_t, float*, float*, std::size_t
 );
 """
 
