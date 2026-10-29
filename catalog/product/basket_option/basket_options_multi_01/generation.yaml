@@ -1,0 +1,16 @@
+schema_version: 4
+status: complete
+inputs: {}
+output:
+  path: datasets/product/basket_option/basket_options_multi_01.json
+  sha256: d245358d668924e42c73ae56a8b17a81355e76a8b614c0f1ea7ed286725cca3f
+hardware:
+  device: cpu
+  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
+software:
+  cmake: cmake version 3.22.1
+  cxx_compiler: g++-14 (Ubuntu 14.3.0-12ubuntu1~22~ppa2) 14.3.0
+  cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
+  cuda_target_architectures: '89'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1

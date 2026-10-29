@@ -1,3 +1,4 @@
+#include "volterra/row_workspace.cuh"
 // Product-independent causal Volterra history and FFT operations.
 #pragma once
 
@@ -28,9 +29,13 @@ __global__ void prepare_weights_kernel(
     const Row* rows,
     std::size_t row_count,
     std::uint32_t steps,
-    float* weights
+    float* weights,
+    std::size_t workspace_stride=0U
 ) {
-    const std::size_t row_index = blockIdx.y;
+    rows=::ai_factory::workbench::volterra::row_workspace_pointer(rows,workspace_stride);
+    weights=::ai_factory::workbench::volterra::row_workspace_pointer(weights,workspace_stride);
+
+    const std::size_t row_index = workspace_stride ? 0U : blockIdx.y;
     const std::uint32_t lag = blockIdx.x * blockDim.x + threadIdx.x + 1U;
     if (row_index >= row_count || lag > steps) return;
     using Kernel = typename Row::Kernel;
@@ -48,8 +53,13 @@ __global__ void prepare_spectrum_kernel(
     std::size_t offset,
     std::size_t spectrum_stride,
     const float* weights,
-    float2* spectra
+    float2* spectra,
+    std::size_t workspace_stride=0U
 ) {
+    rows=::ai_factory::workbench::volterra::row_workspace_pointer(rows,workspace_stride);
+    weights=::ai_factory::workbench::volterra::row_workspace_pointer(weights,workspace_stride);
+    spectra=::ai_factory::workbench::volterra::row_workspace_pointer(spectra,workspace_stride);
+
     using Types = hybrid_fft::FftTypes<
         Length, ElementsPerThread, FftsPerBlock
     >;
@@ -96,15 +106,19 @@ __global__ void update_history_kernel(
     std::size_t path_count,
     std::uint32_t steps,
     std::uint32_t boundary,
-    std::uint32_t scale
+    std::uint32_t scale,
+    std::size_t workspace_stride=0U
 ) {
+    spectra=::ai_factory::workbench::volterra::row_workspace_pointer(spectra,workspace_stride);
+    history=::ai_factory::workbench::volterra::row_workspace_pointer(history,workspace_stride);
+
     using Types = hybrid_fft::FftTypes<
         Length, ElementsPerThread, FftsPerBlock
     >;
     using Forward = typename Types::Forward;
     using Inverse = typename Types::Inverse;
     using Complex = typename Forward::value_type;
-    const std::size_t row_index = blockIdx.y;
+    const std::size_t row_index = workspace_stride ? 0U : blockIdx.y;
     if (row_index >= row_count) return;
     const std::size_t pair = blockIdx.x * FftsPerBlock + threadIdx.y;
     const std::size_t path0 = 2U * pair;

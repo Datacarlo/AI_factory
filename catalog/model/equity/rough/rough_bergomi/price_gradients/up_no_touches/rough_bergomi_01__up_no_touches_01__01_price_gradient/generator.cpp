@@ -45,7 +45,7 @@ int main() {
             {offline::cuda_tuning::PricingFamily::rough_fft,
              "rough_bergomi", "up_no_touch", ""},
             11668828623086813184ULL, models, products, prepare,
-            offline::cuda_tuning::kProductionPathsPerPrice);
+            offline::cuda_tuning::kProductionPathsPerPrice, 1U); // Historical row geometry.
     } catch (const std::exception& error) {
         std::cerr << error.what() << '\n';
         return 1;

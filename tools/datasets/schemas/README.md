@@ -20,6 +20,12 @@ if a published input JSON is normalized or replaced, update the dependent
 input SHA-256 only after checking that the intended numerical input rows are
 unchanged. See `tools/datasets/refresh_generation.py`.
 
+The top-level presentation order is `schema_version`, `status`, `inputs`,
+`output`, `hardware`, `software`, then `timing`. Omit a field when its evidence
+is unavailable or inapplicable; keep the relative order of fields that are
+present. In particular, do not invent software versions for historical
+receipts or add timing to parameter and sample receipts.
+
 Version 1–3 receipts remain readable. `campaign.schema.yaml` governs
 separately staged campaign checkpoints.
 

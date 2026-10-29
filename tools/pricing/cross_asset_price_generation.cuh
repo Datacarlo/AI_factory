@@ -3,12 +3,16 @@
 
 #include "multi_asset/equity_rate_price_kernel.cuh"
 #include "tools/pricing/heterogeneous_rough_price_generation.cuh"
+#include "tools/cuda/generation_checkpoint.hpp"
+#include "tools/cuda/generation_progress.hpp"
 
 #include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
+#include <span>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -19,6 +23,9 @@ struct CrossAssetBatchGeometry {
     std::size_t results_per_launch=4096U;
     unsigned blocks_per_result=0U; // Zero selects from SM count and path work.
     unsigned threads_per_block=128U;
+    std::size_t rough_rows_per_launch=1U;
+    unsigned streams=0U; // Zero retains memory-adaptive historical stream selection.
+    unsigned paths_per_team=0U; // Zero retains TeamSize paths per tile.
 };
 
 template<typename EquityPack,typename RoughPack,typename RatePolicy,
@@ -69,7 +76,7 @@ cuda::MonteCarloRun execute_cross_asset_prices(
             || (direct_tile_size!=32U && direct_tile_size!=64U))
             throw std::invalid_argument("invalid cross-asset FFT geometry");
         if(geometry.blocks_per_result!=0U
-            || geometry.threads_per_block!=128U)
+            || (geometry.threads_per_block!=128U && geometry.threads_per_block!=256U))
             throw std::invalid_argument(
                 "rough cross-asset batch geometry is not supported");
     }
@@ -134,22 +141,37 @@ cuda::MonteCarloRun execute_cross_asset_prices(
     }
     const auto chunk=rough_count>0U
         ? std::min(paths_per_price,path_chunk_size) : paths_per_price;
-    const auto workspace_bytes=MultiRoughDeviceModels<RoughPack>::
-        workspace_bytes(max_steps,chunk);
-    const std::size_t volatility_values=
-        rough_count*chunk*max_steps;
-    const auto max_partials=(paths_per_price
-        +(rough_count>0U ? 127U : geometry.threads_per_block-1U))
-        /(rough_count>0U ? 128U : geometry.threads_per_block);
+    const auto raw_workspace_bytes=MultiRoughDeviceModels<RoughPack>::workspace_bytes(max_steps,chunk);
+    const auto workspace_bytes = volterra::checked_hybrid_fft_sum(
+        raw_workspace_bytes, 15U, "rough workspace alignment overflow") / 16U * 16U;
+    const auto volatility_values = volterra::checked_hybrid_fft_product(
+        volterra::checked_hybrid_fft_product(rough_count, chunk,
+            "rough path capacity overflow"),
+        max_steps, "rough path capacity overflow");
+    const unsigned path_threads=geometry.threads_per_block;
+    const unsigned paths_per_team=geometry.paths_per_team ? geometry.paths_per_team : TeamSize;
+    const auto launch_rows=rough_count>0U ? geometry.rough_rows_per_launch : 1U;
+    if (!launch_rows || launch_rows>65535U || geometry.streams>64U || paths_per_team>1024U)
+        throw std::invalid_argument("invalid cross-asset rough row geometry");
+    const std::size_t paths_per_block=(path_threads/TeamSize)*static_cast<std::size_t>(paths_per_team);
+    const auto chunk_blocks=(chunk+paths_per_block-1U)/paths_per_block;
+    const auto max_partials=(paths_per_price/chunk)*chunk_blocks
+        +((paths_per_price%chunk)+paths_per_block-1U)/paths_per_block;
     const auto batch_rows=std::min<std::size_t>(
         geometry.results_per_launch,65535U);
+    const auto bytes_per_row=volterra::checked_hybrid_fft_sum(workspace_bytes,
+        volterra::checked_hybrid_fft_sum(volterra::checked_hybrid_fft_product(volatility_values,sizeof(float),"rough row memory overflow"),
+            volterra::checked_hybrid_fft_product(max_partials,sizeof(reductions::MomentSums),"rough moments overflow"),"rough row memory overflow"),
+        "rough row memory overflow");
     const auto rough_batch_size=rough_count>0U
-        ? choose_rough_price_batch_size(
-            result_count,std::min<std::size_t>(
-                geometry.results_per_launch,4U),
-            workspace_bytes+volatility_values*sizeof(float)
-                +max_partials*sizeof(reductions::MomentSums))
-        : 1U;
+        ? (geometry.streams ? geometry.streams : choose_rough_price_batch_size(result_count,
+            std::min<std::size_t>(geometry.results_per_launch,4U),
+            volterra::checked_hybrid_fft_product(launch_rows,bytes_per_row,"rough launch memory overflow"))) : 1U;
+    const auto slot_count=rough_batch_size*launch_rows;
+    std::size_t free_bytes=0U,total_bytes=0U;
+    check_cuda(cudaMemGetInfo(&free_bytes,&total_bytes),"cross-asset workspace budget");
+    if (volterra::checked_hybrid_fft_product(slot_count,bytes_per_row,"rough workspace overflow") > free_bytes*3U/4U)
+        throw std::invalid_argument("cross-asset row/stream workspace exceeds available memory; reduce L, P or streams");
     cudaDeviceProp properties{};
     if constexpr (rough_count==0U) {
         int device=0;
@@ -170,7 +192,7 @@ cuda::MonteCarloRun execute_cross_asset_prices(
         return std::min(available,std::max({1U,occupancy,work}));
     };
     std::size_t moment_capacity=rough_count>0U
-        ? max_partials*rough_batch_size : 1U;
+        ? max_partials*slot_count : 1U;
     if constexpr (rough_count==0U)
         for(std::size_t offset=0U;offset<result_count;offset+=batch_rows) {
             const auto count=std::min(batch_rows,result_count-offset);
@@ -179,6 +201,12 @@ cuda::MonteCarloRun execute_cross_asset_prices(
                 moment_capacity=std::max(moment_capacity,count*blocks);
         }
     const auto wall_start=std::chrono::steady_clock::now();
+    cuda::GenerationCheckpoint checkpoint(
+        result_count,{"price","standard_error"});
+    cuda::GenerationProgress progress(
+        result_count,checkpoint.completed_prices());
+    cuda::KernelDurationAccumulator batch_timer;
+    const bool tracked_batches=checkpoint.enabled() || progress.enabled();
     MultiAssetDeviceModels<EquityPack> device_equities(equities);
     MultiRoughDeviceModels<RoughPack> device_rough(rough);
     cuda::DeviceBuffer<typename RatePolicy::Parameters>
@@ -195,9 +223,10 @@ cuda::MonteCarloRun execute_cross_asset_prices(
     cuda::DeviceBuffer<reductions::MomentSums> device_moments(
         moment_capacity);
     cuda::DeviceBuffer<float> device_volatility(
-        rough_count>0U ? rough_batch_size*volatility_values : 1U);
+        rough_count>0U ? slot_count*volatility_values : 1U);
     cuda::DeviceBuffer<std::uint8_t> workspace(
-        workspace_bytes>0U ? rough_batch_size*workspace_bytes : 1U);
+        workspace_bytes>0U ? slot_count*workspace_bytes : 1U);
+    check_cuda(cudaMemset(device_moments.data(),0,moment_capacity*sizeof(reductions::MomentSums)),"cross-asset moments initialization");
     device_rates.copy_from(rate_models.data());
     device_selectors.copy_from(row_plan.selectors.data());
     if constexpr (RatePolicy::kUsesCurve)
@@ -215,10 +244,30 @@ cuda::MonteCarloRun execute_cross_asset_prices(
             device_selectors.data()};
     cuda::Event start,stop;
     check_cuda(cudaEventRecord(start.get()),"cross-asset timer start");
+    std::vector<float> checkpoint_prices,checkpoint_errors;
+    const auto commit_batch=[&](std::size_t offset,std::size_t count) {
+        if(checkpoint.enabled()) {
+            checkpoint_prices.resize(count);
+            checkpoint_errors.resize(count);
+            check_cuda(cudaMemcpy(
+                checkpoint_prices.data(),device_prices.data()+offset,
+                count*sizeof(float),cudaMemcpyDeviceToHost),
+                "cross-asset checkpoint prices");
+            check_cuda(cudaMemcpy(
+                checkpoint_errors.data(),device_errors.data()+offset,
+                count*sizeof(float),cudaMemcpyDeviceToHost),
+                "cross-asset checkpoint standard errors");
+            checkpoint.commit(offset,count,{
+                std::span<const float>(checkpoint_prices),
+                std::span<const float>(checkpoint_errors)});
+        }
+        progress.record_host_progress(offset+count);
+    };
     if constexpr (rough_count==0U) {
-        for(std::size_t offset=0U;offset<result_count;
+        for(std::size_t offset=checkpoint.completed_prices();offset<result_count;
             offset+=batch_rows) {
             const auto count=std::min(batch_rows,result_count-offset);
+            if(checkpoint.enabled()) batch_timer.start_batch();
             const unsigned blocks=blocks_for_count(count);
             monte_carlo::launch_cross_asset_batch_cuda<
                 EquityPack,RoughPack,RatePolicy,Product,false,TeamSize>(
@@ -237,21 +286,30 @@ cuda::MonteCarloRun execute_cross_asset_prices(
                 check_cuda(cudaGetLastError(),
                     "cross-asset batch finalize");
             }
+            if(checkpoint.enabled()) {
+                batch_timer.finish_batch();
+                commit_batch(offset,count);
+            } else {
+                progress.record_cuda_progress(offset+count);
+            }
         }
     } else {
-        const auto launch_price=[&](std::size_t result,std::size_t slot,
+        const auto launch_chunk=[&](std::size_t result,std::size_t slot,std::size_t offset,std::size_t rows,
                                     cudaStream_t stream) {
             const auto product_index=
                 row_plan.selectors[EquityPack::kAssetCount+rough_count+1U]
                     .select(static_cast<std::uint32_t>(result));
-            const auto steps=products[product_index]
-                .maturity_days*steps_per_day;
+            const auto steps=products[product_index].maturity_days*steps_per_day;
+            for(std::size_t j=1U;j<rows;++j) {
+                const auto pi=row_plan.selectors[EquityPack::kAssetCount+rough_count+1U].select(result+j);
+                if(products[pi].maturity_days*steps_per_day!=steps)
+                    throw std::invalid_argument("cross-asset row batch must retain its native time grid");
+            }
             auto* row_workspace=workspace.data()+slot*workspace_bytes;
             auto* row_volatility=device_volatility.data()
                 +slot*volatility_values;
             auto* row_moments=device_moments.data()+slot*max_partials;
-            for(std::size_t offset=0U;offset<paths_per_price;
-                offset+=chunk) {
+            {
                 const auto count=std::min(chunk,
                     paths_per_price-offset);
                 device_rough.template launch_volatilities<
@@ -260,30 +318,81 @@ cuda::MonteCarloRun execute_cross_asset_prices(
                         direct_tile_size,base_seed,row_workspace,
                         workspace_bytes,row_volatility,stream,
                         device_selectors.data(),
-                        EquityPack::kAssetCount+rough_count+2U);
-                monte_carlo::launch_cross_asset_cuda<
+                        EquityPack::kAssetCount+rough_count+2U,rows,workspace_bytes,volatility_values);
+                const auto blocks=static_cast<unsigned>((count+paths_per_block-1U)/paths_per_block);
+                monte_carlo::launch_cross_asset_batch_cuda<
                     EquityPack,RoughPack,RatePolicy,Product,false,TeamSize>(
-                        inputs,result,offset,count,steps,steps_per_day,dt,
-                        base_seed,row_volatility,row_moments,nullptr,stream);
+                        inputs,result,rows,offset,count,max_partials,blocks,path_threads,
+                        steps_per_day,dt,base_seed,row_volatility,row_moments,nullptr,
+                        nullptr,nullptr,stream,paths_per_team,(offset/chunk)*chunk_blocks,volatility_values);
             }
-            monte_carlo::finalize_price_kernel<<<1U,128U,
-                8U*sizeof(double),stream>>>(
-                    row_moments,max_partials,paths_per_price,result,
-                    device_prices.data(),device_errors.data());
-            check_cuda(cudaGetLastError(),"cross-asset finalize");
         };
-        if(rough_batch_size==1U) {
-            for(std::size_t result=0U;result<result_count;++result)
-                launch_price(result,0U,0);
-        } else {
-            std::vector<cuda::Stream> streams(rough_batch_size);
-            std::vector<cuda::Event> completed(rough_batch_size);
+        std::vector<cuda::Stream> streams;
+        std::vector<cuda::Event> completed;
+        if(rough_batch_size>1U) {
+            streams.resize(rough_batch_size);
+            completed.resize(rough_batch_size);
             for(auto& stream:streams)
                 check_cuda(cudaStreamWaitEvent(stream.get(),start.get()),
                     "cross-asset rough batch start dependency");
-            for(std::size_t result=0U;result<result_count;++result)
-                launch_price(result,result%rough_batch_size,
-                    streams[result%rough_batch_size].get());
+        }
+        // Keep the global result index: selectors and Philox both use it.
+        // A completed prefix can therefore resume without changing a path.
+        std::size_t progress_rows=128U;
+        if(const char* configured=std::getenv(
+            "AI_FACTORY_CROSS_ASSET_PROGRESS_ROWS"
+        ); configured!=nullptr && *configured!='\0') {
+            progress_rows=std::stoull(configured);
+            if(progress_rows==0U || progress_rows>4096U)
+                throw std::invalid_argument(
+                    "Invalid cross-asset progress batch size");
+        }
+        std::size_t batch_begin=checkpoint.completed_prices();
+        if(tracked_batches && batch_begin<result_count)
+            batch_timer.start_batch();
+        for(std::size_t result=batch_begin;result<result_count;) {
+            const auto remaining=tracked_batches ? std::min(result_count-result,progress_rows-(result-batch_begin)) : result_count-result;
+            std::vector<std::size_t> group_starts,group_sizes;
+            std::size_t count=0U;
+            for(std::size_t stream=0U;stream<rough_batch_size && count<remaining;++stream) {
+                const auto product_slot=EquityPack::kAssetCount+rough_count+1U;
+                const auto maturity=[&](std::size_t index) {
+                    return products[row_plan.selectors[product_slot].select(static_cast<std::uint32_t>(index))].maturity_days;
+                };
+                std::size_t rows=1U;
+                while(rows<launch_rows && count+rows<remaining && maturity(result+count+rows)==maturity(result+count)) ++rows;
+                group_starts.push_back(count);group_sizes.push_back(rows);count+=rows;
+            }
+            for(std::size_t offset=0U;offset<paths_per_price;offset+=chunk)
+                for(std::size_t group=0U;group<group_starts.size();++group)
+                    launch_chunk(result+group_starts[group],group*launch_rows,offset,group_sizes[group],
+                        rough_batch_size==1U ? nullptr : streams[group].get());
+            for(std::size_t group=0U;group<group_starts.size();++group) {
+                const auto stream=rough_batch_size==1U ? nullptr : streams[group].get();
+                auto* moments=device_moments.data()+group*launch_rows*max_partials;
+                monte_carlo::finalize_price_batch_kernel<<<static_cast<unsigned>(group_sizes[group]),128U,8U*sizeof(double),stream>>>(
+                    moments,max_partials,paths_per_price,result+group_starts[group],device_prices.data(),device_errors.data());
+                check_cuda(cudaGetLastError(),"cross-asset multirow finalize");
+            }
+            const auto next=result+count;
+            result=next;
+            if(tracked_batches && (next-batch_begin==progress_rows
+                || next==result_count)) {
+                if(rough_batch_size==1U) {
+                    check_cuda(cudaDeviceSynchronize(),
+                        "cross-asset rough batch completion");
+                } else {
+                    for(auto& stream:streams)
+                        check_cuda(cudaStreamSynchronize(stream.get()),
+                            "cross-asset rough batch completion");
+                }
+                batch_timer.finish_batch();
+                commit_batch(batch_begin,next-batch_begin);
+                batch_begin=next;
+                if(next<result_count) batch_timer.start_batch();
+            }
+        }
+        if(rough_batch_size>1U) {
             for(std::size_t slot=0U;slot<rough_batch_size;++slot) {
                 check_cuda(cudaEventRecord(
                     completed[slot].get(),streams[slot].get()),
@@ -303,9 +412,15 @@ cuda::MonteCarloRun execute_cross_asset_prices(
     run.standard_errors.resize(result_count);
     device_prices.copy_to(run.prices.data());
     device_errors.copy_to(run.standard_errors.data());
-    run.kernel_seconds=static_cast<double>(ms)*1.0e-3;
+    checkpoint.restore_prefix({
+        std::span<float>(run.prices),
+        std::span<float>(run.standard_errors)});
+    run.kernel_seconds=checkpoint.enabled()
+        || (rough_count>0U && progress.enabled())
+        ? batch_timer.seconds() : static_cast<double>(ms)*1.0e-3;
     run.wall_seconds=std::chrono::duration<double>(
         std::chrono::steady_clock::now()-wall_start).count();
+    progress.complete();
     return run;
 }
 

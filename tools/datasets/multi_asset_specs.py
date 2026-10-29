@@ -21,30 +21,40 @@ class ReferenceDatasetSpec:
 
 
 _FACTOR_MODELS = {
-    "equity/markovian": (
-        "bates", "black_scholes", "cev", "heston", "heston_3_2",
-        "kou", "merton", "normal_inverse_gaussian", "sabr",
-        "schobel_zhu", "stein_stein", "variance_gamma",
-    ),
-    "equity/rough": (
-        "log_modulated_rough_bergomi", "quadratic_rough_heston",
-        "rough_bergomi", "rough_heston", "rough_sabr",
-        "rough_stein_stein",
-    ),
-    "fixed_income": ("g2", "g2_plus_plus"),
+    "equity/markovian": ("bates", "heston", "sabr"),
+    "equity/rough": ("quadratic_rough_heston", "rough_bergomi"),
+    "fixed_income": ("cir",),
 }
 
 REFERENCE_DATASET_SPECS = (
     *(
         ReferenceDatasetSpec(
-            f"generate_{model}_factors_01", "model_parameters",
+            f"generate_{model}_multi_core_01", "model_parameters",
             f"catalog/model/{market}/{model}/factor_parameters/"
-            f"{model}_factors_01/generator.cpp",
+            f"{model}_multi_core_01/generator.cpp",
             f"datasets/model/{market}/{model}/factor_parameters/"
-            f"{model}_factors_01.json",
+            f"{model}_multi_core_01.json",
         )
         for market, models in _FACTOR_MODELS.items()
         for model in models
+    ),
+    *(
+        ReferenceDatasetSpec(
+            f"generate_{dataset_id}", "product_parameters",
+            f"catalog/product/{family}/{dataset_id}/generator.cpp",
+            f"datasets/product/{family}/{dataset_id}.json",
+        )
+        for family, dataset_id in (
+            ("worst_of_option", "worst_of_options_multi_01"),
+            ("best_of_option", "best_of_options_multi_01"),
+            ("basket_option", "basket_options_multi_01"),
+            ("basket_down_and_out_call", "basket_down_and_out_calls_multi_01"),
+        )
+    ),
+    ReferenceDatasetSpec(
+        "generate_five_equity_cir_correlations_01", "correlation_parameters",
+        "catalog/correlation/five_equity_cir_01/generator.cpp",
+        "datasets/correlation/five_equity_cir_01.json",
     ),
     ReferenceDatasetSpec(
         "generate_constant_rates_01", "model_parameters",

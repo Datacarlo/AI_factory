@@ -1354,6 +1354,7 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/markovian/bates/price_gradients/asset_or_nothing_calls/bates_01__asset_or_nothing_calls_01__01_price_gradient/generator.cpp
     catalog/model/equity/markovian/bates/price_gradients/asset_or_nothing_puts/bates_01__asset_or_nothing_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/markovian/bates/price_gradients/asset_or_nothing_puts/bates_01__asset_or_nothing_puts_01__01_price_gradient/generator.cpp
+    catalog/model/equity/markovian/bates/price_gradients/athena_autocalls/bates_01__athena_autocalls_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/markovian/bates/price_gradients/athena_autocalls/bates_01__athena_autocalls_01__01_price_gradient/generator.cpp
     catalog/model/equity/markovian/bates/price_gradients/cliquets/bates_01__cliquets_01__01_price_gradient/generator.cpp
     catalog/model/equity/markovian/bates/price_gradients/digital_calls/bates_01__digital_calls_01__01_price_gradient/generator.cpp
@@ -1383,6 +1384,7 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/markovian/bates/price_gradients/up_one_touches/bates_01__up_one_touches_01__01_price_gradient/generator.cpp
     catalog/model/equity/markovian/bates/prices/american_calls/bates_01__american_calls_01__01/generator.cpp
     catalog/model/equity/markovian/bates/prices/american_puts/bates_01__american_puts_01__01/generator.cpp
+    catalog/model/equity/markovian/bates/prices/american_puts/bates_01__american_puts_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/bates/prices/asian_calls/bates_01__asian_calls_01__01/generator.cpp
     catalog/model/equity/markovian/bates/prices/asian_puts/bates_01__asian_puts_01__01/generator.cpp
     catalog/model/equity/markovian/bates/prices/asset_or_nothing_calls/bates_01__asset_or_nothing_calls_01__01/generator.cpp
@@ -1407,7 +1409,9 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/markovian/bates/prices/geometric_asian_puts/bates_01__geometric_asian_puts_01__01/generator.cpp
     catalog/model/equity/markovian/bates/prices/lookback_options/bates_01__lookback_options_01__01/generator.cpp
     catalog/model/equity/markovian/bates/prices/phoenix_autocalls/bates_01__phoenix_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/bates/prices/phoenix_autocalls/bates_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/bates/prices/phoenix_memory_autocalls/bates_01__phoenix_memory_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/bates/prices/phoenix_memory_autocalls/bates_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/bates/prices/range_accruals/bates_01__range_accruals_01__01/generator.cpp
     catalog/model/equity/markovian/bates/prices/range_accruals/bates_01__range_accruals_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/bates/prices/straddles/bates_01__straddles_01__01/generator.cpp
@@ -1468,7 +1472,9 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/markovian/black_scholes/prices/geometric_asian_puts/black_scholes_01__geometric_asian_puts_01__01/generator.cpp
     catalog/model/equity/markovian/black_scholes/prices/lookback_options/black_scholes_01__lookback_options_01__01/generator.cpp
     catalog/model/equity/markovian/black_scholes/prices/phoenix_autocalls/black_scholes_01__phoenix_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/black_scholes/prices/phoenix_autocalls/black_scholes_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/black_scholes/prices/phoenix_memory_autocalls/black_scholes_01__phoenix_memory_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/black_scholes/prices/phoenix_memory_autocalls/black_scholes_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/black_scholes/prices/range_accruals/black_scholes_01__range_accruals_01__01/generator.cpp
     catalog/model/equity/markovian/black_scholes/prices/range_accruals/black_scholes_01__range_accruals_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/black_scholes/prices/straddles/black_scholes_01__straddles_01__01/generator.cpp
@@ -1509,6 +1515,7 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/markovian/cev/price_gradients/up_one_touches/cev_01__up_one_touches_01__01_price_gradient/generator.cpp
     catalog/model/equity/markovian/cev/prices/american_calls/cev_01__american_calls_01__01/generator.cpp
     catalog/model/equity/markovian/cev/prices/american_puts/cev_01__american_puts_01__01/generator.cpp
+    catalog/model/equity/markovian/cev/prices/american_puts/cev_01__american_puts_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/cev/prices/asian_calls/cev_01__asian_calls_01__01/generator.cpp
     catalog/model/equity/markovian/cev/prices/asian_puts/cev_01__asian_puts_01__01/generator.cpp
     catalog/model/equity/markovian/cev/prices/asset_or_nothing_calls/cev_01__asset_or_nothing_calls_01__01/generator.cpp
@@ -1533,7 +1540,9 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/markovian/cev/prices/geometric_asian_puts/cev_01__geometric_asian_puts_01__01/generator.cpp
     catalog/model/equity/markovian/cev/prices/lookback_options/cev_01__lookback_options_01__01/generator.cpp
     catalog/model/equity/markovian/cev/prices/phoenix_autocalls/cev_01__phoenix_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/cev/prices/phoenix_autocalls/cev_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/cev/prices/phoenix_memory_autocalls/cev_01__phoenix_memory_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/cev/prices/phoenix_memory_autocalls/cev_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/cev/prices/range_accruals/cev_01__range_accruals_01__01/generator.cpp
     catalog/model/equity/markovian/cev/prices/range_accruals/cev_01__range_accruals_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/cev/prices/straddles/cev_01__straddles_01__01/generator.cpp
@@ -1563,10 +1572,13 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/markovian/heston/price_gradients/double_knock_out_calls/heston_01__double_knock_out_calls_01__01_price_gradient/generator.cpp
     catalog/model/equity/markovian/heston/price_gradients/double_knock_out_puts/heston_01__double_knock_out_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/markovian/heston/price_gradients/double_knock_out_puts/heston_01__double_knock_out_puts_01__01_price_gradient/generator.cpp
+    catalog/model/equity/markovian/heston/price_gradients/down_and_in_puts/heston_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/markovian/heston/price_gradients/down_and_in_puts/heston_01__down_and_in_puts_01__01_price_gradient/generator.cpp
+    catalog/model/equity/markovian/heston/price_gradients/down_and_out_puts/heston_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/markovian/heston/price_gradients/down_and_out_puts/heston_01__down_and_out_puts_01__01_price_gradient/generator.cpp
     catalog/model/equity/markovian/heston/price_gradients/european_calls/heston_01__european_calls_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/markovian/heston/price_gradients/european_calls/heston_01__european_calls_01__01_price_gradient/generator.cpp
+    catalog/model/equity/markovian/heston/price_gradients/european_puts/heston_01__european_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/markovian/heston/price_gradients/european_puts/heston_01__european_puts_01__01_price_gradient/generator.cpp
     catalog/model/equity/markovian/heston/price_gradients/forward_start_calls/heston_01__forward_start_calls_01__01_price_gradient/generator.cpp
     catalog/model/equity/markovian/heston/price_gradients/forward_start_puts/heston_01__forward_start_puts_01__01_price_gradient/generator.cpp
@@ -1586,6 +1598,7 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/markovian/heston/price_gradients/up_one_touches/heston_01__up_one_touches_01__01_price_gradient/generator.cpp
     catalog/model/equity/markovian/heston/prices/american_calls/heston_01__american_calls_01__01/generator.cpp
     catalog/model/equity/markovian/heston/prices/american_puts/heston_01__american_puts_01__01/generator.cpp
+    catalog/model/equity/markovian/heston/prices/american_puts/heston_01__american_puts_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/heston/prices/asian_calls/heston_01__asian_calls_01__01/generator.cpp
     catalog/model/equity/markovian/heston/prices/asian_puts/heston_01__asian_puts_01__01/generator.cpp
     catalog/model/equity/markovian/heston/prices/asset_or_nothing_calls/heston_01__asset_or_nothing_calls_01__01/generator.cpp
@@ -1610,7 +1623,9 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/markovian/heston/prices/geometric_asian_puts/heston_01__geometric_asian_puts_01__01/generator.cpp
     catalog/model/equity/markovian/heston/prices/lookback_options/heston_01__lookback_options_01__01/generator.cpp
     catalog/model/equity/markovian/heston/prices/phoenix_autocalls/heston_01__phoenix_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/heston/prices/phoenix_autocalls/heston_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/heston/prices/phoenix_memory_autocalls/heston_01__phoenix_memory_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/heston/prices/phoenix_memory_autocalls/heston_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/heston/prices/range_accruals/heston_01__range_accruals_01__01/generator.cpp
     catalog/model/equity/markovian/heston/prices/range_accruals/heston_01__range_accruals_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/heston/prices/straddles/heston_01__straddles_01__01/generator.cpp
@@ -1671,7 +1686,9 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/markovian/heston_3_2/prices/geometric_asian_puts/heston_3_2_01__geometric_asian_puts_01__01/generator.cpp
     catalog/model/equity/markovian/heston_3_2/prices/lookback_options/heston_3_2_01__lookback_options_01__01/generator.cpp
     catalog/model/equity/markovian/heston_3_2/prices/phoenix_autocalls/heston_3_2_01__phoenix_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/heston_3_2/prices/phoenix_autocalls/heston_3_2_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/heston_3_2/prices/phoenix_memory_autocalls/heston_3_2_01__phoenix_memory_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/heston_3_2/prices/phoenix_memory_autocalls/heston_3_2_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/heston_3_2/prices/range_accruals/heston_3_2_01__range_accruals_01__01/generator.cpp
     catalog/model/equity/markovian/heston_3_2/prices/range_accruals/heston_3_2_01__range_accruals_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/heston_3_2/prices/straddles/heston_3_2_01__straddles_01__01/generator.cpp
@@ -1712,6 +1729,7 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/markovian/kou/price_gradients/up_one_touches/kou_01__up_one_touches_01__01_price_gradient/generator.cpp
     catalog/model/equity/markovian/kou/prices/american_calls/kou_01__american_calls_01__01/generator.cpp
     catalog/model/equity/markovian/kou/prices/american_puts/kou_01__american_puts_01__01/generator.cpp
+    catalog/model/equity/markovian/kou/prices/american_puts/kou_01__american_puts_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/kou/prices/asian_calls/kou_01__asian_calls_01__01/generator.cpp
     catalog/model/equity/markovian/kou/prices/asian_puts/kou_01__asian_puts_01__01/generator.cpp
     catalog/model/equity/markovian/kou/prices/asset_or_nothing_calls/kou_01__asset_or_nothing_calls_01__01/generator.cpp
@@ -1736,7 +1754,9 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/markovian/kou/prices/geometric_asian_puts/kou_01__geometric_asian_puts_01__01/generator.cpp
     catalog/model/equity/markovian/kou/prices/lookback_options/kou_01__lookback_options_01__01/generator.cpp
     catalog/model/equity/markovian/kou/prices/phoenix_autocalls/kou_01__phoenix_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/kou/prices/phoenix_autocalls/kou_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/kou/prices/phoenix_memory_autocalls/kou_01__phoenix_memory_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/kou/prices/phoenix_memory_autocalls/kou_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/kou/prices/range_accruals/kou_01__range_accruals_01__01/generator.cpp
     catalog/model/equity/markovian/kou/prices/range_accruals/kou_01__range_accruals_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/kou/prices/straddles/kou_01__straddles_01__01/generator.cpp
@@ -1777,6 +1797,7 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/markovian/merton/price_gradients/up_one_touches/merton_01__up_one_touches_01__01_price_gradient/generator.cpp
     catalog/model/equity/markovian/merton/prices/american_calls/merton_01__american_calls_01__01/generator.cpp
     catalog/model/equity/markovian/merton/prices/american_puts/merton_01__american_puts_01__01/generator.cpp
+    catalog/model/equity/markovian/merton/prices/american_puts/merton_01__american_puts_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/merton/prices/asian_calls/merton_01__asian_calls_01__01/generator.cpp
     catalog/model/equity/markovian/merton/prices/asian_puts/merton_01__asian_puts_01__01/generator.cpp
     catalog/model/equity/markovian/merton/prices/asset_or_nothing_calls/merton_01__asset_or_nothing_calls_01__01/generator.cpp
@@ -1801,7 +1822,9 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/markovian/merton/prices/geometric_asian_puts/merton_01__geometric_asian_puts_01__01/generator.cpp
     catalog/model/equity/markovian/merton/prices/lookback_options/merton_01__lookback_options_01__01/generator.cpp
     catalog/model/equity/markovian/merton/prices/phoenix_autocalls/merton_01__phoenix_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/merton/prices/phoenix_autocalls/merton_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/merton/prices/phoenix_memory_autocalls/merton_01__phoenix_memory_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/merton/prices/phoenix_memory_autocalls/merton_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/merton/prices/range_accruals/merton_01__range_accruals_01__01/generator.cpp
     catalog/model/equity/markovian/merton/prices/range_accruals/merton_01__range_accruals_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/merton/prices/straddles/merton_01__straddles_01__01/generator.cpp
@@ -1842,6 +1865,7 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/markovian/normal_inverse_gaussian/price_gradients/up_one_touches/normal_inverse_gaussian_01__up_one_touches_01__01_price_gradient/generator.cpp
     catalog/model/equity/markovian/normal_inverse_gaussian/prices/american_calls/normal_inverse_gaussian_01__american_calls_01__01/generator.cpp
     catalog/model/equity/markovian/normal_inverse_gaussian/prices/american_puts/normal_inverse_gaussian_01__american_puts_01__01/generator.cpp
+    catalog/model/equity/markovian/normal_inverse_gaussian/prices/american_puts/normal_inverse_gaussian_01__american_puts_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/normal_inverse_gaussian/prices/asian_calls/normal_inverse_gaussian_01__asian_calls_01__01/generator.cpp
     catalog/model/equity/markovian/normal_inverse_gaussian/prices/asian_puts/normal_inverse_gaussian_01__asian_puts_01__01/generator.cpp
     catalog/model/equity/markovian/normal_inverse_gaussian/prices/asset_or_nothing_calls/normal_inverse_gaussian_01__asset_or_nothing_calls_01__01/generator.cpp
@@ -1866,7 +1890,9 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/markovian/normal_inverse_gaussian/prices/geometric_asian_puts/normal_inverse_gaussian_01__geometric_asian_puts_01__01/generator.cpp
     catalog/model/equity/markovian/normal_inverse_gaussian/prices/lookback_options/normal_inverse_gaussian_01__lookback_options_01__01/generator.cpp
     catalog/model/equity/markovian/normal_inverse_gaussian/prices/phoenix_autocalls/normal_inverse_gaussian_01__phoenix_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/normal_inverse_gaussian/prices/phoenix_autocalls/normal_inverse_gaussian_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/normal_inverse_gaussian/prices/phoenix_memory_autocalls/normal_inverse_gaussian_01__phoenix_memory_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/normal_inverse_gaussian/prices/phoenix_memory_autocalls/normal_inverse_gaussian_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/normal_inverse_gaussian/prices/range_accruals/normal_inverse_gaussian_01__range_accruals_01__01/generator.cpp
     catalog/model/equity/markovian/normal_inverse_gaussian/prices/range_accruals/normal_inverse_gaussian_01__range_accruals_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/normal_inverse_gaussian/prices/straddles/normal_inverse_gaussian_01__straddles_01__01/generator.cpp
@@ -1927,7 +1953,9 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/markovian/sabr/prices/geometric_asian_puts/sabr_01__geometric_asian_puts_01__01/generator.cpp
     catalog/model/equity/markovian/sabr/prices/lookback_options/sabr_01__lookback_options_01__01/generator.cpp
     catalog/model/equity/markovian/sabr/prices/phoenix_autocalls/sabr_01__phoenix_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/sabr/prices/phoenix_autocalls/sabr_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/sabr/prices/phoenix_memory_autocalls/sabr_01__phoenix_memory_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/sabr/prices/phoenix_memory_autocalls/sabr_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/sabr/prices/range_accruals/sabr_01__range_accruals_01__01/generator.cpp
     catalog/model/equity/markovian/sabr/prices/range_accruals/sabr_01__range_accruals_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/sabr/prices/straddles/sabr_01__straddles_01__01/generator.cpp
@@ -1968,6 +1996,7 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/markovian/schobel_zhu/price_gradients/up_one_touches/schobel_zhu_01__up_one_touches_01__01_price_gradient/generator.cpp
     catalog/model/equity/markovian/schobel_zhu/prices/american_calls/schobel_zhu_01__american_calls_01__01/generator.cpp
     catalog/model/equity/markovian/schobel_zhu/prices/american_puts/schobel_zhu_01__american_puts_01__01/generator.cpp
+    catalog/model/equity/markovian/schobel_zhu/prices/american_puts/schobel_zhu_01__american_puts_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/schobel_zhu/prices/asian_calls/schobel_zhu_01__asian_calls_01__01/generator.cpp
     catalog/model/equity/markovian/schobel_zhu/prices/asian_puts/schobel_zhu_01__asian_puts_01__01/generator.cpp
     catalog/model/equity/markovian/schobel_zhu/prices/asset_or_nothing_calls/schobel_zhu_01__asset_or_nothing_calls_01__01/generator.cpp
@@ -1992,7 +2021,9 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/markovian/schobel_zhu/prices/geometric_asian_puts/schobel_zhu_01__geometric_asian_puts_01__01/generator.cpp
     catalog/model/equity/markovian/schobel_zhu/prices/lookback_options/schobel_zhu_01__lookback_options_01__01/generator.cpp
     catalog/model/equity/markovian/schobel_zhu/prices/phoenix_autocalls/schobel_zhu_01__phoenix_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/schobel_zhu/prices/phoenix_autocalls/schobel_zhu_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/schobel_zhu/prices/phoenix_memory_autocalls/schobel_zhu_01__phoenix_memory_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/schobel_zhu/prices/phoenix_memory_autocalls/schobel_zhu_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/schobel_zhu/prices/range_accruals/schobel_zhu_01__range_accruals_01__01/generator.cpp
     catalog/model/equity/markovian/schobel_zhu/prices/range_accruals/schobel_zhu_01__range_accruals_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/schobel_zhu/prices/straddles/schobel_zhu_01__straddles_01__01/generator.cpp
@@ -2053,7 +2084,9 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/markovian/stein_stein/prices/geometric_asian_puts/stein_stein_01__geometric_asian_puts_01__01/generator.cpp
     catalog/model/equity/markovian/stein_stein/prices/lookback_options/stein_stein_01__lookback_options_01__01/generator.cpp
     catalog/model/equity/markovian/stein_stein/prices/phoenix_autocalls/stein_stein_01__phoenix_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/stein_stein/prices/phoenix_autocalls/stein_stein_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/stein_stein/prices/phoenix_memory_autocalls/stein_stein_01__phoenix_memory_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/stein_stein/prices/phoenix_memory_autocalls/stein_stein_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/stein_stein/prices/range_accruals/stein_stein_01__range_accruals_01__01/generator.cpp
     catalog/model/equity/markovian/stein_stein/prices/range_accruals/stein_stein_01__range_accruals_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/stein_stein/prices/straddles/stein_stein_01__straddles_01__01/generator.cpp
@@ -2101,9 +2134,13 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/markovian/variance_gamma/price_gradients/gap_puts/variance_gamma_01__gap_puts_01__01_price_gradient/generator.cpp
     catalog/model/equity/markovian/variance_gamma/price_gradients/geometric_asian_calls/variance_gamma_01__geometric_asian_calls_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/markovian/variance_gamma/price_gradients/geometric_asian_calls/variance_gamma_01__geometric_asian_calls_01__01_price_gradient/generator.cpp
+    catalog/model/equity/markovian/variance_gamma/price_gradients/geometric_asian_puts/variance_gamma_01__geometric_asian_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/markovian/variance_gamma/price_gradients/geometric_asian_puts/variance_gamma_01__geometric_asian_puts_01__01_price_gradient/generator.cpp
+    catalog/model/equity/markovian/variance_gamma/price_gradients/lookback_options/variance_gamma_01__lookback_options_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/markovian/variance_gamma/price_gradients/lookback_options/variance_gamma_01__lookback_options_01__01_price_gradient/generator.cpp
+    catalog/model/equity/markovian/variance_gamma/price_gradients/phoenix_autocalls/variance_gamma_01__phoenix_autocalls_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/markovian/variance_gamma/price_gradients/phoenix_autocalls/variance_gamma_01__phoenix_autocalls_01__01_price_gradient/generator.cpp
+    catalog/model/equity/markovian/variance_gamma/price_gradients/phoenix_memory_autocalls/variance_gamma_01__phoenix_memory_autocalls_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/markovian/variance_gamma/price_gradients/phoenix_memory_autocalls/variance_gamma_01__phoenix_memory_autocalls_01__01_price_gradient/generator.cpp
     catalog/model/equity/markovian/variance_gamma/price_gradients/range_accruals/variance_gamma_01__range_accruals_01__01_price_gradient/generator.cpp
     catalog/model/equity/markovian/variance_gamma/price_gradients/straddles/variance_gamma_01__straddles_01__01_price_gradient/generator.cpp
@@ -2114,6 +2151,7 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/markovian/variance_gamma/price_gradients/up_one_touches/variance_gamma_01__up_one_touches_01__01_price_gradient/generator.cpp
     catalog/model/equity/markovian/variance_gamma/prices/american_calls/variance_gamma_01__american_calls_01__01/generator.cpp
     catalog/model/equity/markovian/variance_gamma/prices/american_puts/variance_gamma_01__american_puts_01__01/generator.cpp
+    catalog/model/equity/markovian/variance_gamma/prices/american_puts/variance_gamma_01__american_puts_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/variance_gamma/prices/asian_calls/variance_gamma_01__asian_calls_01__01/generator.cpp
     catalog/model/equity/markovian/variance_gamma/prices/asian_puts/variance_gamma_01__asian_puts_01__01/generator.cpp
     catalog/model/equity/markovian/variance_gamma/prices/asset_or_nothing_calls/variance_gamma_01__asset_or_nothing_calls_01__01/generator.cpp
@@ -2138,7 +2176,9 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/markovian/variance_gamma/prices/geometric_asian_puts/variance_gamma_01__geometric_asian_puts_01__01/generator.cpp
     catalog/model/equity/markovian/variance_gamma/prices/lookback_options/variance_gamma_01__lookback_options_01__01/generator.cpp
     catalog/model/equity/markovian/variance_gamma/prices/phoenix_autocalls/variance_gamma_01__phoenix_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/variance_gamma/prices/phoenix_autocalls/variance_gamma_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/variance_gamma/prices/phoenix_memory_autocalls/variance_gamma_01__phoenix_memory_autocalls_01__01/generator.cpp
+    catalog/model/equity/markovian/variance_gamma/prices/phoenix_memory_autocalls/variance_gamma_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/variance_gamma/prices/range_accruals/variance_gamma_01__range_accruals_01__01/generator.cpp
     catalog/model/equity/markovian/variance_gamma/prices/range_accruals/variance_gamma_01__range_accruals_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/markovian/variance_gamma/prices/straddles/variance_gamma_01__straddles_01__01/generator.cpp
@@ -2199,7 +2239,9 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/rough/log_modulated_rough_bergomi/prices/geometric_asian_puts/log_modulated_rough_bergomi_01__geometric_asian_puts_01__01/generator.cpp
     catalog/model/equity/rough/log_modulated_rough_bergomi/prices/lookback_options/log_modulated_rough_bergomi_01__lookback_options_01__01/generator.cpp
     catalog/model/equity/rough/log_modulated_rough_bergomi/prices/phoenix_autocalls/log_modulated_rough_bergomi_01__phoenix_autocalls_01__01/generator.cpp
+    catalog/model/equity/rough/log_modulated_rough_bergomi/prices/phoenix_autocalls/log_modulated_rough_bergomi_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/log_modulated_rough_bergomi/prices/phoenix_memory_autocalls/log_modulated_rough_bergomi_01__phoenix_memory_autocalls_01__01/generator.cpp
+    catalog/model/equity/rough/log_modulated_rough_bergomi/prices/phoenix_memory_autocalls/log_modulated_rough_bergomi_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/log_modulated_rough_bergomi/prices/range_accruals/log_modulated_rough_bergomi_01__range_accruals_01__01/generator.cpp
     catalog/model/equity/rough/log_modulated_rough_bergomi/prices/range_accruals/log_modulated_rough_bergomi_01__range_accruals_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/log_modulated_rough_bergomi/prices/straddles/log_modulated_rough_bergomi_01__straddles_01__01/generator.cpp
@@ -2260,7 +2302,9 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/rough/quadratic_rough_heston/prices/geometric_asian_puts/quadratic_rough_heston_01__geometric_asian_puts_01__01/generator.cpp
     catalog/model/equity/rough/quadratic_rough_heston/prices/lookback_options/quadratic_rough_heston_01__lookback_options_01__01/generator.cpp
     catalog/model/equity/rough/quadratic_rough_heston/prices/phoenix_autocalls/quadratic_rough_heston_01__phoenix_autocalls_01__01/generator.cpp
+    catalog/model/equity/rough/quadratic_rough_heston/prices/phoenix_autocalls/quadratic_rough_heston_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/quadratic_rough_heston/prices/phoenix_memory_autocalls/quadratic_rough_heston_01__phoenix_memory_autocalls_01__01/generator.cpp
+    catalog/model/equity/rough/quadratic_rough_heston/prices/phoenix_memory_autocalls/quadratic_rough_heston_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/quadratic_rough_heston/prices/range_accruals/quadratic_rough_heston_01__range_accruals_01__01/generator.cpp
     catalog/model/equity/rough/quadratic_rough_heston/prices/range_accruals/quadratic_rough_heston_01__range_accruals_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/quadratic_rough_heston/prices/straddles/quadratic_rough_heston_01__straddles_01__01/generator.cpp
@@ -2278,9 +2322,13 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/rough/rough_bergomi/price_gradients/asset_or_nothing_puts/rough_bergomi_01__asset_or_nothing_puts_01__01_price_gradient/generator.cpp
     catalog/model/equity/rough/rough_bergomi/price_gradients/athena_autocalls/rough_bergomi_01__athena_autocalls_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/rough/rough_bergomi/price_gradients/athena_autocalls/rough_bergomi_01__athena_autocalls_01__01_price_gradient/generator.cpp
+    catalog/model/equity/rough/rough_bergomi/price_gradients/cliquets/rough_bergomi_01__cliquets_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/rough/rough_bergomi/price_gradients/cliquets/rough_bergomi_01__cliquets_01__01_price_gradient/generator.cpp
+    catalog/model/equity/rough/rough_bergomi/price_gradients/digital_calls/rough_bergomi_01__digital_calls_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/rough/rough_bergomi/price_gradients/digital_calls/rough_bergomi_01__digital_calls_01__01_price_gradient/generator.cpp
+    catalog/model/equity/rough/rough_bergomi/price_gradients/digital_puts/rough_bergomi_01__digital_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/rough/rough_bergomi/price_gradients/digital_puts/rough_bergomi_01__digital_puts_01__01_price_gradient/generator.cpp
+    catalog/model/equity/rough/rough_bergomi/price_gradients/double_knock_out_calls/rough_bergomi_01__double_knock_out_calls_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/rough/rough_bergomi/price_gradients/double_knock_out_calls/rough_bergomi_01__double_knock_out_calls_01__01_price_gradient/generator.cpp
     catalog/model/equity/rough/rough_bergomi/price_gradients/double_knock_out_puts/rough_bergomi_01__double_knock_out_puts_01__01_price_gradient/generator.cpp
     catalog/model/equity/rough/rough_bergomi/price_gradients/down_and_in_puts/rough_bergomi_01__down_and_in_puts_01__01_price_gradient/generator.cpp
@@ -2327,7 +2375,9 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/rough/rough_bergomi/prices/geometric_asian_puts/rough_bergomi_01__geometric_asian_puts_01__01/generator.cpp
     catalog/model/equity/rough/rough_bergomi/prices/lookback_options/rough_bergomi_01__lookback_options_01__01/generator.cpp
     catalog/model/equity/rough/rough_bergomi/prices/phoenix_autocalls/rough_bergomi_01__phoenix_autocalls_01__01/generator.cpp
+    catalog/model/equity/rough/rough_bergomi/prices/phoenix_autocalls/rough_bergomi_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/rough_bergomi/prices/phoenix_memory_autocalls/rough_bergomi_01__phoenix_memory_autocalls_01__01/generator.cpp
+    catalog/model/equity/rough/rough_bergomi/prices/phoenix_memory_autocalls/rough_bergomi_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/rough_bergomi/prices/range_accruals/rough_bergomi_01__range_accruals_01__01/generator.cpp
     catalog/model/equity/rough/rough_bergomi/prices/range_accruals/rough_bergomi_01__range_accruals_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/rough_bergomi/prices/straddles/rough_bergomi_01__straddles_01__01/generator.cpp
@@ -2379,8 +2429,11 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/rough/rough_heston/price_gradients/lookback_options/rough_heston_01__lookback_options_01__01_price_gradient/generator.cpp
     catalog/model/equity/rough/rough_heston/price_gradients/phoenix_autocalls/rough_heston_01__phoenix_autocalls_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/rough/rough_heston/price_gradients/phoenix_autocalls/rough_heston_01__phoenix_autocalls_01__01_price_gradient/generator.cpp
+    catalog/model/equity/rough/rough_heston/price_gradients/phoenix_memory_autocalls/rough_heston_01__phoenix_memory_autocalls_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/rough/rough_heston/price_gradients/phoenix_memory_autocalls/rough_heston_01__phoenix_memory_autocalls_01__01_price_gradient/generator.cpp
+    catalog/model/equity/rough/rough_heston/price_gradients/range_accruals/rough_heston_01__range_accruals_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/rough/rough_heston/price_gradients/range_accruals/rough_heston_01__range_accruals_01__01_price_gradient/generator.cpp
+    catalog/model/equity/rough/rough_heston/price_gradients/straddles/rough_heston_01__straddles_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/rough/rough_heston/price_gradients/straddles/rough_heston_01__straddles_01__01_price_gradient/generator.cpp
     catalog/model/equity/rough/rough_heston/price_gradients/up_and_in_calls/rough_heston_01__up_and_in_calls_01__01_price_gradient/generator.cpp
     catalog/model/equity/rough/rough_heston/price_gradients/up_and_out_calls/rough_heston_01__up_and_out_calls_01__01_cartesian_shard00_price_gradient/generator.cpp
@@ -2411,7 +2464,9 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/rough/rough_heston/prices/geometric_asian_puts/rough_heston_01__geometric_asian_puts_01__01/generator.cpp
     catalog/model/equity/rough/rough_heston/prices/lookback_options/rough_heston_01__lookback_options_01__01/generator.cpp
     catalog/model/equity/rough/rough_heston/prices/phoenix_autocalls/rough_heston_01__phoenix_autocalls_01__01/generator.cpp
+    catalog/model/equity/rough/rough_heston/prices/phoenix_autocalls/rough_heston_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/rough_heston/prices/phoenix_memory_autocalls/rough_heston_01__phoenix_memory_autocalls_01__01/generator.cpp
+    catalog/model/equity/rough/rough_heston/prices/phoenix_memory_autocalls/rough_heston_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/rough_heston/prices/range_accruals/rough_heston_01__range_accruals_01__01/generator.cpp
     catalog/model/equity/rough/rough_heston/prices/range_accruals/rough_heston_01__range_accruals_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/rough_heston/prices/straddles/rough_heston_01__straddles_01__01/generator.cpp
@@ -2472,7 +2527,9 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/rough/rough_sabr/prices/geometric_asian_puts/rough_sabr_01__geometric_asian_puts_01__01/generator.cpp
     catalog/model/equity/rough/rough_sabr/prices/lookback_options/rough_sabr_01__lookback_options_01__01/generator.cpp
     catalog/model/equity/rough/rough_sabr/prices/phoenix_autocalls/rough_sabr_01__phoenix_autocalls_01__01/generator.cpp
+    catalog/model/equity/rough/rough_sabr/prices/phoenix_autocalls/rough_sabr_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/rough_sabr/prices/phoenix_memory_autocalls/rough_sabr_01__phoenix_memory_autocalls_01__01/generator.cpp
+    catalog/model/equity/rough/rough_sabr/prices/phoenix_memory_autocalls/rough_sabr_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/rough_sabr/prices/range_accruals/rough_sabr_01__range_accruals_01__01/generator.cpp
     catalog/model/equity/rough/rough_sabr/prices/range_accruals/rough_sabr_01__range_accruals_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/rough_sabr/prices/straddles/rough_sabr_01__straddles_01__01/generator.cpp
@@ -2533,7 +2590,9 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/equity/rough/rough_stein_stein/prices/geometric_asian_puts/rough_stein_stein_01__geometric_asian_puts_01__01/generator.cpp
     catalog/model/equity/rough/rough_stein_stein/prices/lookback_options/rough_stein_stein_01__lookback_options_01__01/generator.cpp
     catalog/model/equity/rough/rough_stein_stein/prices/phoenix_autocalls/rough_stein_stein_01__phoenix_autocalls_01__01/generator.cpp
+    catalog/model/equity/rough/rough_stein_stein/prices/phoenix_autocalls/rough_stein_stein_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/rough_stein_stein/prices/phoenix_memory_autocalls/rough_stein_stein_01__phoenix_memory_autocalls_01__01/generator.cpp
+    catalog/model/equity/rough/rough_stein_stein/prices/phoenix_memory_autocalls/rough_stein_stein_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/rough_stein_stein/prices/range_accruals/rough_stein_stein_01__range_accruals_01__01/generator.cpp
     catalog/model/equity/rough/rough_stein_stein/prices/range_accruals/rough_stein_stein_01__range_accruals_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/rough_stein_stein/prices/straddles/rough_stein_stein_01__straddles_01__01/generator.cpp
@@ -2996,7 +3055,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/model/fixed_income/vasicek/prices/zero_coupon_bond_up_and_out_calls/vasicek_01__zero_coupon_bond_up_and_out_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/bates/price_gradients/american_calls/bates_01__american_calls_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/bates/price_gradients/american_puts/bates_01__american_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
-    work/catalog/model/equity/markovian/bates/price_gradients/athena_autocalls/bates_01__athena_autocalls_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/bates/price_gradients/cliquets/bates_01__cliquets_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/bates/price_gradients/digital_calls/bates_01__digital_calls_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/bates/price_gradients/digital_puts/bates_01__digital_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
@@ -3020,7 +3078,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/markovian/bates/price_gradients/up_no_touches/bates_01__up_no_touches_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/bates/price_gradients/up_one_touches/bates_01__up_one_touches_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/bates/prices/american_calls/bates_01__american_calls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/bates/prices/american_puts/bates_01__american_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/bates/prices/asian_calls/bates_01__asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/bates/prices/asian_puts/bates_01__asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/bates/prices/asset_or_nothing_calls/bates_01__asset_or_nothing_calls_01__01_cartesian_shard00/generator.cpp
@@ -3040,8 +3097,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/markovian/bates/prices/geometric_asian_calls/bates_01__geometric_asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/bates/prices/geometric_asian_puts/bates_01__geometric_asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/bates/prices/lookback_options/bates_01__lookback_options_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/bates/prices/phoenix_autocalls/bates_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/bates/prices/phoenix_memory_autocalls/bates_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/bates/prices/straddles/bates_01__straddles_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/bates/prices/up_and_in_calls/bates_01__up_and_in_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/bates/prices/up_and_out_calls/bates_01__up_and_out_calls_01__01_cartesian_shard00/generator.cpp
@@ -3095,8 +3150,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/markovian/black_scholes/prices/geometric_asian_calls/black_scholes_01__geometric_asian_calls_01__01_cartesian/generator.cpp
     work/catalog/model/equity/markovian/black_scholes/prices/geometric_asian_puts/black_scholes_01__geometric_asian_puts_01__01_cartesian/generator.cpp
     work/catalog/model/equity/markovian/black_scholes/prices/lookback_options/black_scholes_01__lookback_options_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/black_scholes/prices/phoenix_autocalls/black_scholes_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/black_scholes/prices/phoenix_memory_autocalls/black_scholes_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/black_scholes/prices/straddles/black_scholes_01__straddles_01__01_cartesian/generator.cpp
     work/catalog/model/equity/markovian/black_scholes/prices/up_and_in_calls/black_scholes_01__up_and_in_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/black_scholes/prices/up_and_out_calls/black_scholes_01__up_and_out_calls_01__01_cartesian_shard00/generator.cpp
@@ -3134,7 +3187,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/markovian/cev/price_gradients/up_no_touches/cev_01__up_no_touches_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/cev/price_gradients/up_one_touches/cev_01__up_one_touches_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/cev/prices/american_calls/cev_01__american_calls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/cev/prices/american_puts/cev_01__american_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/cev/prices/asian_calls/cev_01__asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/cev/prices/asian_puts/cev_01__asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/cev/prices/asset_or_nothing_calls/cev_01__asset_or_nothing_calls_01__01_cartesian_shard00/generator.cpp
@@ -3154,8 +3206,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/markovian/cev/prices/geometric_asian_calls/cev_01__geometric_asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/cev/prices/geometric_asian_puts/cev_01__geometric_asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/cev/prices/lookback_options/cev_01__lookback_options_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/cev/prices/phoenix_autocalls/cev_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/cev/prices/phoenix_memory_autocalls/cev_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/cev/prices/straddles/cev_01__straddles_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/cev/prices/up_and_in_calls/cev_01__up_and_in_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/cev/prices/up_and_out_calls/cev_01__up_and_out_calls_01__01_cartesian_shard00/generator.cpp
@@ -3163,9 +3213,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/markovian/cev/prices/up_one_touches/cev_01__up_one_touches_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/heston/price_gradients/american_calls/heston_01__american_calls_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/heston/price_gradients/american_puts/heston_01__american_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
-    work/catalog/model/equity/markovian/heston/price_gradients/down_and_in_puts/heston_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
-    work/catalog/model/equity/markovian/heston/price_gradients/down_and_out_puts/heston_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
-    work/catalog/model/equity/markovian/heston/price_gradients/european_puts/heston_01__european_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/heston/price_gradients/forward_start_calls/heston_01__forward_start_calls_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/heston/price_gradients/forward_start_puts/heston_01__forward_start_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/heston/price_gradients/gap_calls/heston_01__gap_calls_01__01_cartesian_shard00_price_gradient/generator.cpp
@@ -3181,7 +3228,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/markovian/heston/price_gradients/up_no_touches/heston_01__up_no_touches_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/heston/price_gradients/up_one_touches/heston_01__up_one_touches_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/heston/prices/american_calls/heston_01__american_calls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/heston/prices/american_puts/heston_01__american_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/heston/prices/asian_calls/heston_01__asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/heston/prices/asian_puts/heston_01__asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/heston/prices/asset_or_nothing_calls/heston_01__asset_or_nothing_calls_01__01_cartesian_shard00/generator.cpp
@@ -3201,8 +3247,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/markovian/heston/prices/geometric_asian_calls/heston_01__geometric_asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/heston/prices/geometric_asian_puts/heston_01__geometric_asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/heston/prices/lookback_options/heston_01__lookback_options_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/heston/prices/phoenix_autocalls/heston_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/heston/prices/phoenix_memory_autocalls/heston_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/heston/prices/straddles/heston_01__straddles_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/heston/prices/up_and_in_calls/heston_01__up_and_in_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/heston/prices/up_and_out_calls/heston_01__up_and_out_calls_01__01_cartesian_shard00/generator.cpp
@@ -3256,8 +3300,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/markovian/heston_3_2/prices/geometric_asian_calls/heston_3_2_01__geometric_asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/heston_3_2/prices/geometric_asian_puts/heston_3_2_01__geometric_asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/heston_3_2/prices/lookback_options/heston_3_2_01__lookback_options_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/heston_3_2/prices/phoenix_autocalls/heston_3_2_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/heston_3_2/prices/phoenix_memory_autocalls/heston_3_2_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/heston_3_2/prices/straddles/heston_3_2_01__straddles_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/heston_3_2/prices/up_and_in_calls/heston_3_2_01__up_and_in_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/heston_3_2/prices/up_and_out_calls/heston_3_2_01__up_and_out_calls_01__01_cartesian_shard00/generator.cpp
@@ -3295,7 +3337,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/markovian/kou/price_gradients/up_no_touches/kou_01__up_no_touches_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/kou/price_gradients/up_one_touches/kou_01__up_one_touches_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/kou/prices/american_calls/kou_01__american_calls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/kou/prices/american_puts/kou_01__american_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/kou/prices/asian_calls/kou_01__asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/kou/prices/asian_puts/kou_01__asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/kou/prices/asset_or_nothing_calls/kou_01__asset_or_nothing_calls_01__01_cartesian_shard00/generator.cpp
@@ -3315,8 +3356,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/markovian/kou/prices/geometric_asian_calls/kou_01__geometric_asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/kou/prices/geometric_asian_puts/kou_01__geometric_asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/kou/prices/lookback_options/kou_01__lookback_options_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/kou/prices/phoenix_autocalls/kou_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/kou/prices/phoenix_memory_autocalls/kou_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/kou/prices/straddles/kou_01__straddles_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/kou/prices/up_and_in_calls/kou_01__up_and_in_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/kou/prices/up_and_out_calls/kou_01__up_and_out_calls_01__01_cartesian_shard00/generator.cpp
@@ -3354,7 +3393,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/markovian/merton/price_gradients/up_no_touches/merton_01__up_no_touches_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/merton/price_gradients/up_one_touches/merton_01__up_one_touches_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/merton/prices/american_calls/merton_01__american_calls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/merton/prices/american_puts/merton_01__american_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/merton/prices/asian_calls/merton_01__asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/merton/prices/asian_puts/merton_01__asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/merton/prices/asset_or_nothing_calls/merton_01__asset_or_nothing_calls_01__01_cartesian_shard00/generator.cpp
@@ -3374,8 +3412,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/markovian/merton/prices/geometric_asian_calls/merton_01__geometric_asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/merton/prices/geometric_asian_puts/merton_01__geometric_asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/merton/prices/lookback_options/merton_01__lookback_options_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/merton/prices/phoenix_autocalls/merton_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/merton/prices/phoenix_memory_autocalls/merton_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/merton/prices/straddles/merton_01__straddles_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/merton/prices/up_and_in_calls/merton_01__up_and_in_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/merton/prices/up_and_out_calls/merton_01__up_and_out_calls_01__01_cartesian_shard00/generator.cpp
@@ -3413,7 +3449,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/markovian/normal_inverse_gaussian/price_gradients/up_no_touches/normal_inverse_gaussian_01__up_no_touches_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/normal_inverse_gaussian/price_gradients/up_one_touches/normal_inverse_gaussian_01__up_one_touches_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/normal_inverse_gaussian/prices/american_calls/normal_inverse_gaussian_01__american_calls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/normal_inverse_gaussian/prices/american_puts/normal_inverse_gaussian_01__american_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/normal_inverse_gaussian/prices/asian_calls/normal_inverse_gaussian_01__asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/normal_inverse_gaussian/prices/asian_puts/normal_inverse_gaussian_01__asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/normal_inverse_gaussian/prices/asset_or_nothing_calls/normal_inverse_gaussian_01__asset_or_nothing_calls_01__01_cartesian_shard00/generator.cpp
@@ -3433,8 +3468,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/markovian/normal_inverse_gaussian/prices/geometric_asian_calls/normal_inverse_gaussian_01__geometric_asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/normal_inverse_gaussian/prices/geometric_asian_puts/normal_inverse_gaussian_01__geometric_asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/normal_inverse_gaussian/prices/lookback_options/normal_inverse_gaussian_01__lookback_options_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/normal_inverse_gaussian/prices/phoenix_autocalls/normal_inverse_gaussian_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/normal_inverse_gaussian/prices/phoenix_memory_autocalls/normal_inverse_gaussian_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/normal_inverse_gaussian/prices/straddles/normal_inverse_gaussian_01__straddles_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/normal_inverse_gaussian/prices/up_and_in_calls/normal_inverse_gaussian_01__up_and_in_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/normal_inverse_gaussian/prices/up_and_out_calls/normal_inverse_gaussian_01__up_and_out_calls_01__01_cartesian_shard00/generator.cpp
@@ -3488,8 +3521,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/markovian/sabr/prices/geometric_asian_calls/sabr_01__geometric_asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/sabr/prices/geometric_asian_puts/sabr_01__geometric_asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/sabr/prices/lookback_options/sabr_01__lookback_options_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/sabr/prices/phoenix_autocalls/sabr_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/sabr/prices/phoenix_memory_autocalls/sabr_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/sabr/prices/straddles/sabr_01__straddles_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/sabr/prices/up_and_in_calls/sabr_01__up_and_in_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/sabr/prices/up_and_out_calls/sabr_01__up_and_out_calls_01__01_cartesian_shard00/generator.cpp
@@ -3527,7 +3558,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/markovian/schobel_zhu/price_gradients/up_no_touches/schobel_zhu_01__up_no_touches_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/schobel_zhu/price_gradients/up_one_touches/schobel_zhu_01__up_one_touches_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/schobel_zhu/prices/american_calls/schobel_zhu_01__american_calls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/schobel_zhu/prices/american_puts/schobel_zhu_01__american_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/schobel_zhu/prices/asian_calls/schobel_zhu_01__asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/schobel_zhu/prices/asian_puts/schobel_zhu_01__asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/schobel_zhu/prices/asset_or_nothing_calls/schobel_zhu_01__asset_or_nothing_calls_01__01_cartesian_shard00/generator.cpp
@@ -3547,8 +3577,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/markovian/schobel_zhu/prices/geometric_asian_calls/schobel_zhu_01__geometric_asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/schobel_zhu/prices/geometric_asian_puts/schobel_zhu_01__geometric_asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/schobel_zhu/prices/lookback_options/schobel_zhu_01__lookback_options_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/schobel_zhu/prices/phoenix_autocalls/schobel_zhu_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/schobel_zhu/prices/phoenix_memory_autocalls/schobel_zhu_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/schobel_zhu/prices/straddles/schobel_zhu_01__straddles_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/schobel_zhu/prices/up_and_in_calls/schobel_zhu_01__up_and_in_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/schobel_zhu/prices/up_and_out_calls/schobel_zhu_01__up_and_out_calls_01__01_cartesian_shard00/generator.cpp
@@ -3602,8 +3630,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/markovian/stein_stein/prices/geometric_asian_calls/stein_stein_01__geometric_asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/stein_stein/prices/geometric_asian_puts/stein_stein_01__geometric_asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/stein_stein/prices/lookback_options/stein_stein_01__lookback_options_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/stein_stein/prices/phoenix_autocalls/stein_stein_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/stein_stein/prices/phoenix_memory_autocalls/stein_stein_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/stein_stein/prices/straddles/stein_stein_01__straddles_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/stein_stein/prices/up_and_in_calls/stein_stein_01__up_and_in_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/stein_stein/prices/up_and_out_calls/stein_stein_01__up_and_out_calls_01__01_cartesian_shard00/generator.cpp
@@ -3611,17 +3637,12 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/markovian/stein_stein/prices/up_one_touches/stein_stein_01__up_one_touches_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/variance_gamma/price_gradients/american_calls/variance_gamma_01__american_calls_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/variance_gamma/price_gradients/american_puts/variance_gamma_01__american_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
-    work/catalog/model/equity/markovian/variance_gamma/price_gradients/geometric_asian_puts/variance_gamma_01__geometric_asian_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
-    work/catalog/model/equity/markovian/variance_gamma/price_gradients/lookback_options/variance_gamma_01__lookback_options_01__01_cartesian_shard00_price_gradient/generator.cpp
-    work/catalog/model/equity/markovian/variance_gamma/price_gradients/phoenix_autocalls/variance_gamma_01__phoenix_autocalls_01__01_cartesian_shard00_price_gradient/generator.cpp
-    work/catalog/model/equity/markovian/variance_gamma/price_gradients/phoenix_memory_autocalls/variance_gamma_01__phoenix_memory_autocalls_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/variance_gamma/price_gradients/range_accruals/variance_gamma_01__range_accruals_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/variance_gamma/price_gradients/straddles/variance_gamma_01__straddles_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/variance_gamma/price_gradients/up_and_in_calls/variance_gamma_01__up_and_in_calls_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/variance_gamma/price_gradients/up_no_touches/variance_gamma_01__up_no_touches_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/variance_gamma/price_gradients/up_one_touches/variance_gamma_01__up_one_touches_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/markovian/variance_gamma/prices/american_calls/variance_gamma_01__american_calls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/variance_gamma/prices/american_puts/variance_gamma_01__american_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/variance_gamma/prices/asian_calls/variance_gamma_01__asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/variance_gamma/prices/asian_puts/variance_gamma_01__asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/variance_gamma/prices/asset_or_nothing_calls/variance_gamma_01__asset_or_nothing_calls_01__01_cartesian_shard00/generator.cpp
@@ -3641,8 +3662,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/markovian/variance_gamma/prices/geometric_asian_calls/variance_gamma_01__geometric_asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/variance_gamma/prices/geometric_asian_puts/variance_gamma_01__geometric_asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/variance_gamma/prices/lookback_options/variance_gamma_01__lookback_options_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/variance_gamma/prices/phoenix_autocalls/variance_gamma_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/markovian/variance_gamma/prices/phoenix_memory_autocalls/variance_gamma_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/variance_gamma/prices/straddles/variance_gamma_01__straddles_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/variance_gamma/prices/up_and_in_calls/variance_gamma_01__up_and_in_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/markovian/variance_gamma/prices/up_and_out_calls/variance_gamma_01__up_and_out_calls_01__01_cartesian_shard00/generator.cpp
@@ -3696,8 +3715,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/rough/log_modulated_rough_bergomi/prices/geometric_asian_calls/log_modulated_rough_bergomi_01__geometric_asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/log_modulated_rough_bergomi/prices/geometric_asian_puts/log_modulated_rough_bergomi_01__geometric_asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/log_modulated_rough_bergomi/prices/lookback_options/log_modulated_rough_bergomi_01__lookback_options_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/rough/log_modulated_rough_bergomi/prices/phoenix_autocalls/log_modulated_rough_bergomi_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/rough/log_modulated_rough_bergomi/prices/phoenix_memory_autocalls/log_modulated_rough_bergomi_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/log_modulated_rough_bergomi/prices/straddles/log_modulated_rough_bergomi_01__straddles_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/log_modulated_rough_bergomi/prices/up_and_in_calls/log_modulated_rough_bergomi_01__up_and_in_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/log_modulated_rough_bergomi/prices/up_and_out_calls/log_modulated_rough_bergomi_01__up_and_out_calls_01__01_cartesian_shard00/generator.cpp
@@ -3751,17 +3768,11 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/rough/quadratic_rough_heston/prices/geometric_asian_calls/quadratic_rough_heston_01__geometric_asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/quadratic_rough_heston/prices/geometric_asian_puts/quadratic_rough_heston_01__geometric_asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/quadratic_rough_heston/prices/lookback_options/quadratic_rough_heston_01__lookback_options_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/rough/quadratic_rough_heston/prices/phoenix_autocalls/quadratic_rough_heston_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/rough/quadratic_rough_heston/prices/phoenix_memory_autocalls/quadratic_rough_heston_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/quadratic_rough_heston/prices/straddles/quadratic_rough_heston_01__straddles_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/quadratic_rough_heston/prices/up_and_in_calls/quadratic_rough_heston_01__up_and_in_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/quadratic_rough_heston/prices/up_and_out_calls/quadratic_rough_heston_01__up_and_out_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/quadratic_rough_heston/prices/up_no_touches/quadratic_rough_heston_01__up_no_touches_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/quadratic_rough_heston/prices/up_one_touches/quadratic_rough_heston_01__up_one_touches_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/rough/rough_bergomi/price_gradients/cliquets/rough_bergomi_01__cliquets_01__01_cartesian_shard00_price_gradient/generator.cpp
-    work/catalog/model/equity/rough/rough_bergomi/price_gradients/digital_calls/rough_bergomi_01__digital_calls_01__01_cartesian_shard00_price_gradient/generator.cpp
-    work/catalog/model/equity/rough/rough_bergomi/price_gradients/digital_puts/rough_bergomi_01__digital_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
-    work/catalog/model/equity/rough/rough_bergomi/price_gradients/double_knock_out_calls/rough_bergomi_01__double_knock_out_calls_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/rough/rough_bergomi/price_gradients/double_knock_out_puts/rough_bergomi_01__double_knock_out_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/rough/rough_bergomi/price_gradients/down_and_in_puts/rough_bergomi_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/rough/rough_bergomi/price_gradients/down_and_out_puts/rough_bergomi_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
@@ -3800,16 +3811,11 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/rough/rough_bergomi/prices/geometric_asian_calls/rough_bergomi_01__geometric_asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_bergomi/prices/geometric_asian_puts/rough_bergomi_01__geometric_asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_bergomi/prices/lookback_options/rough_bergomi_01__lookback_options_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/rough/rough_bergomi/prices/phoenix_autocalls/rough_bergomi_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/rough/rough_bergomi/prices/phoenix_memory_autocalls/rough_bergomi_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_bergomi/prices/straddles/rough_bergomi_01__straddles_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_bergomi/prices/up_and_in_calls/rough_bergomi_01__up_and_in_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_bergomi/prices/up_and_out_calls/rough_bergomi_01__up_and_out_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_bergomi/prices/up_no_touches/rough_bergomi_01__up_no_touches_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_bergomi/prices/up_one_touches/rough_bergomi_01__up_one_touches_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/rough/rough_heston/price_gradients/phoenix_memory_autocalls/rough_heston_01__phoenix_memory_autocalls_01__01_cartesian_shard00_price_gradient/generator.cpp
-    work/catalog/model/equity/rough/rough_heston/price_gradients/range_accruals/rough_heston_01__range_accruals_01__01_cartesian_shard00_price_gradient/generator.cpp
-    work/catalog/model/equity/rough/rough_heston/price_gradients/straddles/rough_heston_01__straddles_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/rough/rough_heston/price_gradients/up_and_in_calls/rough_heston_01__up_and_in_calls_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/rough/rough_heston/price_gradients/up_no_touches/rough_heston_01__up_no_touches_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/rough/rough_heston/price_gradients/up_one_touches/rough_heston_01__up_one_touches_01__01_cartesian_shard00_price_gradient/generator.cpp
@@ -3832,8 +3838,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/rough/rough_heston/prices/geometric_asian_calls/rough_heston_01__geometric_asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_heston/prices/geometric_asian_puts/rough_heston_01__geometric_asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_heston/prices/lookback_options/rough_heston_01__lookback_options_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/rough/rough_heston/prices/phoenix_autocalls/rough_heston_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/rough/rough_heston/prices/phoenix_memory_autocalls/rough_heston_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_heston/prices/straddles/rough_heston_01__straddles_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_heston/prices/up_and_in_calls/rough_heston_01__up_and_in_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_heston/prices/up_and_out_calls/rough_heston_01__up_and_out_calls_01__01_cartesian_shard00/generator.cpp
@@ -3887,8 +3891,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/rough/rough_sabr/prices/geometric_asian_calls/rough_sabr_01__geometric_asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_sabr/prices/geometric_asian_puts/rough_sabr_01__geometric_asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_sabr/prices/lookback_options/rough_sabr_01__lookback_options_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/rough/rough_sabr/prices/phoenix_autocalls/rough_sabr_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/rough/rough_sabr/prices/phoenix_memory_autocalls/rough_sabr_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_sabr/prices/straddles/rough_sabr_01__straddles_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_sabr/prices/up_and_in_calls/rough_sabr_01__up_and_in_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_sabr/prices/up_and_out_calls/rough_sabr_01__up_and_out_calls_01__01_cartesian_shard00/generator.cpp
@@ -3942,8 +3944,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/model/equity/rough/rough_stein_stein/prices/geometric_asian_calls/rough_stein_stein_01__geometric_asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_stein_stein/prices/geometric_asian_puts/rough_stein_stein_01__geometric_asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_stein_stein/prices/lookback_options/rough_stein_stein_01__lookback_options_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/rough/rough_stein_stein/prices/phoenix_autocalls/rough_stein_stein_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/rough/rough_stein_stein/prices/phoenix_memory_autocalls/rough_stein_stein_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_stein_stein/prices/straddles/rough_stein_stein_01__straddles_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_stein_stein/prices/up_and_in_calls/rough_stein_stein_01__up_and_in_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_stein_stein/prices/up_and_out_calls/rough_stein_stein_01__up_and_out_calls_01__01_cartesian_shard00/generator.cpp
@@ -4073,7 +4073,9 @@ set(AI_FACTORY_MANIFEST_MATHDX_GENERATOR_SOURCES
     catalog/model/equity/rough/log_modulated_rough_bergomi/prices/geometric_asian_puts/log_modulated_rough_bergomi_01__geometric_asian_puts_01__01/generator.cpp
     catalog/model/equity/rough/log_modulated_rough_bergomi/prices/lookback_options/log_modulated_rough_bergomi_01__lookback_options_01__01/generator.cpp
     catalog/model/equity/rough/log_modulated_rough_bergomi/prices/phoenix_autocalls/log_modulated_rough_bergomi_01__phoenix_autocalls_01__01/generator.cpp
+    catalog/model/equity/rough/log_modulated_rough_bergomi/prices/phoenix_autocalls/log_modulated_rough_bergomi_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/log_modulated_rough_bergomi/prices/phoenix_memory_autocalls/log_modulated_rough_bergomi_01__phoenix_memory_autocalls_01__01/generator.cpp
+    catalog/model/equity/rough/log_modulated_rough_bergomi/prices/phoenix_memory_autocalls/log_modulated_rough_bergomi_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/log_modulated_rough_bergomi/prices/range_accruals/log_modulated_rough_bergomi_01__range_accruals_01__01/generator.cpp
     catalog/model/equity/rough/log_modulated_rough_bergomi/prices/range_accruals/log_modulated_rough_bergomi_01__range_accruals_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/log_modulated_rough_bergomi/prices/straddles/log_modulated_rough_bergomi_01__straddles_01__01/generator.cpp
@@ -4093,9 +4095,13 @@ set(AI_FACTORY_MANIFEST_MATHDX_GENERATOR_SOURCES
     catalog/model/equity/rough/rough_bergomi/price_gradients/asset_or_nothing_puts/rough_bergomi_01__asset_or_nothing_puts_01__01_price_gradient/generator.cpp
     catalog/model/equity/rough/rough_bergomi/price_gradients/athena_autocalls/rough_bergomi_01__athena_autocalls_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/rough/rough_bergomi/price_gradients/athena_autocalls/rough_bergomi_01__athena_autocalls_01__01_price_gradient/generator.cpp
+    catalog/model/equity/rough/rough_bergomi/price_gradients/cliquets/rough_bergomi_01__cliquets_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/rough/rough_bergomi/price_gradients/cliquets/rough_bergomi_01__cliquets_01__01_price_gradient/generator.cpp
+    catalog/model/equity/rough/rough_bergomi/price_gradients/digital_calls/rough_bergomi_01__digital_calls_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/rough/rough_bergomi/price_gradients/digital_calls/rough_bergomi_01__digital_calls_01__01_price_gradient/generator.cpp
+    catalog/model/equity/rough/rough_bergomi/price_gradients/digital_puts/rough_bergomi_01__digital_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/rough/rough_bergomi/price_gradients/digital_puts/rough_bergomi_01__digital_puts_01__01_price_gradient/generator.cpp
+    catalog/model/equity/rough/rough_bergomi/price_gradients/double_knock_out_calls/rough_bergomi_01__double_knock_out_calls_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/model/equity/rough/rough_bergomi/price_gradients/double_knock_out_calls/rough_bergomi_01__double_knock_out_calls_01__01_price_gradient/generator.cpp
     catalog/model/equity/rough/rough_bergomi/price_gradients/double_knock_out_puts/rough_bergomi_01__double_knock_out_puts_01__01_price_gradient/generator.cpp
     catalog/model/equity/rough/rough_bergomi/price_gradients/down_and_in_puts/rough_bergomi_01__down_and_in_puts_01__01_price_gradient/generator.cpp
@@ -4142,7 +4148,9 @@ set(AI_FACTORY_MANIFEST_MATHDX_GENERATOR_SOURCES
     catalog/model/equity/rough/rough_bergomi/prices/geometric_asian_puts/rough_bergomi_01__geometric_asian_puts_01__01/generator.cpp
     catalog/model/equity/rough/rough_bergomi/prices/lookback_options/rough_bergomi_01__lookback_options_01__01/generator.cpp
     catalog/model/equity/rough/rough_bergomi/prices/phoenix_autocalls/rough_bergomi_01__phoenix_autocalls_01__01/generator.cpp
+    catalog/model/equity/rough/rough_bergomi/prices/phoenix_autocalls/rough_bergomi_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/rough_bergomi/prices/phoenix_memory_autocalls/rough_bergomi_01__phoenix_memory_autocalls_01__01/generator.cpp
+    catalog/model/equity/rough/rough_bergomi/prices/phoenix_memory_autocalls/rough_bergomi_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/rough_bergomi/prices/range_accruals/rough_bergomi_01__range_accruals_01__01/generator.cpp
     catalog/model/equity/rough/rough_bergomi/prices/range_accruals/rough_bergomi_01__range_accruals_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/rough_bergomi/prices/straddles/rough_bergomi_01__straddles_01__01/generator.cpp
@@ -4205,7 +4213,9 @@ set(AI_FACTORY_MANIFEST_MATHDX_GENERATOR_SOURCES
     catalog/model/equity/rough/rough_sabr/prices/geometric_asian_puts/rough_sabr_01__geometric_asian_puts_01__01/generator.cpp
     catalog/model/equity/rough/rough_sabr/prices/lookback_options/rough_sabr_01__lookback_options_01__01/generator.cpp
     catalog/model/equity/rough/rough_sabr/prices/phoenix_autocalls/rough_sabr_01__phoenix_autocalls_01__01/generator.cpp
+    catalog/model/equity/rough/rough_sabr/prices/phoenix_autocalls/rough_sabr_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/rough_sabr/prices/phoenix_memory_autocalls/rough_sabr_01__phoenix_memory_autocalls_01__01/generator.cpp
+    catalog/model/equity/rough/rough_sabr/prices/phoenix_memory_autocalls/rough_sabr_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/rough_sabr/prices/range_accruals/rough_sabr_01__range_accruals_01__01/generator.cpp
     catalog/model/equity/rough/rough_sabr/prices/range_accruals/rough_sabr_01__range_accruals_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/rough_sabr/prices/straddles/rough_sabr_01__straddles_01__01/generator.cpp
@@ -4268,7 +4278,9 @@ set(AI_FACTORY_MANIFEST_MATHDX_GENERATOR_SOURCES
     catalog/model/equity/rough/rough_stein_stein/prices/geometric_asian_puts/rough_stein_stein_01__geometric_asian_puts_01__01/generator.cpp
     catalog/model/equity/rough/rough_stein_stein/prices/lookback_options/rough_stein_stein_01__lookback_options_01__01/generator.cpp
     catalog/model/equity/rough/rough_stein_stein/prices/phoenix_autocalls/rough_stein_stein_01__phoenix_autocalls_01__01/generator.cpp
+    catalog/model/equity/rough/rough_stein_stein/prices/phoenix_autocalls/rough_stein_stein_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/rough_stein_stein/prices/phoenix_memory_autocalls/rough_stein_stein_01__phoenix_memory_autocalls_01__01/generator.cpp
+    catalog/model/equity/rough/rough_stein_stein/prices/phoenix_memory_autocalls/rough_stein_stein_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/rough_stein_stein/prices/range_accruals/rough_stein_stein_01__range_accruals_01__01/generator.cpp
     catalog/model/equity/rough/rough_stein_stein/prices/range_accruals/rough_stein_stein_01__range_accruals_01__01_cartesian_shard00/generator.cpp
     catalog/model/equity/rough/rough_stein_stein/prices/straddles/rough_stein_stein_01__straddles_01__01/generator.cpp
@@ -4326,17 +4338,11 @@ set(AI_FACTORY_MANIFEST_MATHDX_GENERATOR_SOURCES
     work/catalog/model/equity/rough/log_modulated_rough_bergomi/prices/geometric_asian_calls/log_modulated_rough_bergomi_01__geometric_asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/log_modulated_rough_bergomi/prices/geometric_asian_puts/log_modulated_rough_bergomi_01__geometric_asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/log_modulated_rough_bergomi/prices/lookback_options/log_modulated_rough_bergomi_01__lookback_options_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/rough/log_modulated_rough_bergomi/prices/phoenix_autocalls/log_modulated_rough_bergomi_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/rough/log_modulated_rough_bergomi/prices/phoenix_memory_autocalls/log_modulated_rough_bergomi_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/log_modulated_rough_bergomi/prices/straddles/log_modulated_rough_bergomi_01__straddles_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/log_modulated_rough_bergomi/prices/up_and_in_calls/log_modulated_rough_bergomi_01__up_and_in_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/log_modulated_rough_bergomi/prices/up_and_out_calls/log_modulated_rough_bergomi_01__up_and_out_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/log_modulated_rough_bergomi/prices/up_no_touches/log_modulated_rough_bergomi_01__up_no_touches_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/log_modulated_rough_bergomi/prices/up_one_touches/log_modulated_rough_bergomi_01__up_one_touches_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/rough/rough_bergomi/price_gradients/cliquets/rough_bergomi_01__cliquets_01__01_cartesian_shard00_price_gradient/generator.cpp
-    work/catalog/model/equity/rough/rough_bergomi/price_gradients/digital_calls/rough_bergomi_01__digital_calls_01__01_cartesian_shard00_price_gradient/generator.cpp
-    work/catalog/model/equity/rough/rough_bergomi/price_gradients/digital_puts/rough_bergomi_01__digital_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
-    work/catalog/model/equity/rough/rough_bergomi/price_gradients/double_knock_out_calls/rough_bergomi_01__double_knock_out_calls_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/rough/rough_bergomi/price_gradients/double_knock_out_puts/rough_bergomi_01__double_knock_out_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/rough/rough_bergomi/price_gradients/down_and_in_puts/rough_bergomi_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/model/equity/rough/rough_bergomi/price_gradients/down_and_out_puts/rough_bergomi_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient/generator.cpp
@@ -4375,8 +4381,6 @@ set(AI_FACTORY_MANIFEST_MATHDX_GENERATOR_SOURCES
     work/catalog/model/equity/rough/rough_bergomi/prices/geometric_asian_calls/rough_bergomi_01__geometric_asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_bergomi/prices/geometric_asian_puts/rough_bergomi_01__geometric_asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_bergomi/prices/lookback_options/rough_bergomi_01__lookback_options_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/rough/rough_bergomi/prices/phoenix_autocalls/rough_bergomi_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/rough/rough_bergomi/prices/phoenix_memory_autocalls/rough_bergomi_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_bergomi/prices/straddles/rough_bergomi_01__straddles_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_bergomi/prices/up_and_in_calls/rough_bergomi_01__up_and_in_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_bergomi/prices/up_and_out_calls/rough_bergomi_01__up_and_out_calls_01__01_cartesian_shard00/generator.cpp
@@ -4430,8 +4434,6 @@ set(AI_FACTORY_MANIFEST_MATHDX_GENERATOR_SOURCES
     work/catalog/model/equity/rough/rough_sabr/prices/geometric_asian_calls/rough_sabr_01__geometric_asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_sabr/prices/geometric_asian_puts/rough_sabr_01__geometric_asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_sabr/prices/lookback_options/rough_sabr_01__lookback_options_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/rough/rough_sabr/prices/phoenix_autocalls/rough_sabr_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/rough/rough_sabr/prices/phoenix_memory_autocalls/rough_sabr_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_sabr/prices/straddles/rough_sabr_01__straddles_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_sabr/prices/up_and_in_calls/rough_sabr_01__up_and_in_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_sabr/prices/up_and_out_calls/rough_sabr_01__up_and_out_calls_01__01_cartesian_shard00/generator.cpp
@@ -4485,8 +4487,6 @@ set(AI_FACTORY_MANIFEST_MATHDX_GENERATOR_SOURCES
     work/catalog/model/equity/rough/rough_stein_stein/prices/geometric_asian_calls/rough_stein_stein_01__geometric_asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_stein_stein/prices/geometric_asian_puts/rough_stein_stein_01__geometric_asian_puts_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_stein_stein/prices/lookback_options/rough_stein_stein_01__lookback_options_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/rough/rough_stein_stein/prices/phoenix_autocalls/rough_stein_stein_01__phoenix_autocalls_01__01_cartesian_shard00/generator.cpp
-    work/catalog/model/equity/rough/rough_stein_stein/prices/phoenix_memory_autocalls/rough_stein_stein_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_stein_stein/prices/straddles/rough_stein_stein_01__straddles_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_stein_stein/prices/up_and_in_calls/rough_stein_stein_01__up_and_in_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/model/equity/rough/rough_stein_stein/prices/up_and_out_calls/rough_stein_stein_01__up_and_out_calls_01__01_cartesian_shard00/generator.cpp

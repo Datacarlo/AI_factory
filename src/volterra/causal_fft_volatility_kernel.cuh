@@ -1,3 +1,4 @@
+#include "volterra/row_workspace.cuh"
 // Product-independent causal FFT generation of a rough volatility path.
 #pragma once
 
@@ -99,8 +100,12 @@ __global__ void prepare_volatility_row_kernel(
     std::uint64_t base_seed,
     VolatilityRow<Policy>* output,
     const RowIndexSelector* row_selectors,
-    std::size_t model_slot,std::size_t correlation_slot
+    std::size_t model_slot,std::size_t correlation_slot,
+    std::size_t workspace_stride=0U
 ) {
+    result_index+=blockIdx.y;
+    output=::ai_factory::workbench::volterra::row_workspace_pointer(output,workspace_stride);
+
     if (threadIdx.x != 0U) return;
     const std::uint32_t model_index=row_selectors[model_slot].select(
         static_cast<std::uint32_t>(result_index));
@@ -131,8 +136,15 @@ __global__ void advance_volatility_tile_kernel(
     VolatilityContext<Policy>* contexts,
     float* volatility_path,
     std::size_t volatility_factor,
-    std::uint32_t auxiliary_source
+    std::uint32_t auxiliary_source,
+    std::size_t workspace_stride=0U,std::size_t output_stride=0U
 ) {
+    rows=::ai_factory::workbench::volterra::row_workspace_pointer(rows,workspace_stride);
+    weights=::ai_factory::workbench::volterra::row_workspace_pointer(weights,workspace_stride);
+    history=::ai_factory::workbench::volterra::row_workspace_pointer(history,workspace_stride);
+    contexts=::ai_factory::workbench::volterra::row_workspace_pointer(contexts,workspace_stride);
+    volatility_path+=blockIdx.y*output_stride;
+
     const std::size_t path = blockIdx.x * blockDim.x + threadIdx.x;
     __shared__ VolatilityRow<Policy> row;
     if (threadIdx.x == 0U) row = rows[0];
@@ -191,7 +203,8 @@ void launch_causal_engine_cuda(
     TileLauncher launch_tile,
     cudaStream_t stream,
     const RowIndexSelector* row_selectors,
-    std::size_t model_slot,std::size_t correlation_slot
+    std::size_t model_slot,std::size_t correlation_slot,
+    std::size_t batch_rows=1U,std::size_t workspace_stride=0U,std::size_t output_stride=0U
 ) {
     if (!models || !row_selectors
         || !packed_factors || !workspace
@@ -213,13 +226,13 @@ void launch_causal_engine_cuda(
     auto* contexts = reinterpret_cast<Context*>(
         bytes + plan.context_offset
     );
-    prepare_volatility_row_kernel<Policy, Dimension><<<1U, 1U, 0U, stream>>>(
+    prepare_volatility_row_kernel<Policy, Dimension><<<dim3(1U,batch_rows), 1U, 0U, stream>>>(
         models, packed_factors, result_index, dt, base_seed, row,
-        row_selectors,model_slot,correlation_slot
+        row_selectors,model_slot,correlation_slot,workspace_stride
     );
     check_cuda(cudaGetLastError(), "causal volatility row preparation");
-    prepare_weights_kernel<Row><<<dim3((steps + 255U) / 256U, 1U), 256U, 0U, stream>>>(
-        row, 1U, steps, weights
+    prepare_weights_kernel<Row><<<dim3((steps + 255U) / 256U, batch_rows), 256U, 0U, stream>>>(
+        row, 1U, steps, weights, workspace_stride
     );
     check_cuda(cudaGetLastError(), "causal volatility weight preparation");
     for (std::uint32_t scale = direct_tile_size; scale < steps;
@@ -252,18 +265,18 @@ void launch_causal_engine_cuda(
                 cudaFuncAttributeMaxDynamicSharedMemorySize,
                 static_cast<int>(update_shared)),
                 "causal volatility history shared memory");
-            prepare<<<1U, Forward::block_dim,
+            prepare<<<dim3(1U,batch_rows), Forward::block_dim,
                 Forward::shared_memory_size, stream>>>(
                     row, 1U, steps, scale, spectrum_offset,
-                    4U * steps, weights, spectra
+                    4U * steps, weights, spectra, workspace_stride
                 );
             check_cuda(cudaGetLastError(),
                 "causal volatility spectrum preparation");
         });
     }
-    check_cuda(cudaMemsetAsync(history, 0,
-        path_count * steps * sizeof(float), stream),
-        "causal volatility clear history");
+    for(std::size_t row_index=0U;row_index<batch_rows;++row_index)
+        check_cuda(cudaMemsetAsync(reinterpret_cast<unsigned char*>(history)+row_index*workspace_stride,0,
+            path_count*steps*sizeof(float),stream),"causal volatility clear history");
     for (std::uint32_t first = 0U; first < steps;
          first += direct_tile_size) {
         launch_tile(row, path_offset, path_count, steps, first,
@@ -288,11 +301,11 @@ void launch_causal_engine_cuda(
                 static_cast<std::size_t>(Forward::shared_memory_size),
                 static_cast<std::size_t>(Inverse::shared_memory_size)
             );
-            update<<<static_cast<unsigned int>((
+            update<<<dim3(static_cast<unsigned int>((
                 (path_count + 1U) / 2U + FftsPerBlock - 1U)
-                / FftsPerBlock), Forward::block_dim, shared, stream>>>(
+                / FftsPerBlock),batch_rows), Forward::block_dim, shared, stream>>>(
                 spectra, 4U * steps, spectrum_offset, history,
-                1U, path_count, path_count, steps, boundary, scale
+                1U, path_count, path_count, steps, boundary, scale, workspace_stride
             );
             check_cuda(cudaGetLastError(),
                 "causal volatility history update");
@@ -318,7 +331,8 @@ void launch_volatility_factor_cuda(
     std::uint32_t auxiliary_source,
     cudaStream_t stream,
     const RowIndexSelector* row_selectors,
-    std::size_t model_slot,std::size_t correlation_slot
+    std::size_t model_slot,std::size_t correlation_slot,
+    std::size_t batch_rows=1U,std::size_t workspace_stride=0U,std::size_t output_stride=0U
 ) {
     if (!volatility_path || volatility_factor >= Dimension
         || auxiliary_source < 2U || auxiliary_source > 255U) {
@@ -335,14 +349,14 @@ void launch_volatility_factor_cuda(
             std::uint32_t tile, const float* weights,
             float* history, VolatilityContext<Policy>* contexts) {
             advance_volatility_tile_kernel<Policy>
-                <<<static_cast<unsigned int>((count + 127U) / 128U), 128U, 0U, stream>>>(
+                <<<dim3(static_cast<unsigned int>((count + 127U) / 128U),batch_rows), 128U, 0U, stream>>>(
                 row, offset, count, total_steps, first, tile,
                 weights, history, contexts, volatility_path,
-                volatility_factor, auxiliary_source
+                volatility_factor, auxiliary_source, workspace_stride, output_stride
             );
             check_cuda(cudaGetLastError(), "causal volatility direct tile");
         }, stream,
-        row_selectors,model_slot,correlation_slot
+        row_selectors,model_slot,correlation_slot,batch_rows,workspace_stride,output_stride
     );
 }
 

@@ -20,14 +20,15 @@ public:
     using Cache = typename Graph::Cache;
     using ExecutionPlan = typename Graph::ExecutionPlan;
 
-    RoughGraphExecution(float horizon, float dt)
-        : horizon_(horizon), dt_(dt), cache_(make_cache(horizon, dt)) {}
+    RoughGraphExecution(float horizon, float dt, std::size_t rows_per_launch = 0U)
+        : rows_per_launch_(rows_per_launch), horizon_(horizon), dt_(dt), cache_(make_cache(horizon, dt)) {}
 
     std::size_t workspace_bytes(
         const auto& host, const pg::LaunchConfiguration& launch
     ) {
         if constexpr (requires(const Cache& cache) { cache.entries(); }) {
             auto complete = launch;
+            complete.rows_per_launch = rows_per_launch_;
             complete.result_offset = 0U;
             complete.result_count = host.result_count;
             if (host.construction == PriceConstruction::CartesianProduct
@@ -59,7 +60,8 @@ public:
             }
             plan_ = Graph::plan(host, cache_, complete);
         } else {
-            plan_ = Graph::plan(host, cache_, launch);
+            auto selected = launch; selected.rows_per_launch = rows_per_launch_;
+            plan_ = Graph::plan(host, cache_, selected);
         }
         workspace_capacity_ = plan_->bytes;
         return plan_->bytes;
@@ -118,6 +120,7 @@ private:
             if (model != active_model_) {
                 cache_ = make_cache(horizon_, dt_);
                 auto scoped_launch = launch;
+                scoped_launch.rows_per_launch = rows_per_launch_;
                 scoped_launch.result_offset = model * model_span_;
                 scoped_launch.result_count = model_span_;
                 plan_ = Graph::plan(host, cache_, scoped_launch);
@@ -144,6 +147,7 @@ private:
             return Cache{};
     }
 
+    std::size_t rows_per_launch_ = 0U;
     float horizon_;
     float dt_;
     Cache cache_;
@@ -158,7 +162,8 @@ int execute_rough_graph_dataset(
     const datasets::price_gradients::Recipe& recipe,
     cuda_tuning::PricingIdentity identity, std::uint64_t seed,
     const Models& models, const Products& products, Prepare prepare,
-    std::size_t paths_per_price = cuda_tuning::kProductionPathsPerPrice
+    std::size_t paths_per_price = cuda_tuning::kProductionPathsPerPrice,
+    std::size_t rows_per_launch = 0U
 ) {
     if (recipe.orders != pg::SensitivityOrders::first
         || recipe.sensitivity_strategy != pg::SensitivityStrategy::node_graph) {
@@ -173,7 +178,7 @@ int execute_rough_graph_dataset(
             static_cast<float>(product.maturity_days) / 252.0f);
     return execute_prepared_dataset<true, pg::SensitivityOrders::first>(
         recipe, identity, seed, host,
-        RoughGraphExecution<Graph>(horizon, recipe.time.dt), nullptr,
+        RoughGraphExecution<Graph>(horizon, recipe.time.dt, rows_per_launch), nullptr,
         paths_per_price
     );
 }

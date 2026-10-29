@@ -222,7 +222,7 @@ struct BermudanSwaptionDevicePreparedSensitivityPolicy
         ) const {
             const std::size_t result_index =
                 input_result_offset + local_row;
-            const mcpg::DevicePreparedPlan plan{
+            mcpg::DevicePreparedPlan plan{
                 time,
                 construction,
                 model_count,
@@ -231,6 +231,15 @@ struct BermudanSwaptionDevicePreparedSensitivityPolicy
                 sensitivity_count,
                 curve_count,
             };
+            plan.model_product_rows = make_model_product_row_plan(
+                static_cast<std::uint32_t>(model_count),
+                static_cast<std::uint32_t>(product_count), construction);
+            if constexpr (requires { primary.curves; }) {
+                plan.model_curve_product_rows = make_model_curve_product_row_plan(
+                    static_cast<std::uint32_t>(model_count),
+                    static_cast<std::uint32_t>(curve_count),
+                    static_cast<std::uint32_t>(product_count), construction);
+            }
             Scenario central{};
             const bool valid = primary.make_central(
                 result_index, plan, central

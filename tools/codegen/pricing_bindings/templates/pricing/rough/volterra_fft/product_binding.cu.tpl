@@ -24,7 +24,8 @@ namespace ai_factory::workbench::model::equity::{model} {{
     std::size_t workspace_bytes,
     std::uint64_t base_seed,
     float* device_prices,
-    float* device_standard_errors
+    float* device_standard_errors,
+    std::size_t row_count
 ) {{
     using ProductPolicy = {product_policy_expression};
     launch_{model}_hybrid_fft_cuda<
@@ -48,7 +49,7 @@ namespace ai_factory::workbench::model::equity::{model} {{
         device_prices,
         device_standard_errors,
         "{model}.{product}",
-        {diagnostic_variant}
+        {diagnostic_variant}, row_count
     );
 }}
 

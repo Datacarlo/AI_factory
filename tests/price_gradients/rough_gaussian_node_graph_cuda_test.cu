@@ -28,6 +28,7 @@
 #include <cuda_runtime.h>
 
 #include <cmath>
+#include <cstring>
 #include <cstddef>
 #include <cstdint>
 #include <stdexcept>
@@ -159,6 +160,29 @@ int main() {
     prices.download(graph_prices, 2U);
     errors.download(graph_errors, 2U);
     gradients.download(graph_gradients, 8U);
+    // L changes row scheduling only, including a batch larger than the remaining
+    // rows and a final partial path chunk (513 paths). All output channels retain bits.
+    const auto snapshot = [&]() {
+        std::vector<float> result;
+        for (auto* buffer : {&prices, &errors, &gradients, &gradient_errors, &hessians, &hessian_errors}) {
+            const auto n = (buffer == &prices || buffer == &errors) ? 2U : 8U;
+            const auto offset = result.size(); result.resize(offset + n);
+            buffer->download(result.data() + offset, n);
+        }
+        return result;
+    };
+    const auto reference = snapshot();
+    for (std::size_t rows_per_launch : {2U, 3U, 8U}) {
+        auto batched_launch = launch; batched_launch.rows_per_launch = rows_per_launch;
+        Graph::Cache batched_cache;
+        const auto batched_plan = Graph::plan(host, batched_cache, batched_launch);
+        DeviceBuffer<unsigned char> batched_workspace(batched_plan.bytes);
+        Graph::launch(host, batched_cache, batched_launch, outputs, stencil_outputs,
+            batched_plan, batched_workspace.value, batched_plan.bytes);
+        const auto batched = snapshot();
+        require(std::memcmp(reference.data(), batched.data(), reference.size() * sizeof(float)) == 0,
+            "Gaussian FFT row batching changed price/sensitivity moments.");
+    }
     require(cache.prepared_for(workspace.value),
             "Gaussian FFT cache was not retained in the workspace.");
     Graph::launch(host, cache, launch, outputs, stencil_outputs,

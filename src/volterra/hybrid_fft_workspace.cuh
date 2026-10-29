@@ -131,8 +131,11 @@ inline std::size_t required_hybrid_fft_workspace_bytes(
 inline HybridFftWorkspacePlan plan_hybrid_fft_workspace(
     std::size_t maximum_step_count,
     std::size_t monte_carlo_paths_per_price,
-    std::size_t path_chunk_size
+    std::size_t path_chunk_size,
+    std::size_t row_count = 1U
 ) {
+    if (row_count == 0U || row_count > 65535U)
+        throw std::invalid_argument("Invalid hybrid FFT row count.");
     validate_monte_carlo_path_count(monte_carlo_paths_per_price);
     if (maximum_step_count == 0U
         || maximum_step_count > kMaximumHybridFftStepCount) {
@@ -173,11 +176,11 @@ inline HybridFftWorkspacePlan plan_hybrid_fft_workspace(
         kHybridFftVolterraVarianceBytes,
         convolution_bytes,
         partial_count,
-        required_hybrid_fft_workspace_bytes(
+        checked_hybrid_fft_product(row_count, required_hybrid_fft_workspace_bytes(
             maximum_step_count,
             monte_carlo_paths_per_price,
             path_chunk_size
-        ),
+        ), "Hybrid FFT batched workspace overflow"),
     };
 }
 

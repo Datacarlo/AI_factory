@@ -6,12 +6,12 @@
 
 namespace ai_factory::workbench::product {
 
-std::vector<BestOfCallParameters> load_best_of_calls(
+std::vector<BestOfCallParameters> load_best_of_options(
     const std::filesystem::path& dataset_path
 ) {
     return datasets::load_parameter_rows<BestOfCallParameters>(
         dataset_path, datasets::ParameterDatasetFamily::Product,
-        "Best-of call",
+        "Best-of option",
         [](const nlohmann::json& parameters, const std::string& prefix) {
             const BestOfCallParameters product{
                 parameters.at("strike").get<float>(),
@@ -24,6 +24,12 @@ std::vector<BestOfCallParameters> load_best_of_calls(
             return product;
         }
     );
+}
+
+std::vector<BestOfCallParameters> load_best_of_calls(
+    const std::filesystem::path& dataset_path
+) {
+    return load_best_of_options(dataset_path);
 }
 
 }  // namespace ai_factory::workbench::product

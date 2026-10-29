@@ -366,7 +366,7 @@ void launch_pricing_cuda(
                     + FftsPerBlock - 1U) / FftsPerBlock),
                     Forward::block_dim, shared>>>(
                         rows, batch_rows, steps, scale, offset,
-                        plan.spectrum_stride, weights, spectra
+                        plan.spectrum_stride, weights, spectra, 0U
                     );
                 check_cuda(cudaGetLastError(), "causal FFT spectrum preparation");
                 using Inverse = typename Types::Inverse;
@@ -432,7 +432,7 @@ void launch_pricing_cuda(
                         Forward::block_dim, shared>>>(
                             spectra, plan.spectrum_stride, offset,
                             history, batch_rows, path_chunk_size,
-                            chunk_paths, steps, boundary, scale
+                            chunk_paths, steps, boundary, scale, 0U
                         );
                     check_cuda(cudaGetLastError(), "causal FFT history update");
                 });

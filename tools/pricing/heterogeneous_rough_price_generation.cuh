@@ -136,7 +136,8 @@ struct MultiRoughDeviceModels<simulation::MultiRoughPack<Head,Tail...>> {
         void* workspace,std::size_t workspace_bytes,
         float* volatility_paths,cudaStream_t stream,
         const RowIndexSelector* row_selectors,
-        std::size_t correlation_slot
+        std::size_t correlation_slot,
+        std::size_t batch_rows=1U,std::size_t workspace_stride=0U,std::size_t output_stride=0U
     ) const {
         constexpr std::uint32_t source=static_cast<std::uint32_t>(
             2U+MarkovAssets+AssetOffset);
@@ -148,7 +149,7 @@ struct MultiRoughDeviceModels<simulation::MultiRoughPack<Head,Tail...>> {
                     result_index,path_offset,path_count,dt,steps,
                     direct_tile_size,seed,workspace,workspace_bytes,
                     output,AssetOffset,source,stream,
-                    row_selectors,MarkovAssets+AssetOffset,correlation_slot);
+                    row_selectors,MarkovAssets+AssetOffset,correlation_slot,batch_rows,workspace_stride,output_stride);
         } else {
             volterra::hybrid_fft::launch_correlated_hybrid_volatility_cuda<
                 Head,Dimension>(
@@ -156,7 +157,7 @@ struct MultiRoughDeviceModels<simulation::MultiRoughPack<Head,Tail...>> {
                     result_index,path_offset,path_count,dt,steps,seed,
                     workspace,workspace_bytes,output,AssetOffset,source,
                     stream,row_selectors,
-                    MarkovAssets+AssetOffset,correlation_slot);
+                    MarkovAssets+AssetOffset,correlation_slot,batch_rows,workspace_stride,output_stride);
         }
         if constexpr (Rest::kAssetCount>0U)
             tail.template launch_volatilities<
@@ -164,7 +165,7 @@ struct MultiRoughDeviceModels<simulation::MultiRoughPack<Head,Tail...>> {
                     packed_factors,result_index,path_offset,
                     path_count,dt,steps,direct_tile_size,seed,
                     workspace,workspace_bytes,volatility_paths,stream,
-                    row_selectors,correlation_slot);
+                    row_selectors,correlation_slot,batch_rows,workspace_stride,output_stride);
     }
 };
 
@@ -208,7 +209,8 @@ struct MultiRoughDeviceModels<
         void* workspace, std::size_t workspace_bytes,
         float* volatility_paths,cudaStream_t stream,
         const RowIndexSelector* row_selectors,
-        std::size_t correlation_slot
+        std::size_t correlation_slot,
+        std::size_t batch_rows=1U, std::size_t workspace_stride=0U, std::size_t output_stride=0U
     ) const {
         for (std::size_t asset = 0U; asset < Count; ++asset) {
             float* output = volatility_paths
@@ -222,7 +224,7 @@ struct MultiRoughDeviceModels<
                         path_count, dt, steps, direct_tile_size, seed,
                         workspace, workspace_bytes, output,
                         asset, source, stream,
-                        row_selectors,MarkovAssets+asset,correlation_slot);
+                        row_selectors,MarkovAssets+asset,correlation_slot,batch_rows,workspace_stride,output_stride);
             } else {
                 volterra::hybrid_fft::
                     launch_correlated_hybrid_volatility_cuda<
@@ -231,7 +233,7 @@ struct MultiRoughDeviceModels<
                             path_count, dt, steps, seed, workspace,
                             workspace_bytes, output, asset, source,
                             stream,row_selectors,
-                            MarkovAssets+asset,correlation_slot);
+                            MarkovAssets+asset,correlation_slot,batch_rows,workspace_stride,output_stride);
             }
         }
     }

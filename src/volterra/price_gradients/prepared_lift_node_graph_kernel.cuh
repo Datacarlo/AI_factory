@@ -71,7 +71,8 @@ PreparedLiftGraphExecutionPlan<
     std::size_t paths_per_row,
     std::size_t prepared_count,
     unsigned int reduction_threads,
-    std::size_t workspace_limit = 1U << 29U
+    std::size_t workspace_limit = 1U << 29U,
+    std::size_t requested_rows = 0U
 ) {
     static_assert(Orders != pg::SensitivityOrders::none);
     using NodePolicy = typename Evaluation::NodePolicy;
@@ -81,7 +82,8 @@ PreparedLiftGraphExecutionPlan<
         || paths_per_row < 2U || !prepared_count) {
         throw std::invalid_argument("Invalid prepared-lift graph dimensions.");
     }
-    auto rows = std::min<std::size_t>(result_count, 16U);
+    if (requested_rows > 65535U) throw std::invalid_argument("Invalid lift row batch size.");
+    auto rows = std::min<std::size_t>(result_count, requested_rows ? requested_rows : 16U);
     auto paths = std::min<std::size_t>(paths_per_row, 8192U);
     paths = std::max<std::size_t>(reduction_threads,
         paths / reduction_threads * reduction_threads);
@@ -142,7 +144,7 @@ auto plan_prepared_lift_node_graph_for_host(
     >(
         launch.result_count, host.sensitivity_count(),
         launch.paths_per_price, cache.values().size(),
-        launch.threads_per_block, workspace_limit
+        launch.threads_per_block, workspace_limit, launch.rows_per_launch
     );
 }
 

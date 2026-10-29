@@ -7,6 +7,10 @@
 
 namespace ai_factory::workbench::product {
 
+std::vector<BestOfCallParameters> load_best_of_options(
+    const std::filesystem::path& dataset_path
+);
+
 std::vector<BestOfCallParameters> load_best_of_calls(
     const std::filesystem::path& dataset_path
 );

@@ -46,7 +46,7 @@ int main() {
             {offline::cuda_tuning::PricingFamily::rough_fft,
              "rough_stein_stein", "asset_or_nothing_option", ""},
             11668828919439556608ULL, models, products, prepare,
-            offline::cuda_tuning::kProductionPathsPerPrice);
+            offline::cuda_tuning::kProductionPathsPerPrice, 1U); // Historical row geometry.
     } catch (const std::exception& error) {
         std::cerr << error.what() << '\n';
         return 1;

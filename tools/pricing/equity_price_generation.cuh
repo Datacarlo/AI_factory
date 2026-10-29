@@ -1,6 +1,8 @@
 // Generic offline assembly for generated equity price recipes.
 #pragma once
 
+#include "volterra/hybrid_fft_workspace.cuh"
+
 #include "datasets/validation.hpp"
 #include "equity/spot_relative_product.hpp"
 #include "pricing_rows/price_construction.cuh"
@@ -58,6 +60,7 @@ struct VolterraMonteCarloProfile {
     std::uint64_t seed = 0U;
     std::string delta_t_description;
     cuda_tuning::PricingIdentity identity{cuda_tuning::PricingFamily::rough_fft, {}, {}, {}};
+    std::size_t rows_per_launch = 1U;
 };
 
 struct AnalyticalProfile {
@@ -98,6 +101,7 @@ struct VolterraLaunchContext {
     std::size_t step_count;
     std::size_t path_chunk_size;
     std::uint64_t seed;
+    std::size_t row_count = 1U;
 };
 
 struct MonteCarloExecution {
@@ -416,18 +420,24 @@ MonteCarloExecution execute_volterra_monte_carlo(
     const auto plan = cuda_tuning::make_pricing_launch_plan(
         profile.identity, result_count, profile.paths_per_price, settings
     );
+    if (profile.rows_per_launch == 0U || profile.rows_per_launch > 65535U)
+        throw std::invalid_argument("Invalid Volterra rows_per_launch.");
     const auto workspace = std::invoke(
         workspace_planner,
         maximum_step_count,
         profile.paths_per_price,
         profile.path_chunk_size
     );
+    const auto resident_rows = std::min(profile.rows_per_launch, result_count);
+    const auto workspace_bytes = volterra::checked_hybrid_fft_product(
+        workspace.workspace_bytes, resident_rows, "Volterra row workspace overflow");
+    std::size_t submitted_batches = 0U;
     cuda::MonteCarloGenerationCheckpoint checkpoint(result_count);
     cuda::GenerationProgress progress(
         result_count, checkpoint.completed_prices()
     );
 
-    auto invoke_row = [&](auto& execution, std::size_t result_index) {
+    auto invoke_row = [&](auto& execution, std::size_t result_index, std::size_t row_count = 1U) {
         const ModelProductIndices indices = decode_model_product_result_index(
             result_index,
             products.size(),
@@ -446,7 +456,7 @@ MonteCarloExecution execute_volterra_monte_carlo(
                 profile.target_dt
             ),
             profile.path_chunk_size,
-            profile.seed,
+            profile.seed, row_count,
         };
         std::invoke(
             launcher,
@@ -465,19 +475,30 @@ MonteCarloExecution execute_volterra_monte_carlo(
     auto run = cuda::run_monte_carlo_with_workspace(
         cuda::inputs(models, products),
         result_count,
-        workspace.workspace_bytes,
+        workspace_bytes,
         [&](auto& execution) { invoke_row(execution, 0U); },
         [&](auto& execution) {
-            for (std::size_t index = checkpoint.completed_prices();
-                 index < result_count; ++index) {
+            for (std::size_t index = checkpoint.completed_prices(); index < result_count;) {
+                // Contiguous rows only: retain each row's native FFT and calendar.
+                const auto steps_at = [&](std::size_t row) {
+                    const auto id = decode_model_product_result_index(row, products.size(), construction);
+                    return rounded_volterra_step_count(products[id.product_index].maturity_days,
+                        profile.day_fraction, profile.target_dt);
+                };
+                const auto steps = steps_at(index);
+                std::size_t count = 1U;
+                while (count < profile.rows_per_launch && index + count < result_count
+                       && steps_at(index + count) == steps) ++count;
                 checkpoint.start_batch();
-                invoke_row(execution, index);
+                invoke_row(execution, index, count);
+                ++submitted_batches;
                 if (checkpoint.enabled()) {
-                    checkpoint.commit(execution, index, 1U);
-                    progress.record_host_progress(index + 1U);
+                    checkpoint.commit(execution, index, count);
+                    progress.record_host_progress(index + count);
                 } else {
-                    progress.record_cuda_progress(index + 1U);
+                    progress.record_cuda_progress(index + count);
                 }
+                index += count;
             }
         }
     );
@@ -492,8 +513,9 @@ MonteCarloExecution execute_volterra_monte_carlo(
                 cuda_tuning::ceiling_divide(profile.paths_per_price, profile.path_chunk_size)
             },
             {"maximum_step_count", maximum_step_count},
-            {"workspace_bytes", workspace.workspace_bytes},
-            {"price_submission_count", result_count},
+            {"workspace_bytes", workspace_bytes},
+            {"rows_per_launch", resident_rows},
+            {"price_submission_count", submitted_batches},
             {"launch_plan", cuda_tuning::pricing_launch_metadata(plan)},
             {"tuning_profile", cuda_tuning::metadata("volterra_fft_pricing")},
     };

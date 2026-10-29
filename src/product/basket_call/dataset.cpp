@@ -6,12 +6,12 @@
 
 namespace ai_factory::workbench::product {
 
-std::vector<BasketCallParameters> load_basket_calls(
+std::vector<BasketCallParameters> load_basket_options(
     const std::filesystem::path& dataset_path
 ) {
     return datasets::load_parameter_rows<BasketCallParameters>(
         dataset_path, datasets::ParameterDatasetFamily::Product,
-        "Basket call",
+        "Arithmetic-mean basket option",
         [](const nlohmann::json& parameters, const std::string& prefix) {
             const BasketCallParameters product{
                 parameters.at("strike").get<float>(),
@@ -24,6 +24,12 @@ std::vector<BasketCallParameters> load_basket_calls(
             return product;
         }
     );
+}
+
+std::vector<BasketCallParameters> load_basket_calls(
+    const std::filesystem::path& dataset_path
+) {
+    return load_basket_options(dataset_path);
 }
 
 }  // namespace ai_factory::workbench::product

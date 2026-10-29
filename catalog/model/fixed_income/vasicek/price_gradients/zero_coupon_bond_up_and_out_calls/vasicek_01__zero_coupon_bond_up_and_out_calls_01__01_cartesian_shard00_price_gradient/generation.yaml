@@ -1,0 +1,29 @@
+schema_version: 4
+status: complete
+inputs:
+  model:
+    path: datasets/model/fixed_income/vasicek/parameters/vasicek_01.json
+    sha256: 193a3732c42d36f5fb0fbd2cd3d50ec0b0cc2cdad88175404867dada6e4c4dc8
+  product:
+    path: datasets/product/zero_coupon_bond_up_and_out/zero_coupon_bond_up_and_outs_01_shard00.json
+    sha256: 598d3d5d811f4d0da1520381d2357553d7a86826ff06e2937ae88bb93c676b32
+output:
+  path: datasets/model/fixed_income/vasicek/price_gradients/zero_coupon_bond_up_and_out_calls/vasicek_01__zero_coupon_bond_up_and_out_calls_01__01_cartesian_shard00_price_gradient.json
+  sha256: ec40a3debbf0872691dc0682e8d021ec9a4f88e4458689389a43da2b5328f5f9
+hardware:
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+  device: gpu
+  name: Tesla V100-SXM2-32GB
+  uuid: GPU-eb05268b-e265-c927-124b-f944b18caf0c
+  compute_capability: '7.0'
+  driver_version: 580.178.04
+software:
+  cmake: cmake version 3.31.6
+  cxx_compiler: g++-14 (Debian 14.2.0-19) 14.2.0
+  cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
+  cuda_target_architectures: '70'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1
+timing:
+  wall_seconds: 1334.1697805561125
+  duration: 22 min 14 s 170 ms

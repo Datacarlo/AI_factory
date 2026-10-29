@@ -291,6 +291,13 @@ struct GaussianTerminalEvaluation {
     }
 };
 
+struct GaussianFftConvolutionGroup {
+    std::uint32_t row;
+    std::uint32_t representative;
+    std::uint32_t kernel_index;
+    std::uint32_t step_count;
+};
+
 template<typename NodePolicy>
 struct GaussianFftGraphExecutionPlan {
     mcpg::TerminalNodeGraphConfiguration graph{};
@@ -305,6 +312,9 @@ struct GaussianFftGraphExecutionPlan {
     std::size_t variance_capacity = 0U;
     std::size_t maximum_steps = 0U;
     std::size_t bytes = 0U;
+    std::size_t fft_stride = 0U;
+    std::size_t group_offset = 0U;
+    std::size_t group_spectra_offset = 0U;
 };
 
 template<
@@ -355,7 +365,10 @@ auto plan_gaussian_fft_node_graph(
             "Gaussian-FFT variance cache overflows size_t."
         );
     }
-    // One row at a time keeps the expensive convolution buffer bounded.
+    if (launch.rows_per_launch > 65535U)
+        throw std::invalid_argument("Invalid Gaussian-FFT row batch size.");
+    const auto batch_rows = std::min(launch.rows_per_launch ? launch.rows_per_launch : 1U, launch.result_count);
+    // Each row retains its own path buffer and the same partial sums.
     constexpr std::size_t fft_threads = tuning::kPricingPathThreads;
     // Larger batches amortize FFT setup and convolution launches. The
     // workspace-limit loop below still reduces the batch when necessary.
@@ -367,21 +380,21 @@ auto plan_gaussian_fft_node_graph(
         )
     );
     while (true) {
-        mcpg::TerminalNodeGraphConfiguration graph{1U, path_chunk, 1U};
+        mcpg::TerminalNodeGraphConfiguration graph{batch_rows, path_chunk, 1U};
         const auto layout = mcpg::terminal_node_graph_workspace_layout<
             NodePolicy, Orders, MaximumSensitivities
         >(host.sensitivity_count(), launch.threads_per_block, graph);
         std::size_t bytes = layout.bytes;
+        const auto fft_stride = required_hybrid_fft_workspace_bytes(
+            maximum_steps, launch.paths_per_price, path_chunk);
         const auto fft_offset =
             workspace_layout::append_array<unsigned char>(
                 bytes,
-                required_hybrid_fft_workspace_bytes(
-                    maximum_steps, launch.paths_per_price, path_chunk
-                ),
+                checked_hybrid_fft_product(batch_rows, fft_stride, "Gaussian FFT rows overflow"),
                 "Gaussian-FFT graph workspace overflow."
             );
         const auto row_offset = workspace_layout::append_array<Row>(
-            bytes, 1U, "Gaussian-FFT graph workspace overflow."
+            bytes, batch_rows, "Gaussian-FFT graph workspace overflow."
         );
         const auto kernel_offset =
             workspace_layout::append_array<DeviceKernel>(
@@ -398,11 +411,16 @@ auto plan_gaussian_fft_node_graph(
                 bytes, variance_count,
                 "Gaussian-FFT variance cache workspace overflow."
             );
+        const auto group_offset = workspace_layout::append_array<GaussianFftConvolutionGroup>(
+            bytes, checked_hybrid_fft_product(batch_rows, Row::kNodeCapacity, "Gaussian FFT group overflow"),
+            "Gaussian FFT group overflow");
+        const auto group_spectra_offset = workspace_layout::append_array<const float2*>(
+            bytes, batch_rows, "Gaussian FFT spectra pointer overflow");
         if (bytes <= workspace_limit) {
             return GaussianFftGraphExecutionPlan<NodePolicy>{
                 graph, layout, fft_offset, row_offset, kernel_offset,
                 spectrum_offset, variance_offset, cache.entries().size(),
-                spectrum_count, variance_count, maximum_steps, bytes
+                spectrum_count, variance_count, maximum_steps, bytes, fft_stride, group_offset, group_spectra_offset
             };
         }
         if (path_chunk <= fft_threads) {
@@ -469,32 +487,26 @@ __global__ void prepare_gaussian_fft_kernel_cache_entry(
 }
 
 template<typename KernelPolicy, typename ModelPathPolicy,
-         typename ProductPolicy, typename Scenario>
+         typename ProductPolicy, typename Scenario, std::size_t MaximumSensitivities>
 __global__ void prepare_gaussian_fft_group_row_kernel(
-    const Scenario* scenario,
+    const GaussianFftGraphRow<Scenario, MaximumSensitivities>* rows,
+    const GaussianFftConvolutionGroup* groups,
     const GaussianFftDeviceKernel<KernelPolicy>* kernel_cache,
-    std::size_t global_row,
-    std::uint64_t base_seed,
-    float dt,
-    hybrid_fft::PreparedRow<
-        KernelPolicy, ModelPathPolicy, ProductPolicy,
-        TerminalHybridSchedule
-    >* prepared_row
+    std::size_t global_row, std::uint64_t base_seed, float dt,
+    hybrid_fft::PreparedRow<KernelPolicy, ModelPathPolicy, ProductPolicy,
+        TerminalHybridSchedule>* prepared_row,
+    const float2** spectra, std::size_t fft_stride
 ) {
     if (threadIdx.x != 0U) return;
-    const auto s = *scenario;
-    using Row = hybrid_fft::PreparedRow<
-        KernelPolicy, ModelPathPolicy, ProductPolicy,
-        TerminalHybridSchedule
-    >;
-    *prepared_row = Row{
-        kernel_cache->kernel,
-        {},
-        {},
+    const auto group = groups[blockIdx.y];
+    const auto s = rows[group.row].scenarios[group.representative];
+    prepared_row = row_workspace_pointer(prepared_row, fft_stride);
+    spectra[blockIdx.y] = kernel_cache[group.kernel_index].spectrum;
+    using Row = hybrid_fft::PreparedRow<KernelPolicy, ModelPathPolicy,
+        ProductPolicy, TerminalHybridSchedule>;
+    *prepared_row = Row{kernel_cache[group.kernel_index].kernel, {}, {},
         {s.maturity_years, dt, s.step_count},
-        philox::make_key(base_seed + global_row),
-        sqrtf(dt)
-    };
+        philox::make_key(base_seed + global_row + group.row), sqrtf(dt)};
 }
 
 template<typename NodePolicy, typename Scenario,
@@ -508,7 +520,12 @@ __global__ void initialize_gaussian_fft_graph_row_kernel(
     mcpg::DevicePreparedStencilOutputs<4U> stencil_outputs
 ) {
     if (threadIdx.x != 0U) return;
-    workspace.row_status[0] = 1U;
+    const auto local_row = blockIdx.x;
+    row += local_row;
+    global_row += local_row;
+    workspace.row_status[local_row] = 1U;
+    workspace.node_metadata += local_row * mcpg::terminal_node_graph_active_node_capacity(sensitivity_count);
+    workspace.node_indices += local_row * sensitivity_count;
     for (std::size_t node = 0U; node < row->node_count; ++node) {
         workspace.node_metadata[node] =
             NodePolicy::prepare_metadata(row->scenarios[node], time);
@@ -531,14 +548,14 @@ template<typename KernelPolicy, typename ModelPathPolicy,
              KernelPolicy, ModelPathPolicy, ProductPolicy>>
 __global__ void evaluate_gaussian_fft_group_nodes_kernel(
     const GaussianFftGraphRow<Scenario, MaximumSensitivities>* row,
-    std::uint32_t kernel_index,
-    std::uint32_t step_count,
+    const GaussianFftConvolutionGroup* groups,
+    const GaussianFftDeviceKernel<KernelPolicy>* kernels,
+    std::size_t fft_stride,
     pg::TimeConfiguration time,
     const hybrid_fft::PreparedRow<
         KernelPolicy, ModelPathPolicy, ProductPolicy,
         TerminalHybridSchedule
     >* prepared_row,
-    const float* variances,
     const float2* convolutions,
     std::size_t first_path,
     std::size_t path_count,
@@ -548,6 +565,16 @@ __global__ void evaluate_gaussian_fft_group_nodes_kernel(
         typename Evaluation::NodePolicy
     > workspace
 ) {
+    const auto group = groups[blockIdx.y];
+    row += group.row;
+    const auto kernel_index = group.kernel_index;
+    const auto step_count = group.step_count;
+    const float* variances = kernels[kernel_index].variances;
+    prepared_row = row_workspace_pointer(prepared_row, fft_stride);
+    convolutions = row_workspace_pointer(convolutions, fft_stride);
+    const auto row_nodes = mcpg::terminal_node_graph_active_node_capacity(sensitivity_count);
+    workspace.node_metadata += group.row * row_nodes;
+    workspace.node_values += group.row * path_capacity * row_nodes;
     constexpr std::size_t capacity =
         GaussianFftGraphRow<Scenario, MaximumSensitivities>::kNodeCapacity;
     using PreparedModel = typename ModelPathPolicy::PreparedModel;
@@ -642,13 +669,10 @@ template<typename KernelPolicy, typename ModelPathPolicy,
          typename Scenario, std::size_t MaximumSensitivities>
 void launch_gaussian_fft_convolution_group(
     const GaussianFftGraphRow<Scenario, MaximumSensitivities>* device_row,
-    std::size_t representative,
+    const GaussianFftConvolutionGroup* groups, std::size_t group_count,
     std::size_t global_row,
-    std::uint32_t kernel_index,
-    std::uint32_t step_count,
     const GaussianFftDeviceKernel<KernelPolicy>* device_kernel,
-    const float2* spectrum,
-    const float* variances,
+    const float2** spectra, std::size_t fft_stride,
     hybrid_fft::PreparedRow<
         KernelPolicy, ModelPathPolicy, ProductPolicy,
         TerminalHybridSchedule
@@ -686,10 +710,9 @@ void launch_gaussian_fft_convolution_group(
     }();
     (void)configured;
     prepare_gaussian_fft_group_row_kernel<
-        KernelPolicy, ModelPathPolicy, ProductPolicy, Scenario
-    ><<<1U, 1U>>>(
-        &device_row->scenarios[representative],
-        device_kernel, global_row, seed, time.dt, prepared_row
+        KernelPolicy, ModelPathPolicy, ProductPolicy, Scenario, MaximumSensitivities
+    ><<<dim3(1U, static_cast<unsigned>(group_count)), 1U>>>(
+        device_row, groups, device_kernel, global_row, seed, time.dt, prepared_row, spectra, fft_stride
     );
     check_cuda(cudaGetLastError(), "Gaussian graph group row preparation");
     const auto pairs = hybrid_fft_ceiling_division(count, 2U);
@@ -699,18 +722,18 @@ void launch_gaussian_fft_convolution_group(
     hybrid_fft::convolve_paths_kernel<
         KernelPolicy, ModelPathPolicy, ProductPolicy,
         TerminalHybridSchedule, Length, Forward, Inverse
-    ><<<static_cast<unsigned int>(blocks), Forward::block_dim, shared>>>(
-        first_path, count, prepared_row, spectrum, convolutions
+    ><<<dim3(static_cast<unsigned int>(blocks), static_cast<unsigned>(group_count)), Forward::block_dim, shared>>>(
+        first_path, count, prepared_row, nullptr, convolutions, fft_stride, spectra
     );
     check_cuda(cudaGetLastError(), "Gaussian graph FFT convolution");
     evaluate_gaussian_fft_group_nodes_kernel<
         KernelPolicy, ModelPathPolicy, ProductPolicy,
         Scenario, MaximumSensitivities, Evaluation
-    ><<<static_cast<unsigned int>(
+    ><<<dim3(static_cast<unsigned int>(
         hybrid_fft_ceiling_division(count, tuning::kPricingPathThreads)
-    ), tuning::kPricingPathThreads>>>(
-        device_row, kernel_index, step_count, time, prepared_row,
-        variances, convolutions,
+    ), static_cast<unsigned>(group_count)), tuning::kPricingPathThreads>>>(
+        device_row, groups, device_kernel, fft_stride, time, prepared_row,
+        convolutions,
         first_path, count, path_capacity, sensitivity_count, node_workspace
     );
     check_cuda(cudaGetLastError(), "Gaussian graph path evaluation");
@@ -792,7 +815,7 @@ void launch_gaussian_fft_node_graph(
         || launch.result_offset > host.result_count
         || launch.result_count > host.result_count - launch.result_offset
         || launch.paths_per_price < 2U
-        || execution.graph.row_chunk_size != 1U
+        || execution.graph.row_chunk_size == 0U
         || stencil_outputs.stencils == nullptr
         || stencil_outputs.capacity <
             host.result_count * host.sensitivity_count()
@@ -825,7 +848,7 @@ void launch_gaussian_fft_node_graph(
         mcpg::make_terminal_node_graph_workspace<NodePolicy>(
             storage, storage_bytes, execution.node_layout
         );
-    // The dataset writer launches one row per call into the same workspace.
+    // Consecutive row batches reuse the same workspace.
     // FFT spectra depend on the model and grid, not on the product row or
     // Philox path. Prepare the complete planned cache only once.
     auto& device_descriptors = cache.device_descriptors();
@@ -866,97 +889,87 @@ void launch_gaussian_fft_node_graph(
         mcpg::terminal_node_graph_output_count<Orders>(
             host.sensitivity_count()
         );
+    auto* device_groups = reinterpret_cast<GaussianFftConvolutionGroup*>(base + execution.group_offset);
+    auto* group_spectra = reinterpret_cast<const float2**>(base + execution.group_spectra_offset);
     for (std::size_t global_row = launch.result_offset;
-         global_row < launch.result_offset + launch.result_count;
-         ++global_row) {
-        const Row row = prepare_gaussian_fft_graph_row<
-            Orders, MaximumSensitivities
-        >(host, global_row, cache);
-        if (cache.entries().size() != prepared_count) {
-            throw std::invalid_argument(
-                "Gaussian-FFT cache changed after its spectra were prepared."
-            );
+         global_row < launch.result_offset + launch.result_count;) {
+        const auto row_count = std::min(execution.graph.row_chunk_size,
+            launch.result_offset + launch.result_count - global_row);
+        std::vector<Row> rows;
+        std::vector<std::vector<GaussianFftConvolutionGroup>> row_groups(row_count);
+        std::size_t rounds = 0U;
+        for (std::size_t local = 0U; local < row_count; ++local) {
+            rows.push_back(prepare_gaussian_fft_graph_row<Orders, MaximumSensitivities>(host, global_row + local, cache));
+            const auto& row = rows.back();
+            for (std::size_t node = 0U; node < row.node_count; ++node) {
+                const auto index = row.kernel_indices[node];
+                const auto steps = row.scenarios[node].step_count;
+                auto& groups = row_groups[local];
+                if (std::none_of(groups.begin(), groups.end(), [&](const auto& group) {
+                    return group.kernel_index == index && group.step_count == steps;
+                })) groups.push_back({static_cast<std::uint32_t>(local),
+                    static_cast<std::uint32_t>(node), index, steps});
+            }
+            rounds = std::max(rounds, row_groups[local].size());
         }
-        check_cuda(cudaMemcpy(
-            device_row, &row, sizeof(Row), cudaMemcpyHostToDevice
-        ), "Gaussian graph row upload");
-        initialize_gaussian_fft_graph_row_kernel<
-            NodePolicy, Scenario, MaximumSensitivities
-        ><<<1U, 1U>>>(
-            device_row, global_row, host.sensitivity_count(), host.time,
-            node_workspace, stencil_outputs
-        );
-        check_cuda(cudaGetLastError(), "Gaussian graph row initialization");
-        std::uint32_t groups[Row::kNodeCapacity]{};
-        std::uint32_t group_steps[Row::kNodeCapacity]{};
-        std::size_t representatives[Row::kNodeCapacity]{};
-        std::size_t group_count = 0U;
-        for (std::size_t node = 0U; node < row.node_count; ++node) {
-            const auto index = row.kernel_indices[node];
-            const auto steps = row.scenarios[node].step_count;
-            bool found = false;
-            for (std::size_t group = 0U; group < group_count; ++group)
-                found = found || (groups[group] == index
-                    && group_steps[group] == steps);
-            if (!found) {
-                groups[group_count] = index;
-                group_steps[group_count] = steps;
-                representatives[group_count] = node;
-                ++group_count;
+        if (cache.entries().size() != prepared_count)
+            throw std::invalid_argument("Gaussian-FFT cache changed after preparation.");
+        check_cuda(cudaMemcpy(device_row, rows.data(), row_count * sizeof(Row), cudaMemcpyHostToDevice),
+            "Gaussian graph rows upload");
+        initialize_gaussian_fft_graph_row_kernel<NodePolicy, Scenario, MaximumSensitivities>
+            <<<static_cast<unsigned>(row_count), 1U>>>(device_row, global_row,
+                host.sensitivity_count(), host.time, node_workspace, stencil_outputs);
+        check_cuda(cudaGetLastError(), "Gaussian graph rows initialization");
+        struct GroupLaunch { std::size_t offset, count; std::uint32_t maximum_steps; };
+        std::vector<GroupLaunch> launches;
+        std::vector<GaussianFftConvolutionGroup> descriptors;
+        // Upload group descriptors once per row batch, outside the path loop.
+        for (std::size_t round = 0U; round < rounds; ++round) {
+            std::vector<GaussianFftConvolutionGroup> pending;
+            for (const auto& groups : row_groups)
+                if (round < groups.size()) pending.push_back(groups[round]);
+            while (!pending.empty()) {
+                const auto entry = cache.entries()[pending.front().kernel_index];
+                const auto first = descriptors.size();
+                for (const auto& group : pending)
+                    if (cache.entries()[group.kernel_index].fft_length == entry.fft_length)
+                        descriptors.push_back(group);
+                pending.erase(std::remove_if(pending.begin(), pending.end(), [&](const auto& group) {
+                    return cache.entries()[group.kernel_index].fft_length == entry.fft_length;
+                }), pending.end());
+                launches.push_back({first, descriptors.size() - first, entry.maximum_steps});
             }
         }
-        for (std::size_t first_path = 0U;
-             first_path < launch.paths_per_price;
+        check_cuda(cudaMemcpy(device_groups, descriptors.data(), descriptors.size() * sizeof(GaussianFftConvolutionGroup),
+            cudaMemcpyHostToDevice), "Gaussian FFT groups upload");
+        for (std::size_t first_path = 0U; first_path < launch.paths_per_price;
              first_path += execution.graph.path_chunk_size) {
-            const auto count = std::min(
-                execution.graph.path_chunk_size,
-                launch.paths_per_price - first_path
-            );
-            for (std::size_t group = 0U; group < group_count; ++group) {
-                const auto index = groups[group];
-                const auto& entry = cache.entries()[index];
-                tuning::dispatch_hybrid_fft_specialization<
-                    kMaximumHybridFftLength
-                >(entry.maximum_steps, [&]<typename Specialization>() {
-                    launch_gaussian_fft_convolution_group<
-                        KernelPolicy, ModelPathPolicy, ProductPolicy,
-                        Evaluation, Specialization::kLength,
-                        Specialization::kPricingElementsPerThread,
-                        Specialization::kPricingFftsPerBlock,
-                        Scenario, MaximumSensitivities
-                    >(
-                        device_row, representatives[group], global_row,
-                        index, group_steps[group], device_cache + index,
-                        device_descriptors[index].spectrum,
-                        device_descriptors[index].variances,
-                        prepared_row, convolutions, node_workspace,
-                        first_path, count,
-                        execution.graph.path_chunk_size,
-                        host.sensitivity_count(), launch.base_seed, host.time
-                    );
+            const auto count = std::min(execution.graph.path_chunk_size, launch.paths_per_price - first_path);
+            // Each row's central group precedes its bumped groups, even when
+            // neighboring rows require different FFT specializations.
+            for (const auto& group : launches) {
+                tuning::dispatch_hybrid_fft_specialization<kMaximumHybridFftLength>(
+                    group.maximum_steps, [&]<typename Specialization>() {
+                    launch_gaussian_fft_convolution_group<KernelPolicy, ModelPathPolicy, ProductPolicy,
+                        Evaluation, Specialization::kLength, Specialization::kPricingElementsPerThread,
+                        Specialization::kPricingFftsPerBlock, Scenario, MaximumSensitivities>(
+                        device_row, device_groups + group.offset, group.count, global_row, device_cache, group_spectra,
+                        execution.fft_stride, prepared_row, convolutions, node_workspace, first_path, count,
+                        execution.graph.path_chunk_size, host.sensitivity_count(), launch.base_seed, host.time);
                 });
             }
-            mcpg::node_graph_detail::accumulate_node_moments_kernel<
-                Orders, NodePolicy, MaximumSensitivities
-            ><<<dim3(1U, static_cast<unsigned int>(output_count)),
-                 launch.threads_per_block>>>(
-                global_row, 1U, first_path, count,
-                execution.graph.path_chunk_size,
-                host.sensitivity_count(), node_workspace, stencil_outputs
-            );
-            check_cuda(cudaGetLastError(),
-                       "Gaussian graph moment accumulation");
+            mcpg::node_graph_detail::accumulate_node_moments_kernel<Orders, NodePolicy, MaximumSensitivities>
+                <<<dim3(static_cast<unsigned>(row_count), static_cast<unsigned>(output_count)), launch.threads_per_block>>>(
+                    global_row, row_count, first_path, count, execution.graph.path_chunk_size,
+                    host.sensitivity_count(), node_workspace, stencil_outputs);
+            check_cuda(cudaGetLastError(), "Gaussian graph moment accumulation");
         }
-        mcpg::node_graph_detail::finalize_node_moments_kernel<
-            Orders, NodePolicy
-        ><<<dim3(1U, static_cast<unsigned int>(output_count)),
-             launch.threads_per_block,
-             2U * (launch.threads_per_block / 32U) * sizeof(double)>>>(
-            global_row, 1U, host.sensitivity_count(),
-            launch.paths_per_price, node_workspace, outputs
-        );
-        check_cuda(cudaGetLastError(),
-                   "Gaussian graph moment finalization");
+        mcpg::node_graph_detail::finalize_node_moments_kernel<Orders, NodePolicy>
+            <<<dim3(static_cast<unsigned>(row_count), static_cast<unsigned>(output_count)), launch.threads_per_block,
+                2U * (launch.threads_per_block / 32U) * sizeof(double)>>>(
+                global_row, row_count, host.sensitivity_count(), launch.paths_per_price, node_workspace, outputs);
+        check_cuda(cudaGetLastError(), "Gaussian graph moment finalization");
+        global_row += row_count;
     }
 }
 

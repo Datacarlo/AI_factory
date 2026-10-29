@@ -27,7 +27,8 @@ void launch_rough_stein_stein_hybrid_fft_cuda(
     float* device_prices,
     float* device_standard_errors,
     const char* diagnostic_name,
-    const char* diagnostic_variant
+    const char* diagnostic_variant,
+    std::size_t row_count = 1U
 ) {
     volterra::hybrid_fft::launch_pricing_cuda<
         volterra::FractionalResolventHybridKernelPolicy,
@@ -40,7 +41,7 @@ void launch_rough_stein_stein_hybrid_fft_cuda(
         monte_carlo_paths_per_price, time_configuration, step_count,
         path_chunk_size, device_workspace, workspace_bytes, base_seed,
         device_prices, device_standard_errors, diagnostic_name,
-        diagnostic_variant
+        diagnostic_variant, row_count
     );
 }
 
