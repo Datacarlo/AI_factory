@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "count": 1853,
+  "count": 1878,
   "datasets": [
     {
       "source": "curve/flat/flat_01",
@@ -241,6 +241,20 @@
       "originalOutput": "datasets/model/equity/markovian/bates/price_gradients/athena_autocalls/bates_01__athena_autocalls_01__01_price_gradient.json"
     },
     {
+      "source": "model/equity/markovian/bates/price_gradients/cliquets/bates_01__cliquets_01__01_cartesian_shard00_price_gradient",
+      "id": "bates_01__cliquets_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "equity/markovian/bates",
+      "collection": "price_gradients",
+      "product": "cliquets",
+      "output": "datasets/model/equity/markovian/bates/price_gradients/cliquets/bates_01__cliquets_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/model/equity/markovian/bates/price_gradients/cliquets/bates_01__cliquets_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/model/equity/markovian/bates/price_gradients/cliquets/bates_01__cliquets_01__01_cartesian_shard00_price_gradient.json"
+    },
+    {
       "source": "model/equity/markovian/bates/price_gradients/cliquets/bates_01__cliquets_01__01_price_gradient",
       "id": "bates_01__cliquets_01__01_price_gradient",
       "kind": "price_gradients",
@@ -255,6 +269,20 @@
       "originalOutput": "datasets/model/equity/markovian/bates/price_gradients/cliquets/bates_01__cliquets_01__01_price_gradient.json"
     },
     {
+      "source": "model/equity/markovian/bates/price_gradients/digital_calls/bates_01__digital_calls_01__01_cartesian_shard00_price_gradient",
+      "id": "bates_01__digital_calls_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "equity/markovian/bates",
+      "collection": "price_gradients",
+      "product": "digital_calls",
+      "output": "datasets/model/equity/markovian/bates/price_gradients/digital_calls/bates_01__digital_calls_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/model/equity/markovian/bates/price_gradients/digital_calls/bates_01__digital_calls_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/model/equity/markovian/bates/price_gradients/digital_calls/bates_01__digital_calls_01__01_cartesian_shard00_price_gradient.json"
+    },
+    {
       "source": "model/equity/markovian/bates/price_gradients/digital_calls/bates_01__digital_calls_01__01_price_gradient",
       "id": "bates_01__digital_calls_01__01_price_gradient",
       "kind": "price_gradients",
@@ -267,6 +295,20 @@
       "recipeMatchesReceipt": false,
       "catalogPath": "catalog/model/equity/markovian/bates/price_gradients/digital_calls/bates_01__digital_calls_01__01_price_gradient",
       "originalOutput": "datasets/model/equity/markovian/bates/price_gradients/digital_calls/bates_01__digital_calls_01__01_price_gradient.json"
+    },
+    {
+      "source": "model/equity/markovian/bates/price_gradients/digital_puts/bates_01__digital_puts_01__01_cartesian_shard00_price_gradient",
+      "id": "bates_01__digital_puts_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "equity/markovian/bates",
+      "collection": "price_gradients",
+      "product": "digital_puts",
+      "output": "datasets/model/equity/markovian/bates/price_gradients/digital_puts/bates_01__digital_puts_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/model/equity/markovian/bates/price_gradients/digital_puts/bates_01__digital_puts_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/model/equity/markovian/bates/price_gradients/digital_puts/bates_01__digital_puts_01__01_cartesian_shard00_price_gradient.json"
     },
     {
       "source": "model/equity/markovian/bates/price_gradients/digital_puts/bates_01__digital_puts_01__01_price_gradient",
@@ -3622,6 +3664,20 @@
       "originalOutput": "datasets/model/equity/markovian/heston/price_gradients/european_puts/heston_01__european_puts_01__01_price_gradient.json"
     },
     {
+      "source": "model/equity/markovian/heston/price_gradients/forward_start_calls/heston_01__forward_start_calls_01__01_cartesian_shard00_price_gradient",
+      "id": "heston_01__forward_start_calls_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "equity/markovian/heston",
+      "collection": "price_gradients",
+      "product": "forward_start_calls",
+      "output": "datasets/model/equity/markovian/heston/price_gradients/forward_start_calls/heston_01__forward_start_calls_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/model/equity/markovian/heston/price_gradients/forward_start_calls/heston_01__forward_start_calls_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/model/equity/markovian/heston/price_gradients/forward_start_calls/heston_01__forward_start_calls_01__01_cartesian_shard00_price_gradient.json"
+    },
+    {
       "source": "model/equity/markovian/heston/price_gradients/forward_start_calls/heston_01__forward_start_calls_01__01_price_gradient",
       "id": "heston_01__forward_start_calls_01__01_price_gradient",
       "kind": "price_gradients",
@@ -3634,6 +3690,20 @@
       "recipeMatchesReceipt": false,
       "catalogPath": "catalog/model/equity/markovian/heston/price_gradients/forward_start_calls/heston_01__forward_start_calls_01__01_price_gradient",
       "originalOutput": "datasets/model/equity/markovian/heston/price_gradients/forward_start_calls/heston_01__forward_start_calls_01__01_price_gradient.json"
+    },
+    {
+      "source": "model/equity/markovian/heston/price_gradients/forward_start_puts/heston_01__forward_start_puts_01__01_cartesian_shard00_price_gradient",
+      "id": "heston_01__forward_start_puts_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "equity/markovian/heston",
+      "collection": "price_gradients",
+      "product": "forward_start_puts",
+      "output": "datasets/model/equity/markovian/heston/price_gradients/forward_start_puts/heston_01__forward_start_puts_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/model/equity/markovian/heston/price_gradients/forward_start_puts/heston_01__forward_start_puts_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/model/equity/markovian/heston/price_gradients/forward_start_puts/heston_01__forward_start_puts_01__01_cartesian_shard00_price_gradient.json"
     },
     {
       "source": "model/equity/markovian/heston/price_gradients/forward_start_puts/heston_01__forward_start_puts_01__01_price_gradient",
@@ -3650,6 +3720,20 @@
       "originalOutput": "datasets/model/equity/markovian/heston/price_gradients/forward_start_puts/heston_01__forward_start_puts_01__01_price_gradient.json"
     },
     {
+      "source": "model/equity/markovian/heston/price_gradients/gap_calls/heston_01__gap_calls_01__01_cartesian_shard00_price_gradient",
+      "id": "heston_01__gap_calls_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "equity/markovian/heston",
+      "collection": "price_gradients",
+      "product": "gap_calls",
+      "output": "datasets/model/equity/markovian/heston/price_gradients/gap_calls/heston_01__gap_calls_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/model/equity/markovian/heston/price_gradients/gap_calls/heston_01__gap_calls_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/model/equity/markovian/heston/price_gradients/gap_calls/heston_01__gap_calls_01__01_cartesian_shard00_price_gradient.json"
+    },
+    {
       "source": "model/equity/markovian/heston/price_gradients/gap_calls/heston_01__gap_calls_01__01_price_gradient",
       "id": "heston_01__gap_calls_01__01_price_gradient",
       "kind": "price_gradients",
@@ -3664,6 +3748,20 @@
       "originalOutput": "datasets/model/equity/markovian/heston/price_gradients/gap_calls/heston_01__gap_calls_01__01_price_gradient.json"
     },
     {
+      "source": "model/equity/markovian/heston/price_gradients/gap_puts/heston_01__gap_puts_01__01_cartesian_shard00_price_gradient",
+      "id": "heston_01__gap_puts_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "equity/markovian/heston",
+      "collection": "price_gradients",
+      "product": "gap_puts",
+      "output": "datasets/model/equity/markovian/heston/price_gradients/gap_puts/heston_01__gap_puts_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/model/equity/markovian/heston/price_gradients/gap_puts/heston_01__gap_puts_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/model/equity/markovian/heston/price_gradients/gap_puts/heston_01__gap_puts_01__01_cartesian_shard00_price_gradient.json"
+    },
+    {
       "source": "model/equity/markovian/heston/price_gradients/gap_puts/heston_01__gap_puts_01__01_price_gradient",
       "id": "heston_01__gap_puts_01__01_price_gradient",
       "kind": "price_gradients",
@@ -3676,6 +3774,20 @@
       "recipeMatchesReceipt": false,
       "catalogPath": "catalog/model/equity/markovian/heston/price_gradients/gap_puts/heston_01__gap_puts_01__01_price_gradient",
       "originalOutput": "datasets/model/equity/markovian/heston/price_gradients/gap_puts/heston_01__gap_puts_01__01_price_gradient.json"
+    },
+    {
+      "source": "model/equity/markovian/heston/price_gradients/geometric_asian_calls/heston_01__geometric_asian_calls_01__01_cartesian_shard00_price_gradient",
+      "id": "heston_01__geometric_asian_calls_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "equity/markovian/heston",
+      "collection": "price_gradients",
+      "product": "geometric_asian_calls",
+      "output": "datasets/model/equity/markovian/heston/price_gradients/geometric_asian_calls/heston_01__geometric_asian_calls_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/model/equity/markovian/heston/price_gradients/geometric_asian_calls/heston_01__geometric_asian_calls_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/model/equity/markovian/heston/price_gradients/geometric_asian_calls/heston_01__geometric_asian_calls_01__01_cartesian_shard00_price_gradient.json"
     },
     {
       "source": "model/equity/markovian/heston/price_gradients/geometric_asian_calls/heston_01__geometric_asian_calls_01__01_price_gradient",
@@ -12082,6 +12194,20 @@
       "originalOutput": "datasets/model/equity/markovian/variance_gamma/price_gradients/phoenix_memory_autocalls/variance_gamma_01__phoenix_memory_autocalls_01__01_price_gradient.json"
     },
     {
+      "source": "model/equity/markovian/variance_gamma/price_gradients/range_accruals/variance_gamma_01__range_accruals_01__01_cartesian_shard00_price_gradient",
+      "id": "variance_gamma_01__range_accruals_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "equity/markovian/variance_gamma",
+      "collection": "price_gradients",
+      "product": "range_accruals",
+      "output": "datasets/model/equity/markovian/variance_gamma/price_gradients/range_accruals/variance_gamma_01__range_accruals_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/model/equity/markovian/variance_gamma/price_gradients/range_accruals/variance_gamma_01__range_accruals_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/model/equity/markovian/variance_gamma/price_gradients/range_accruals/variance_gamma_01__range_accruals_01__01_cartesian_shard00_price_gradient.json"
+    },
+    {
       "source": "model/equity/markovian/variance_gamma/price_gradients/range_accruals/variance_gamma_01__range_accruals_01__01_price_gradient",
       "id": "variance_gamma_01__range_accruals_01__01_price_gradient",
       "kind": "price_gradients",
@@ -12096,6 +12222,20 @@
       "originalOutput": "datasets/model/equity/markovian/variance_gamma/price_gradients/range_accruals/variance_gamma_01__range_accruals_01__01_price_gradient.json"
     },
     {
+      "source": "model/equity/markovian/variance_gamma/price_gradients/straddles/variance_gamma_01__straddles_01__01_cartesian_shard00_price_gradient",
+      "id": "variance_gamma_01__straddles_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "equity/markovian/variance_gamma",
+      "collection": "price_gradients",
+      "product": "straddles",
+      "output": "datasets/model/equity/markovian/variance_gamma/price_gradients/straddles/variance_gamma_01__straddles_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/model/equity/markovian/variance_gamma/price_gradients/straddles/variance_gamma_01__straddles_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/model/equity/markovian/variance_gamma/price_gradients/straddles/variance_gamma_01__straddles_01__01_cartesian_shard00_price_gradient.json"
+    },
+    {
       "source": "model/equity/markovian/variance_gamma/price_gradients/straddles/variance_gamma_01__straddles_01__01_price_gradient",
       "id": "variance_gamma_01__straddles_01__01_price_gradient",
       "kind": "price_gradients",
@@ -12108,6 +12248,20 @@
       "recipeMatchesReceipt": false,
       "catalogPath": "catalog/model/equity/markovian/variance_gamma/price_gradients/straddles/variance_gamma_01__straddles_01__01_price_gradient",
       "originalOutput": "datasets/model/equity/markovian/variance_gamma/price_gradients/straddles/variance_gamma_01__straddles_01__01_price_gradient.json"
+    },
+    {
+      "source": "model/equity/markovian/variance_gamma/price_gradients/up_and_in_calls/variance_gamma_01__up_and_in_calls_01__01_cartesian_shard00_price_gradient",
+      "id": "variance_gamma_01__up_and_in_calls_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "equity/markovian/variance_gamma",
+      "collection": "price_gradients",
+      "product": "up_and_in_calls",
+      "output": "datasets/model/equity/markovian/variance_gamma/price_gradients/up_and_in_calls/variance_gamma_01__up_and_in_calls_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/model/equity/markovian/variance_gamma/price_gradients/up_and_in_calls/variance_gamma_01__up_and_in_calls_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/model/equity/markovian/variance_gamma/price_gradients/up_and_in_calls/variance_gamma_01__up_and_in_calls_01__01_cartesian_shard00_price_gradient.json"
     },
     {
       "source": "model/equity/markovian/variance_gamma/price_gradients/up_and_in_calls/variance_gamma_01__up_and_in_calls_01__01_price_gradient",
@@ -14957,6 +15111,20 @@
       "originalOutput": "datasets/model/equity/rough/rough_bergomi/price_gradients/double_knock_out_calls/rough_bergomi_01__double_knock_out_calls_01__01_price_gradient.json"
     },
     {
+      "source": "model/equity/rough/rough_bergomi/price_gradients/double_knock_out_puts/rough_bergomi_01__double_knock_out_puts_01__01_cartesian_shard00_price_gradient",
+      "id": "rough_bergomi_01__double_knock_out_puts_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "equity/rough/rough_bergomi",
+      "collection": "price_gradients",
+      "product": "double_knock_out_puts",
+      "output": "datasets/model/equity/rough/rough_bergomi/price_gradients/double_knock_out_puts/rough_bergomi_01__double_knock_out_puts_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/model/equity/rough/rough_bergomi/price_gradients/double_knock_out_puts/rough_bergomi_01__double_knock_out_puts_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/model/equity/rough/rough_bergomi/price_gradients/double_knock_out_puts/rough_bergomi_01__double_knock_out_puts_01__01_cartesian_shard00_price_gradient.json"
+    },
+    {
       "source": "model/equity/rough/rough_bergomi/price_gradients/double_knock_out_puts/rough_bergomi_01__double_knock_out_puts_01__01_price_gradient",
       "id": "rough_bergomi_01__double_knock_out_puts_01__01_price_gradient",
       "kind": "price_gradients",
@@ -14971,6 +15139,20 @@
       "originalOutput": "datasets/model/equity/rough/rough_bergomi/price_gradients/double_knock_out_puts/rough_bergomi_01__double_knock_out_puts_01__01_price_gradient.json"
     },
     {
+      "source": "model/equity/rough/rough_bergomi/price_gradients/down_and_in_puts/rough_bergomi_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient",
+      "id": "rough_bergomi_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "equity/rough/rough_bergomi",
+      "collection": "price_gradients",
+      "product": "down_and_in_puts",
+      "output": "datasets/model/equity/rough/rough_bergomi/price_gradients/down_and_in_puts/rough_bergomi_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/model/equity/rough/rough_bergomi/price_gradients/down_and_in_puts/rough_bergomi_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/model/equity/rough/rough_bergomi/price_gradients/down_and_in_puts/rough_bergomi_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient.json"
+    },
+    {
       "source": "model/equity/rough/rough_bergomi/price_gradients/down_and_in_puts/rough_bergomi_01__down_and_in_puts_01__01_price_gradient",
       "id": "rough_bergomi_01__down_and_in_puts_01__01_price_gradient",
       "kind": "price_gradients",
@@ -14983,6 +15165,20 @@
       "recipeMatchesReceipt": false,
       "catalogPath": "catalog/model/equity/rough/rough_bergomi/price_gradients/down_and_in_puts/rough_bergomi_01__down_and_in_puts_01__01_price_gradient",
       "originalOutput": "datasets/model/equity/rough/rough_bergomi/price_gradients/down_and_in_puts/rough_bergomi_01__down_and_in_puts_01__01_price_gradient.json"
+    },
+    {
+      "source": "model/equity/rough/rough_bergomi/price_gradients/down_and_out_puts/rough_bergomi_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient",
+      "id": "rough_bergomi_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "equity/rough/rough_bergomi",
+      "collection": "price_gradients",
+      "product": "down_and_out_puts",
+      "output": "datasets/model/equity/rough/rough_bergomi/price_gradients/down_and_out_puts/rough_bergomi_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/model/equity/rough/rough_bergomi/price_gradients/down_and_out_puts/rough_bergomi_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/model/equity/rough/rough_bergomi/price_gradients/down_and_out_puts/rough_bergomi_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient.json"
     },
     {
       "source": "model/equity/rough/rough_bergomi/price_gradients/down_and_out_puts/rough_bergomi_01__down_and_out_puts_01__01_price_gradient",
@@ -15027,6 +15223,20 @@
       "originalOutput": "datasets/model/equity/rough/rough_bergomi/price_gradients/european_calls/rough_bergomi_01__european_calls_01__01_price_gradient.json"
     },
     {
+      "source": "model/equity/rough/rough_bergomi/price_gradients/european_puts/rough_bergomi_01__european_puts_01__01_cartesian_shard00_price_gradient",
+      "id": "rough_bergomi_01__european_puts_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "equity/rough/rough_bergomi",
+      "collection": "price_gradients",
+      "product": "european_puts",
+      "output": "datasets/model/equity/rough/rough_bergomi/price_gradients/european_puts/rough_bergomi_01__european_puts_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/model/equity/rough/rough_bergomi/price_gradients/european_puts/rough_bergomi_01__european_puts_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/model/equity/rough/rough_bergomi/price_gradients/european_puts/rough_bergomi_01__european_puts_01__01_cartesian_shard00_price_gradient.json"
+    },
+    {
       "source": "model/equity/rough/rough_bergomi/price_gradients/european_puts/rough_bergomi_01__european_puts_01__01_price_gradient",
       "id": "rough_bergomi_01__european_puts_01__01_price_gradient",
       "kind": "price_gradients",
@@ -15039,6 +15249,20 @@
       "recipeMatchesReceipt": false,
       "catalogPath": "catalog/model/equity/rough/rough_bergomi/price_gradients/european_puts/rough_bergomi_01__european_puts_01__01_price_gradient",
       "originalOutput": "datasets/model/equity/rough/rough_bergomi/price_gradients/european_puts/rough_bergomi_01__european_puts_01__01_price_gradient.json"
+    },
+    {
+      "source": "model/equity/rough/rough_bergomi/price_gradients/forward_start_calls/rough_bergomi_01__forward_start_calls_01__01_cartesian_shard00_price_gradient",
+      "id": "rough_bergomi_01__forward_start_calls_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "equity/rough/rough_bergomi",
+      "collection": "price_gradients",
+      "product": "forward_start_calls",
+      "output": "datasets/model/equity/rough/rough_bergomi/price_gradients/forward_start_calls/rough_bergomi_01__forward_start_calls_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/model/equity/rough/rough_bergomi/price_gradients/forward_start_calls/rough_bergomi_01__forward_start_calls_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/model/equity/rough/rough_bergomi/price_gradients/forward_start_calls/rough_bergomi_01__forward_start_calls_01__01_cartesian_shard00_price_gradient.json"
     },
     {
       "source": "model/equity/rough/rough_bergomi/price_gradients/forward_start_calls/rough_bergomi_01__forward_start_calls_01__01_price_gradient",
@@ -15055,6 +15279,20 @@
       "originalOutput": "datasets/model/equity/rough/rough_bergomi/price_gradients/forward_start_calls/rough_bergomi_01__forward_start_calls_01__01_price_gradient.json"
     },
     {
+      "source": "model/equity/rough/rough_bergomi/price_gradients/forward_start_puts/rough_bergomi_01__forward_start_puts_01__01_cartesian_shard00_price_gradient",
+      "id": "rough_bergomi_01__forward_start_puts_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "equity/rough/rough_bergomi",
+      "collection": "price_gradients",
+      "product": "forward_start_puts",
+      "output": "datasets/model/equity/rough/rough_bergomi/price_gradients/forward_start_puts/rough_bergomi_01__forward_start_puts_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/model/equity/rough/rough_bergomi/price_gradients/forward_start_puts/rough_bergomi_01__forward_start_puts_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/model/equity/rough/rough_bergomi/price_gradients/forward_start_puts/rough_bergomi_01__forward_start_puts_01__01_cartesian_shard00_price_gradient.json"
+    },
+    {
       "source": "model/equity/rough/rough_bergomi/price_gradients/forward_start_puts/rough_bergomi_01__forward_start_puts_01__01_price_gradient",
       "id": "rough_bergomi_01__forward_start_puts_01__01_price_gradient",
       "kind": "price_gradients",
@@ -15069,6 +15307,20 @@
       "originalOutput": "datasets/model/equity/rough/rough_bergomi/price_gradients/forward_start_puts/rough_bergomi_01__forward_start_puts_01__01_price_gradient.json"
     },
     {
+      "source": "model/equity/rough/rough_bergomi/price_gradients/gap_calls/rough_bergomi_01__gap_calls_01__01_cartesian_shard00_price_gradient",
+      "id": "rough_bergomi_01__gap_calls_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "equity/rough/rough_bergomi",
+      "collection": "price_gradients",
+      "product": "gap_calls",
+      "output": "datasets/model/equity/rough/rough_bergomi/price_gradients/gap_calls/rough_bergomi_01__gap_calls_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/model/equity/rough/rough_bergomi/price_gradients/gap_calls/rough_bergomi_01__gap_calls_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/model/equity/rough/rough_bergomi/price_gradients/gap_calls/rough_bergomi_01__gap_calls_01__01_cartesian_shard00_price_gradient.json"
+    },
+    {
       "source": "model/equity/rough/rough_bergomi/price_gradients/gap_calls/rough_bergomi_01__gap_calls_01__01_price_gradient",
       "id": "rough_bergomi_01__gap_calls_01__01_price_gradient",
       "kind": "price_gradients",
@@ -15081,6 +15333,20 @@
       "recipeMatchesReceipt": false,
       "catalogPath": "catalog/model/equity/rough/rough_bergomi/price_gradients/gap_calls/rough_bergomi_01__gap_calls_01__01_price_gradient",
       "originalOutput": "datasets/model/equity/rough/rough_bergomi/price_gradients/gap_calls/rough_bergomi_01__gap_calls_01__01_price_gradient.json"
+    },
+    {
+      "source": "model/equity/rough/rough_bergomi/price_gradients/gap_puts/rough_bergomi_01__gap_puts_01__01_cartesian_shard00_price_gradient",
+      "id": "rough_bergomi_01__gap_puts_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "equity/rough/rough_bergomi",
+      "collection": "price_gradients",
+      "product": "gap_puts",
+      "output": "datasets/model/equity/rough/rough_bergomi/price_gradients/gap_puts/rough_bergomi_01__gap_puts_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/model/equity/rough/rough_bergomi/price_gradients/gap_puts/rough_bergomi_01__gap_puts_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/model/equity/rough/rough_bergomi/price_gradients/gap_puts/rough_bergomi_01__gap_puts_01__01_cartesian_shard00_price_gradient.json"
     },
     {
       "source": "model/equity/rough/rough_bergomi/price_gradients/gap_puts/rough_bergomi_01__gap_puts_01__01_price_gradient",
@@ -16498,6 +16764,20 @@
       "originalOutput": "datasets/model/equity/rough/rough_heston/price_gradients/straddles/rough_heston_01__straddles_01__01_price_gradient.json"
     },
     {
+      "source": "model/equity/rough/rough_heston/price_gradients/up_and_in_calls/rough_heston_01__up_and_in_calls_01__01_cartesian_shard00_price_gradient",
+      "id": "rough_heston_01__up_and_in_calls_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "equity/rough/rough_heston",
+      "collection": "price_gradients",
+      "product": "up_and_in_calls",
+      "output": "datasets/model/equity/rough/rough_heston/price_gradients/up_and_in_calls/rough_heston_01__up_and_in_calls_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/model/equity/rough/rough_heston/price_gradients/up_and_in_calls/rough_heston_01__up_and_in_calls_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/model/equity/rough/rough_heston/price_gradients/up_and_in_calls/rough_heston_01__up_and_in_calls_01__01_cartesian_shard00_price_gradient.json"
+    },
+    {
       "source": "model/equity/rough/rough_heston/price_gradients/up_and_in_calls/rough_heston_01__up_and_in_calls_01__01_price_gradient",
       "id": "rough_heston_01__up_and_in_calls_01__01_price_gradient",
       "kind": "price_gradients",
@@ -16540,6 +16820,20 @@
       "originalOutput": "datasets/model/equity/rough/rough_heston/price_gradients/up_and_out_calls/rough_heston_01__up_and_out_calls_01__01_price_gradient.json"
     },
     {
+      "source": "model/equity/rough/rough_heston/price_gradients/up_no_touches/rough_heston_01__up_no_touches_01__01_cartesian_shard00_price_gradient",
+      "id": "rough_heston_01__up_no_touches_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "equity/rough/rough_heston",
+      "collection": "price_gradients",
+      "product": "up_no_touches",
+      "output": "datasets/model/equity/rough/rough_heston/price_gradients/up_no_touches/rough_heston_01__up_no_touches_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/model/equity/rough/rough_heston/price_gradients/up_no_touches/rough_heston_01__up_no_touches_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/model/equity/rough/rough_heston/price_gradients/up_no_touches/rough_heston_01__up_no_touches_01__01_cartesian_shard00_price_gradient.json"
+    },
+    {
       "source": "model/equity/rough/rough_heston/price_gradients/up_no_touches/rough_heston_01__up_no_touches_01__01_price_gradient",
       "id": "rough_heston_01__up_no_touches_01__01_price_gradient",
       "kind": "price_gradients",
@@ -16552,6 +16846,20 @@
       "recipeMatchesReceipt": false,
       "catalogPath": "catalog/model/equity/rough/rough_heston/price_gradients/up_no_touches/rough_heston_01__up_no_touches_01__01_price_gradient",
       "originalOutput": "datasets/model/equity/rough/rough_heston/price_gradients/up_no_touches/rough_heston_01__up_no_touches_01__01_price_gradient.json"
+    },
+    {
+      "source": "model/equity/rough/rough_heston/price_gradients/up_one_touches/rough_heston_01__up_one_touches_01__01_cartesian_shard00_price_gradient",
+      "id": "rough_heston_01__up_one_touches_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "equity/rough/rough_heston",
+      "collection": "price_gradients",
+      "product": "up_one_touches",
+      "output": "datasets/model/equity/rough/rough_heston/price_gradients/up_one_touches/rough_heston_01__up_one_touches_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/model/equity/rough/rough_heston/price_gradients/up_one_touches/rough_heston_01__up_one_touches_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/model/equity/rough/rough_heston/price_gradients/up_one_touches/rough_heston_01__up_one_touches_01__01_cartesian_shard00_price_gradient.json"
     },
     {
       "source": "model/equity/rough/rough_heston/price_gradients/up_one_touches/rough_heston_01__up_one_touches_01__01_price_gradient",
@@ -19819,7 +20127,7 @@
       "kind": "price_gradients",
       "model": "fixed_income/cir_plus_plus",
       "collection": "price_gradients",
-      "product": "nelson_siegel",
+      "product": "bermudan_payer_swaptions",
       "output": "datasets/model/fixed_income/cir_plus_plus/price_gradients/nelson_siegel/bermudan_payer_swaptions/cir_plus_plus_01__nelson_siegel_01__bermudan_payer_swaptions_01__01_cartesian_shard00_price_gradient_frozen_policy.json",
       "rowCount": 99465,
       "ready": true,
@@ -19847,7 +20155,7 @@
       "kind": "price_gradients",
       "model": "fixed_income/cir_plus_plus",
       "collection": "price_gradients",
-      "product": "nelson_siegel",
+      "product": "bermudan_receiver_swaptions",
       "output": "datasets/model/fixed_income/cir_plus_plus/price_gradients/nelson_siegel/bermudan_receiver_swaptions/cir_plus_plus_01__nelson_siegel_01__bermudan_receiver_swaptions_01__01_cartesian_shard00_price_gradient_frozen_policy.json",
       "rowCount": 99465,
       "ready": true,
@@ -20071,7 +20379,7 @@
       "kind": "price_gradients",
       "model": "fixed_income/cir_plus_plus",
       "collection": "price_gradients",
-      "product": "svensson",
+      "product": "bermudan_payer_swaptions",
       "output": "datasets/model/fixed_income/cir_plus_plus/price_gradients/svensson/bermudan_payer_swaptions/cir_plus_plus_01__svensson_01__bermudan_payer_swaptions_01__01_cartesian_shard00_price_gradient_frozen_policy.json",
       "rowCount": 99499,
       "ready": true,
@@ -20099,7 +20407,7 @@
       "kind": "price_gradients",
       "model": "fixed_income/cir_plus_plus",
       "collection": "price_gradients",
-      "product": "svensson",
+      "product": "bermudan_receiver_swaptions",
       "output": "datasets/model/fixed_income/cir_plus_plus/price_gradients/svensson/bermudan_receiver_swaptions/cir_plus_plus_01__svensson_01__bermudan_receiver_swaptions_01__01_cartesian_shard00_price_gradient_frozen_policy.json",
       "rowCount": 99499,
       "ready": true,
@@ -25786,6 +26094,48 @@
       "recipeMatchesReceipt": true,
       "catalogPath": "catalog/model/fixed_income/vasicek/samples/samples_02",
       "originalOutput": "datasets/model/fixed_income/vasicek/samples/samples_02.json"
+    },
+    {
+      "source": "multi_asset/best_of_option/five_equity_cir_best_of_calls_01",
+      "id": "five_equity_cir_best_of_calls_01",
+      "kind": "prices",
+      "model": "multi_asset",
+      "collection": "prices",
+      "product": "best_of_option",
+      "output": "datasets/multi_asset/best_of_option/five_equity_cir_best_of_calls_01.json",
+      "rowCount": 250000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/multi_asset/best_of_option/five_equity_cir_best_of_calls_01",
+      "originalOutput": "datasets/multi_asset/best_of_option/five_equity_cir_best_of_calls_01.json"
+    },
+    {
+      "source": "multi_asset/worst_of_option/five_equity_cir_worst_of_calls_01",
+      "id": "five_equity_cir_worst_of_calls_01",
+      "kind": "prices",
+      "model": "multi_asset",
+      "collection": "prices",
+      "product": "worst_of_option",
+      "output": "datasets/multi_asset/worst_of_option/five_equity_cir_worst_of_calls_01.json",
+      "rowCount": 250000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/multi_asset/worst_of_option/five_equity_cir_worst_of_calls_01",
+      "originalOutput": "datasets/multi_asset/worst_of_option/five_equity_cir_worst_of_calls_01.json"
+    },
+    {
+      "source": "multi_asset/worst_of_option/five_equity_cir_worst_of_puts_01",
+      "id": "five_equity_cir_worst_of_puts_01",
+      "kind": "prices",
+      "model": "multi_asset",
+      "collection": "prices",
+      "product": "worst_of_option",
+      "output": "datasets/multi_asset/worst_of_option/five_equity_cir_worst_of_puts_01.json",
+      "rowCount": 250000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/multi_asset/worst_of_option/five_equity_cir_worst_of_puts_01",
+      "originalOutput": "datasets/multi_asset/worst_of_option/five_equity_cir_worst_of_puts_01.json"
     },
     {
       "source": "product/american_option/american_options_01",

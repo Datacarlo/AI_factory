@@ -10,7 +10,6 @@ class ArtifactContractTests(unittest.TestCase):
     def setUp(self):
         sensitivity = {
             "method": "finite_difference_shared_innovations",
-            "source_price_recipe": "source",
             "parameters": [{
                 "parameter": "model.rho", "displacement": 0.125,
                 "scale": "absolute", "boundary": "central_then_one_sided_order2",

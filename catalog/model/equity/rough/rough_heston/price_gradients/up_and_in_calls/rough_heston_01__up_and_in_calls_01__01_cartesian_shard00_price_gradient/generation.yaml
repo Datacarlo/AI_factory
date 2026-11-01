@@ -1,0 +1,28 @@
+schema_version: 4
+status: complete
+inputs:
+  model:
+    path: datasets/model/equity/rough/rough_heston/parameters/rough_heston_01.json
+    sha256: afa7eeb075673353fe28b27aa447f917777f4c83bae12d51e59a2bef841d7631
+  product:
+    path: datasets/product/up_and_in_option/up_and_in_options_01_shard00.json
+    sha256: 4ffb9eb09547bc5a6757328957dc5b345b6d76876f34f353bbd0036817e7ae01
+output:
+  path: datasets/model/equity/rough/rough_heston/price_gradients/up_and_in_calls/rough_heston_01__up_and_in_calls_01__01_cartesian_shard00_price_gradient.json
+  sha256: a113c6db11f17f50e7bcaf2f7e9f8ff542bb7b076f3e95fd1c8b4d78622c957a
+hardware:
+  device: gpu
+  name: NVIDIA GeForce RTX 5090
+  uuid: GPU-11b9a6f1-3f11-a2b5-400c-0eee5c2089c6
+  compute_capability: '12.0'
+  driver_version: 615.71.09
+software:
+  cmake: cmake version 3.31.6
+  cxx_compiler: g++-14 (Debian 14.2.0-19) 14.2.0
+  cuda_compiler: Cuda compilation tools, release 13.2, V13.2.86
+  cuda_target_architectures: '120'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1
+timing:
+  wall_seconds: 38474.524777865
+  duration: 10 h 41 min 14 s 525 ms

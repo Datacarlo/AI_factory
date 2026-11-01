@@ -9,7 +9,7 @@ inputs:
     sha256: 6da8587ed4a9435a4d8d58bb9353bcce68ee3575afcba18cbee5d28b71d20a27
 output:
   path: datasets/model/equity/markovian/variance_gamma/price_gradients/european_puts/variance_gamma_01__european_puts_01__01_cartesian_shard00_price_gradient.json
-  sha256: f7fcffa3cce20d5a0905dbe637ce33cf09a09eb29c3bce7d1623ace69a231d88
+  sha256: 885b6d485226743fc79f8eeb98e637ad95626975abf098c3450fe43ef043e26c
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   device: gpu

@@ -23,7 +23,7 @@ struct ReconstructibleSensitivity {
 };
 struct Recipe {
     std::filesystem::path model_input, product_input, dataset, catalog;
-    std::string source_price_recipe;
+    std::string source_price_recipe; // Legacy constructor slot; never serialized or dereferenced.
     PriceConstruction construction;
     ::ai_factory::workbench::price_gradients::PriceGradientConfiguration configuration;
     ::ai_factory::workbench::price_gradients::TimeConfiguration time;

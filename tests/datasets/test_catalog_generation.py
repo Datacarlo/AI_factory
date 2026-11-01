@@ -98,7 +98,7 @@ class GenerationTests(unittest.TestCase):
                   "work": str(price_work), "dataset": "datasets/prices.json"}
         gradient = {"kind": "price_gradients", "target": "generate_gradients",
                     "inputs": ["models.json"], "dataset": "datasets/gradients.json",
-                    "sensitivity": {"source_price_recipe": source["recipe"]}}
+                    "source_price_target": source["target"], "sensitivity": {}}
         state = {"jobs": [source, gradient]}
         exact = campaign.compare_matching_prices(state, gradient, gradient_work)
         self.assertEqual(exact["status"], "within_budget")

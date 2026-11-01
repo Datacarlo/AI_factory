@@ -16,6 +16,13 @@ hardware:
   uuid: GPU-ffb1fd41-c0b7-008f-20de-9d7a92b52a3d
   compute_capability: '7.0'
   driver_version: 580.178.04
+software:
+  cmake: 3.31.6
+  cxx_compiler: GNU 14.2.0
+  cuda_compiler: 12.9.41
+  cuda_target_architectures: '70'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1
 timing:
   wall_seconds: 63280.839469951
   duration: 17 h 34 min 40 s 839 ms

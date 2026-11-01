@@ -157,7 +157,6 @@ nlohmann::ordered_json sensitivity_metadata(
             ? "finite_difference_shared_innovations"
             : "finite_difference"},
         {"parameters", selections},
-        {"source_price_recipe", recipe.source_price_recipe},
     };
     if (!recipe.reconstructible_sensitivities.empty()) {
         auto reconstructed = nlohmann::ordered_json::array();

@@ -51,7 +51,6 @@ sensitivity:
     boundary: central_then_one_sided_order2
   bump_rule: h = displacement (absolute) or displacement * abs(x) (relative); centered
     when valid, otherwise second-order one-sided.
-  source_price_recipe: catalog/model/equity/rough/rough_bergomi/prices/digital_calls/rough_bergomi_01__digital_calls_01__01_cartesian_shard00/recipe.yaml
   reconstructible_from_price:
   - parameter: product.cash_payoff
     formula: price / product.cash_payoff

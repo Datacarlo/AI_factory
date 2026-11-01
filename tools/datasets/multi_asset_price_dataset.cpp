@@ -15,7 +15,7 @@ void write_dataset(
     const CompiledRowIndexPlan& row_plan,
     const std::vector<float>& prices,
     const std::vector<float>& standard_errors,
-    std::size_t paths_per_price,std::uint64_t base_seed,
+    std::size_t paths_per_price,std::uint64_t /*base_seed*/,
     const nlohmann::ordered_json& execution,
     double wall_seconds,double kernel_seconds
 ) {
@@ -68,8 +68,11 @@ void write_dataset(
     };
     nlohmann::ordered_json model_references=
         nlohmann::ordered_json::array();
-    for(const auto* model:models)
+    auto model_families = nlohmann::ordered_json::array();
+    for(const auto* model:models) {
         model_references.push_back(reference(*model));
+        model_families.push_back(model->at("model_family"));
+    }
     nlohmann::ordered_json results=nlohmann::ordered_json::array();
     std::vector<std::uint32_t> model_indices(asset_count);
     const auto correlation_slot=product_slot+1U;
@@ -104,56 +107,41 @@ void write_dataset(
             ids.push_back(models[asset]->at("models")
                 .at(model_indices[asset]).at("id"));
         }
-        nlohmann::ordered_json result{
-            {"id",format_row_id(i)},
-            {"model_ids",ids},
-            {"correlation_id",correlation.at("correlations")
-                .at(correlation_index).at("id")},
-            {"product_id",product.at("products")
-                .at(product_index).at("id")},
-            {"seed",base_seed+i},
-            {"outputs",{
-                {"price",prices[i]},
-                {"standard_error",standard_errors[i]}}}
-        };
+        nlohmann::ordered_json result{{"model_ids",ids}};
         if(recipe.rate_model_dataset_path)
             result["rate_model_id"]=rates.at("models")
                 .at(rate_index).at("id");
+        result["product_id"]=product.at("products")
+            .at(product_index).at("id");
+        result["correlation_id"]=correlation.at("correlations")
+            .at(correlation_index).at("id");
         if(recipe.curve_dataset_path)
             result["curve_id"]=curve.at("curves")
                 .at(curve_index).at("id");
+        result["price"]=prices[i];
+        result["standard_error"]=standard_errors[i];
         results.push_back(std::move(result));
     }
     nlohmann::ordered_json document{
         {"database_id",recipe.dataset_path.stem().string()},
-        {"option_side",recipe.option_side},
-        {"row_count",result_count},
-        {"time_convention",product.at("time_convention")},
-        {"model_datasets",model_references},
-        {"product_dataset",reference(product)},
-        {"correlation_dataset",reference(correlation)},
-        {"price_construction",{{"method","compiled aligned/cartesian plan"},
-            {"model_order","model_datasets order"},
-            {"selectors",[&] {
-                nlohmann::ordered_json descriptors=
-                    nlohmann::ordered_json::array();
-                for(const auto& selector:row_plan.selectors)
-                    descriptors.push_back({
-                        {"stride",selector.stride},
-                        {"source_count",selector.source_count},
-                        {"mode",selector.mode==RowIndexMode::Strided
-                            ?"strided":"sampled_curve"}});
-                return descriptors;
-            }()}}},
-        {"timing",{
-            {"wall_seconds",wall_seconds},
-            {"kernel_seconds",kernel_seconds}}},
-        {"results",results}
+        {"model_families",model_families},
+        {"product_family",product.at("product_family")},
     };
+    if(recipe.rate_model_dataset_path)
+        document["rate_model_family"]=rates.at("model_family");
     if(recipe.curve_dataset_path)
-        document["curve_dataset"]=reference(curve);
+        document["curve_family"]=curve.at("curve_family");
+    document["option_side"]=recipe.option_side;
+    document["quote_convention"]=product.at("quote_convention");
+    document["row_count"]=result_count;
+    document["model_datasets"]=model_references;
     if(recipe.rate_model_dataset_path)
         document["rate_model_dataset"]=reference(rates);
+    document["product_dataset"]=reference(product);
+    document["correlation_dataset"]=reference(correlation);
+    if(recipe.curve_dataset_path)
+        document["curve_dataset"]=reference(curve);
+    document["results"]=std::move(results);
     write_json_file(recipe.dataset_path,document);
     validate_price_dataset_file(recipe.dataset_path);
     auto receipt=execution;

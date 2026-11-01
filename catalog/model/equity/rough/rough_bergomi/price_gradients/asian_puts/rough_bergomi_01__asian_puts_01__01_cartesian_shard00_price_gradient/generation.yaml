@@ -9,7 +9,7 @@ inputs:
     sha256: 25b5113835fe796afffda654e6b5378348c2653abb7ff1857b7d0fc64cc4efd9
 output:
   path: datasets/model/equity/rough/rough_bergomi/price_gradients/asian_puts/rough_bergomi_01__asian_puts_01__01_cartesian_shard00_price_gradient.json
-  sha256: 78a930028702d55bf7301df8ca6fafc9630c962c90461430c61cd6a49451c298
+  sha256: 2f86daee95c82c4a9457237e767e5ab34d36de718b7ed292be1478b08c6174d3
 hardware:
   cpu_model: Intel(R) Core(TM) Ultra 9 285K
   device: gpu

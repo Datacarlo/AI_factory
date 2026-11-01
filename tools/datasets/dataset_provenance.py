@@ -123,10 +123,27 @@ def software_versions(build: Path) -> dict[str, str]:
                 cache[key.split(":", 1)[0]] = value
     cxx = cache.get("CMAKE_CXX_COMPILER", "")
     nvcc = cache.get("CMAKE_CUDA_COMPILER", "")
+    # CMake records the compiler that built the binaries. Read that record
+    # first: a campaign can be collected from a node without the same nvcc.
+    cmake_parts = [cache.get(f"CMAKE_CACHE_{part}_VERSION")
+                   for part in ("MAJOR", "MINOR", "PATCH")]
+    cmake_version = ".".join(cmake_parts) if all(cmake_parts) else None
+    compiler_facts = {}
+    if cmake_version:
+        for language in ("CXX", "CUDA"):
+            description = build / "CMakeFiles" / cmake_version / f"CMake{language}Compiler.cmake"
+            if description.is_file():
+                compiler_facts.update(dict(re.findall(
+                    r'set\((CMAKE_(?:CXX|CUDA)_COMPILER_(?:ID|VERSION)) "([^"\n]+)"\)',
+                    description.read_text())))
+    cxx_version = compiler_facts.get("CMAKE_CXX_COMPILER_VERSION")
     versions = {
-        "cmake": _version(["cmake", "--version"]),
-        "cxx_compiler": _version([cxx, "--version"]) if cxx else "unavailable",
-        "cuda_compiler": _version([nvcc, "--version"]) if nvcc else "unavailable",
+        "cmake": cmake_version or _version(["cmake", "--version"]),
+        "cxx_compiler": (
+            (compiler_facts.get("CMAKE_CXX_COMPILER_ID", "") + " " + cxx_version).strip()
+            if cxx_version else (_version([cxx, "--version"]) if cxx else "unavailable")),
+        "cuda_compiler": compiler_facts.get("CMAKE_CUDA_COMPILER_VERSION")
+            or (_version([nvcc, "--version"]) if nvcc else "unavailable"),
     }
     cuda_architectures = (cache.get("CUDA_WORKBENCH_ARCHITECTURES")
                           or cache.get("CMAKE_CUDA_ARCHITECTURES"))
@@ -267,7 +284,7 @@ def attach_generation(work: Path, job: dict, state: dict) -> None:
 def _check_published_json(recipe: dict, generation: dict, document: dict) -> None:
     if not isinstance(document, dict):
         raise ValueError("Dataset JSON must be an object")
-    rows = recipe.get("row_count")  # candidate rows before optional selection
+    rows = recipe.get("candidate_row_count", recipe.get("row_count"))
     kind = recipe.get("kind")
     selected_rows = document.get("row_count")
     selection = recipe.get("row_selection")
@@ -322,18 +339,29 @@ def _check_published_json(recipe: dict, generation: dict, document: dict) -> Non
         results = document.get("results")
         if not isinstance(results, list) or len(results) != selected_rows:
             raise ValueError("Price result count contradicts recipe")
-        expected_keys = {"model_id", "product_id", "price"}
+        multi_asset = isinstance(document.get("model_datasets"), list)
+        expected_keys = ({"model_ids", "product_id", "correlation_id", "price"}
+                         if multi_asset else {"model_id", "product_id", "price"})
         if "curve" in recipe.get("inputs", {}):
             expected_keys.add("curve_id")
-        if recipe.get("paths_per_price", 0) > 0:
+        if "rate_model" in recipe.get("inputs", {}):
+            expected_keys.add("rate_model_id")
+        has_mc_error = recipe.get("paths_per_price", 0) > 0
+        if has_mc_error:
             expected_keys.add("standard_error")
         for index, row in enumerate(results, 1):
             if not isinstance(row, dict) or not expected_keys <= set(row):
                 raise ValueError(f"Invalid compact price row at {index}")
-            value = row.get("price")
-            error = row.get("standard_error")
+            if multi_asset and (not isinstance(row["model_ids"], list)
+                                or len(row["model_ids"]) != len(document["model_datasets"])):
+                raise ValueError(f"Invalid multi-asset model IDs at row {index}")
+            outputs = row
+            if not isinstance(outputs, dict):
+                raise ValueError(f"Invalid price outputs at row {index}")
+            value = outputs.get("price")
+            error = outputs.get("standard_error")
             if (type(value) not in (int, float) or not math.isfinite(value)
-                    or ("standard_error" in expected_keys
+                    or (has_mc_error
                         and (type(error) not in (int, float)
                              or not math.isfinite(error) or error < 0))):
                 raise ValueError(f"Invalid price or standard error at row {index}")
