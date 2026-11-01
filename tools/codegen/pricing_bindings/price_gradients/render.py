@@ -3,6 +3,7 @@
 from pathlib import Path
 from string import Template
 import json
+import yaml
 from .strategy_map import covers, decision_for, first_order_decision_for
 from .manifest import (
     TERMINAL_PRODUCT_METADATA,
@@ -1424,7 +1425,6 @@ def render_recipes(
                     "(relative); centered when valid, otherwise "
                     "second-order one-sided."
                 ),
-                "source_price_recipe": source.recipe_yaml_path,
             },
         }
         if spec.asset_class == "fixed_income":
@@ -1537,11 +1537,10 @@ def render_recipes(
         else:
             metadata["time_grid"] = {"steps_per_year":504,"simulation_steps_per_day":2,"delta_t":"1 / 504"}
         recipe_path = destination.with_name("recipe.yaml")
-        recipe_text = json.dumps(metadata, indent=2) + "\n"
-        recipe_text = recipe_text.replace(
-            '"minimum_annualized_decimal_rate": 1e-05',
-            '"minimum_annualized_decimal_rate": 0.00001',
-        )
+        if "row_selection" in metadata:
+            metadata = {("candidate_row_count" if k == "row_count" else k): v
+                        for k, v in metadata.items()}
+        recipe_text = yaml.safe_dump(metadata, sort_keys=False, allow_unicode=True)
         write_generated(recipe_path, recipe_text)
         generated.append(recipe_path)
     return generated

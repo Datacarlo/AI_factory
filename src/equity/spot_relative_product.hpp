@@ -129,6 +129,19 @@ __host__ __device__ Product selected_central_product(
     }
 }
 
+// Price-only callers use the convention retained by the product loader;
+// direct callers may already supply an absolute contract.
+template<typename Model, typename Product>
+__host__ __device__ Product selected_central_product(
+    const Model& model, const Product& quote
+) {
+    if constexpr (requires { quote.quote_is_ratio; }) {
+        return selected_central_product(model, quote, quote.quote_is_ratio);
+    } else {
+        return quote;
+    }
+}
+
 // Check selected pairs without keeping an expanded model/product dataset.
 template<typename Model, typename Product>
 void validate_resolved_rows(

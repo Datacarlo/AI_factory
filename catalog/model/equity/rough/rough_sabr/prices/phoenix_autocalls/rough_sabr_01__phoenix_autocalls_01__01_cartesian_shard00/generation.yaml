@@ -9,21 +9,21 @@ inputs:
     sha256: 7021f092aedee4e18fe549bb7720c03fe256f10bd6b149aa2aa393707f372392
 output:
   path: datasets/model/equity/rough/rough_sabr/prices/phoenix_autocalls/rough_sabr_01__phoenix_autocalls_01__01_cartesian_shard00.json
-  sha256: d793c5354e0204648e4d966c96a9b70030772e80de32c50f43642bf8e6705838
+  sha256: f6b14c25f7a92bd802385d237e2faa73772da7ebb3f17860ac34166b7b394498
 hardware:
-  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
+  cpu_model: Intel(R) Core(TM) Ultra 9 285K
   device: gpu
-  name: NVIDIA A100 80GB PCIe
-  uuid: GPU-5102f6b2-92ef-1ca5-849f-649cb3851bf6
-  compute_capability: '8.0'
-  driver_version: 590.48.01
+  name: NVIDIA GeForce RTX 5090
+  uuid: GPU-11b9a6f1-3f11-a2b5-400c-0eee5c2089c6
+  compute_capability: '12.0'
+  driver_version: 615.71.09
 software:
   cmake: cmake version 3.31.6
   cxx_compiler: g++-14 (Debian 14.2.0-19) 14.2.0
-  cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
-  cuda_target_architectures: '80'
+  cuda_compiler: Cuda compilation tools, release 13.2, V13.2.86
+  cuda_target_architectures: '120'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
 timing:
-  wall_seconds: 10429.395590249915
-  duration: 2 h 53 min 49 s 396 ms
+  wall_seconds: 4352.425838932395
+  duration: 1 h 12 min 32 s 426 ms

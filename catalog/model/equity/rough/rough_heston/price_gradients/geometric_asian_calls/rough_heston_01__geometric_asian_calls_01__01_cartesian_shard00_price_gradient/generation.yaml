@@ -9,7 +9,7 @@ inputs:
     sha256: 0c4e306a34b114cfecaaec9982473edaa158f755d59202ea5250da5b14cb4b6b
 output:
   path: datasets/model/equity/rough/rough_heston/price_gradients/geometric_asian_calls/rough_heston_01__geometric_asian_calls_01__01_cartesian_shard00_price_gradient.json
-  sha256: d1c8afe7b817ad589e6cd2127d503a4a06b96103778540116788f4ad98e0b7fa
+  sha256: dc3a4606668081f81cb068aafc8493717a208c1c0664b3f79c3e978b97357042
 hardware:
   device: gpu
   name: NVIDIA GeForce RTX 5090

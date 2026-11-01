@@ -9,7 +9,7 @@ inputs:
 output:
   path: datasets/model/fixed_income/cir_plus_plus/price_gradients/nelson_siegel/zero_coupon_bond_up_and_out_calls/cir_plus_plus_01__nelson_siegel_01__zero_coupon_bond_up_and_out_calls_01__01_cartesian_shard00_price_gradient.json
   format: json
-row_count: 100000
+candidate_row_count: 100000
 paths_per_price: 1048576
 sensitivity:
   method: finite_difference_shared_innovations
@@ -60,7 +60,6 @@ sensitivity:
     boundary: central_then_one_sided_order2
   bump_rule: h = displacement (absolute) or displacement * abs(x) (relative); centered
     when valid, otherwise second-order one-sided.
-  source_price_recipe: catalog/model/fixed_income/cir_plus_plus/prices/nelson_siegel/zero_coupon_bond_up_and_out_calls/cir_plus_plus_01__nelson_siegel_01__zero_coupon_bond_up_and_out_calls_01__01_cartesian_shard00/recipe.yaml
   maturity_coordinate: Underlying bond maturity U; option expiry T, monitoring grid,
     and central absolute K and B stay fixed.
 quote_convention:

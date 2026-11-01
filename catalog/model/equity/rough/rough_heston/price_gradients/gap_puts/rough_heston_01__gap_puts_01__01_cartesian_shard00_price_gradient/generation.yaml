@@ -9,7 +9,7 @@ inputs:
     sha256: 552093587f66e8e73bba80aec7a484df4b8ba4b61502d4292008a46869eff6a7
 output:
   path: datasets/model/equity/rough/rough_heston/price_gradients/gap_puts/rough_heston_01__gap_puts_01__01_cartesian_shard00_price_gradient.json
-  sha256: 93e6f5ee20e70a4193967241fba853c53348b7150733acc6c51e12531fd1fd70
+  sha256: df689983a777b2c61fc84a2b67736fe0ae8844ca9071bf46bf2b25314a698ed3
 hardware:
   device: gpu
   name: NVIDIA GeForce RTX 5090

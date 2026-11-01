@@ -83,6 +83,45 @@ target_link_libraries(generate_five_equity_cir_correlations_01 PRIVATE
 add_dependencies(parameter_generators
     generate_five_equity_cir_correlations_01)
 
+
+# Published five-equity/CIR compositions (kernels shared with single-asset models).
+if(EXISTS "${CMAKE_SOURCE_DIR}/catalog/multi_asset/worst_of_option/five_equity_cir_worst_of_puts_01/generator.cpp")
+    set_source_files_properties(catalog/multi_asset/worst_of_option/five_equity_cir_worst_of_puts_01/generator.cpp PROPERTIES LANGUAGE CUDA)
+    add_executable(generate_five_equity_cir_worst_of_puts_01 EXCLUDE_FROM_ALL catalog/multi_asset/worst_of_option/five_equity_cir_worst_of_puts_01/generator.cpp)
+    add_dependencies(price_generators generate_five_equity_cir_worst_of_puts_01)
+    target_include_directories(generate_five_equity_cir_worst_of_puts_01 PRIVATE ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src)
+    target_link_libraries(generate_five_equity_cir_worst_of_puts_01 PRIVATE
+        ai_factory_equity_heston_dataset ai_factory_equity_bates_dataset
+        ai_factory_equity_sabr_dataset ai_factory_equity_quadratic_rough_heston_dataset
+        ai_factory_equity_rough_bergomi_dataset ai_factory_fixed_income_cir_dataset
+        ai_factory_product_worst_of_call_dataset ai_factory_correlation_dataset
+        ai_factory_multi_asset_price_dataset ai_factory_causal_fft ai_factory_cuda_tuning)
+endif()
+if(EXISTS "${CMAKE_SOURCE_DIR}/catalog/multi_asset/worst_of_option/five_equity_cir_worst_of_calls_01/generator.cpp")
+    set_source_files_properties(catalog/multi_asset/worst_of_option/five_equity_cir_worst_of_calls_01/generator.cpp PROPERTIES LANGUAGE CUDA)
+    add_executable(generate_five_equity_cir_worst_of_calls_01 EXCLUDE_FROM_ALL catalog/multi_asset/worst_of_option/five_equity_cir_worst_of_calls_01/generator.cpp)
+    add_dependencies(price_generators generate_five_equity_cir_worst_of_calls_01)
+    target_include_directories(generate_five_equity_cir_worst_of_calls_01 PRIVATE ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src)
+    target_link_libraries(generate_five_equity_cir_worst_of_calls_01 PRIVATE
+        ai_factory_equity_heston_dataset ai_factory_equity_bates_dataset
+        ai_factory_equity_sabr_dataset ai_factory_equity_quadratic_rough_heston_dataset
+        ai_factory_equity_rough_bergomi_dataset ai_factory_fixed_income_cir_dataset
+        ai_factory_product_worst_of_call_dataset ai_factory_correlation_dataset
+        ai_factory_multi_asset_price_dataset ai_factory_causal_fft ai_factory_cuda_tuning)
+endif()
+if(EXISTS "${CMAKE_SOURCE_DIR}/catalog/multi_asset/best_of_option/five_equity_cir_best_of_calls_01/generator.cpp")
+    set_source_files_properties(catalog/multi_asset/best_of_option/five_equity_cir_best_of_calls_01/generator.cpp PROPERTIES LANGUAGE CUDA)
+    add_executable(generate_five_equity_cir_best_of_calls_01 EXCLUDE_FROM_ALL catalog/multi_asset/best_of_option/five_equity_cir_best_of_calls_01/generator.cpp)
+    add_dependencies(price_generators generate_five_equity_cir_best_of_calls_01)
+    target_include_directories(generate_five_equity_cir_best_of_calls_01 PRIVATE ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src)
+    target_link_libraries(generate_five_equity_cir_best_of_calls_01 PRIVATE
+        ai_factory_equity_heston_dataset ai_factory_equity_bates_dataset
+        ai_factory_equity_sabr_dataset ai_factory_equity_quadratic_rough_heston_dataset
+        ai_factory_equity_rough_bergomi_dataset ai_factory_fixed_income_cir_dataset
+        ai_factory_product_best_of_call_dataset ai_factory_correlation_dataset
+        ai_factory_multi_asset_price_dataset ai_factory_causal_fft ai_factory_cuda_tuning)
+endif()
+
 # Local experiments are present only in a developer work directory.
 if(EXISTS "${CMAKE_SOURCE_DIR}/work/cmake/AIFactoryMultiAssetExperiments.cmake")
     include("${CMAKE_SOURCE_DIR}/work/cmake/AIFactoryMultiAssetExperiments.cmake")

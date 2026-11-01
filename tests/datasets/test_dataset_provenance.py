@@ -75,6 +75,42 @@ class ProvenanceTests(unittest.TestCase):
         self.assertNotIn("record_sha256", self.generation)
         self.assertNotIn("execution", self.generation)
 
+    def test_software_uses_build_compilers_without_executing_remote_tools(self):
+        build = self.root / "historical_build"
+        compiler_dir = build / "CMakeFiles" / "3.31.6"
+        compiler_dir.mkdir(parents=True)
+        (build / "CMakeCache.txt").write_text(
+            "CMAKE_CACHE_MAJOR_VERSION:INTERNAL=3\n"
+            "CMAKE_CACHE_MINOR_VERSION:INTERNAL=31\n"
+            "CMAKE_CACHE_PATCH_VERSION:INTERNAL=6\n"
+            "CMAKE_CXX_COMPILER:FILEPATH=/remote/g++\n"
+            "CMAKE_CUDA_COMPILER:FILEPATH=/remote/nvcc\n"
+            "CMAKE_CUDA_ARCHITECTURES:STRING=70\n")
+        for language, identity, version in [("CXX", "GNU", "14.2.0"), ("CUDA", "NVIDIA", "12.9.41")]:
+            (compiler_dir / f"CMake{language}Compiler.cmake").write_text(
+                f'set(CMAKE_{language}_COMPILER_ID "{identity}")\n'
+                f'set(CMAKE_{language}_COMPILER_VERSION "{version}")\n')
+        with patch.object(provenance, "_version", side_effect=AssertionError("must use build records")):
+            software = provenance.software_versions(build)
+        self.assertEqual(software["cxx_compiler"], "GNU 14.2.0")
+        self.assertEqual(software["cuda_compiler"], "12.9.41")
+        self.assertEqual(software["cuda_target_architectures"], "70")
+
+    def test_multi_asset_prices_and_standard_errors(self):
+        self.document.pop("model_dataset")
+        self.document["model_datasets"] = [{"id": "model_a"}, {"id": "model_b"}]
+        self.document["results"] = [{
+            "model_ids": ["m1", "m2"], "product_id": "p1",
+            "correlation_id": "c1", "price": 1.25, "standard_error": 0.01,
+        }]
+        self.save_dataset()
+        self.generation["output"]["sha256"] = digest(self.dataset)
+        self.assertEqual(self.assess()["status"], "compatible")
+        self.document["results"][0]["standard_error"] = -0.01
+        self.save_dataset()
+        self.generation["output"]["sha256"] = digest(self.dataset)
+        self.assertEqual(self.assess()["status"], "invalid")
+
     def test_recipe_and_hardware_may_change_without_generation_gate(self):
         self.recipe["seeds"]["dynamics"] = 124
         self.generation["hardware"]["name"] = "corrected GPU name"
@@ -95,7 +131,8 @@ class ProvenanceTests(unittest.TestCase):
         self.assertEqual(self.assess()["status"], "invalid")
 
     def test_selected_result_count_is_bounded_by_candidate_count(self):
-        self.recipe["row_count"] = 2
+        self.recipe.pop("row_count")
+        self.recipe["candidate_row_count"] = 2
         self.recipe["row_selection"] = {
             "method": "resolved_bond_nonzero_support"}
         self.assertEqual(self.assess()["status"], "compatible")
@@ -103,7 +140,7 @@ class ProvenanceTests(unittest.TestCase):
         self.assertEqual(self.assess()["status"], "invalid")
         self.recipe["row_selection"] = {
             "method": "resolved_bond_nonzero_support"}
-        self.recipe["row_count"] = 0
+        self.recipe["candidate_row_count"] = 0
         self.assertEqual(self.assess()["status"], "invalid")
 
     def test_input_sha_is_current_metadata_not_an_immutable_gate(self):

@@ -3,6 +3,7 @@
 
 #include "cuda/check_cuda.cuh"
 #include "equity/path_product_policy.cuh"
+#include "equity/spot_relative_product.hpp"
 #include "pricing_rows/result_index.cuh"
 #include "monte_carlo/reductions.cuh"
 #include "volterra/causal_fft_core_kernel.cuh"
@@ -150,7 +151,8 @@ __global__ void prepare_rows_kernel(
         static_cast<std::uint32_t>(product_count), construction
     );
     const auto model = models[indices.model_index];
-    const auto product = products[indices.product_index];
+    const auto product = equity::spot_relative::selected_central_product(
+        model, products[indices.product_index]);
     const auto schedule = SchedulePolicy::prepare(
         ProductPolicy::calendar(product), time_config, steps
     );

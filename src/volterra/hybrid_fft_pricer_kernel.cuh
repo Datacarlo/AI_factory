@@ -3,6 +3,7 @@
 
 #include "cuda/check_cuda.cuh"
 #include "equity/path_product_policy.cuh"
+#include "equity/spot_relative_product.hpp"
 #include "cuda/cuda_kernel_diagnostics.cuh"
 #include "philox/distributions.cuh"
 #include "monte_carlo/reductions.cuh"
@@ -83,7 +84,8 @@ __global__ void prepare_direct_row_kernel(
     const typename ModelPathPolicy::Parameters parameters =
         models[indices.model_index];
     const typename ProductPolicy::ProductParameters product_parameters =
-        products[indices.product_index];
+        equity::spot_relative::selected_central_product(
+            parameters, products[indices.product_index]);
     const typename SchedulePolicy::PreparedSchedule schedule =
         SchedulePolicy::prepare(
             ProductPolicy::calendar(product_parameters),
@@ -177,7 +179,8 @@ __global__ void prepare_row_kernel(
     const typename ModelPathPolicy::Parameters parameters =
         models[indices.model_index];
     const typename ProductPolicy::ProductParameters product_parameters =
-        products[indices.product_index];
+        equity::spot_relative::selected_central_product(
+            parameters, products[indices.product_index]);
     const typename SchedulePolicy::Calendar calendar =
         ProductPolicy::calendar(product_parameters);
     const typename SchedulePolicy::PreparedSchedule schedule =

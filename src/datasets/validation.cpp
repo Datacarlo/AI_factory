@@ -357,10 +357,32 @@ void validate_product_dataset(const nlohmann::json& document) {
 void validate_compact_price_dataset(const nlohmann::json& document) {
     const std::string id = database_id(document);
     require_string(document, "database_id", "Price", id);
-    require_string(document, "model_family", "Price", id);
+    const bool multi_asset = document.contains("model_datasets");
+    const bool has_rate_model = document.contains("rate_model_dataset");
+    if (multi_asset) {
+        const auto& models = document.at("model_datasets");
+        if (!models.is_array() || models.empty()
+            || !document.contains("model_families")
+            || !document.at("model_families").is_array()
+            || document.at("model_families").size() != models.size())
+            reject("Price", id, "model_families must match model_datasets.");
+        for (const auto& model : models)
+            validate_dataset_reference({{"model_dataset", model}}, "model_dataset", id, true);
+        for (const auto& family : document.at("model_families"))
+            if (!family.is_string() || family.get<std::string>().empty())
+                reject("Price", id, "model families must be non-empty strings.");
+        validate_dataset_reference(document, "correlation_dataset", id, true);
+    } else {
+        require_string(document, "model_family", "Price", id);
+        validate_dataset_reference(document, "model_dataset", id, true);
+    }
+    if (has_rate_model) {
+        if (!multi_asset) reject("Price", id, "rate_model_dataset requires multiple assets.");
+        require_string(document, "rate_model_family", "Price", id);
+        validate_dataset_reference(document, "rate_model_dataset", id, true);
+    }
     require_string(document, "product_family", "Price", id);
     if (document.contains("catalog")) require_string(document, "catalog", "Price", id);
-    validate_dataset_reference(document, "model_dataset", id, true);
     validate_dataset_reference(document, "product_dataset", id, true);
     const bool has_curve = document.contains("curve_dataset");
     if (has_curve) {
@@ -380,16 +402,30 @@ void validate_compact_price_dataset(const nlohmann::json& document) {
     }
     for (const auto& row : results) {
         if (!row.is_object()) reject("Price", id, "results rows must be objects.");
-        require_string(row, "model_id", "Price", id);
+        if (multi_asset) {
+            if (!row.contains("model_ids") || !row.at("model_ids").is_array()
+                || row.at("model_ids").size() != document.at("model_datasets").size())
+                reject("Price", id, "model_ids must match model_datasets.");
+            for (const auto& model_id : row.at("model_ids"))
+                if (!model_id.is_string() || model_id.get<std::string>().empty())
+                    reject("Price", id, "model_ids must be non-empty strings.");
+            require_string(row, "correlation_id", "Price", id);
+        } else {
+            require_string(row, "model_id", "Price", id);
+        }
+        if (has_rate_model) require_string(row, "rate_model_id", "Price", id);
         require_string(row, "product_id", "Price", id);
         if (has_curve) require_string(row, "curve_id", "Price", id);
         for (const auto& [name, value] : row.items()) {
-            if (name == "model_id" || name == "product_id" || name == "curve_id")
+            if (name == "model_id" || name == "model_ids" || name == "product_id"
+                || name == "curve_id" || name == "rate_model_id" || name == "correlation_id")
                 continue;
             if (!value.is_number() || !std::isfinite(value.get<double>())) {
                 reject("Price", id, "result " + name + " must be finite numeric.");
             }
         }
+        if (row.contains("standard_error") && row.at("standard_error").get<double>() < 0)
+            reject("Price", id, "standard_error must be nonnegative.");
         if (!row.contains("price") || !row.at("price").is_number()) {
             reject("Price", id, "every result must contain a numeric price.");
         }

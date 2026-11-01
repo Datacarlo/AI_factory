@@ -33,7 +33,7 @@ from tools.datasets.dataset_provenance import (
     input_fingerprints,
     snapshot_sources,
 )
-from tools.datasets.metadata_schemas import validate_document
+from tools.datasets.metadata_schemas import validate_document, recipe_candidate_count
 
 
 def save_campaign(path: Path, state: dict) -> None:
@@ -161,18 +161,13 @@ def inventory(
             raise ValueError(f"Recipe output contradicts manifest: {recipe_path}")
         if recipe.get("generator") != spec.generator_path:
             raise ValueError(f"Recipe generator contradicts manifest: {recipe_path}")
-        if recipe.get("row_count") != spec.row_count:
+        if recipe_candidate_count(recipe) != spec.row_count:
             raise ValueError(f"Recipe row count contradicts manifest: {recipe_path}")
         if spec.dataset_kind == "price_gradients":
             # Price-only recipes can live in a local work catalogue. Validate
             # the gradient against the typed source capability, which remains
             # available in a clean delivery checkout.
             price_source = PRICE_GRADIENT_SOURCE_BY_GENERATOR[spec.generator_path]
-            source_path = recipe["sensitivity"]["source_price_recipe"]
-            if source_path != price_source.recipe_yaml_path:
-                raise ValueError(
-                    f"Sensitivity source contradicts the capability manifest: {recipe_path}"
-                )
             source_domain = RNG_DOMAIN_BY_GENERATOR.get(price_source.generator_path)
             expected_rng = "philox" if source_domain else None
             if recipe.get("random_number_generator") != expected_rng:
@@ -209,7 +204,10 @@ def inventory(
                      "url": None if spec.dataset_kind == "price_gradients" else spec.url,
                      "inputs": inputs, "sample_shape": shape,
                      "rng_stream_seeds": {name: domain.seed(name) for name in domain.streams} if domain else {},
-                     "row_count": recipe["row_count"],
+                     "row_count": recipe_candidate_count(recipe),
+                     "source_price_target": (
+                         PRICE_GRADIENT_SOURCE_BY_GENERATOR[spec.generator_path].cmake_target
+                         if spec.dataset_kind == "price_gradients" else None),
                      "curve_assignment": recipe.get("curve_assignment"),
                      "declared_method": {
                          "engine": spec.engine,
@@ -759,13 +757,15 @@ def compare_matching_prices(state: dict, job: dict, work: Path) -> dict | None:
     """
     if job["kind"] != "price_gradients":
         return None
-    source_recipe = job["sensitivity"]["source_price_recipe"]
+    source_target = job.get("source_price_target")
+    if source_target is None:
+        return None
     peers = [candidate for candidate in state["jobs"]
-             if candidate["kind"] == "prices" and candidate["recipe"] == source_recipe]
+             if candidate["kind"] == "prices" and candidate["target"] == source_target]
     if not peers:
         return None
     if len(peers) != 1:
-        raise ValueError(f"Ambiguous source price recipe: {source_recipe}")
+        raise ValueError(f"Ambiguous source price target: {source_target}")
     peer = peers[0]
     if peer["state"] != "complete" or peer["inputs"] != job["inputs"]:
         raise ValueError(f"Source price is unfinished or uses different inputs: {peer['target']}")

@@ -61,7 +61,6 @@ void write_price_delta_dataset(const PriceDeltaRecipe& recipe, const PriceDeltaR
         {"parameter", "spot"}, {"method", recipe.delta_method},
         {"relative_full_width", recipe.relative_bump_width},
         {"denominator", "per-row represented upper minus lower"},
-        {"source_price_recipe", recipe.source_price_recipe},
         {"qualification", "implementation tested on bounded cases; no global bias certification"},
         {"standard_error_scope", stochastic ? "paired sampling error; excludes bump and stopping-policy bias" : "not applicable"}};
     nlohmann::ordered_json price_construction{{"method", "Aligned"}};

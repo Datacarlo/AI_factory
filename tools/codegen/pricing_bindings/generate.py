@@ -578,10 +578,10 @@ def generate_samples(output_root: Path) -> list[Path]:
             metadata_path = recipe.with_name("recipe.yaml")
             _write_generated(
                 metadata_path,
-                json.dumps(
+                yaml.safe_dump(
                     _sample_recipe_metadata(model, recipe_index, dataset),
-                    indent=2,
-                ) + "\n",
+                    sort_keys=False, allow_unicode=True,
+                ),
             )
             generated.append(metadata_path)
     return generated
@@ -986,7 +986,7 @@ def generate_price_delta_recipes(output_root: Path) -> list[Path]:
             "paths_per_price": 1048576 if stochastic else 0,
             "launch_profile": "inherited price profile; inspect compiled plan; not delta-tuned",
             "sensitivity": {"parameter": "spot", "method": values["method"],
-                            "relative_full_width": .01, "source_price_recipe": source.recipe_yaml_path},
+                            "relative_full_width": .01},
             "dynamics_seed": int(values["seed"]),
             **({"rng_mapping_version": rng_mapping_version(dataset.model)}
                if stochastic else {}),
@@ -999,7 +999,7 @@ def generate_price_delta_recipes(output_root: Path) -> list[Path]:
                                      "coefficient_precision": "host FP64, device FP32"}
         if fft:
             recipe["preparation"] = {"method": values["numerical_method"], "shared_convolution": True}
-        _write_generated(recipe_path, json.dumps(recipe, indent=2) + "\n")
+        _write_generated(recipe_path, yaml.safe_dump(recipe, sort_keys=False, allow_unicode=True))
         generated.append(recipe_path)
     return generated
 
@@ -1701,6 +1701,9 @@ def _price_recipe_metadata(dataset, source: str) -> dict:
             "simulation_steps_per_day": steps_per_year // 252,
             "delta_t": f"1 / {steps_per_year}",
         }
+    if "row_selection" in metadata:
+        metadata = {("candidate_row_count" if k == "row_count" else k): v
+                    for k, v in metadata.items()}
     return metadata
 
 
@@ -1713,10 +1716,10 @@ def generate_price_recipe_metadata(output_root: Path) -> list[Path]:
         metadata_path = output_root / layout_relative(dataset.recipe_yaml_path)
         _write_generated(
             metadata_path,
-            json.dumps(
+            yaml.safe_dump(
                 _price_recipe_metadata(dataset, generator.read_text()),
-                indent=2,
-            ) + "\n",
+                sort_keys=False, allow_unicode=True,
+            ),
         )
         generated.append(metadata_path)
     return generated
@@ -1778,7 +1781,6 @@ def generate_fixed_income_price_central_mirrors(output_root: Path) -> list[Path]
         metadata["output"]["path"] = price.dataset_path
         internal = metadata.pop("sensitivity", None)
         if internal is not None:
-            internal.pop("source_price_recipe", None)
             metadata["internal_sensitivity_plan"] = internal
         metadata["central_price_engine"] = {
             "gradient_dataset_id": gradient.dataset_id,

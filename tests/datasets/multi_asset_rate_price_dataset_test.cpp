@@ -29,15 +29,17 @@ int main() {
         models.push_back({{"id",id}});
     }
     datasets::write_json_file(equity,{
-        {"database_id","equity_01"},{"models",models}});
+        {"database_id","equity_01"},{"model_family","Heston"},{"models",models}});
     datasets::write_json_file(rate,{
-        {"database_id","g2_plus_plus_01"},{"models",models}});
+        {"database_id","g2_plus_plus_01"},{"model_family","G2++"},{"models",models}});
     datasets::write_json_file(product,{
         {"database_id","product_01"},
+        {"product_family","Basket Options"},
+        {"quote_convention",{{"strike",{{"mode","ratio_to_initial_basket"}}}}},
         {"time_convention",{{"unit","business_day"},{"days_per_year",252}}},
         {"products",{{{"id","000001"}}}}});
     datasets::write_json_file(curve,{
-        {"database_id","curve_01"},{"curves",models}});
+        {"database_id","curve_01"},{"curve_family","Flat"},{"curves",models}});
     const datasets::MultiAssetPriceDatasetRecipe recipe{
         {equity,equity},product,correlation,curve,output,receipt,"",rate};
     using Expression=RowIndexExpression;
@@ -72,6 +74,15 @@ int main() {
         ||compact_document.at("results").at(0).at("curve_id")
             !="000001")
         throw std::runtime_error("compact dataset provenance incomplete");
+    if (compact_document.contains("timing") || compact_document.contains("price_construction"))
+        throw std::runtime_error("execution metadata leaked into JSON");
+    for (std::size_t j=0;j<prices.size();++j) {
+        const auto& row=compact_document.at("results").at(j);
+        if (row.contains("outputs") || row.contains("seed") || row.contains("id")
+            || row.at("price").get<float>() != prices[j]
+            || row.at("standard_error").get<float>() != errors[j])
+            throw std::runtime_error("compact result serialization changed values");
+    }
     bool rejected=false;
     try {
         auto invalid=plan;

@@ -8,7 +8,6 @@ required:
   - dataset_id
   - generator
   - output
-  - row_count
 properties:
   schema_version:
     const: 1
@@ -22,6 +21,9 @@ properties:
     type: string
     pattern: "^catalog/.+/generator\\.cpp$"
   row_count:
+    type: integer
+    minimum: 1
+  candidate_row_count:
     type: integer
     minimum: 1
   random_number_generator:
@@ -47,6 +49,9 @@ properties:
   url: false
   option_side:
     enum: [call, put, payer, receiver]
+oneOf:
+  - required: [row_count]
+  - required: [candidate_row_count, row_selection]
 allOf:
   - not:
       anyOf:

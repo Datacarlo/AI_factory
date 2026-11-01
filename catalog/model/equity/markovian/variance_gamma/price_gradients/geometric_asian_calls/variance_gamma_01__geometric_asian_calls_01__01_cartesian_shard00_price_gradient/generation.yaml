@@ -9,7 +9,7 @@ inputs:
     sha256: 0c4e306a34b114cfecaaec9982473edaa158f755d59202ea5250da5b14cb4b6b
 output:
   path: datasets/model/equity/markovian/variance_gamma/price_gradients/geometric_asian_calls/variance_gamma_01__geometric_asian_calls_01__01_cartesian_shard00_price_gradient.json
-  sha256: 682a9eb0cde556883438e9ff9e3e4d532a30df70f03410091f203cef7725a202
+  sha256: 0e964a24a5dcbe97808696f180807841cb1833ab3ea6fc6508da6a72b51adb5a
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   device: gpu

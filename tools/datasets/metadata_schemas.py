@@ -35,6 +35,11 @@ def schema_validator(kind: str) -> jsonschema.Draft202012Validator:
     return jsonschema.Draft202012Validator(schema)
 
 
+def recipe_candidate_count(recipe: dict) -> int:
+    """Number of candidate rows, before an optional deterministic rejection."""
+    return recipe.get("candidate_row_count", recipe.get("row_count"))
+
+
 def validate_document(document: object, kind: str, source: object = "document") -> None:
     """Reject one document with a stable, path-oriented schema diagnostic."""
 

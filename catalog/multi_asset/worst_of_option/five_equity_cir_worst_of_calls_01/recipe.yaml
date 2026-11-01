@@ -1,0 +1,36 @@
+schema_version: 1
+kind: prices
+dataset_id: five_equity_cir_worst_of_calls_01
+generator: catalog/multi_asset/worst_of_option/five_equity_cir_worst_of_calls_01/generator.cpp
+output:
+  path: datasets/multi_asset/worst_of_option/five_equity_cir_worst_of_calls_01.json
+  format: json
+inputs:
+  model_0: datasets/model/equity/markovian/heston/factor_parameters/heston_multi_core_01.json
+  model_1: datasets/model/equity/markovian/bates/factor_parameters/bates_multi_core_01.json
+  model_2: datasets/model/equity/markovian/sabr/factor_parameters/sabr_multi_core_01.json
+  model_3: datasets/model/equity/rough/quadratic_rough_heston/factor_parameters/quadratic_rough_heston_multi_core_01.json
+  model_4: datasets/model/equity/rough/rough_bergomi/factor_parameters/rough_bergomi_multi_core_01.json
+  rate_model: datasets/model/fixed_income/cir/factor_parameters/cir_multi_core_01.json
+  product: datasets/product/worst_of_option/worst_of_options_multi_01.json
+  correlation: datasets/correlation/five_equity_cir_01.json
+construction:
+  expression: cartesian(product[100], correlation[10], aligned(model_0[250], model_1[250],
+    model_2[250], model_3[250], model_4[250], rate_model[250]))
+pricing:
+  steps_per_business_day: 2
+  team_size: 1
+  payoff_unit: initial-spot-normalized basket
+  discount: stochastic CIR short-rate integral
+  rows_per_launch: 16
+  path_chunk_size: 131072
+  streams: 1
+  threads_per_block: 256
+  paths_per_team: 1
+  checkpoint_rows: 128
+row_count: 250000
+paths_per_price: 1048576
+option_side: call
+random_number_generator: philox
+seeds:
+  dynamics: 202610210700

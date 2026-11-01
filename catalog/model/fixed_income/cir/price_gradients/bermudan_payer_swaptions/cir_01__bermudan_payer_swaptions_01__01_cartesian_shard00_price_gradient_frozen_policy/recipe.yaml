@@ -8,7 +8,7 @@ inputs:
 output:
   path: datasets/model/fixed_income/cir/price_gradients/bermudan_payer_swaptions/cir_01__bermudan_payer_swaptions_01__01_cartesian_shard00_price_gradient_frozen_policy.json
   format: json
-row_count: 100000
+candidate_row_count: 100000
 paths_per_price: 1048576
 sensitivity:
   method: finite_difference_shared_innovations
@@ -35,7 +35,6 @@ sensitivity:
     boundary: central_then_one_sided_order2
   bump_rule: h = displacement (absolute) or displacement * abs(x) (relative); centered
     when valid, otherwise second-order one-sided.
-  source_price_recipe: catalog/model/fixed_income/cir/prices/bermudan_payer_swaptions/cir_01__bermudan_payer_swaptions_01__01_cartesian_shard00/recipe.yaml
 quote_convention:
   strike:
     mode: additive_to_initial_first_exercise_par_swap_rate

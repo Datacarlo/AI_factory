@@ -11,11 +11,19 @@ output:
   path: datasets/model/equity/rough/rough_heston/price_gradients/athena_autocalls/rough_heston_01__athena_autocalls_01__01_cartesian_shard00_price_gradient.json
   sha256: 2ac938f0f1fe3ab0625791a3d4b80dba134d7011f816ba287c754dfd98744816
 hardware:
+  cpu_model: Intel(R) Core(TM) Ultra 9 285K
   device: gpu
   name: NVIDIA GeForce RTX 5090
   uuid: GPU-11b9a6f1-3f11-a2b5-400c-0eee5c2089c6
   compute_capability: '12.0'
   driver_version: 615.71.09
+software:
+  cmake: 3.31.6
+  cxx_compiler: GNU 14.2.0
+  cuda_compiler: 13.2.86
+  cuda_target_architectures: '120'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1
 timing:
-  wall_seconds: 97982.29322970693
-  duration: 1 j 3 h 13 min 2 s 293 ms
+  wall_seconds: 97995.29065662762
+  duration: 1 j 3 h 13 min 15 s 291 ms

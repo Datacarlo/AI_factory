@@ -8,7 +8,7 @@ inputs:
 output:
   path: datasets/model/fixed_income/cir/prices/zero_coupon_bond_calls/cir_01__zero_coupon_bond_calls_01__01_cartesian.json
   format: json
-row_count: 1000000
+candidate_row_count: 1000000
 paths_per_price: 0
 quote_convention:
   strike:
