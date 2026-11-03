@@ -27,7 +27,7 @@ def _routes(root: Path) -> dict[str, str]:
     return routes
 
 
-def physical_path(root: Path, relative: str) -> Path:
+def physical_path(root: Path, relative: str, *, publication_state: bool = False) -> Path:
     """Return the physical location of a logical catalog or dataset path."""
     part = Path(relative)
     if part.is_absolute() or not part.parts or ".." in part.parts:
@@ -36,7 +36,7 @@ def physical_path(root: Path, relative: str) -> Path:
     routes = _routes(base)
     route = routes.get(part.as_posix(), part.as_posix())
     if routes and part.as_posix() not in routes and len(part.parts) > 1:
-        if part.parts[0] == "catalog" and part.parts[1] in {"model", "product", "curve", "archives", "qualifications", "releases"}:
+        if part.parts[0] == "catalog" and part.parts[1] in {"parameters", "samples", "single_asset", "multi_asset", "model", "product", "curve", "archives", "qualifications", "releases"}:
             destination = ("maintainer/evidence/catalog"
                            if part.parts[1] in {"archives", "qualifications", "releases"}
                            else "work/catalog")
@@ -58,6 +58,17 @@ def physical_path(root: Path, relative: str) -> Path:
         ("work", "catalog"), ("work", "datasets")
     } and route_parts[2] in {"archives", "qualifications", "releases"}:
         route = str(Path("maintainer/evidence") / Path(*route_parts[1:]))
+    # Optional producer layout. Public recipe paths remain datasets/<collection>/...;
+    # newly validated deliveries shadow the externally published collection.
+    physical = Path(route)
+    if (publication_state and len(physical.parts) > 1 and physical.parts[0] == "datasets"
+            and physical.parts[1] not in {"published", "unpublished"}
+            and (base / "datasets/published").is_dir()):
+        suffix = Path(*physical.parts[1:])
+        pending = base / "datasets/unpublished" / suffix
+        published = base / "datasets/published" / suffix
+        route = str((pending if pending.exists() or not published.exists()
+                     else published).relative_to(base))
     path = base / route
     if path.resolve() != path:
         raise ValueError(f"Artifact path traverses a symlink: {path}")

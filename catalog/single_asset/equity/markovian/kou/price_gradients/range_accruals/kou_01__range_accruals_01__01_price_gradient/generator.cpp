@@ -1,0 +1,36 @@
+// Generated kou range_accrual selected-gradient recipe.
+#include "model/equity/markovian/kou/product/range_accrual_price_gradients.cuh"
+#include "model/equity/markovian/kou/dataset.hpp"
+#include "product/range_accrual/dataset.hpp"
+#include "tools/pricing/price_gradients/generation.cuh"
+
+int main() {
+    using namespace ai_factory::workbench;
+    namespace pg = price_gradients;
+    try {
+        datasets::price_gradients::Recipe recipe{
+            "datasets/parameters/model/equity/markovian/kou/parameters/kou_01.json", "datasets/parameters/product/range_accrual/range_accruals_01.json", "datasets/single_asset/equity/markovian/kou/price_gradients/range_accruals/kou_01__range_accruals_01__01_price_gradient.json", "catalog/single_asset/equity/markovian/kou/price_gradients/range_accruals/kou_01__range_accruals_01__01_price_gradient/generation.yaml", "catalog/single_asset/equity/markovian/kou/prices/range_accruals/kou_01__range_accruals_01__01/recipe.yaml",
+            PriceConstruction::Aligned, {{
+        {"model.volatility", {0.005, pg::BumpScale::relative}},
+        {"model.jump_intensity", {0.05, pg::BumpScale::absolute}},
+        {"model.up_probability", {0.002, pg::BumpScale::absolute}},
+        {"model.risk_free_rate", {0.0005, pg::BumpScale::absolute}},
+        {"model.dividend_yield", {0.0005, pg::BumpScale::absolute}},
+        {"model.positive_jump_rate", {0.005, pg::BumpScale::relative}},
+        {"model.negative_jump_rate", {0.005, pg::BumpScale::relative}},
+        {"product.lower_barrier", {0.005, pg::BumpScale::relative}},
+        {"product.upper_barrier", {0.005, pg::BumpScale::relative}},
+        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
+            }}, {1.0f/504.0f, 2U}, true};
+        recipe.exact_schedule_transition = true;
+        recipe.reconstructible_sensitivities = {{"product.coupon_rate", "(price - exp(-model.risk_free_rate * product.maturity / 252)) / product.coupon_rate", "standard_error / product.coupon_rate"}};
+        const auto models = model::equity::kou::load_models(recipe.model_input);
+        const auto products = product::load_range_accruals(recipe.product_input);
+        return offline::pricing::price_gradients::execute_dataset<true>(recipe,
+            {offline::cuda_tuning::PricingFamily::equity_exact_mc, "kou", "range_accrual", ""}, 11668827373251330048ULL,
+            models, products, model::equity::kou::prepare_kou_range_accrual_price_gradients,
+            model::equity::kou::launch_kou_range_accrual_price_gradients_cuda,
+            offline::cuda_tuning::kProductionPathsPerPrice,
+            model::equity::kou::prepare_range_accrual_price_gradient_stencils_cuda);
+    } catch (const std::exception& error) { std::cerr << error.what() << '\n'; return 1; }
+}

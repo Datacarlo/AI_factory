@@ -125,7 +125,7 @@ nlohmann::ordered_json price_validation_metadata(
     const std::filesystem::path& dataset_path
 ) {
     nlohmann::ordered_json metadata = {{"status", "pending"}, {"verified", false}};
-    const auto relative = dataset_path.lexically_normal().lexically_relative("datasets/model");
+    const auto relative = dataset_path.lexically_normal().lexically_relative("datasets/single_asset");
     if (relative.empty() || relative.is_absolute() || *relative.begin() == "..")
         return metadata;  // Standalone temporary artifacts have no catalogue cache.
     std::filesystem::path reference = "validation/datasets/price";

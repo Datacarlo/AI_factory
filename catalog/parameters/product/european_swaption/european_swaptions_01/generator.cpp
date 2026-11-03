@@ -1,0 +1,155 @@
+// Generate regular physical-settlement European swaptions.
+#include "tools/datasets/parameter_dataset.hpp"
+#include "datasets/validation.hpp"
+
+#include <cstdint>
+#include <filesystem>
+#include <string>
+#include <utility>
+#include <vector>
+
+namespace {
+
+using ai_factory::workbench::datasets::GeneratedRows;
+
+struct ScheduleSpec {
+    std::uint32_t payment_interval_days;
+    std::uint32_t payment_count;
+    float accrual_fraction;
+};
+
+// Expand a traceable regular-schedule grid in deterministic row order.
+GeneratedRows regular_regime(
+    const std::vector<std::uint32_t>& exercise_times_days,
+    const std::vector<ScheduleSpec>& schedules,
+    const std::vector<float>& strikes,
+    const std::string& description
+) {
+    GeneratedRows generated;
+    for (const std::uint32_t exercise_time_days : exercise_times_days) {
+        for (const ScheduleSpec& schedule : schedules) {
+            for (const float strike : strikes) {
+                generated.rows.push_back({
+                    {"notional", 1.0f},
+                    {"strike", strike},
+                    {"exercise_time", exercise_time_days},
+                    {"payment_interval", schedule.payment_interval_days},
+                    {"payment_count", schedule.payment_count},
+                    {"accrual_fraction", schedule.accrual_fraction},
+                });
+            }
+        }
+    }
+
+    nlohmann::ordered_json schedule_rows = nlohmann::ordered_json::array();
+    for (const ScheduleSpec& schedule : schedules) {
+        schedule_rows.push_back({
+            {"payment_interval", schedule.payment_interval_days},
+            {"payment_count", schedule.payment_count},
+            {"accrual_fraction", schedule.accrual_fraction},
+        });
+    }
+    generated.construction = {
+        {"method", "Cartesian grid"},
+        {
+            "rule",
+            "Every exercise time, regular fixed-leg schedule, and strike "
+            "combination."
+        },
+        {"description", description},
+        {"exercise_times", exercise_times_days},
+        {"schedules", schedule_rows},
+        {"strikes", strikes},
+        {"notional", 1.0},
+    };
+    return generated;
+}
+
+}  // namespace
+
+// Generate the product dataset and its compact catalog entry.
+int main() {
+    using namespace ai_factory::workbench::datasets;
+
+    const std::filesystem::path dataset_path =
+        "datasets/parameters/product/european_swaption/"
+        "european_swaptions_01.json";
+    const std::filesystem::path catalog_path =
+        "catalog/parameters/product/european_swaption/"
+        "european_swaptions_01/generation.yaml";
+    const std::string url =
+        "https://datasets.ai-factory.example/v1/product/"
+        "european_swaptions/european_swaptions_01.json";
+
+    std::vector<ScheduleSpec> core_schedules;
+    core_schedules.reserve(10U);
+    for (const std::uint32_t tenor_years : {1U, 2U, 5U, 10U, 20U}) {
+        core_schedules.push_back({252U, tenor_years, 1.0f});
+        core_schedules.push_back({126U, 2U * tenor_years, 0.5f});
+    }
+
+    GeneratedRows core = regular_regime(
+        {63U, 126U, 252U, 504U, 756U,
+         1260U, 1764U, 2520U, 3780U, 5040U},
+        core_schedules,
+        {-0.006f, -0.004f, -0.002f, -0.001f, 0.0f,
+         0.001f, 0.002f, 0.004f, 0.006f},
+        "Standard expiries, one-to-twenty-year swaps, annual or semiannual "
+        "fixed legs, and strikes concentrated around ordinary rate levels."
+    );
+    GeneratedRows stress = regular_regime(
+        {21U, 63U, 252U, 2520U, 6300U},
+        {
+            {21U, 12U, 1.0f / 12.0f},
+            {63U, 20U, 0.25f},
+            {126U, 40U, 0.5f},
+            {252U, 30U, 1.0f},
+            {252U, 1U, 1.0f},
+        },
+        {-0.015f, -0.008f, 0.008f, 0.015f},
+        "One-month to twenty-five-year expiries, one-to-thirty-year fixed "
+        "legs, monthly through annual schedules, and moderate strike tails."
+    );
+    const GeneratedRows rows = core_stress_rows(
+        std::move(core), std::move(stress)
+    );
+
+    write_fixed_income_product_dataset(
+        "european_swaptions_01",
+        "European Swaptions",
+        dataset_path,
+        catalog_path,
+        url,
+        {
+            {"notional", "Contract notional N."},
+            {"strike", "Annualized decimal spread from the initial par swap rate; 0.005 means +50 bp."},
+            {
+                "exercise_time",
+                "Exercise date and underlying swap start T_e in business days."
+            },
+            {
+                "payment_interval",
+                "Constant number of business days between fixed-leg payments."
+            },
+            {"payment_count", "Number of fixed-leg payments."},
+            {
+                "accrual_fraction",
+                "Constant contractual year fraction delta for each coupon."
+            },
+        },
+        {
+            {
+                "expression",
+                "N * max(omega * (1 - P(T_e,T_N) - K * sum_i "
+                "delta * P(T_e,T_i)), 0), omega = +1 payer / -1 receiver"
+            },
+            {"exercise_time", "T_e equals the underlying swap start."},
+            {"settlement", "physical"},
+            {"normalization", "N = 1"},
+        },
+        rows,
+        { {"strike", { {"mode", "additive_to_initial_par_swap_rate"}, {"unit", "annualized_decimal_rate"}, {"effective_level", "strike = initial_par_swap_rate + strike_spread"} } },
+          {"reference_policy", "Resolved at the unbumped model and initial curve; absolute contract levels stay fixed for model and curve bumps."} }
+);
+    validate_product_dataset_file(dataset_path);
+}

@@ -44,8 +44,8 @@ inline datasets::ModelSampleRecipe recipe(
     return {
         id,
         "Quadratic rough-Heston",
-        "datasets/model/equity/rough/quadratic_rough_heston/samples/" + id + ".json",
-        "catalog/model/equity/rough/quadratic_rough_heston/samples/" + id + "/generation.yaml",
+        "datasets/samples/equity/rough/quadratic_rough_heston/" + id + ".json",
+        "catalog/samples/equity/rough/quadratic_rough_heston/" + id + "/generation.yaml",
         parameter_count,
         paths_per_parameter,
         63U,

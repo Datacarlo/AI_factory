@@ -42,8 +42,8 @@ inline datasets::ModelSampleRecipe recipe(
     return {
         id,
         "Heston",
-        "datasets/model/equity/markovian/heston/samples/" + id + ".json",
-        "catalog/model/equity/markovian/heston/samples/" + id + "/generation.yaml",
+        "datasets/samples/equity/markovian/heston/" + id + ".json",
+        "catalog/samples/equity/markovian/heston/" + id + "/generation.yaml",
         parameter_count,
         paths_per_parameter,
         63U,

@@ -38,8 +38,8 @@ inline datasets::ModelSampleRecipe recipe(
     return {
         id,
         "Hull-White",
-        "datasets/model/fixed_income/hull_white/samples/" + id + ".json",
-        "catalog/model/fixed_income/hull_white/samples/" + id + "/generation.yaml",
+        "datasets/samples/fixed_income/hull_white/" + id + ".json",
+        "catalog/samples/fixed_income/hull_white/" + id + "/generation.yaml",
         parameter_count,
         paths_per_parameter,
         63U,

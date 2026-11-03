@@ -30,7 +30,7 @@ def digest(path: Path) -> str | None:
 
 def contained_path(root: Path, relative: str) -> Path:
     """Reject traversal and map legacy logical paths to their physical branch."""
-    return physical_path(root, relative)
+    return physical_path(root, relative, publication_state=True)
 
 
 def sync_directory(path: Path) -> None:

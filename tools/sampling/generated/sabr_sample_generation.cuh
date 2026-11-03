@@ -41,8 +41,8 @@ inline datasets::ModelSampleRecipe recipe(
     return {
         id,
         "SABR",
-        "datasets/model/equity/markovian/sabr/samples/" + id + ".json",
-        "catalog/model/equity/markovian/sabr/samples/" + id + "/generation.yaml",
+        "datasets/samples/equity/markovian/sabr/" + id + ".json",
+        "catalog/samples/equity/markovian/sabr/" + id + "/generation.yaml",
         parameter_count,
         paths_per_parameter,
         63U,

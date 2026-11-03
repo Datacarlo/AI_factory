@@ -8,9 +8,9 @@ int main() {
     using namespace ai_factory::workbench;
     namespace rates = model::fixed_income::${model};
     const std::filesystem::path model_path =
-        "datasets/model/fixed_income/${model}/parameters/${model}_01.json";
+        "datasets/parameters/model/fixed_income/${model}/parameters/${model}_01.json";
     const std::filesystem::path product_path =
-        "datasets/product/bermudan_swaption/bermudan_swaptions_01.json";
+        "datasets/parameters/product/bermudan_swaption/bermudan_swaptions_01.json";
     const auto models = rates::load_models(model_path);
     const auto products = product::load_bermudan_swaptions(product_path);
     constexpr std::size_t paths =

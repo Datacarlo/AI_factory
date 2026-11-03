@@ -1,0 +1,24 @@
+schema_version: 1
+kind: prices
+dataset_id: quadratic_rough_heston_01__straddles_01__01
+generator: catalog/single_asset/equity/rough/quadratic_rough_heston/prices/straddles/quadratic_rough_heston_01__straddles_01__01/generator.cpp
+inputs:
+  model: datasets/parameters/model/equity/rough/quadratic_rough_heston/parameters/quadratic_rough_heston_01.json
+  product: datasets/parameters/product/straddle/straddles_01.json
+output:
+  path: datasets/single_asset/equity/rough/quadratic_rough_heston/prices/straddles/quadratic_rough_heston_01__straddles_01__01.json
+  format: json
+row_count: 1000
+numerical_method:
+  engine: equity_n_factor
+outputs:
+- price
+- standard_error
+paths_per_price: 1048576
+seeds:
+  dynamics: 11668828477057925120
+random_number_generator: philox
+time_grid:
+  steps_per_year: 504
+  simulation_steps_per_day: 2
+  delta_t: 1 / 504

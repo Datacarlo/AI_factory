@@ -1,0 +1,83 @@
+// Generate reproducible standalone G2 short-rate parameters.
+#include "tools/datasets/parameter_dataset.hpp"
+#include "datasets/validation.hpp"
+#include "tools/sampling/parameters/g2_generation.hpp"
+
+#include <cstdint>
+#include <filesystem>
+#include <string>
+#include <utility>
+
+// Generate the G2 dataset and adjacent catalog entry.
+int main() {
+    using namespace ai_factory::workbench::datasets;
+
+    const std::filesystem::path dataset_path =
+        "datasets/parameters/model/fixed_income/g2/parameters/g2_01.json";
+    const std::filesystem::path catalog_path =
+        "catalog/parameters/model/fixed_income/g2/parameters/g2_01/generation.yaml";
+    const std::string url =
+        "https://datasets.ai-factory.example/v1/model/fixed_income/g2/parameters/g2_01.json";
+
+    constexpr std::uint64_t seed = 1650000201ULL;
+    GeneratedRows core = g2::generate_rows(
+        900U,
+        seed,
+        {
+            {
+                {0.03f, 0.35f},
+                {0.10f, 1.00f},
+                {0.0025f, 0.018f},
+                {0.0015f, 0.012f},
+                {-0.75f, -0.05f},
+            },
+            {0.001f, 0.05f},
+            {0.001f, 0.03f},
+        }
+    );
+    GeneratedRows stress = g2::generate_rows(
+        100U,
+        seed + 2ULL,
+        {
+            {
+                {0.02f, 0.50f},
+                {0.05f, 1.30f},
+                {0.0015f, 0.025f},
+                {0.001f, 0.018f},
+                {-0.90f, -0.02f},
+            },
+            {-0.02f, 0.08f},
+            {-0.02f, 0.06f},
+        }
+    );
+    const GeneratedRows rows = core_stress_rows(
+        std::move(core), std::move(stress)
+    );
+
+    write_model_dataset(
+        "g2_01",
+        "G2 Gaussian two-factor short rate",
+        dataset_path,
+        catalog_path,
+        url,
+        {
+            {"mean_reversion_x", "Positive mean-reversion speed a."},
+            {"volatility_x", "Non-negative first-factor volatility sigma."},
+            {"mean_reversion_y", "Positive mean-reversion speed b above a."},
+            {"volatility_y", "Non-negative second-factor volatility eta."},
+            {"correlation", "Brownian correlation rho in [-1, 1]."},
+            {"initial_state_x", "Initial first Gaussian factor x(0)."},
+            {"initial_state_y", "Initial second Gaussian factor y(0)."},
+        },
+        {
+            {"state_x", "dx_t = -a x_t dt + sigma dW_t^x"},
+            {"state_y", "dy_t = -b y_t dt + eta dW_t^y"},
+            {"correlation", "d<W^x,W^y>_t = rho dt"},
+            {"short_rate", "r_t = x_t + y_t"},
+            {"initial_short_rate", "r(0) = x(0) + y(0)"},
+            {"transition", "exact correlated Gaussian transitions"},
+        },
+        rows
+    );
+    validate_model_dataset_file(dataset_path);
+}

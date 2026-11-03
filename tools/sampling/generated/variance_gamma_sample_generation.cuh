@@ -40,8 +40,8 @@ inline datasets::ModelSampleRecipe recipe(
     return {
         id,
         "Variance-Gamma",
-        "datasets/model/equity/markovian/variance_gamma/samples/" + id + ".json",
-        "catalog/model/equity/markovian/variance_gamma/samples/" + id + "/generation.yaml",
+        "datasets/samples/equity/markovian/variance_gamma/" + id + ".json",
+        "catalog/samples/equity/markovian/variance_gamma/" + id + "/generation.yaml",
         parameter_count,
         paths_per_parameter,
         63U,

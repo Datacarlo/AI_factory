@@ -16,6 +16,6 @@ _PRODUCT_DATASETS = {
 @lru_cache(maxsize=None)
 def quote_convention(product: str) -> dict:
     root = Path(__file__).resolve().parents[3]
-    recipe = (root / 'catalog/product' / product
+    recipe = (root / 'catalog/parameters/product' / product
               / _PRODUCT_DATASETS[product] / 'recipe.yaml')
     return yaml.safe_load(recipe.read_text())['quote_convention']

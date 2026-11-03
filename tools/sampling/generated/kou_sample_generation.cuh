@@ -42,8 +42,8 @@ inline datasets::ModelSampleRecipe recipe(
     return {
         id,
         "Kou",
-        "datasets/model/equity/markovian/kou/samples/" + id + ".json",
-        "catalog/model/equity/markovian/kou/samples/" + id + "/generation.yaml",
+        "datasets/samples/equity/markovian/kou/" + id + ".json",
+        "catalog/samples/equity/markovian/kou/" + id + "/generation.yaml",
         parameter_count,
         paths_per_parameter,
         63U,

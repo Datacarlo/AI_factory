@@ -1,0 +1,25 @@
+schema_version: 1
+kind: prices
+dataset_id: heston_3_2_01__forward_start_puts_01__01
+generator: catalog/single_asset/equity/markovian/heston_3_2/prices/forward_start_puts/heston_3_2_01__forward_start_puts_01__01/generator.cpp
+inputs:
+  model: datasets/parameters/model/equity/markovian/heston_3_2/parameters/heston_3_2_01.json
+  product: datasets/parameters/product/forward_start_option/forward_start_options_01.json
+output:
+  path: datasets/single_asset/equity/markovian/heston_3_2/prices/forward_start_puts/heston_3_2_01__forward_start_puts_01__01.json
+  format: json
+row_count: 1000
+numerical_method:
+  engine: equity_markovian
+outputs:
+- price
+- standard_error
+paths_per_price: 1048576
+option_side: put
+seeds:
+  dynamics: 11668827197157670912
+random_number_generator: philox
+time_grid:
+  steps_per_year: 504
+  simulation_steps_per_day: 2
+  delta_t: 1 / 504

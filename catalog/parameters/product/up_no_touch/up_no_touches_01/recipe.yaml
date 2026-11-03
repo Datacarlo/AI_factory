@@ -1,0 +1,80 @@
+schema_version: 1
+kind: product_parameters
+dataset_id: up_no_touches_01
+generator: catalog/parameters/product/up_no_touch/up_no_touches_01/generator.cpp
+output:
+  path: datasets/parameters/product/up_no_touch/up_no_touches_01.json
+  format: json
+product_family: Up No-Touches
+row_count: 1000
+time_convention:
+  unit: business_day
+  days_per_year: 252
+quote_convention:
+  barrier:
+    mode: ratio_to_central_spot
+    unit: dimensionless
+    effective_level: barrier * S0
+  reference_policy: Resolved at the unbumped model spot S0 for each model-product
+    pair; absolute contract levels remain fixed for model bumps.
+parameters:
+  barrier: Dimensionless ratio of the quoted spot level to the central model spot
+    S0; 1.0 means 100% of S0.
+  cash_payoff: Cash amount paid at maturity without a touch.
+  maturity: Maturity in business days.
+payoff:
+  expression: cash_payoff if max(S_[0,T]) < barrier; otherwise 0
+  payment_time: maturity
+construction:
+  method: ordered 90/10 core-stress construction
+  row_order:
+    core: rows 1-900
+    stress: rows 901-1000
+  core_share: 0.9
+  stress_share: 0.1
+  core:
+    row_count: 900
+    generation:
+      method: maturity-dependent log-barrier grid
+      maturity:
+        minimum: 21
+        maximum: 756
+        count: 45
+        spacing: linear
+      barrier:
+        count_per_maturity: 20
+        conditional_bounds: '[exp(0.05), exp(0.15 + 0.20 sqrt((T/252) / 3))]'
+  stress:
+    row_count: 100
+    generation:
+      method: maturity-dependent log-barrier grid
+      maturity:
+        minimum: 5
+        maximum: 1260
+        count: 10
+        spacing: linear
+      barrier:
+        count_per_maturity: 10
+        conditional_bounds: '[exp(0.01), exp(0.01 + 0.75 min(sqrt(T/252), 1.25))]'
+  grid:
+    maturity:
+      core:
+        minimum: 21
+        maximum: 756
+        count: 45
+        spacing: linear
+      stress:
+        minimum: 5
+        maximum: 1260
+        count: 10
+        spacing: linear
+    barrier:
+      spacing: linear in log-barrier
+      core:
+        count_per_maturity: 20
+        conditional_bounds: '[exp(0.05), exp(0.15 + 0.20 sqrt((T/252) / 3))]'
+      stress:
+        count_per_maturity: 10
+        conditional_bounds: '[exp(0.01), exp(0.01 + 0.75 min(sqrt(T/252), 1.25))]'
+  rule: For each T, the upper barrier is linearly spaced in log-space.
+  cash_payoff: 1.0

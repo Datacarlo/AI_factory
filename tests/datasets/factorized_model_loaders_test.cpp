@@ -57,14 +57,14 @@ int main() {
                     throw std::runtime_error("Rate correlation was not neutral");
         }
     };
-    check(model::equity::bates::load_models, "datasets/model/equity/markovian/bates/factor_parameters/bates_multi_core_01.json", 250U);
-    check(model::equity::heston::load_models, "datasets/model/equity/markovian/heston/factor_parameters/heston_multi_core_01.json", 250U);
-    check(model::equity::sabr::load_models, "datasets/model/equity/markovian/sabr/factor_parameters/sabr_multi_core_01.json", 250U);
-    check(model::equity::quadratic_rough_heston::load_models, "datasets/model/equity/rough/quadratic_rough_heston/factor_parameters/quadratic_rough_heston_multi_core_01.json", 250U);
-    check(model::equity::rough_bergomi::load_models, "datasets/model/equity/rough/rough_bergomi/factor_parameters/rough_bergomi_multi_core_01.json", 250U);
-    check(model::fixed_income::cir::load_models, "datasets/model/fixed_income/cir/factor_parameters/cir_multi_core_01.json", 250U);
+    check(model::equity::bates::load_models, "datasets/parameters/model/equity/markovian/bates/factor_parameters/bates_multi_core_01.json", 250U);
+    check(model::equity::heston::load_models, "datasets/parameters/model/equity/markovian/heston/factor_parameters/heston_multi_core_01.json", 250U);
+    check(model::equity::sabr::load_models, "datasets/parameters/model/equity/markovian/sabr/factor_parameters/sabr_multi_core_01.json", 250U);
+    check(model::equity::quadratic_rough_heston::load_models, "datasets/parameters/model/equity/rough/quadratic_rough_heston/factor_parameters/quadratic_rough_heston_multi_core_01.json", 250U);
+    check(model::equity::rough_bergomi::load_models, "datasets/parameters/model/equity/rough/rough_bergomi/factor_parameters/rough_bergomi_multi_core_01.json", 250U);
+    check(model::fixed_income::cir::load_models, "datasets/parameters/model/fixed_income/cir/factor_parameters/cir_multi_core_01.json", 250U);
     std::ifstream invalid_source(
-        "datasets/model/equity/markovian/heston/factor_parameters/heston_multi_core_01.json");
+        "datasets/parameters/model/equity/markovian/heston/factor_parameters/heston_multi_core_01.json");
     nlohmann::json invalid;
     invalid_source >> invalid;
     invalid.at("models").at(0).at("parameters")["rho"] = 0.3;

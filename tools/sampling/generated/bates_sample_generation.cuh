@@ -45,8 +45,8 @@ inline datasets::ModelSampleRecipe recipe(
     return {
         id,
         "Bates",
-        "datasets/model/equity/markovian/bates/samples/" + id + ".json",
-        "catalog/model/equity/markovian/bates/samples/" + id + "/generation.yaml",
+        "datasets/samples/equity/markovian/bates/" + id + ".json",
+        "catalog/samples/equity/markovian/bates/" + id + "/generation.yaml",
         parameter_count,
         paths_per_parameter,
         63U,

@@ -41,8 +41,8 @@ inline datasets::ModelSampleRecipe recipe(
     return {
         id,
         "Rough-Bergomi",
-        "datasets/model/equity/rough/rough_bergomi/samples/" + id + ".json",
-        "catalog/model/equity/rough/rough_bergomi/samples/" + id + "/generation.yaml",
+        "datasets/samples/equity/rough/rough_bergomi/" + id + ".json",
+        "catalog/samples/equity/rough/rough_bergomi/" + id + "/generation.yaml",
         parameter_count,
         paths_per_parameter,
         63U,

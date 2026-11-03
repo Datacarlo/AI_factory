@@ -42,8 +42,8 @@ inline datasets::ModelSampleRecipe recipe(
     return {
         id,
         "Schobel-Zhu",
-        "datasets/model/equity/markovian/schobel_zhu/samples/" + id + ".json",
-        "catalog/model/equity/markovian/schobel_zhu/samples/" + id + "/generation.yaml",
+        "datasets/samples/equity/markovian/schobel_zhu/" + id + ".json",
+        "catalog/samples/equity/markovian/schobel_zhu/" + id + "/generation.yaml",
         parameter_count,
         paths_per_parameter,
         63U,

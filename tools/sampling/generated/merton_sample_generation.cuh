@@ -41,8 +41,8 @@ inline datasets::ModelSampleRecipe recipe(
     return {
         id,
         "Merton",
-        "datasets/model/equity/markovian/merton/samples/" + id + ".json",
-        "catalog/model/equity/markovian/merton/samples/" + id + "/generation.yaml",
+        "datasets/samples/equity/markovian/merton/" + id + ".json",
+        "catalog/samples/equity/markovian/merton/" + id + "/generation.yaml",
         parameter_count,
         paths_per_parameter,
         63U,

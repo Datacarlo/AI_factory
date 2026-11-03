@@ -17,11 +17,11 @@ namespace {
 
 // Full input datasets and rule used to construct the price rows.
 const std::filesystem::path model_dataset_path =
-    "datasets/model/fixed_income/${model}/parameters/${model}_01.json";
+    "datasets/parameters/model/fixed_income/${model}/parameters/${model}_01.json";
 const std::filesystem::path curve_dataset_path =
-    "datasets/curve/${curve}/${curve}_01.json";
+    "datasets/parameters/curve/${curve}/${curve}_01.json";
 const std::filesystem::path product_dataset_path =
-    "datasets/product/rate_option/rate_options_01.json";
+    "datasets/parameters/product/rate_option/rate_options_01.json";
 
 constexpr ai_factory::workbench::PriceConstruction construction =
     ai_factory::workbench::PriceConstruction::${construction};
@@ -33,10 +33,10 @@ constexpr float day_fraction = 1.0f / 252.0f;
 
 // Artifact locations and descriptive metadata used after pricing.
 const std::filesystem::path dataset_path =
-    "datasets/model/fixed_income/${model}/prices/${curve}/${variant}/"
+    "datasets/single_asset/fixed_income/${model}/prices/${curve}/${variant}/"
     "${model}_01__${curve}_01__${variant}_01__01.json";
 const std::filesystem::path catalog_path =
-    "catalog/model/fixed_income/${model}/prices/${curve}/${variant}/"
+    "catalog/single_asset/fixed_income/${model}/prices/${curve}/${variant}/"
     "${model}_01__${curve}_01__${variant}_01__01/generation.yaml";
 const std::string url =
     "https://datasets.ai-factory.example/v1/model/fixed_income/${model}/prices/"

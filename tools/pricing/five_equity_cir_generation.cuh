@@ -94,15 +94,15 @@ int generate_five_equity_cir_prices(
             "Usage: generator [--pilot product_index correlation_index paths [rows]]");
     }
     const std::vector<std::filesystem::path> model_paths{
-        "datasets/model/equity/markovian/heston/factor_parameters/heston_multi_core_01.json",
-        "datasets/model/equity/markovian/bates/factor_parameters/bates_multi_core_01.json",
-        "datasets/model/equity/markovian/sabr/factor_parameters/sabr_multi_core_01.json",
-        "datasets/model/equity/rough/quadratic_rough_heston/factor_parameters/quadratic_rough_heston_multi_core_01.json",
-        "datasets/model/equity/rough/rough_bergomi/factor_parameters/rough_bergomi_multi_core_01.json"};
+        "datasets/parameters/model/equity/markovian/heston/factor_parameters/heston_multi_core_01.json",
+        "datasets/parameters/model/equity/markovian/bates/factor_parameters/bates_multi_core_01.json",
+        "datasets/parameters/model/equity/markovian/sabr/factor_parameters/sabr_multi_core_01.json",
+        "datasets/parameters/model/equity/rough/quadratic_rough_heston/factor_parameters/quadratic_rough_heston_multi_core_01.json",
+        "datasets/parameters/model/equity/rough/rough_bergomi/factor_parameters/rough_bergomi_multi_core_01.json"};
     const std::string rate_path=
-        "datasets/model/fixed_income/cir/factor_parameters/cir_multi_core_01.json";
+        "datasets/parameters/model/fixed_income/cir/factor_parameters/cir_multi_core_01.json";
     const std::string correlation_path=
-        "datasets/correlation/five_equity_cir_01.json";
+        "datasets/parameters/correlation/five_equity_cir_01.json";
     MultiAssetHostModels<FiveEquityPack> equity;
     equity.models=model::equity::heston::load_models(model_paths[0]);
     equity.tail.models=model::equity::bates::load_models(model_paths[1]);

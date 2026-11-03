@@ -1,0 +1,154 @@
+schema_version: 1
+kind: product_parameters
+dataset_id: bermudan_swaptions_01
+generator: catalog/parameters/product/bermudan_swaption/bermudan_swaptions_01/generator.cpp
+output:
+  path: datasets/parameters/product/bermudan_swaption/bermudan_swaptions_01.json
+  format: json
+product_family: Bermudan Swaptions
+row_count: 1000
+time_convention:
+  unit: business_day
+  days_per_year: 252
+quote_convention:
+  strike:
+    mode: additive_to_initial_first_exercise_par_swap_rate
+    unit: annualized_decimal_rate
+    effective_level: strike = initial_first_exercise_par_swap_rate + strike_spread
+  reference_policy: Resolved at the unbumped model and initial curve; absolute contract
+    levels stay fixed for model and curve bumps.
+parameters:
+  notional: Contract notional N.
+  strike: Annualized decimal spread from the initial par swap rate; 0.005 means +50
+    bp.
+  accrual_fraction: Constant contractual coupon year fraction delta.
+  first_exercise_time: First exercise and initial swap-start date in business days.
+  payment_interval: Business days between payments and exercise opportunities.
+  payment_count: Payments from first exercise to final maturity.
+  exercise_count: Co-terminal exercise opportunities.
+payoff:
+  expression: max over exercise policy of N * max(omega * (1 - P(t,T_N) - K * sum_{i>j}
+    delta * P(t,T_i)), 0), omega = +1 payer / -1 receiver
+  exercise_dates: first_exercise_time + j * payment_interval, j = 0,...,exercise_count-1
+  underlying: At exercise j, the remaining co-terminal swap.
+  settlement: physical
+  normalization: N = 1
+construction:
+  method: ordered 90/10 core-stress construction
+  row_order:
+    core: rows 1-900
+    stress: rows 901-1000
+  core_share: 0.9
+  stress_share: 0.1
+  core:
+    row_count: 900
+    generation:
+      method: Cartesian grid
+      rule: Every first exercise time, co-terminal regular schedule, and strike combination.
+      description: Six-month to fifteen-year first exercise dates; two-to-twenty-year
+        co-terminal swaps; annual or semiannual fixed legs; and two-to-ten exercise
+        opportunities with strike spreads around ATM.
+      first_exercise_times:
+      - 126
+      - 252
+      - 504
+      - 756
+      - 1260
+      - 1764
+      - 2016
+      - 2520
+      - 3150
+      - 3780
+      schedules:
+      - payment_interval: 252
+        payment_count: 2
+        exercise_count: 2
+        accrual_fraction: 1.0
+      - payment_interval: 252
+        payment_count: 3
+        exercise_count: 3
+        accrual_fraction: 1.0
+      - payment_interval: 252
+        payment_count: 5
+        exercise_count: 5
+        accrual_fraction: 1.0
+      - payment_interval: 252
+        payment_count: 7
+        exercise_count: 5
+        accrual_fraction: 1.0
+      - payment_interval: 252
+        payment_count: 10
+        exercise_count: 5
+        accrual_fraction: 1.0
+      - payment_interval: 252
+        payment_count: 10
+        exercise_count: 10
+        accrual_fraction: 1.0
+      - payment_interval: 126
+        payment_count: 4
+        exercise_count: 4
+        accrual_fraction: 0.5
+      - payment_interval: 126
+        payment_count: 10
+        exercise_count: 6
+        accrual_fraction: 0.5
+      - payment_interval: 126
+        payment_count: 20
+        exercise_count: 10
+        accrual_fraction: 0.5
+      - payment_interval: 126
+        payment_count: 40
+        exercise_count: 10
+        accrual_fraction: 0.5
+      strikes:
+      - -0.006000000052154064
+      - -0.004000000189989805
+      - -0.0020000000949949026
+      - -0.0010000000474974513
+      - 0.0
+      - 0.0010000000474974513
+      - 0.0020000000949949026
+      - 0.004000000189989805
+      - 0.006000000052154064
+      notional: 1.0
+  stress:
+    row_count: 100
+    generation:
+      method: Cartesian grid
+      rule: Every first exercise time, co-terminal regular schedule, and strike combination.
+      description: One-month to twenty-year first exercises, monthly through annual
+        fixed legs, one-to-thirty-year co-terminal swaps, and moderate ATM spread
+        tails.
+      first_exercise_times:
+      - 21
+      - 63
+      - 252
+      - 2520
+      - 5040
+      schedules:
+      - payment_interval: 21
+        payment_count: 12
+        exercise_count: 4
+        accrual_fraction: 0.0833333358168602
+      - payment_interval: 63
+        payment_count: 20
+        exercise_count: 6
+        accrual_fraction: 0.25
+      - payment_interval: 126
+        payment_count: 40
+        exercise_count: 8
+        accrual_fraction: 0.5
+      - payment_interval: 252
+        payment_count: 20
+        exercise_count: 10
+        accrual_fraction: 1.0
+      - payment_interval: 252
+        payment_count: 30
+        exercise_count: 10
+        accrual_fraction: 1.0
+      strikes:
+      - -0.014999999664723873
+      - -0.00800000037997961
+      - 0.00800000037997961
+      - 0.014999999664723873
+      notional: 1.0

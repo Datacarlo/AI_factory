@@ -430,7 +430,7 @@ def _render_sample_recipe_source(
         parameter_count, paths_per_parameter = "3'000'000U", "1U"
         sample_kind = "unconditional"
     recipe_path = (
-        f"catalog/model/{model.source_folder}/samples/"
+        f"catalog/samples/{model.source_folder}/"
         f"samples_{recipe_index:02d}/generator.cpp"
     )
     domain = resolve_rng_domain(recipe_path)
@@ -562,7 +562,7 @@ def generate_samples(output_root: Path) -> list[Path]:
         for recipe_index in (1, 2):
             recipe = (
                 output_root / layout_relative(
-                    f"catalog/model/{model.source_folder}/samples/"
+                    f"catalog/samples/{model.source_folder}/"
                     f"samples_{recipe_index:02d}/generator.cpp"
                 )
             )
@@ -940,8 +940,8 @@ def generate_price_delta_recipes(output_root: Path) -> list[Path]:
             args.append("delta_errors")
         values = {
             "model": dataset.model, "product": dataset.product,
-            "model_input": f"datasets/{model.source_prefix}/parameters/{model.parameter_dataset_id}.json",
-            "product_input": f"datasets/product/{dataset.product}/{product_id}.json",
+            "model_input": f"datasets/parameters/{model.source_prefix}/parameters/{model.parameter_dataset_id}.json",
+            "product_input": f"datasets/parameters/product/{dataset.product}/{product_id}.json",
             "dataset": dataset.dataset_path, "catalog": dataset.generation_yaml_path,
             "url": dataset.url, "source_recipe": source.recipe_yaml_path,
             "method": "frozen_central_exercise_dates_crn" if lsm else "centered_crn" if stochastic else "centered_closed_form",
@@ -1475,11 +1475,11 @@ def generate_catalog_recipes(output_root: Path) -> list[Path]:
                 if variant.side else "factor_count"
             ),
             "model_dataset_path": (
-                f"datasets/{model_spec.source_prefix}/parameters/"
+                f"datasets/parameters/{model_spec.source_prefix}/parameters/"
                 f"{model_spec.parameter_dataset_id}.json"
             ),
             "product_dataset_path": (
-                f"datasets/product/{variant.product}/"
+                f"datasets/parameters/product/{variant.product}/"
                 f"{variant.product_dataset_id}.json"
             ),
             "price_dataset_path": dataset.dataset_path,
@@ -1623,11 +1623,11 @@ def _price_recipe_metadata(dataset, source: str) -> dict:
     ]
     roles: dict[str, str] = {}
     for value in inputs:
-        if value.startswith("datasets/product/"):
+        if value.startswith("datasets/parameters/product/"):
             role = "product"
-        elif value.startswith("datasets/curve/"):
+        elif value.startswith("datasets/parameters/curve/"):
             role = "curve"
-        elif value.startswith("datasets/model/"):
+        elif value.startswith("datasets/parameters/model/"):
             role = "model"
         else:
             raise ValueError(f"Unknown dataset input role: {value}")
@@ -2217,7 +2217,7 @@ def apply_product_shard_inputs(output_root: Path) -> None:
             continue
         source = generator.read_text()
         inputs = sorted(set(re.findall(
-            r"datasets/product/[a-z0-9_/]+\.json", source
+            r"datasets/parameters/product/[a-z0-9_/]+\.json", source
         )))
         if len(inputs) != 1:
             raise ValueError(

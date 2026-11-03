@@ -8,8 +8,8 @@ int main() {
     using namespace ai_factory::workbench;
     namespace rates = model::fixed_income::${model};
     const datasets::ZeroCouponBondUpAndOutRecipe recipe{
-        "datasets/model/fixed_income/${model}/parameters/${model}_01.json",
-        "datasets/product/zero_coupon_bond_up_and_out/zero_coupon_bond_up_and_outs_01.json",
+        "datasets/parameters/model/fixed_income/${model}/parameters/${model}_01.json",
+        "datasets/parameters/product/zero_coupon_bond_up_and_out/zero_coupon_bond_up_and_outs_01.json",
         "${price_dataset_path}", "${catalog_path}", "${url}",
         ${dynamics_seed}ULL, ${launch_identity}, PriceConstruction::${construction},
         1'048'576U, 1U, {}, "${model_transition_method}",

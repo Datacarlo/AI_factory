@@ -31,8 +31,8 @@ inline datasets::ModelSampleRecipe recipe(
     return {
         id,
         "$display",
-        "datasets/model/$source_folder/samples/" + id + ".json",
-        "catalog/model/$source_folder/samples/" + id + "/generation.yaml",
+        "datasets/samples/$source_folder/" + id + ".json",
+        "catalog/samples/$source_folder/" + id + "/generation.yaml",
         parameter_count,
         paths_per_parameter,
         63U,

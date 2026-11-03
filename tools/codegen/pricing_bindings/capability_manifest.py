@@ -227,11 +227,8 @@ class DatasetSpec:
     def dataset_path(self) -> str:
         recipe = PurePosixPath(self.generator_path)
         relative = recipe.relative_to("catalog")
-        return str(
-            PurePosixPath("datasets")
-            / relative.parent.parent
-            / f"{self.dataset_id}.json"
-        )
+        folder = relative.parent.parent
+        return str(PurePosixPath("datasets") / folder / f"{self.dataset_id}.json")
 
     @property
     def url(self) -> str:
@@ -883,7 +880,7 @@ def _model_parameter_dataset_specs() -> tuple[DatasetSpec, ...]:
             dataset_kind="model_parameters",
             asset_class=model.asset_class,
             generator_path=(
-                f"catalog/{model.source_prefix}/parameters/"
+                f"catalog/parameters/{model.source_prefix}/parameters/"
                 f"{model.parameter_dataset_id}/generator.cpp"
             ),
             owner="hand_written",
@@ -905,7 +902,7 @@ def _product_parameter_dataset_specs() -> tuple[DatasetSpec, ...]:
             dataset_kind="product_parameters",
             asset_class=product.asset_class,
             generator_path=(
-                f"catalog/{product.source_prefix}/{dataset_id}/generator.cpp"
+                f"catalog/parameters/{product.source_prefix}/{dataset_id}/generator.cpp"
             ),
             owner="hand_written",
             status="available",
@@ -927,7 +924,7 @@ def _curve_dataset_specs() -> tuple[DatasetSpec, ...]:
             dataset_kind="curve_parameters",
             asset_class="fixed_income",
             generator_path=(
-                f"catalog/{curve.source_prefix}/"
+                f"catalog/parameters/{curve.source_prefix}/"
                 f"{curve.parameter_dataset_id}/generator.cpp"
             ),
             owner="hand_written",
@@ -959,7 +956,7 @@ def _ordinary_equity_price_dataset_specs() -> tuple[DatasetSpec, ...]:
                 dataset_kind="prices",
                 asset_class="equity",
                 generator_path=(
-                    f"catalog/{model_spec.source_prefix}/prices/"
+                    f"catalog/single_asset/{model_spec.source_prefix.removeprefix('model/')}/prices/"
                     f"{variant.name}/{dataset_id}/generator.cpp"
                 ),
                 owner="generated",
@@ -991,7 +988,7 @@ def _american_price_dataset_specs() -> tuple[DatasetSpec, ...]:
             dataset_kind="prices",
             asset_class="equity",
             generator_path=(
-                f"catalog/{MODEL_BY_NAME[model.model].source_prefix}/prices/"
+                f"catalog/single_asset/{MODEL_BY_NAME[model.model].source_prefix.removeprefix('model/')}/prices/"
                 f"american_{side}s/"
                 f"{model.model}_01__american_{side}s_01__01/generator.cpp"
             ),
@@ -1034,7 +1031,7 @@ def _fixed_income_price_dataset_specs() -> tuple[DatasetSpec, ...]:
                 dataset_kind="prices",
                 asset_class="fixed_income",
                 generator_path=(
-                    f"catalog/{capability.source_prefix}/prices/{curve_path}"
+                    f"catalog/single_asset/{capability.source_prefix.removeprefix('model/')}/prices/{curve_path}"
                     f"{variant}/{dataset_id}/generator.cpp"
                 ),
                 owner="generated",
@@ -1066,7 +1063,7 @@ def _sample_dataset_specs() -> tuple[DatasetSpec, ...]:
             dataset_kind="samples",
             asset_class=model.asset_class,
             generator_path=(
-                f"catalog/{model.source_prefix}/samples/"
+                f"catalog/samples/{model.source_prefix.removeprefix('model/')}/"
                 f"samples_{recipe_index:02d}/generator.cpp"
             ),
             owner="generated",
@@ -1120,6 +1117,17 @@ def _uses_philox(dataset: DatasetSpec) -> bool:
     )
 
 
+def _rng_sort_identity(dataset: DatasetSpec) -> str:
+    """Frozen RNG ordering identity, independent of the catalogue storage layout."""
+    path = PurePosixPath(dataset.generator_path)
+    if dataset.dataset_kind == "samples":
+        return str(PurePosixPath("catalog") / dataset.source_prefix / "samples"
+                   / path.parent.name / path.name)
+    suffix = path.relative_to(PurePosixPath("catalog/single_asset")
+                              / dataset.source_prefix.removeprefix("model/"))
+    return str(PurePosixPath("catalog") / dataset.source_prefix / suffix)
+
+
 def _rng_streams(dataset: DatasetSpec) -> tuple[str, ...]:
     if dataset.dataset_kind == "samples":
         return ("parameters", "schedule", "dynamics")
@@ -1147,7 +1155,7 @@ RNG_DOMAIN_SPECS = tuple(
                     int(dataset.engine == "fixed_income_monte_carlo"),
                     (4 if dataset.model == "ornstein_uhlenbeck" else 5)
                     if dataset.product == "zero_coupon_bond_up_and_out" else 0),
-                dataset.generator_path,
+                _rng_sort_identity(dataset),
             ),
         )
     )
@@ -1225,7 +1233,12 @@ validate_rng_domain_specs(RNG_DOMAIN_SPECS)
 
 def validate_dataset_spec(dataset: DatasetSpec) -> None:
     """Reject path, owner and renderer metadata that diverge from one owner."""
-    expected_prefix = f"catalog/{dataset.source_prefix}/"
+    category = ("samples" if dataset.dataset_kind == "samples" else
+                "single_asset" if dataset.dataset_kind in {"prices", "price_delta", "price_deltas", "price_gradients"}
+                else "parameters")
+    source = (dataset.source_prefix.removeprefix("model/")
+              if category != "parameters" else dataset.source_prefix)
+    expected_prefix = f"catalog/{category}/{source}/"
     if not dataset.generator_path.startswith(expected_prefix):
         raise ValueError(
             f"recipe path does not inherit source prefix "

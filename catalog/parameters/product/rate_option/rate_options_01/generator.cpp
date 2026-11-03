@@ -1,0 +1,100 @@
+// Generate normalized rate_options with central strikes and sparse tail cases.
+#include "tools/datasets/parameter_dataset.hpp"
+#include "datasets/validation.hpp"
+
+#include <filesystem>
+#include <string>
+#include <utility>
+
+// Generate the forward rate option dataset and catalog entry.
+int main() {
+    using namespace ai_factory::workbench::datasets;
+
+    const std::filesystem::path dataset_path =
+        "datasets/parameters/product/rate_option/rate_options_01.json";
+    const std::filesystem::path catalog_path =
+        "catalog/parameters/product/rate_option/rate_options_01/generation.yaml";
+    const std::string url =
+        "https://datasets.ai-factory.example/v1/product/rate_options/"
+        "rate_options_01.json";
+
+    std::vector<float> core_strikes;
+    core_strikes.reserve(25U);
+    for (const float coordinate : linear_grid(-1.0f, 1.0f, 25U)) {
+        const float cube = coordinate * coordinate * coordinate;
+        core_strikes.push_back(
+            0.010f * cube
+        );
+    }
+    const auto regime = [](const std::vector<std::uint32_t>& fixing_times,
+                           const std::vector<std::uint32_t>& accrual_periods,
+                           const std::vector<float>& strikes,
+                           const std::string& description) {
+        GeneratedRows generated;
+        for (const std::uint32_t fixing_time_days : fixing_times) {
+            for (const std::uint32_t accrual_period_days : accrual_periods) {
+                for (const float strike : strikes) {
+                    generated.rows.push_back({
+                    {"notional", 1.0f},
+                    {"strike", strike},
+                    {"fixing_time", fixing_time_days},
+                    {
+                        "payment_time",
+                        fixing_time_days + accrual_period_days
+                    },
+                    {"accrual_period", accrual_period_days},
+                    });
+                }
+            }
+        }
+        generated.construction = {
+            {"method", "Cartesian grid"},
+            {"rule", "Every fixing, accrual period, and strike combination."},
+            {"description", description},
+            {"fixing_times", fixing_times},
+            {"accrual_periods", accrual_periods},
+            {"strikes", strikes},
+            {"notional", 1.0},
+        };
+        return generated;
+    };
+    GeneratedRows core = regime(
+        linear_business_day_grid(63U, 1260U, 18U),
+        {63U, 126U},
+        core_strikes,
+        "Representative fixing dates and strike spreads concentrated around ATM."
+    );
+    GeneratedRows stress = regime(
+        linear_business_day_grid(21U, 2520U, 10U),
+        {21U, 252U},
+        {-0.025f, -0.0125f, 0.0f, 0.0125f, 0.025f},
+        "One-month to ten-year fixings, monthly or annual accruals, and moderate rate-strike tails."
+    );
+    const GeneratedRows rows = core_stress_rows(
+        std::move(core), std::move(stress)
+    );
+
+    write_fixed_income_product_dataset(
+        "rate_options_01",
+        "Forward Rate Options",
+        dataset_path,
+        catalog_path,
+        url,
+        {
+            {"notional", "Normalized contract notional."},
+            {"strike", "Annualized decimal spread from the initial simple forward rate; 0.005 means +50 bp."},
+            {"fixing_time", "Forward-rate fixing time T1 in business days."},
+            {"payment_time", "Cashflow payment time T2 in business days."},
+            {"accrual_period", "Business days in the interval [T1, T2]."},
+        },
+        {
+            {"expression", "N * delta * max(side * (L(T1; T1, T2) - K), 0), side = +1 caplet / -1 floorlet"},
+            {"payment_time", "T2"},
+            {"normalization", "N = 1"},
+        },
+        rows,
+        { {"strike", { {"mode", "additive_to_initial_simple_forward_rate"}, {"unit", "annualized_decimal_rate"}, {"effective_level", "strike = initial_simple_forward_rate + strike_spread"} } },
+          {"reference_policy", "Resolved at the unbumped model and initial curve; absolute contract levels stay fixed for model and curve bumps."} }
+);
+    validate_product_dataset_file(dataset_path);
+}

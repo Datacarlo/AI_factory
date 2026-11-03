@@ -42,8 +42,8 @@ inline datasets::ModelSampleRecipe recipe(
     return {
         id,
         "Rough Stein-Stein",
-        "datasets/model/equity/rough/rough_stein_stein/samples/" + id + ".json",
-        "catalog/model/equity/rough/rough_stein_stein/samples/" + id + "/generation.yaml",
+        "datasets/samples/equity/rough/rough_stein_stein/" + id + ".json",
+        "catalog/samples/equity/rough/rough_stein_stein/" + id + "/generation.yaml",
         parameter_count,
         paths_per_parameter,
         63U,

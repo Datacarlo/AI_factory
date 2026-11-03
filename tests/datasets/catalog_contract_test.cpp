@@ -192,7 +192,7 @@ int main() {
             "materialized generation metadata is missing");
 
     const std::string heston = read_text(
-        "catalog/model/equity/markovian/heston/parameters/heston_01/recipe.yaml"
+        "catalog/parameters/model/equity/markovian/heston/parameters/heston_01/recipe.yaml"
     );
     require(heston.find("core_share: 0.9") != std::string::npos
                 && heston.find("stress_share: 0.1") != std::string::npos,

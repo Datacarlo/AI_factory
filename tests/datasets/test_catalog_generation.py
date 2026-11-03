@@ -18,9 +18,9 @@ class GenerationTests(unittest.TestCase):
         self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name)
         self.run = self.root / "run"
-        base = "catalog/model/equity/markovian/test/prices/calls/test"
+        base = "catalog/single_asset/equity/markovian/test/prices/calls/test"
         self.job = {"target": "generate_test", "kind": "prices", "rows": 2, "inputs": [],
-                    "dataset": "datasets/model/equity/markovian/test/prices/calls/test.json",
+                    "dataset": "datasets/single_asset/equity/markovian/test/prices/calls/test.json",
                     "url": "https://datasets.ai-factory.example/v1/model/equity/markovian/test/prices/calls/test.json",
                     "generator": f"{base}/generator.cpp",
                     "recipe": f"{base}/recipe.yaml",

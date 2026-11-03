@@ -39,8 +39,8 @@ inline datasets::ModelSampleRecipe recipe(
     return {
         id,
         "Ornstein-Uhlenbeck",
-        "datasets/model/fixed_income/ornstein_uhlenbeck/samples/" + id + ".json",
-        "catalog/model/fixed_income/ornstein_uhlenbeck/samples/" + id + "/generation.yaml",
+        "datasets/samples/fixed_income/ornstein_uhlenbeck/" + id + ".json",
+        "catalog/samples/fixed_income/ornstein_uhlenbeck/" + id + "/generation.yaml",
         parameter_count,
         paths_per_parameter,
         63U,

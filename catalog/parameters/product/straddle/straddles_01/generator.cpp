@@ -1,0 +1,47 @@
+// Generate 20 maturity-dependent exponential strikes at each of 50 maturities.
+#include "tools/datasets/parameter_dataset.hpp"
+#include "datasets/validation.hpp"
+
+#include <filesystem>
+#include <string>
+
+// Generate the straddle dataset and catalog entry.
+int main() {
+    using namespace ai_factory::workbench::datasets;
+
+    const std::filesystem::path dataset_path =
+        "datasets/parameters/product/straddle/straddles_01.json";
+    const std::filesystem::path catalog_path =
+        "catalog/parameters/product/straddle/straddles_01/generation.yaml";
+    const std::string url =
+        "https://datasets.ai-factory.example/v1/product/straddles/"
+        "straddles_01.json";
+
+    GeneratedRows rows = core_stress_exponential_strike_grid(
+        linear_business_day_grid(21U, 756U, 45U),
+        20U,
+        0.2f,
+        linear_business_day_grid(5U, 1260U, 10U),
+        10U,
+        0.2f
+    );
+
+    write_spot_relative_equity_product_dataset(
+        "straddles_01",
+        "Straddles",
+        dataset_path,
+        catalog_path,
+        url,
+        {
+            {"strike", "Common call and put strike in normalized spot units."},
+            {"maturity", "Maturity in business days."},
+        },
+        {
+            {"expression", "abs(S_T - K)"},
+            {"decomposition", "European call plus European put."},
+            {"payoff_homogeneity", "Scaling the entire spot path and all strike/barrier levels by c scales the payoff by c."},
+        },
+        rows
+    );
+    validate_product_dataset_file(dataset_path);
+}

@@ -11,7 +11,7 @@ class GenerationProgressTest(unittest.TestCase):
             "kind": "samples",
             "state": "running",
             "rows": 3_000_000,
-            "dataset": "datasets/model/x/samples/samples_01.json",
+            "dataset": "datasets/samples/x/samples_01.json",
         }
         waiting = format_progress(job, {}, 100.0)
         self.assertIn("en attente de la phase d'écriture", waiting)

@@ -12,7 +12,7 @@ int main() {
         "/tmp/ai_factory_artifact_io_stage_test";
     for (const std::string prefix : {"equity/rough/rough_bergomi", "fixed_income/hull_white"}) {
         const auto metadata = price_validation_metadata(
-            "datasets/model/" + prefix + "/prices/variant/example.json");
+            "datasets/single_asset/" + prefix + "/prices/variant/example.json");
         if (metadata != nlohmann::ordered_json{
                 {"status", "pending"}, {"verified", false},
                 {"dataset", "validation/datasets/price/" + prefix + "/variant/example.json"}}) {
