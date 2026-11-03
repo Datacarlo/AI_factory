@@ -14,11 +14,11 @@ int main() {{
 
 {time_constants}
     const pricing::EquityPriceRecipe recipe{{
-        "datasets/model/equity/markovian/{model}/parameters/{model}_01.json",
-        "datasets/product/american_option/american_options_01.json",
-        "datasets/model/equity/markovian/{model}/prices/american_{side}s/"
+        "datasets/parameters/model/equity/markovian/{model}/parameters/{model}_01.json",
+        "datasets/parameters/product/american_option/american_options_01.json",
+        "datasets/single_asset/equity/markovian/{model}/prices/american_{side}s/"
         "{database_id}.json",
-        "catalog/model/equity/markovian/{model}/prices/american_{side}s/"
+        "catalog/single_asset/equity/markovian/{model}/prices/american_{side}s/"
         "{database_id}/generation.yaml",
         "https://datasets.ai-factory.example/v2/model/equity/markovian/{model}/prices/"
         "american_{side}s/{database_id}.json",

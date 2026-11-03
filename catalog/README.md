@@ -13,3 +13,20 @@ python3 tools/datasets/generate_catalog.py --build build --kind all --catalog-on
 ```
 
 Use `--compile --execute --run-dir /path/to/new/run` for an isolated campaign. Publication is a separate `--publish` action and refuses to overwrite different existing data. For one generator, see [`tools/run_generator.py`](../tools/run_generator.py).
+
+## Layout
+
+The catalogue and downloadable collection share the same relative paths:
+
+```text
+catalog/
+  parameters/{model,product,curve,correlation}/
+  samples/{equity,fixed_income}/
+  single_asset/{equity,fixed_income}/
+  multi_asset/
+```
+
+Each dataset `datasets/<path>/<id>.json` has its generator and recipe under
+`catalog/<path>/<id>/`. A completed dataset also has its generation receipt
+there. Parameter datasets are linked from the pricing recipes that use them;
+sample recipes declare their own parameter-generation bounds.

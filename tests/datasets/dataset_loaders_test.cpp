@@ -1151,7 +1151,7 @@ int main() {
     // Price datasets may omit the curve or require it consistently per row.
     nlohmann::json price_document = {
         {"database_id", "test_price_01"},
-        {"catalog", "catalog/model/equity/markovian/test_model/prices/test_price_01"},
+        {"catalog", "catalog/single_asset/equity/markovian/test_model/prices/test_price_01"},
         {"url", "https://datasets.ai-factory.example/test_price_01.json"},
         {"row_count", 1U},
         {"time_convention", {
@@ -1165,7 +1165,7 @@ int main() {
         }},
         {"product_dataset", {
             {"id", "test_product_01"},
-            {"catalog", "catalog/product/test_product_01"},
+            {"catalog", "catalog/parameters/product/test_product_01"},
             {"url", "https://datasets.ai-factory.example/test_product_01.json"},
         }},
         {"timing", {{"wall_seconds", 1.0}, {"kernel_seconds", 0.5}}},
@@ -1179,7 +1179,7 @@ int main() {
     datasets::validate_price_dataset(price_document);
     price_document["curve_dataset"] = {
         {"id", "test_curve_01"},
-        {"catalog", "catalog/curve/test_curve_01"},
+        {"catalog", "catalog/parameters/curve/test_curve_01"},
         {"url", "https://datasets.ai-factory.example/test_curve_01.json"},
     };
     bool rejected_missing_curve_id = false;

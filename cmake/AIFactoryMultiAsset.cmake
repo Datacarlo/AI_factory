@@ -28,7 +28,7 @@ ai_factory_add_dataset_library(
     src/model/fixed_income/constant_rate/dataset.cpp
 )
 add_executable(generate_constant_rates_01 EXCLUDE_FROM_ALL
-    catalog/model/fixed_income/constant_rate/parameters/constant_rates_01/generator.cpp
+    catalog/parameters/model/fixed_income/constant_rate/parameters/constant_rates_01/generator.cpp
 )
 target_link_libraries(generate_constant_rates_01 PRIVATE
     ai_factory_parameter_dataset ai_factory_dataset_validation
@@ -47,7 +47,7 @@ foreach(core_model IN ITEMS
     get_filename_component(model_name "${core_model}" NAME)
     set(core_target generate_${model_name}_multi_core_01)
     add_executable(${core_target} EXCLUDE_FROM_ALL
-        catalog/model/${core_model}/factor_parameters/${model_name}_multi_core_01/generator.cpp)
+        catalog/parameters/model/${core_model}/factor_parameters/${model_name}_multi_core_01/generator.cpp)
     target_link_libraries(${core_target} PRIVATE
         ai_factory_parameter_dataset ai_factory_dataset_validation)
     add_dependencies(parameter_generators ${core_target})
@@ -63,21 +63,21 @@ foreach(basket_family IN ITEMS worst_of_option best_of_option basket_option)
     endif()
     set(basket_target generate_${basket_dataset})
     add_executable(${basket_target} EXCLUDE_FROM_ALL
-        catalog/product/${basket_family}/${basket_dataset}/generator.cpp)
+        catalog/parameters/product/${basket_family}/${basket_dataset}/generator.cpp)
     target_link_libraries(${basket_target} PRIVATE
         ai_factory_parameter_dataset ai_factory_dataset_validation)
     add_dependencies(parameter_generators ${basket_target})
 endforeach()
 
 add_executable(generate_basket_down_and_out_calls_multi_01 EXCLUDE_FROM_ALL
-    catalog/product/basket_down_and_out_call/basket_down_and_out_calls_multi_01/generator.cpp)
+    catalog/parameters/product/basket_down_and_out_call/basket_down_and_out_calls_multi_01/generator.cpp)
 target_link_libraries(generate_basket_down_and_out_calls_multi_01 PRIVATE
     ai_factory_parameter_dataset ai_factory_dataset_validation)
 add_dependencies(parameter_generators
     generate_basket_down_and_out_calls_multi_01)
 
 add_executable(generate_five_equity_cir_correlations_01 EXCLUDE_FROM_ALL
-    catalog/correlation/five_equity_cir_01/generator.cpp)
+    catalog/parameters/correlation/five_equity_cir_01/generator.cpp)
 target_link_libraries(generate_five_equity_cir_correlations_01 PRIVATE
     ai_factory_correlation_dataset ai_factory_artifact_io)
 add_dependencies(parameter_generators
@@ -115,6 +115,18 @@ if(EXISTS "${CMAKE_SOURCE_DIR}/catalog/multi_asset/best_of_option/five_equity_ci
     add_dependencies(price_generators generate_five_equity_cir_best_of_calls_01)
     target_include_directories(generate_five_equity_cir_best_of_calls_01 PRIVATE ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src)
     target_link_libraries(generate_five_equity_cir_best_of_calls_01 PRIVATE
+        ai_factory_equity_heston_dataset ai_factory_equity_bates_dataset
+        ai_factory_equity_sabr_dataset ai_factory_equity_quadratic_rough_heston_dataset
+        ai_factory_equity_rough_bergomi_dataset ai_factory_fixed_income_cir_dataset
+        ai_factory_product_best_of_call_dataset ai_factory_correlation_dataset
+        ai_factory_multi_asset_price_dataset ai_factory_causal_fft ai_factory_cuda_tuning)
+endif()
+if(EXISTS "${CMAKE_SOURCE_DIR}/catalog/multi_asset/best_of_option/five_equity_cir_best_of_puts_01/generator.cpp")
+    set_source_files_properties(catalog/multi_asset/best_of_option/five_equity_cir_best_of_puts_01/generator.cpp PROPERTIES LANGUAGE CUDA)
+    add_executable(generate_five_equity_cir_best_of_puts_01 EXCLUDE_FROM_ALL catalog/multi_asset/best_of_option/five_equity_cir_best_of_puts_01/generator.cpp)
+    add_dependencies(price_generators generate_five_equity_cir_best_of_puts_01)
+    target_include_directories(generate_five_equity_cir_best_of_puts_01 PRIVATE ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src)
+    target_link_libraries(generate_five_equity_cir_best_of_puts_01 PRIVATE
         ai_factory_equity_heston_dataset ai_factory_equity_bates_dataset
         ai_factory_equity_sabr_dataset ai_factory_equity_quadratic_rough_heston_dataset
         ai_factory_equity_rough_bergomi_dataset ai_factory_fixed_income_cir_dataset

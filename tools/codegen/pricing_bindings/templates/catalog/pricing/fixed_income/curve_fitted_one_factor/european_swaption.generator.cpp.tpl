@@ -15,11 +15,11 @@ int main() {
     namespace ns = curve::${curve};
 
     const std::filesystem::path model_path =
-        "datasets/model/fixed_income/${model}/parameters/${model}_01.json";
+        "datasets/parameters/model/fixed_income/${model}/parameters/${model}_01.json";
     const std::filesystem::path curve_path =
-        "datasets/curve/${curve}/${curve}_01.json";
+        "datasets/parameters/curve/${curve}/${curve}_01.json";
     const std::filesystem::path product_path =
-        "datasets/product/european_swaption/"
+        "datasets/parameters/product/european_swaption/"
         "european_swaptions_01.json";
     const auto product_dataset = product::load_european_swaptions(product_path);
     datasets::generate_regular_european_swaption_prices(
@@ -37,10 +37,10 @@ int main() {
                 plan.profile.distribution == offline::cuda_tuning::PriceWorkDistribution::block
                     ? closed_form::WorkDistribution::cooperative : closed_form::WorkDistribution::scalar);
         },
-        "datasets/model/fixed_income/${model}/prices/${curve}/"
+        "datasets/single_asset/fixed_income/${model}/prices/${curve}/"
         "${variant}/"
         "${model}_01__${curve}_01__${variant}_01__01.json",
-        "catalog/model/fixed_income/${model}/prices/${curve}/"
+        "catalog/single_asset/fixed_income/${model}/prices/${curve}/"
         "${variant}/"
         "${model}_01__${curve}_01__${variant}_01__01/"
         "generation.yaml",

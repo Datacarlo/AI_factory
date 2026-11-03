@@ -33,5 +33,27 @@ int main() {
         || receipt.find("row_count: 1") == std::string::npos) {
         throw std::runtime_error("parameter generation receipt assembly failed");
     }
+    const GeneratedRows heston{{{{"spot", 1.0f}, {"risk_free_rate", 0.02f},
+        {"dividend_yield", 0.01f}, {"initial_variance", 0.04f}, {"kappa", 1.5f},
+        {"theta", 0.04f}, {"gamma", 0.3f}, {"rho", -0.7f}}}, {{"method", "test"}}};
+    const auto source = directory / "heston.json";
+    write_model_dataset("heston_test", "Heston", source,
+        directory / "source/generation.yaml", "https://example.test/heston.json",
+        {}, {}, heston);
+    const auto factor = directory / "factors.json";
+    write_core_factorized_model_dataset(source, "factors_test", factor,
+        directory / "factor/generation.yaml", "https://example.test/factors.json",
+        1U, 1U, 42U, std::nullopt);
+    const auto factors = read_json_file(factor);
+    if (factors.at("source_model_dataset") != "heston_test"
+        || factors.at("models").at(0).at("parameters").contains("rho")
+        || factors.at("models").at(0).at("parameters").contains("risk_free_rate")) {
+        throw std::runtime_error("Factor JSON must reference the source ID, not its path");
+    }
+    std::ifstream factor_recipe(directory / "factor/recipe.yaml");
+    const std::string factor_yaml{std::istreambuf_iterator<char>(factor_recipe), {}};
+    if (factor_yaml.find(source.generic_string()) == std::string::npos) {
+        throw std::runtime_error("Factor recipe must retain the actual input path");
+    }
     std::filesystem::remove_all(directory);
 }

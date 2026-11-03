@@ -70,7 +70,7 @@ void write_parameter_dataset(
     }
     if (metadata.contains("source_model_dataset")) {
         recipe["inputs"] = {
-            {"source_model", metadata.at("source_model_dataset")}
+            {"source_model", generated.construction.at("source_model_dataset")}
         };
     }
     if (metadata.contains("time_convention")) {
@@ -155,7 +155,7 @@ void write_factorized_model_dataset(
         {{"source_model_dataset", source_dataset_path.generic_string()}},
         generated,
         {{"parameterization", "factorized"},
-         {"source_model_dataset", source_dataset_path.generic_string()}}
+         {"source_model_dataset", source.at("database_id")}}
     );
     validate_model_dataset_file(dataset_path);
 }
@@ -220,7 +220,7 @@ void write_core_factorized_model_dataset(
         {{"source_model_dataset", source_dataset_path.generic_string()}},
         generated,
         {{"parameterization", "factorized"},
-         {"source_model_dataset", source_dataset_path.generic_string()}}
+         {"source_model_dataset", source.at("database_id")}}
     );
     validate_model_dataset_file(dataset_path);
 }

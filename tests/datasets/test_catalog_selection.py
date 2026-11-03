@@ -27,8 +27,8 @@ def spec(
             f"{family}/{name}/samples/samples_01/generator.cpp"
         ),
         construction=construction,
-        dataset_path=f"datasets/model/equity/{family}/{name}/samples/samples_01.json",
-        generation_yaml_path=f"catalog/model/equity/{family}/{name}/samples/samples_01/generation.yaml",
+        dataset_path=f"datasets/samples/equity/{family}/{name}/samples_01.json",
+        generation_yaml_path=f"catalog/samples/equity/{family}/{name}/samples_01/generation.yaml",
     )
 
 

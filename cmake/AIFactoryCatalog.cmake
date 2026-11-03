@@ -94,9 +94,9 @@ endfunction()
 # Register one CUDA price generator with shared build settings.
 function(add_price_generator target source)
     if(source MATCHES
-        "(catalog|work/catalog)/model/equity/rough/(rough_heston|quadratic_rough_heston)/prices/"
+        "(catalog|work/catalog)/single_asset/equity/rough/(rough_heston|quadratic_rough_heston)/prices/"
         OR source MATCHES
-        "(catalog|work/catalog)/model/equity/rough/[^/]+/price_gradients/")
+        "(catalog|work/catalog)/single_asset/equity/rough/[^/]+/price_gradients/")
         # Rough preparation and schedule policies include device definitions.
         # Their generated entry points keep .cpp names but need nvcc.
         set_source_files_properties(${source} PROPERTIES LANGUAGE CUDA)
@@ -104,7 +104,7 @@ function(add_price_generator target source)
     add_executable(${target} EXCLUDE_FROM_ALL ${source})
     target_include_directories(${target} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
     if(source MATCHES
-        "(catalog|work/catalog)/model/equity/rough/[^/]+/price_gradients/"
+        "(catalog|work/catalog)/single_asset/equity/rough/[^/]+/price_gradients/"
         AND AI_FACTORY_MATHDX_ROOT)
         if(TARGET ai_factory_cufftdx)
             target_link_libraries(${target} PRIVATE ai_factory_cufftdx)
@@ -144,7 +144,7 @@ endfunction()
 # Register one model-sample generator against its thin CUDA model binding.
 function(add_sample_generator target source)
     if(source MATCHES
-        "(catalog|work/catalog)/model/equity/rough/(rough_heston|quadratic_rough_heston)/samples/")
+        "(catalog|work/catalog)/samples/equity/rough/(rough_heston|quadratic_rough_heston)/")
         # Host N-factor preparation includes CUDA-decorated dynamics types.
         set_source_files_properties(${source} PROPERTIES LANGUAGE CUDA)
     endif()
@@ -185,10 +185,10 @@ function(ai_factory_catalog_generator_target output source)
         endforeach()
         string(APPEND target "_${version}")
     elseif(source MATCHES
-        "(catalog|work/catalog)/model/equity/(markovian|rough)/([^/]+)/samples/")
+        "(catalog|work/catalog)/samples/equity/(markovian|rough)/([^/]+)/")
         set(target "generate_${CMAKE_MATCH_3}_${recipe_id}")
     elseif(source MATCHES
-        "(catalog|work/catalog)/model/fixed_income/([^/]+)/samples/")
+        "(catalog|work/catalog)/samples/fixed_income/([^/]+)/")
         set(target "generate_${CMAKE_MATCH_2}_${recipe_id}")
     else()
         set(target "generate_${recipe_id}")

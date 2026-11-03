@@ -1,0 +1,34 @@
+// Generated sabr range_accrual selected-gradient recipe.
+#include "model/equity/markovian/sabr/product/range_accrual_price_gradients.cuh"
+#include "model/equity/markovian/sabr/dataset.hpp"
+#include "product/range_accrual/dataset.hpp"
+#include "tools/pricing/price_gradients/generation.cuh"
+
+int main() {
+    using namespace ai_factory::workbench;
+    namespace pg = price_gradients;
+    try {
+        datasets::price_gradients::Recipe recipe{
+            "datasets/parameters/model/equity/markovian/sabr/parameters/sabr_01.json", "datasets/parameters/product/range_accrual/range_accruals_01.json", "datasets/single_asset/equity/markovian/sabr/price_gradients/range_accruals/sabr_01__range_accruals_01__01_price_gradient.json", "catalog/single_asset/equity/markovian/sabr/price_gradients/range_accruals/sabr_01__range_accruals_01__01_price_gradient/generation.yaml", "catalog/single_asset/equity/markovian/sabr/prices/range_accruals/sabr_01__range_accruals_01__01/recipe.yaml",
+            PriceConstruction::Aligned, {{
+        {"model.initial_volatility", {0.005, pg::BumpScale::relative}},
+        {"model.rho", {0.002, pg::BumpScale::absolute}},
+        {"model.beta", {0.002, pg::BumpScale::absolute}},
+        {"model.risk_free_rate", {0.0005, pg::BumpScale::absolute}},
+        {"model.dividend_yield", {0.0005, pg::BumpScale::absolute}},
+        {"model.volatility_of_volatility", {0.005, pg::BumpScale::relative}},
+        {"product.lower_barrier", {0.005, pg::BumpScale::relative}},
+        {"product.upper_barrier", {0.005, pg::BumpScale::relative}},
+        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
+            }}, {1.0f/504.0f, 2U}, false};
+        recipe.reconstructible_sensitivities = {{"product.coupon_rate", "(price - exp(-model.risk_free_rate * product.maturity / 252)) / product.coupon_rate", "standard_error / product.coupon_rate"}};
+        const auto models = model::equity::sabr::load_models(recipe.model_input);
+        const auto products = product::load_range_accruals(recipe.product_input);
+        return offline::pricing::price_gradients::execute_dataset<true>(recipe,
+            {offline::cuda_tuning::PricingFamily::equity_step_mc, "sabr", "range_accrual", ""}, 11668827789863157760ULL,
+            models, products, model::equity::sabr::prepare_sabr_range_accrual_price_gradients,
+            model::equity::sabr::launch_sabr_range_accrual_price_gradients_cuda,
+            offline::cuda_tuning::kProductionPathsPerPrice,
+            model::equity::sabr::prepare_range_accrual_price_gradient_stencils_cuda);
+    } catch (const std::exception& error) { std::cerr << error.what() << '\n'; return 1; }
+}

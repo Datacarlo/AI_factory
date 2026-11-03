@@ -40,8 +40,8 @@ inline datasets::ModelSampleRecipe recipe(
     return {
         id,
         "CIR",
-        "datasets/model/fixed_income/cir/samples/" + id + ".json",
-        "catalog/model/fixed_income/cir/samples/" + id + "/generation.yaml",
+        "datasets/samples/fixed_income/cir/" + id + ".json",
+        "catalog/samples/fixed_income/cir/" + id + "/generation.yaml",
         parameter_count,
         paths_per_parameter,
         63U,

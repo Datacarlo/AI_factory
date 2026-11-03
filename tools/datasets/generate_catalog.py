@@ -576,7 +576,8 @@ def describe_job(inputs: Path, binaries: Path, job: dict) -> dict:
                     }):
                 raise ValueError(f"Invalid sampled-curve construction: {job['target']}")
             curve_positions = [i for i, name in enumerate(job["inputs"])
-                               if Path(name).parts[:2] == ("datasets", "curve")]
+                               if Path(name).parts[:3] == ("datasets", "parameters", "curve")
+                               or Path(name).parts[:2] == ("datasets", "curve")]
             if len(curve_positions) != 1:
                 raise ValueError(f"Expected one curve input: {job['target']}")
             rows = math.prod(count for i, count in enumerate(input_counts)
@@ -627,6 +628,8 @@ def describe_job(inputs: Path, binaries: Path, job: dict) -> dict:
 def validate_model_parameter_variation(path: Path, logical_path: str) -> None:
     """Reject stale model bases with an unintended constant parameter."""
     parts = Path(logical_path).parts
+    if parts[:3] == ("datasets", "parameters", "model"):
+        parts = (parts[0], *parts[2:])
     if (len(parts) < 6 or parts[:2] != ("datasets", "model")
             or parts[-2] not in {"parameters", "factor_parameters"}
             or path.suffix != ".json"):

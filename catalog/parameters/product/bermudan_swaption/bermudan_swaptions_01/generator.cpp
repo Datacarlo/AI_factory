@@ -1,0 +1,171 @@
+// Generate regular co-terminal physical-settlement Bermudan swaptions.
+#include "tools/datasets/parameter_dataset.hpp"
+#include "datasets/validation.hpp"
+
+#include <cstdint>
+#include <filesystem>
+#include <string>
+#include <utility>
+#include <vector>
+
+namespace {
+
+using ai_factory::workbench::datasets::GeneratedRows;
+
+struct ScheduleSpec {
+    std::uint32_t payment_interval_days;
+    std::uint32_t payment_count;
+    std::uint32_t exercise_count;
+    float accrual_fraction;
+};
+
+GeneratedRows regular_regime(
+    const std::vector<std::uint32_t>& first_exercise_times,
+    const std::vector<ScheduleSpec>& schedules,
+    const std::vector<float>& strikes,
+    const std::string& description
+) {
+    GeneratedRows generated;
+    for (const std::uint32_t first_exercise_time_days : first_exercise_times) {
+        for (const ScheduleSpec& schedule : schedules) {
+            for (const float strike : strikes) {
+                generated.rows.push_back({
+                    {"notional", 1.0f},
+                    {"strike", strike},
+                    {"accrual_fraction", schedule.accrual_fraction},
+                    {"first_exercise_time", first_exercise_time_days},
+                    {"payment_interval", schedule.payment_interval_days},
+                    {"payment_count", schedule.payment_count},
+                    {"exercise_count", schedule.exercise_count},
+                });
+            }
+        }
+    }
+
+    nlohmann::ordered_json schedule_rows = nlohmann::ordered_json::array();
+    for (const ScheduleSpec& schedule : schedules) {
+        schedule_rows.push_back({
+            {"payment_interval", schedule.payment_interval_days},
+            {"payment_count", schedule.payment_count},
+            {"exercise_count", schedule.exercise_count},
+            {"accrual_fraction", schedule.accrual_fraction},
+        });
+    }
+    generated.construction = {
+        {"method", "Cartesian grid"},
+        {
+            "rule",
+            "Every first exercise time, co-terminal regular schedule, and "
+            "strike combination."
+        },
+        {"description", description},
+        {"first_exercise_times", first_exercise_times},
+        {"schedules", schedule_rows},
+        {"strikes", strikes},
+        {"notional", 1.0},
+    };
+    return generated;
+}
+
+}  // namespace
+
+int main() {
+    using namespace ai_factory::workbench::datasets;
+
+    const std::filesystem::path dataset_path =
+        "datasets/parameters/product/bermudan_swaption/"
+        "bermudan_swaptions_01.json";
+    const std::filesystem::path catalog_path =
+        "catalog/parameters/product/bermudan_swaption/"
+        "bermudan_swaptions_01/generation.yaml";
+    const std::string url =
+        "https://datasets.ai-factory.example/v1/product/"
+        "bermudan_swaptions/bermudan_swaptions_01.json";
+
+    const GeneratedRows core = regular_regime(
+        {
+            126U, 252U, 504U, 756U, 1260U,
+            1764U, 2016U, 2520U, 3150U, 3780U,
+        },
+        {
+            {252U, 2U, 2U, 1.0f},
+            {252U, 3U, 3U, 1.0f},
+            {252U, 5U, 5U, 1.0f},
+            {252U, 7U, 5U, 1.0f},
+            {252U, 10U, 5U, 1.0f},
+            {252U, 10U, 10U, 1.0f},
+            {126U, 4U, 4U, 0.5f},
+            {126U, 10U, 6U, 0.5f},
+            {126U, 20U, 10U, 0.5f},
+            {126U, 40U, 10U, 0.5f},
+        },
+        {
+            -0.006f, -0.004f, -0.002f, -0.001f, 0.0f,
+            0.001f, 0.002f, 0.004f, 0.006f,
+        },
+        "Six-month to fifteen-year first exercise dates; two-to-twenty-year "
+        "co-terminal swaps; annual or semiannual fixed legs; and two-to-ten "
+        "exercise opportunities with strike spreads around ATM."
+    );
+    const GeneratedRows stress = regular_regime(
+        {21U, 63U, 252U, 2520U, 5040U},
+        {
+            {21U, 12U, 4U, 1.0f / 12.0f},
+            {63U, 20U, 6U, 0.25f},
+            {126U, 40U, 8U, 0.5f},
+            {252U, 20U, 10U, 1.0f},
+            {252U, 30U, 10U, 1.0f},
+        },
+        {-0.015f, -0.008f, 0.008f, 0.015f},
+        "One-month to twenty-year first exercises, monthly through annual "
+        "fixed legs, one-to-thirty-year co-terminal swaps, "
+        "and moderate ATM spread tails."
+    );
+    const GeneratedRows rows = core_stress_rows(core, stress);
+
+    write_fixed_income_product_dataset(
+        "bermudan_swaptions_01",
+        "Bermudan Swaptions",
+        dataset_path,
+        catalog_path,
+        url,
+        {
+            {"notional", "Contract notional N."},
+            {"strike", "Annualized decimal spread from the initial par swap rate; 0.005 means +50 bp."},
+            {
+                "accrual_fraction",
+                "Constant contractual coupon year fraction delta."
+            },
+            {
+                "first_exercise_time",
+                "First exercise and initial swap-start date in business days."
+            },
+            {
+                "payment_interval",
+                "Business days between payments and exercise opportunities."
+            },
+            {"payment_count", "Payments from first exercise to final maturity."},
+            {"exercise_count", "Co-terminal exercise opportunities."},
+        },
+        {
+            {
+                "expression",
+                "max over exercise policy of N * max(omega * (1 - "
+                "P(t,T_N) - K * sum_{i>j} delta * P(t,T_i)), 0), "
+                "omega = +1 payer / -1 receiver"
+            },
+            {
+                "exercise_dates",
+                "first_exercise_time + j * payment_interval, "
+                "j = 0,...,exercise_count-1"
+            },
+            {"underlying", "At exercise j, the remaining co-terminal swap."},
+            {"settlement", "physical"},
+            {"normalization", "N = 1"},
+        },
+        rows,
+        { {"strike", { {"mode", "additive_to_initial_first_exercise_par_swap_rate"}, {"unit", "annualized_decimal_rate"}, {"effective_level", "strike = initial_first_exercise_par_swap_rate + strike_spread"} } },
+          {"reference_policy", "Resolved at the unbumped model and initial curve; absolute contract levels stay fixed for model and curve bumps."} }
+);
+    validate_product_dataset_file(dataset_path);
+}

@@ -2,28 +2,28 @@ schema_version: 4
 status: complete
 inputs:
   model_0:
-    path: datasets/model/equity/markovian/heston/factor_parameters/heston_multi_core_01.json
-    sha256: edd825aca2994be4b8b54700931e007e56f6e0462b5cce14d01609f3e9edea77
+    path: datasets/parameters/model/equity/markovian/heston/factor_parameters/heston_multi_core_01.json
+    sha256: b02774b949ea2a5dd687c0ac339e34cdd75ab3ea40dc86789ea469880218d219
   model_1:
-    path: datasets/model/equity/markovian/bates/factor_parameters/bates_multi_core_01.json
-    sha256: 8b13cbd4720037a8ae60d4d9ad906711a0aaf3be9e45b5644a424d85b7f00f5c
+    path: datasets/parameters/model/equity/markovian/bates/factor_parameters/bates_multi_core_01.json
+    sha256: 8b9c90c707dedfe3fedb6a99868a731bcef2b8ef51a776f4f8d008c1e906e148
   model_2:
-    path: datasets/model/equity/markovian/sabr/factor_parameters/sabr_multi_core_01.json
-    sha256: f67240649ae11ea32817cdd770c5b145f70c36280eab7c674afefeb85b163ba1
+    path: datasets/parameters/model/equity/markovian/sabr/factor_parameters/sabr_multi_core_01.json
+    sha256: 9a0751e5b47d179add6a35003e0587a621ed34ac1be010b53c57b5de07c19035
   model_3:
-    path: datasets/model/equity/rough/quadratic_rough_heston/factor_parameters/quadratic_rough_heston_multi_core_01.json
-    sha256: c7e8ec6711f62981c572d55102524696cb1f87eb4b7728f88694f1ca09cf2a60
+    path: datasets/parameters/model/equity/rough/quadratic_rough_heston/factor_parameters/quadratic_rough_heston_multi_core_01.json
+    sha256: 6c3605a72b7b2d7483f09d8942f0ba21ec7d06f9fa4b43a0fc28035f7c0ae307
   model_4:
-    path: datasets/model/equity/rough/rough_bergomi/factor_parameters/rough_bergomi_multi_core_01.json
-    sha256: 926fb26a6fc4a4d8fb804738d351118b58a0281a761b3b8d0237bd0cbb5d466c
+    path: datasets/parameters/model/equity/rough/rough_bergomi/factor_parameters/rough_bergomi_multi_core_01.json
+    sha256: 033cffa28ea3942f3912c4661778cde68c39a880d89cf44a17cb886a2a65c9f8
   rate_model:
-    path: datasets/model/fixed_income/cir/factor_parameters/cir_multi_core_01.json
-    sha256: 8add2dbb097d07c5b84462c06cb968ef352868578764a06ea23d93cfe53511f9
+    path: datasets/parameters/model/fixed_income/cir/factor_parameters/cir_multi_core_01.json
+    sha256: f9b4c3d82fd0108676329f0d8d203dc2e9b0f96d5ec04002b4d9bef9b07d366b
   product:
-    path: datasets/product/worst_of_option/worst_of_options_multi_01.json
+    path: datasets/parameters/product/worst_of_option/worst_of_options_multi_01.json
     sha256: 61e375b54d2c4f8c858354b6e4f453550db14185a53d5aa1100b2e13f36398be
   correlation:
-    path: datasets/correlation/five_equity_cir_01.json
+    path: datasets/parameters/correlation/five_equity_cir_01.json
     sha256: f9fdeca69342c307b429037af10d65cbf0847ec2dd04c843861454244f9d603e
 output:
   path: datasets/multi_asset/worst_of_option/five_equity_cir_worst_of_puts_01.json

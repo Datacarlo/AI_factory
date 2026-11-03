@@ -1161,33 +1161,33 @@ def render_recipes(
             else None
         )
         seed = resolve_rng_domain(spec).seed("dynamics") if stochastic else 0
-        model_input = f"datasets/{model.source_prefix}/parameters/{model.parameter_dataset_id}.json"
+        model_input = f"datasets/parameters/{model.source_prefix}/parameters/{model.parameter_dataset_id}.json"
         if spec.asset_class == "fixed_income":
             fixed_income_product_inputs = {
                 "bermudan_swaption": (
-                    "datasets/product/bermudan_swaption/"
+                    "datasets/parameters/product/bermudan_swaption/"
                     "bermudan_swaptions_01.json"
                 ),
                 "european_swaption": (
-                    "datasets/product/european_swaption/"
+                    "datasets/parameters/product/european_swaption/"
                     "european_swaptions_01.json"
                 ),
                 "rate_option": (
-                    "datasets/product/rate_option/rate_options_01.json"
+                    "datasets/parameters/product/rate_option/rate_options_01.json"
                 ),
                 "zero_coupon_bond_option": (
-                    "datasets/product/zero_coupon_bond_option/"
+                    "datasets/parameters/product/zero_coupon_bond_option/"
                     "zero_coupon_bond_options_01.json"
                 ),
                 "zero_coupon_bond_up_and_out": (
-                    "datasets/product/zero_coupon_bond_up_and_out/"
+                    "datasets/parameters/product/zero_coupon_bond_up_and_out/"
                     "zero_coupon_bond_up_and_outs_01.json"
                 ),
             }
             product_input = fixed_income_product_inputs[spec.product]
         elif spec.product == "american_option":
             product_input = (
-                "datasets/product/american_option/"
+                "datasets/parameters/product/american_option/"
                 "american_options_01.json"
             )
         else:
@@ -1196,7 +1196,7 @@ def render_recipes(
                 if item.name == spec.variant
             )
             product_input = (
-                f"datasets/product/{spec.product}/"
+                f"datasets/parameters/product/{spec.product}/"
                 f"{variant.product_dataset_id}.json"
             )
         if (spec.asset_class == "fixed_income"
@@ -1228,7 +1228,7 @@ def render_recipes(
             )
         fitted = spec.curve is not None
         curve_input = (
-            f"datasets/curve/{spec.curve}/{spec.curve}_01.json"
+            f"datasets/parameters/curve/{spec.curve}/{spec.curve}_01.json"
             if fitted else ""
         )
         curve_prefix = f"{spec.curve}/" if fitted else ""

@@ -12,9 +12,9 @@ int main() {
     namespace ${model_alias} = model::fixed_income::${model};
 
     const std::filesystem::path model_path =
-        "datasets/model/fixed_income/${model}/parameters/${model}_01.json";
+        "datasets/parameters/model/fixed_income/${model}/parameters/${model}_01.json";
     const std::filesystem::path product_path =
-        "datasets/product/european_swaption/"
+        "datasets/parameters/product/european_swaption/"
         "european_swaptions_01.json";
     const auto product_dataset = product::load_european_swaptions(product_path);
     datasets::generate_regular_european_swaption_prices(
@@ -30,9 +30,9 @@ int main() {
                     ? closed_form::WorkDistribution::cooperative : closed_form::WorkDistribution::scalar
             );
         },
-        "datasets/model/fixed_income/${model}/prices/${variant}/"
+        "datasets/single_asset/fixed_income/${model}/prices/${variant}/"
         "${model}_01__${variant}_01__01.json",
-        "catalog/model/fixed_income/${model}/prices/${variant}/"
+        "catalog/single_asset/fixed_income/${model}/prices/${variant}/"
         "${model}_01__${variant}_01__01/generation.yaml",
         "https://datasets.ai-factory.example/v1/model/fixed_income/${model}/"
         "prices/${variant}/"

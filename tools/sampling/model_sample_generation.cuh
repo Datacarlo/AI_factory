@@ -85,7 +85,7 @@ inline datasets::ModelSampleRecipe smoke_sample_recipe(
     datasets::ModelSampleRecipe recipe
 ) {
     const std::string model = recipe.dataset_path
-        .parent_path().parent_path().filename().string();
+        .parent_path().filename().string();
     const std::filesystem::path directory =
         std::filesystem::path("/tmp/ai_factory_sample_smoke")
         / model / recipe.database_id;

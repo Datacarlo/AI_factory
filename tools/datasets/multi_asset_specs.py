@@ -30,9 +30,9 @@ REFERENCE_DATASET_SPECS = (
     *(
         ReferenceDatasetSpec(
             f"generate_{model}_multi_core_01", "model_parameters",
-            f"catalog/model/{market}/{model}/factor_parameters/"
+            f"catalog/parameters/model/{market}/{model}/factor_parameters/"
             f"{model}_multi_core_01/generator.cpp",
-            f"datasets/model/{market}/{model}/factor_parameters/"
+            f"datasets/parameters/model/{market}/{model}/factor_parameters/"
             f"{model}_multi_core_01.json",
         )
         for market, models in _FACTOR_MODELS.items()
@@ -41,8 +41,8 @@ REFERENCE_DATASET_SPECS = (
     *(
         ReferenceDatasetSpec(
             f"generate_{dataset_id}", "product_parameters",
-            f"catalog/product/{family}/{dataset_id}/generator.cpp",
-            f"datasets/product/{family}/{dataset_id}.json",
+            f"catalog/parameters/product/{family}/{dataset_id}/generator.cpp",
+            f"datasets/parameters/product/{family}/{dataset_id}.json",
         )
         for family, dataset_id in (
             ("worst_of_option", "worst_of_options_multi_01"),
@@ -53,14 +53,14 @@ REFERENCE_DATASET_SPECS = (
     ),
     ReferenceDatasetSpec(
         "generate_five_equity_cir_correlations_01", "correlation_parameters",
-        "catalog/correlation/five_equity_cir_01/generator.cpp",
-        "datasets/correlation/five_equity_cir_01.json",
+        "catalog/parameters/correlation/five_equity_cir_01/generator.cpp",
+        "datasets/parameters/correlation/five_equity_cir_01.json",
     ),
     ReferenceDatasetSpec(
         "generate_constant_rates_01", "model_parameters",
-        "catalog/model/fixed_income/constant_rate/parameters/"
+        "catalog/parameters/model/fixed_income/constant_rate/parameters/"
         "constant_rates_01/generator.cpp",
-        "datasets/model/fixed_income/constant_rate/parameters/"
+        "datasets/parameters/model/fixed_income/constant_rate/parameters/"
         "constant_rates_01.json",
     ),
 )

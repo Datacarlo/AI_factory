@@ -41,8 +41,8 @@ inline datasets::ModelSampleRecipe recipe(
     return {
         id,
         "Stein-Stein",
-        "datasets/model/equity/markovian/stein_stein/samples/" + id + ".json",
-        "catalog/model/equity/markovian/stein_stein/samples/" + id + "/generation.yaml",
+        "datasets/samples/equity/markovian/stein_stein/" + id + ".json",
+        "catalog/samples/equity/markovian/stein_stein/" + id + "/generation.yaml",
         parameter_count,
         paths_per_parameter,
         63U,

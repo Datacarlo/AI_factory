@@ -39,8 +39,8 @@ inline datasets::ModelSampleRecipe recipe(
     return {
         id,
         "CEV",
-        "datasets/model/equity/markovian/cev/samples/" + id + ".json",
-        "catalog/model/equity/markovian/cev/samples/" + id + "/generation.yaml",
+        "datasets/samples/equity/markovian/cev/" + id + ".json",
+        "catalog/samples/equity/markovian/cev/" + id + "/generation.yaml",
         parameter_count,
         paths_per_parameter,
         63U,

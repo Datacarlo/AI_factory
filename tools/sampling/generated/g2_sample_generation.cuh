@@ -43,8 +43,8 @@ inline datasets::ModelSampleRecipe recipe(
     return {
         id,
         "G2",
-        "datasets/model/fixed_income/g2/samples/" + id + ".json",
-        "catalog/model/fixed_income/g2/samples/" + id + "/generation.yaml",
+        "datasets/samples/fixed_income/g2/" + id + ".json",
+        "catalog/samples/fixed_income/g2/" + id + "/generation.yaml",
         parameter_count,
         paths_per_parameter,
         63U,

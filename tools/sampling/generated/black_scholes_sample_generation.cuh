@@ -38,8 +38,8 @@ inline datasets::ModelSampleRecipe recipe(
     return {
         id,
         "Black-Scholes",
-        "datasets/model/equity/markovian/black_scholes/samples/" + id + ".json",
-        "catalog/model/equity/markovian/black_scholes/samples/" + id + "/generation.yaml",
+        "datasets/samples/equity/markovian/black_scholes/" + id + ".json",
+        "catalog/samples/equity/markovian/black_scholes/" + id + "/generation.yaml",
         parameter_count,
         paths_per_parameter,
         63U,

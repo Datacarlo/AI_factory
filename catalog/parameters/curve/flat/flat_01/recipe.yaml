@@ -1,0 +1,23 @@
+schema_version: 1
+kind: curve_parameters
+dataset_id: flat_01
+generator: catalog/parameters/curve/flat/flat_01/generator.cpp
+output:
+  path: datasets/parameters/curve/flat/flat_01.json
+  format: json
+curve_family: Flat
+row_count: 1000
+parameters:
+  rate: Constant continuously compounded zero and forward rate.
+construction:
+  method: ordered 90/10 core-stress construction
+  core:
+    row_count: 900
+    rate_bounds:
+    - 0.001
+    - 0.08
+  stress:
+    row_count: 100
+    rate_bounds:
+    - -0.02
+    - 0.12

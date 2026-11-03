@@ -63,7 +63,7 @@ int main() {
         auto call_recipe = recipe;
         call_recipe.dataset = directory / "call_gradients.json";
         call_recipe.source_price_recipe =
-            "catalog/model/test/prices/european_calls/test/recipe.yaml";
+            "catalog/single_asset/test/prices/european_calls/test/recipe.yaml";
         call_recipe.option_side = "call";
         data::write_dataset(call_recipe, result);
         const auto call_document = datasets::read_json_file(

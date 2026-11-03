@@ -37,7 +37,7 @@ struct G2 {
     using Curve = std::monostate;
     static constexpr const char* model_name = "g2";
     static constexpr const char* curve_name = "";
-    static auto models() { return rates::g2::load_models("datasets/model/fixed_income/g2/parameters/g2_01.json"); }
+    static auto models() { return rates::g2::load_models("datasets/parameters/model/fixed_income/g2/parameters/g2_01.json"); }
     static auto curves() { return std::vector<Curve>(1000); }
     template<wb::SwaptionSide Side, typename Product>
     static void launch(const Model* models, const Curve* curves, const Product* host_products,
@@ -65,8 +65,8 @@ struct G2NelsonSiegel {
     using Curve = wb::curve::nelson_siegel::NelsonSiegelParameters;
     static constexpr const char* model_name = "g2_plus_plus";
     static constexpr const char* curve_name = "nelson_siegel";
-    static auto models() { return rates::g2_plus_plus::load_models("datasets/model/fixed_income/g2_plus_plus/parameters/g2_plus_plus_01.json"); }
-    static auto curves() { return wb::curve::nelson_siegel::load_curves("datasets/curve/nelson_siegel/nelson_siegel_01.json"); }
+    static auto models() { return rates::g2_plus_plus::load_models("datasets/parameters/model/fixed_income/g2_plus_plus/parameters/g2_plus_plus_01.json"); }
+    static auto curves() { return wb::curve::nelson_siegel::load_curves("datasets/parameters/curve/nelson_siegel/nelson_siegel_01.json"); }
     template<wb::SwaptionSide Side, typename Product>
     static void launch(const Model* models, const Curve* curves, const Product* host_products,
                        const Product* products, const std::uint32_t* host_dates, const float* host_accruals,
@@ -93,8 +93,8 @@ struct G2Svensson {
     using Curve = wb::curve::svensson::SvenssonParameters;
     static constexpr const char* model_name = "g2_plus_plus";
     static constexpr const char* curve_name = "svensson";
-    static auto models() { return rates::g2_plus_plus::load_models("datasets/model/fixed_income/g2_plus_plus/parameters/g2_plus_plus_01.json"); }
-    static auto curves() { return wb::curve::svensson::load_curves("datasets/curve/svensson/svensson_01.json"); }
+    static auto models() { return rates::g2_plus_plus::load_models("datasets/parameters/model/fixed_income/g2_plus_plus/parameters/g2_plus_plus_01.json"); }
+    static auto curves() { return wb::curve::svensson::load_curves("datasets/parameters/curve/svensson/svensson_01.json"); }
     template<wb::SwaptionSide Side, typename Product>
     static void launch(const Model* models, const Curve* curves, const Product* host_products,
                        const Product* products, const std::uint32_t* host_dates, const float* host_accruals,
@@ -128,7 +128,7 @@ void validate_side() {
     const auto models = selected(Adapter::models());
     const auto curves = selected(Adapter::curves());
     auto products = selected(product::load_european_swaptions(
-        "datasets/product/european_swaption/european_swaptions_01.json").products);
+        "datasets/parameters/product/european_swaption/european_swaptions_01.json").products);
     // Include a single-coupon bond-option identity in every model/side sweep.
     products[0].payment_count = 1U;
     constexpr auto count = indices.size();
@@ -204,7 +204,7 @@ void validate_cartesian() {
     auto models = Adapter::models(); models.resize(2);
     auto curves = Adapter::curves(); curves.resize(2);
     auto products = product::load_european_swaptions(
-        "datasets/product/european_swaption/european_swaptions_01.json").products;
+        "datasets/parameters/product/european_swaption/european_swaptions_01.json").products;
     products.resize(2);
     std::vector<typename Adapter::Model> expanded_models;
     std::vector<typename Adapter::Curve> expanded_curves;

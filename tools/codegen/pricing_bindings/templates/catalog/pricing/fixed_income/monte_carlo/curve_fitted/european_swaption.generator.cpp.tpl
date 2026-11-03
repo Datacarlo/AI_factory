@@ -9,11 +9,11 @@ int main() {
     using namespace ai_factory::workbench;
     namespace rates = model::fixed_income::${model};
     const datasets::EuropeanSwaptionMonteCarloRecipe recipe{
-        "datasets/model/fixed_income/${model}/parameters/${model}_01.json",
-        "datasets/curve/${curve}/${curve}_01.json",
-        "datasets/product/european_swaption/european_swaptions_01.json",
-        "datasets/model/fixed_income/${model}/prices/${curve}/${variant}/${model}_01__${curve}_01__${variant}_01__01.json",
-        "catalog/model/fixed_income/${model}/prices/${curve}/${variant}/${model}_01__${curve}_01__${variant}_01__01/generation.yaml",
+        "datasets/parameters/model/fixed_income/${model}/parameters/${model}_01.json",
+        "datasets/parameters/curve/${curve}/${curve}_01.json",
+        "datasets/parameters/product/european_swaption/european_swaptions_01.json",
+        "datasets/single_asset/fixed_income/${model}/prices/${curve}/${variant}/${model}_01__${curve}_01__${variant}_01__01.json",
+        "catalog/single_asset/fixed_income/${model}/prices/${curve}/${variant}/${model}_01__${curve}_01__${variant}_01__01/generation.yaml",
         "https://datasets.ai-factory.example/v2/model/fixed_income/${model}/prices/${curve}/${variant}/${model}_01__${curve}_01__${variant}_01__01.json",
         ${dynamics_seed}ULL,
         ${launch_identity},

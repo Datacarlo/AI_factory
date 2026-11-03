@@ -63,10 +63,10 @@ def test_compact_publication_joins_recipe_inputs_and_converts_coordinates(tmp_pa
     from learning.common.data.cache import prepare_pricing_dataset
 
     root = tmp_path
-    dataset = root / "datasets/model/example/prices/example.json"
-    recipe = root / "catalog/model/example/prices/example/recipe.yaml"
+    dataset = root / "datasets/single_asset/example/prices/example.json"
+    recipe = root / "catalog/single_asset/example/prices/example/recipe.yaml"
     model_path = root / "datasets/model/example/models.json"
-    product_path = root / "datasets/product/example/products.json"
+    product_path = root / "datasets/parameters/product/example/products.json"
     for path in (dataset, recipe, model_path, product_path):
         path.parent.mkdir(parents=True, exist_ok=True)
     model_path.write_text(json.dumps({"database_id": "models", "models": [
@@ -77,7 +77,7 @@ def test_compact_publication_joins_recipe_inputs_and_converts_coordinates(tmp_pa
     }, "quote_convention": {"strike": {"mode": "ratio_to_central_spot"}}, "products": [
         {"id": "p1", "parameters": {"strike": 1.25, "maturity": 63}}
     ]}))
-    recipe.write_text("""inputs:\n  model: datasets/model/example/models.json\n  product: datasets/product/example/products.json\nsensitivity:\n  parameters:\n  - {parameter: model.spot}\n  - {parameter: product.strike}\n  - {parameter: product.maturity_years}\n""")
+    recipe.write_text("""inputs:\n  model: datasets/model/example/models.json\n  product: datasets/parameters/product/example/products.json\nsensitivity:\n  parameters:\n  - {parameter: model.spot}\n  - {parameter: product.strike}\n  - {parameter: product.maturity_years}\n""")
     row = {"model_id": "m1", "product_id": "p1", "price": 1.0,
            "gradients": {"model.spot": 0.5, "product.strike": -0.8,
                          "product.maturity_years": 0.2},
