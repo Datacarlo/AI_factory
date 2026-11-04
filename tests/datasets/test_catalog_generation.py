@@ -400,6 +400,21 @@ class GenerationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Completed output changed"):
             campaign.execute(self.run, self.state)
 
+    def test_legacy_lsm_strategy_is_inferred_only_for_known_profile(self):
+        execution = {"profile_id": "price_gradients_device_prepared_lsm_v1",
+                     "family": "equity_lsm"}
+        self.assertEqual(campaign.receipt_sensitivity_strategy(execution), "mono")
+        self.assertEqual(campaign.receipt_sensitivity_strategy(
+            {**execution, "family": "gaussian_rate_lsm"}), "mono")
+        self.assertEqual(campaign.receipt_sensitivity_strategy(
+            {**execution, "sensitivity_strategy": "node_graph"}), "node_graph")
+        self.assertIsNone(campaign.receipt_sensitivity_strategy(
+            {**execution, "sensitivity_strategy": None}))
+        self.assertIsNone(campaign.receipt_sensitivity_strategy(
+            {**execution, "profile_id": "unknown"}))
+        self.assertIsNone(campaign.receipt_sensitivity_strategy(
+            {**execution, "family": "rough_fft"}))
+
     def test_native_launch_profile_must_match_inspector(self):
         work = self.root / "wrong-profile"
         self.job["launch_plan"]["profile_id"] = "sm89"
@@ -499,19 +514,24 @@ class GenerationTests(unittest.TestCase):
         recipe = {"dataset_id": "samples",
                   "shape": {"parameter_count": 1, "paths_per_parameter": 2},
                   "maturity_sampling": {"minimum_days": 63, "maximum_days": 504}}
-        rows = [{"parameter_id": "000001", "maturity_days": 252,
-                 "values": {"spot": 1.1}} for _ in range(2)]
+        rows = [{"id": i, "parameters": {"x": 1.0}, "maturity_days": 252,
+                 "values": {"spot": 1.1}} for i in range(2)]
         contents = '{\n'
         contents += '  "database_id": "samples",\n'
         contents += '  "model_family": "Test model",\n'
         contents += '  "row_count": 2,\n'
-        contents += '  "parameters": [\n'
-        contents += json.dumps({"id": "000001", "values": {"x": 1.0}})
-        contents += '\n  ],\n  "results": [\n'
+        contents += '  "time_convention": {"days_per_year":252},\n'
+        contents += '  "results": [\n'
         contents += ",\n".join(json.dumps(row) for row in rows) + "\n  ]\n}\n"
         path.write_text(contents)
         campaign.check_samples(path, job, recipe)
-        for invalid in (contents[:-6], contents.replace('"spot": 1.1', '"spot": NaN')):
+        for invalid in (contents[:-6], contents.replace('"spot": 1.1', '"spot": NaN'),
+                        contents.replace('"id": 1', '"id": 0'),
+                        contents.replace('"id": 1', '"id": true'),
+                        contents.replace('"parameters": {"x": 1.0}', '"parameters": {}'),
+                        contents.replace('"days_per_year":252', '"days_per_year":365'),
+                        contents.replace('"id": 1, "parameters": {"x": 1.0}',
+                                         '"id": 1, "parameters": {"x": 2.0}')):
             path.write_text(invalid)
             with self.assertRaises(ValueError):
                 campaign.check_samples(path, job, recipe)

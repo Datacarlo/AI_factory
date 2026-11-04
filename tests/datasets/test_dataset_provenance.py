@@ -284,12 +284,10 @@ class ProvenanceTests(unittest.TestCase):
 "database_id": "prices",
 "model_family": "test",
 "row_count": 2,
-"parameters": [
-{"id":"000001","values":{"spot":1.0}}
-],
+"time_convention": {"days_per_year":252},
 "results": [
-{"parameter_id":"000001","maturity_days":1,"values":{"spot":1.0}},
-{"parameter_id":"000001","maturity_days":2,"values":{"spot":1.1}}
+{"id":0,"parameters":{"spot":1.0},"maturity_days":1,"values":{"spot":1.0}},
+{"id":1,"parameters":{"spot":1.0},"maturity_days":2,"values":{"spot":1.1}}
 ]
 }""")
         self.generation["output"]["sha256"] = digest(self.dataset)

@@ -51,8 +51,6 @@ quote_convention:
     mode: ratio_to_initial_bond_price
     unit: dimensionless
     effective_level: barrier = barrier_ratio * P(0,U)
-  reference_policy: Resolved at the unbumped model and initial curve; absolute K and
-    B stay fixed for model and curve bumps.
 row_selection:
   method: resolved_bond_nonzero_support
   criteria:
@@ -82,3 +80,4 @@ product_shard:
   selection: one seeded permutation position per contiguous ten-row block
   core_products: 90
   stress_products: 10
+row_layout: inline_parameters

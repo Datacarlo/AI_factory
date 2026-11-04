@@ -6,10 +6,10 @@ inputs:
     sha256: 178ccbc37089fea72cd43879c5f74901cb196ad9422a4713281a7827b1e55714
   product:
     path: datasets/parameters/product/rate_option/rate_options_01.json
-    sha256: f62468ce286b1a5b684a4ef551aa63cd6375517861af2952925ad76ebb1b6caf
+    sha256: 1a21aec7561aaef37447fe0766eb21a2036346216112207d0bde77985939dba1
 output:
   path: datasets/single_asset/fixed_income/ornstein_uhlenbeck/price_gradients/caplets/ornstein_uhlenbeck_01__caplets_01__01_cartesian_price_gradient.json
-  sha256: 589c9bba0208cffd3f0cef7886f636aad90303c08dcb74d1e217a2514fc574a4
+  sha256: 15f46f91d88d9f17f20efe64b500af1d6e1075979299ce356f887f6644721455
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   device: gpu

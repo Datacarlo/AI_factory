@@ -6,10 +6,10 @@ inputs:
     sha256: ac15d0efe70e1d173a0ec7dcbc2d7390a4dd419715a675804e76ed5de4a5a92f
   product:
     path: datasets/parameters/product/up_and_in_option/up_and_in_options_01_shard00.json
-    sha256: 4ffb9eb09547bc5a6757328957dc5b345b6d76876f34f353bbd0036817e7ae01
+    sha256: 11e3f292c8ad5dfbdf15ccd21f8a4834636eacad68de2557eb388fdca40cf8a7
 output:
   path: datasets/single_asset/equity/markovian/variance_gamma/price_gradients/up_and_in_calls/variance_gamma_01__up_and_in_calls_01__01_cartesian_shard00_price_gradient.json
-  sha256: 47ce97c6f40a10557d9a44b171e2c5f7c74f200c40b9741a5810814c0efdfd7c
+  sha256: 9ca428c0e1830e136757b9f92f88e9976f1ffe5354ac744add8c7178d54b8367
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   device: gpu

@@ -3,7 +3,7 @@ status: complete
 inputs: {}
 output:
   path: datasets/samples/equity/markovian/variance_gamma/samples_01.json
-  sha256: c71255d53b4341f8868a968b39f4effad46e43238a8e38545cdcc415ed1d688d
+  sha256: b300842a7537e9845f868a2fa57d07697e63b6d3b3d582e1038e23169fdb3b08
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

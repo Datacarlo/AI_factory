@@ -3,7 +3,7 @@ status: complete
 inputs: {}
 output:
   path: datasets/samples/equity/rough/rough_stein_stein/samples_01.json
-  sha256: 6a4988c4304fb07b1965bf601e2425a3b81af46be89b0d06f9e334cbfbcbb95a
+  sha256: 2033182500ccd81045ac530985db75d3b629e00b6b7b06623375e92b2b6d6d1d
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

@@ -27,7 +27,7 @@ inputs:
     sha256: f9fdeca69342c307b429037af10d65cbf0847ec2dd04c843861454244f9d603e
 output:
   path: datasets/multi_asset/best_of_option/five_equity_cir_best_of_calls_01.json
-  sha256: 3f29ed029ab608f479d07a081e4edfd298f00e38e35e538a4016431afec5b32b
+  sha256: 183511b7d74f0842d2a932626ccf928eaca760d83c410dbfe53b973da83ad81f
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

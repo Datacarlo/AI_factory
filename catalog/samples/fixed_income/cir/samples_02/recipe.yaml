@@ -11,6 +11,14 @@ shape:
   parameter_count: 3000000
   paths_per_parameter: 1
   row_order: parameter-major, then path-major
+sample_layout:
+  fields:
+  - id
+  - parameters
+  - maturity_days
+  - values
+  id: zero-based observation index
+  parameters: inline in every observation
 parameter_sampling:
   regime: plausible core only
   distribution: independent Philox uniform proposals with counter-local rejection

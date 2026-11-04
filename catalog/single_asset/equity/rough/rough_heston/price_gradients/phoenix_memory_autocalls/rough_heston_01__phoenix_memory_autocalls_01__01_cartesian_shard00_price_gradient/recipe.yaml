@@ -90,3 +90,4 @@ product_shard:
   selection: one seeded permutation position per contiguous ten-row block
   core_products: 90
   stress_products: 10
+row_layout: inline_parameters

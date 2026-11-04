@@ -3,7 +3,6 @@
 
 #include "sample/validation.cuh"
 #include "tools/datasets/artifact_io.hpp"
-#include "tools/datasets/sampling.hpp"
 
 #include <chrono>
 #include <cmath>
@@ -167,32 +166,14 @@ void write_streamed_json(
         );
     }
 
-    // Parameter rows are shared by all paths drawn from the same parameter set.
-    // Keep dataset identity here; the recipe and receipt carry rules and execution.
+    // Each observation is self-contained. Rules and execution stay in the YAML.
     output << "{\n"
            << "  \"database_id\": " << nlohmann::json(recipe.database_id).dump() << ",\n"
            << "  \"model_family\": " << nlohmann::json(recipe.model_family).dump() << ",\n"
            << "  \"row_count\": " << row_count << ",\n"
-           << "  \"parameters\": [\n";
-    for (std::size_t parameter_index = 0U;
-         parameter_index < execution.parameter_count;
-         ++parameter_index) {
-        const nlohmann::ordered_json parameters =
-            parameter_json(parameter_index);
-        if (!parameters.is_object() || parameters.empty()) {
-            throw std::runtime_error(
-                "A serialized sample parameter row must be a non-empty object."
-            );
-        }
-        const nlohmann::ordered_json row = {
-            {"id", format_row_id(parameter_index)},
-            {"values", parameters},
-        };
-        output << "    " << row.dump();
-        if (parameter_index + 1U != execution.parameter_count) output << ',';
-        output << '\n';
-    }
-    output << "  ],\n  \"results\": [\n";
+           << "  \"time_convention\": {\"days_per_year\":252},\n"
+           << "  \"results\": [\n";
+    nlohmann::ordered_json parameters;
 
     for (std::size_t sample_index = 0U;
          sample_index < row_count;
@@ -206,6 +187,17 @@ void write_streamed_json(
         }
         const std::size_t parameter_index =
             sample_index / execution.paths_per_parameter;
+        if (sample_index % execution.paths_per_parameter == 0U) {
+            parameters = parameter_json(parameter_index);
+            if (!parameters.is_object() || parameters.empty()) {
+                throw std::runtime_error("Sample parameters must be a non-empty object.");
+            }
+            for (const auto& value : parameters) {
+                if (!value.is_number() || !std::isfinite(value.get<double>())) {
+                    throw std::runtime_error("Sample parameters must be finite numbers.");
+                }
+            }
+        }
         nlohmann::ordered_json values = nlohmann::ordered_json::object();
         for (const NamedSampleValues& named : outputs) {
             const float value = named.values->at(sample_index);
@@ -219,7 +211,8 @@ void write_streamed_json(
             values[named.name] = value;
         }
         const nlohmann::ordered_json row = {
-            {"parameter_id", format_row_id(parameter_index)},
+            {"id", sample_index},
+            {"parameters", parameters},
             {"maturity_days", days},
             {"values", std::move(values)},
         };
@@ -314,39 +307,30 @@ void validate_model_sample_dataset_file(
         || !document.at("model_family").is_string()
         || document.at("model_family").get<std::string>().empty()
         || document.at("row_count") != expected_row_count
-        || !document.contains("parameters")
-        || !document.contains("results")
-        || !document.at("parameters").is_array()
-        || document.at("parameters").empty()
-        || expected_row_count % document.at("parameters").size() != 0U
+        || document.at("time_convention") != nlohmann::ordered_json{{"days_per_year", 252}}
+        || !document.at("results").is_array()
         || document.at("results").size() != expected_row_count) {
         throw std::runtime_error("Invalid model-sample dataset envelope.");
     }
-    for (std::size_t index = 0U;
-         index < document.at("parameters").size();
-         ++index) {
-        const auto& parameters = document.at("parameters").at(index);
-        if (parameters.at("id") != format_row_id(index)
-            || !parameters.at("values").is_object()
-            || parameters.at("values").empty()) {
-            throw std::runtime_error("Invalid model-sample parameter row.");
-        }
-    }
     std::size_t sample_index = 0U;
     for (const auto& row : document.at("results")) {
-        const std::uint32_t days =
-            row.at("maturity_days").get<std::uint32_t>();
-        const auto& parameter_id = row.at("parameter_id");
-        if (!parameter_id.is_string()
-            || parameter_id.get<std::string>() != format_row_id(
-                sample_index / (expected_row_count
-                    / document.at("parameters").size())
-            )
+        const auto& days = row.at("maturity_days");
+        if (row.size() != 4U
+            || !days.is_number_unsigned()
+            || !row.at("id").is_number_unsigned()
+            || row.at("id").get<std::size_t>() != sample_index
+            || !row.at("parameters").is_object()
+            || row.at("parameters").empty()
             || !row.at("values").is_object()
             || row.at("values").empty()
             || days < minimum_maturity_days
             || days > maximum_maturity_days) {
             throw std::runtime_error("Invalid model-sample dataset row.");
+        }
+        for (const auto& value : row.at("parameters")) {
+            if (!value.is_number() || !std::isfinite(value.get<double>())) {
+                throw std::runtime_error("Invalid model-sample parameter.");
+            }
         }
         for (const auto& [name, value] : row.at("values").items()) {
             (void)name;

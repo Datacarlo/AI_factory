@@ -6,10 +6,10 @@ inputs:
     sha256: 5b4c16d54d626795b3484982ee1195528ab7b2da42154c0e8084563cb7764843
   product:
     path: datasets/parameters/product/athena_autocall/athena_autocalls_01_shard00.json
-    sha256: 37da5c5d72940d08a3811c033284f091a016eac535fce1ff605dc40fb663591e
+    sha256: 44a06d021eba31d46753a81617b9d6f28da6f5ef85b00ca6f9be4f67d7eefd0b
 output:
   path: datasets/single_asset/equity/rough/rough_sabr/prices/athena_autocalls/rough_sabr_01__athena_autocalls_01__01_cartesian_shard00.json
-  sha256: cedc3a0c5e6b47ee7d719585969de484f797030c393dabca3b30ac870b22abe3
+  sha256: b8ae5ee74d13f0d57c3f05191e92fc727852043a8476856b87496dca78ed363b
 hardware:
   cpu_model: Intel(R) Core(TM) Ultra 9 285K
   device: gpu

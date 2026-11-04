@@ -6,10 +6,10 @@ inputs:
     sha256: afa7eeb075673353fe28b27aa447f917777f4c83bae12d51e59a2bef841d7631
   product:
     path: datasets/parameters/product/asset_or_nothing_option/asset_or_nothing_options_01_shard00.json
-    sha256: 0b80ab764b5f790c7b5a51889543063c0c83dfe31553080a75dc7acaff4ff769
+    sha256: ec859069340e206356e7b9001ab660de3449663ed78a5b1e67b5d02d9acf8f99
 output:
   path: datasets/single_asset/equity/rough/rough_heston/price_gradients/asset_or_nothing_calls/rough_heston_01__asset_or_nothing_calls_01__01_cartesian_shard00_price_gradient.json
-  sha256: 4b19cb2731fad6dca4adfea4d6d2033a5da52dda4f07a4d3dd7384b4ca4f95e2
+  sha256: fe0dba4f1b3b78e44837ca7979ea5a9c22a60f06b5d763bffa8351abe176c25f
 hardware:
   cpu_model: Intel(R) Core(TM) Ultra 9 285K
   device: gpu

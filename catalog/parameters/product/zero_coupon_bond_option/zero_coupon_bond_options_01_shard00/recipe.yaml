@@ -11,7 +11,7 @@ row_count: 100
 selection:
   rule: one seeded permutation position per consecutive ten-row block
   seed: ai-factory-product-shards-20261014-v1
-  source_sha256: f5e7d2e4d34d3cfab6cd2ed2662751c77efef9b0431bdcaadf8c32be5b4763a9
+  source_sha256: 3169842802da747b3b77e31136316b6cd7e62866a5c8936f11bcad745c90beff
   shard_index: 0
   total_shards: 10
   core_rows: 90
@@ -122,5 +122,3 @@ quote_convention:
     mode: ratio_to_initial_forward_bond_price
     unit: dimensionless
     effective_level: strike = strike_ratio * P(0,U)/P(0,T)
-  reference_policy: Resolved at the unbumped model and initial curve; absolute contract
-    levels stay fixed for model and curve bumps.

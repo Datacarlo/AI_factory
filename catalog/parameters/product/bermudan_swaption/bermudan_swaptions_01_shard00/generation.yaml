@@ -3,10 +3,10 @@ status: complete
 inputs:
   source_product:
     path: datasets/parameters/product/bermudan_swaption/bermudan_swaptions_01.json
-    sha256: af04015b2627875baebab5bf3bea502383955dcc0217e5311a87c20d4bf5ec2c
+    sha256: 9be1c3640354588bdbf891fa700158a3203704805c8aa8ac7e703ff8350ed53c
 output:
   path: datasets/parameters/product/bermudan_swaption/bermudan_swaptions_01_shard00.json
-  sha256: 60647bdc898be7ad768c7a8f0f31471aa653c7cf430211707cdf9a4a7938915e
+  sha256: 8e11f6643ea1e6522a4c803c1fdfc437264a6611b11c8211c96571d802009a3c
 hardware:
   device: cpu
   cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK

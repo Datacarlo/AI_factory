@@ -14,3 +14,4 @@ numerical_method:
 outputs:
 - price
 paths_per_price: 0
+row_layout: inline_parameters

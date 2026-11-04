@@ -6,10 +6,10 @@ inputs:
     sha256: fed757eaebe17e53f542816e9b65dffed06c2dacfd9d692d6461879b70710afa
   product:
     path: datasets/parameters/product/bermudan_swaption/bermudan_swaptions_01_shard00.json
-    sha256: 60647bdc898be7ad768c7a8f0f31471aa653c7cf430211707cdf9a4a7938915e
+    sha256: 8e11f6643ea1e6522a4c803c1fdfc437264a6611b11c8211c96571d802009a3c
 output:
   path: datasets/single_asset/fixed_income/cir/price_gradients/bermudan_payer_swaptions/cir_01__bermudan_payer_swaptions_01__01_cartesian_shard00_price_gradient_frozen_policy.json
-  sha256: 59508ec154ea8dc7878209759c2f41488ba2ac7fc96afc5ec3cbe60596069e16
+  sha256: 8d7546286b6ef10b30418405a34c1b806eaf1c45f9837cc2b7b0e79daeb38fb9
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   device: gpu

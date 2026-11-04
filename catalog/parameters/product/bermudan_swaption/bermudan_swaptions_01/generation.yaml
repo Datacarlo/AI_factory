@@ -3,7 +3,7 @@ status: complete
 inputs: {}
 output:
   path: datasets/parameters/product/bermudan_swaption/bermudan_swaptions_01.json
-  sha256: af04015b2627875baebab5bf3bea502383955dcc0217e5311a87c20d4bf5ec2c
+  sha256: 9be1c3640354588bdbf891fa700158a3203704805c8aa8ac7e703ff8350ed53c
 hardware:
   device: cpu
   cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK

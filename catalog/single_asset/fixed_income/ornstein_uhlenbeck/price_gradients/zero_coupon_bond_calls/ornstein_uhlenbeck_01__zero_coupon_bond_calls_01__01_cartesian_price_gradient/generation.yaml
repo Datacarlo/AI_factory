@@ -6,10 +6,10 @@ inputs:
     sha256: 178ccbc37089fea72cd43879c5f74901cb196ad9422a4713281a7827b1e55714
   product:
     path: datasets/parameters/product/zero_coupon_bond_option/zero_coupon_bond_options_01.json
-    sha256: f5e7d2e4d34d3cfab6cd2ed2662751c77efef9b0431bdcaadf8c32be5b4763a9
+    sha256: 3169842802da747b3b77e31136316b6cd7e62866a5c8936f11bcad745c90beff
 output:
   path: datasets/single_asset/fixed_income/ornstein_uhlenbeck/price_gradients/zero_coupon_bond_calls/ornstein_uhlenbeck_01__zero_coupon_bond_calls_01__01_cartesian_price_gradient.json
-  sha256: c85fb66ad799f80f8a63e5597a9e5247fe5e5ed9c1e3e70e9e74f57ac0acd6db
+  sha256: e85b7fc4b1ea2d8e94a92ae65e6766db4d1b3188548aa44c15158d1419f7e14b
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   device: gpu

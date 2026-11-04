@@ -6,10 +6,10 @@ inputs:
     sha256: 84eeb1797d0f77b4c56baac0d8f1eedf35130bc91bdfcbcdf2877fea02b991d5
   product:
     path: datasets/parameters/product/american_option/american_options_01_shard00.json
-    sha256: 40edcab26a31f5ebd3d922e8924fe26b9ec064568f3bbf8f67a252d81beda681
+    sha256: 960008a1a9f4eb3d6f016f8661382aec2cb73cc2b75d4ac7ed3df89a59d8af03
 output:
   path: datasets/single_asset/equity/markovian/bates/prices/american_puts/bates_01__american_puts_01__01_cartesian_shard00.json
-  sha256: 55262cd251fc133c01248c1820a141dc6161f571cfdeb125279c1aeadb5cc3d7
+  sha256: c3a00541815bde27fa976a8ce17438bae43d4baeda69b94f4322a5fac2dbeb7a
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

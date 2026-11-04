@@ -16,9 +16,9 @@ int main() {
     try {
         const auto require = [](bool value) { if (!value) throw std::runtime_error("Gradient artifact contract failed."); };
         nlohmann::ordered_json models{{"database_id","models"},{"model_family","Test model"},
-            {"models",{{{"id","000001"}}}}};
+            {"models",{{{"id","000001"},{"parameters",{{"spot",1.7f},{"rho",1.f}}}}}}};
         auto products = models;
-        products.erase("models"); products["products"] = {{{"id","000001"}}};
+        products.erase("models"); products["products"] = {{{"id","000001"},{"parameters",{{"strike",.9f},{"maturity",1.f}}}}};
         products["time_convention"] = {{"unit","business_day"},{"days_per_year",252}};
         products["product_family"] = "Test product";
         datasets::write_json_file(directory/"models.json",models);
@@ -43,6 +43,10 @@ int main() {
         require(valid["results"].size() == 1U);
         require(valid["results"][0]["model_id"] == "000001");
         require(valid["results"][0]["product_id"] == "000001");
+        require(valid["results"][0]["id"] == 0U);
+        require(valid["results"][0]["model_parameters"] == models["models"][0]["parameters"]);
+        require(valid["results"][0]["product_parameters"] == products["products"][0]["parameters"]);
+        require(valid["time_convention"] == products["time_convention"]);
         require(valid["results"][0]["price"] == .1f);
         require(valid["results"][0]["gradients"]["model.rho"] == .2f);
         require(valid["results"][0]["standard_error"] == .01f);
@@ -184,7 +188,7 @@ int main() {
         const auto diagonal_document = datasets::read_json_file(recipe.dataset);
         require(diagonal_document["results"][0]["diagonal_hessians"]["model.rho"] == .3f);
         require(!diagonal_document["results"][0].contains("stencils"));
-        require(diagonal_document["results"][0].size() == 8U);
+        require(diagonal_document["results"][0].size() == 11U);
         auto full_recipe = recipe;
         full_recipe.dataset = directory / "full_hessian.json";
         full_recipe.catalog = directory / "full_hessian_generation.yaml";
@@ -250,14 +254,14 @@ int main() {
         require(!deterministic["results"][0].contains("gradient_standard_errors"));
         require(!deterministic["results"][0].contains("standard_error"));
 
-        models["models"].push_back({{"id", "000002"}});
-        products["products"].push_back({{"id", "000002"}});
+        models["models"].push_back({{"id", "000002"}, {"parameters", {{"spot", 2.3f}, {"rho", .5f}}}});
+        products["products"].push_back({{"id", "000002"}, {"parameters", {{"strike", 1.1f}, {"maturity", 2.f}}}});
         nlohmann::ordered_json curves{
             {"database_id", "curves"},
             {"catalog", "catalog/test"},
             {"curve_family", "Test curve"},
             {"url", "https://datasets.ai-factory.example/curves.json"},
-            {"curves", {{{"id", "000001"}}, {{"id", "000002"}}}},
+            {"curves", {{{"id", "000001"}, {"parameters", {{"rate", .02f}}}}, {{"id", "000002"}, {"parameters", {{"rate", .05f}}}}}},
         };
         datasets::write_json_file(directory/"models.json", models);
         datasets::write_json_file(directory/"products.json", products);
@@ -272,6 +276,8 @@ int main() {
         const auto curve_document = datasets::read_json_file(recipe.dataset);
         auto family_field = curve_document.begin();
         require(family_field.key() == "database_id");
+        ++family_field;
+        require(family_field.key() == "row_count");
         ++family_field;
         require(family_field.key() == "model_family");
         ++family_field;
@@ -291,6 +297,23 @@ int main() {
         require(curve_document["results"][4]["model_id"] == "000002"
             && curve_document["results"][4]["curve_id"] == "000001"
             && curve_document["results"][4]["product_id"] == "000001");
+        // Accepted output ordinals differ from candidate IDs after rejection.
+        result.candidate_rows = {1U, 6U};
+        result.prices = {.12f, .34f};
+        result.gradients = {.2f, .4f};
+        result.stencils.resize(2U);
+        data::write_dataset(recipe, result);
+        const auto accepted = datasets::read_json_file(recipe.dataset);
+        require(accepted["row_count"] == 2U);
+        const auto& row0 = accepted["results"][0];
+        const auto& row1 = accepted["results"][1];
+        require(row0["id"] == 0U && row0["product_id"] == "000002");
+        require(row1["id"] == 1U && row1["model_id"] == "000002"
+            && row1["curve_id"] == "000002" && row1["product_id"] == "000001");
+        require(row0["product_parameters"] == products["products"][1]["parameters"]);
+        require(row1["model_parameters"] == models["models"][1]["parameters"]);
+        require(row1["curve_parameters"] == curves["curves"][1]["parameters"]);
+        require(row1["price"] == .34f);
         std::filesystem::remove_all(directory);
         return 0;
     } catch (const std::exception& error) {

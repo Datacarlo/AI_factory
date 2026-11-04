@@ -6,10 +6,10 @@ inputs:
     sha256: ac15d0efe70e1d173a0ec7dcbc2d7390a4dd419715a675804e76ed5de4a5a92f
   product:
     path: datasets/parameters/product/down_and_in_option/down_and_in_options_01_shard00.json
-    sha256: a60e4ebb4a4c352e9dce4a44a7d1fd2703b6ade16a64f99305b929d3c9f92c4c
+    sha256: fe751f1ba02e76f97c8ad20be1d62bddd5923fe0846fd5968e8310067c3ef036
 output:
   path: datasets/single_asset/equity/markovian/variance_gamma/price_gradients/down_and_in_puts/variance_gamma_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient.json
-  sha256: 6d91d06827f07195808f213fd1b6d6fba2f5cde17b1cff2d001a497fe8e2dfea
+  sha256: c222825cb9578228dfb1b2e7ceb4142f50968d2d318a22f35e0302cf05a01aa9
 hardware:
   device: gpu
   name: Tesla V100-SXM2-32GB

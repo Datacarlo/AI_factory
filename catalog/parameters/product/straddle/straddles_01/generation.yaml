@@ -3,7 +3,7 @@ status: complete
 inputs: {}
 output:
   path: datasets/parameters/product/straddle/straddles_01.json
-  sha256: bf27f26a8edf391734545834f5e219bafecf1d4384f3e2775ec47a6aa0f72ba3
+  sha256: c021ce0349fafb7ce7d86ce66d582a63ab1b1629c0dd74cd26f7ae3163f54eb9
 hardware:
   device: cpu
   cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK

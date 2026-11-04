@@ -64,7 +64,8 @@ int main() {
         {{"engine","cross_asset_mc"}},0.01,0.005);
     const auto compact_document=datasets::read_json_file(
         compact_recipe.dataset_path);
-    if(compact_document.at("option_side")!="put"
+    if(compact_document.at("time_convention") != datasets::read_json_file(product).at("time_convention")
+        || compact_document.at("option_side")!="put"
         ||compact_document.at("results").size()!=1000U
         ||compact_document.at("results").at(999).at("model_ids").size()!=2U
         ||compact_document.at("rate_model_dataset").at("id")
@@ -74,6 +75,11 @@ int main() {
         ||compact_document.at("results").at(0).at("curve_id")
             !="000001")
         throw std::runtime_error("compact dataset provenance incomplete");
+    const auto text = compact_document.dump();
+    if (text.find("option_side") < text.find("product_family")
+        || text.find("option_side") > text.find("rate_model_family")
+        || text.find("quote_convention") < text.find("correlation_dataset"))
+        throw std::runtime_error("multi-asset header field order changed");
     if (compact_document.contains("timing") || compact_document.contains("price_construction"))
         throw std::runtime_error("execution metadata leaked into JSON");
     for (std::size_t j=0;j<prices.size();++j) {

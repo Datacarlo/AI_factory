@@ -6,10 +6,10 @@ inputs:
     sha256: ac15d0efe70e1d173a0ec7dcbc2d7390a4dd419715a675804e76ed5de4a5a92f
   product:
     path: datasets/parameters/product/athena_autocall/athena_autocalls_01_shard00.json
-    sha256: 37da5c5d72940d08a3811c033284f091a016eac535fce1ff605dc40fb663591e
+    sha256: 44a06d021eba31d46753a81617b9d6f28da6f5ef85b00ca6f9be4f67d7eefd0b
 output:
   path: datasets/single_asset/equity/markovian/variance_gamma/price_gradients/athena_autocalls/variance_gamma_01__athena_autocalls_01__01_cartesian_shard00_price_gradient.json
-  sha256: 46eea4575a1810e1a62c2d214ad48acc0c6d99aa6a8a7823c56d9d2dc6868e41
+  sha256: 4c4b8fda6de5466f5a8aef793ee8064b31bb73f93ef1002ea5e751e49efaf7f7
 hardware:
   device: gpu
   name: Tesla V100-SXM2-32GB

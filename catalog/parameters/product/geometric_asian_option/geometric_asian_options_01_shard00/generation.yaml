@@ -3,10 +3,10 @@ status: complete
 inputs:
   source_product:
     path: datasets/parameters/product/geometric_asian_option/geometric_asian_options_01.json
-    sha256: bcb1ecca8fefb524f28ee39927ba88a5521ee81405da0b6a11bcd38afd8ec0a0
+    sha256: 693ae568e84499dcb536ce01bff25cfe2f974f4bd426811d619b59ecf169a72f
 output:
   path: datasets/parameters/product/geometric_asian_option/geometric_asian_options_01_shard00.json
-  sha256: 0c4e306a34b114cfecaaec9982473edaa158f755d59202ea5250da5b14cb4b6b
+  sha256: fc3625a9c446eebf0e74954cfcc48adf2e70ac52d79435ebbc137736aa797ff8
 hardware:
   device: cpu
   cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK

@@ -477,6 +477,11 @@ def _sample_recipe_metadata(
             "paths_per_parameter": paths_per_parameter,
             "row_order": "parameter-major, then path-major",
         },
+        "sample_layout": {
+            "fields": ["id", "parameters", "maturity_days", "values"],
+            "id": "zero-based observation index",
+            "parameters": "inline in every observation",
+        },
         "parameter_sampling": {
             "regime": "plausible core only",
             "distribution": (
@@ -1645,6 +1650,7 @@ def _price_recipe_metadata(dataset, source: str) -> dict:
     metadata: dict = {
         "schema_version": 1,
         "kind": "prices",
+        "row_layout": "inline_parameters",
         "dataset_id": dataset.dataset_id,
         "generator": dataset.generator_path,
         "inputs": roles,

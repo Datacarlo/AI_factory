@@ -67,8 +67,6 @@ quote_convention:
     mode: ratio_to_initial_forward_bond_price
     unit: dimensionless
     effective_level: strike = strike_ratio * P(0,U)/P(0,T)
-  reference_policy: Resolved at the unbumped model and initial curve; absolute contract
-    levels stay fixed for model and curve bumps.
 option_side: call
 curve_assignment:
   method: splitmix64_modulo
@@ -79,3 +77,4 @@ time_representation:
   kind: exact_terminal_transition
   contractual_days_per_year: 252
   maturity_bump_steps_per_year: 504
+row_layout: inline_parameters

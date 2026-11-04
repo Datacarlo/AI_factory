@@ -55,5 +55,16 @@ int main() {
     if (factor_yaml.find(source.generic_string()) == std::string::npos) {
         throw std::runtime_error("Factor recipe must retain the actual input path");
     }
+    write_spot_relative_equity_product_dataset(
+        "test_call", "European Options", directory / "product.json",
+        directory / "product/generation.yaml", "https://example.test/product.json",
+        {{"strike", "quoted strike"}}, {{"expression", "max(S-K,0)"}},
+        {{{{"strike", 0.9f}, {"maturity", 252U}}}, {{"method", "test"}}});
+    const auto quotes = read_json_file(directory / "product.json").at("quote_convention");
+    if (quotes.contains("reference_policy") || quotes.size() != 1U
+        || quotes.at("strike").at("mode") != "ratio_to_central_spot"
+        || quotes.at("strike").at("effective_level") != "strike * S0") {
+        throw std::runtime_error("Product conventions must retain units without reference prose");
+    }
     std::filesystem::remove_all(directory);
 }

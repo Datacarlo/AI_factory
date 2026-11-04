@@ -336,9 +336,6 @@ void write_spot_relative_equity_product_dataset(
             };
         }
     }
-    quote_convention["reference_policy"] =
-        "Resolved at the unbumped model spot S0 for each model-product pair; "
-        "absolute contract levels remain fixed for model bumps.";
     write_product_dataset(
         database_id, product_family, dataset_path, catalog_path, url,
         descriptions, resolved_payoff, generated, quote_convention

@@ -9,7 +9,7 @@ inputs:
     sha256: 4410b02bdbed74d7b1a8569c01f482f2d6cfb088883984e11386be5d62638f92
 output:
   path: datasets/single_asset/equity/markovian/bates/prices/range_accruals/bates_01__range_accruals_01__01_cartesian_shard00.json
-  sha256: 7096da9f92e2df1bbf0b2b80003152892d4e6308872a84a4985a2e0d78ff3dde
+  sha256: 74bf706c3ea63dc8de503c0bf8093e4d0dcfc8eb06b6da4db90800a7d3b68182
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

@@ -6,10 +6,10 @@ inputs:
     sha256: c02e005bd3eb40858e3d9ade80a31cdcee309cc0d73540a5035405ae2b35382f
   product:
     path: datasets/parameters/product/phoenix_memory_autocall/phoenix_memory_autocalls_01_shard00.json
-    sha256: 714c41fc5c8c95dfce642775f681336569ac3c81098ac81f50c6b85f62a8408e
+    sha256: 9edcf57db30fdc39263abda60bfe734981cd146002d1fd7dc6b323d69694b500
 output:
   path: datasets/single_asset/equity/markovian/sabr/prices/phoenix_memory_autocalls/sabr_01__phoenix_memory_autocalls_01__01_cartesian_shard00.json
-  sha256: 01d8f225fc5f93dc4680043e1ee75b1107ce20a85f82c4315d6f1157ce837262
+  sha256: b79e65950f0bcdd34fbc67584815768e0ee3f1ae8aaa0ec57a4024f09f58676a
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

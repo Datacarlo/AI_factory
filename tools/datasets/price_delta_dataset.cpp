@@ -1,6 +1,7 @@
 // Validate paired outputs and write native JSON/YAML for staged publication.
 #include "tools/datasets/price_delta_dataset.hpp"
 #include "tools/datasets/artifact_io.hpp"
+#include "tools/datasets/json_header.hpp"
 #include "pricing_rows/result_index.cuh"
 #include <cmath>
 #include <stdexcept>
@@ -91,6 +92,7 @@ void write_price_delta_dataset(const PriceDeltaRecipe& recipe, const PriceDeltaR
     auto document = catalog;
     document.erase("title");
     document.erase("outputs");
+    document = ordered_dataset_header(document);
     document["results"] = std::move(rows);
     // All outputs are checked before either artifact is written. Atomic pair
     // publication remains the campaign controller's responsibility.

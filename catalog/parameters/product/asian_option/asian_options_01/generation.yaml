@@ -3,7 +3,7 @@ status: complete
 inputs: {}
 output:
   path: datasets/parameters/product/asian_option/asian_options_01.json
-  sha256: 402d43b23eda2ea1711b695745a68585b4530349e3719fbdd7176b12b458633e
+  sha256: a99226e16b43099194557c92c3e58ca58f97439cac4ee7b97ac58d29c816992f
 hardware:
   device: cpu
   cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK

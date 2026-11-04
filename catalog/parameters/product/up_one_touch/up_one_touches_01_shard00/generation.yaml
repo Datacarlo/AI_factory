@@ -3,10 +3,10 @@ status: complete
 inputs:
   source_product:
     path: datasets/parameters/product/up_one_touch/up_one_touches_01.json
-    sha256: 6248d70b811e540a3cc06878916fa1f1a7e4e565a2567eb68d0b6877f570f727
+    sha256: ae1e06ce85f3d78b757e94d0ee61b0aaaaf8205d73e0c66211115720214b6c72
 output:
   path: datasets/parameters/product/up_one_touch/up_one_touches_01_shard00.json
-  sha256: 63eaa711da251aa913d950f9f5aa1196e07ea6e03c7d65a6f4266e72e9d6255d
+  sha256: f98f18b07a3ef522ffae7b99ea4716094212e294b153dfd56da007ba0387c12a
 hardware:
   device: cpu
   cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK

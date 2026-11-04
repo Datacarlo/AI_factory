@@ -3,10 +3,10 @@ status: complete
 inputs:
   source_product:
     path: datasets/parameters/product/up_and_out_option/up_and_out_options_01.json
-    sha256: 941069ff0dfcf7ae5b322a82a2d6250ccf82db6a171bd8b8f9fc0170435789c4
+    sha256: 843996efb5626d3cce3d6143c9a5341e3f4c8e331ff92f87f15bfd22e082fa55
 output:
   path: datasets/parameters/product/up_and_out_option/up_and_out_options_01_shard00.json
-  sha256: 40eae8b15b3783a03f861d4b845b09f341035a76f36172cd0bffe26c8614ef92
+  sha256: 90ebfdd8b8463460cbd461b40a3967d27d088220dc09d0f19f17a7d18a80c9b2
 hardware:
   device: cpu
   cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK

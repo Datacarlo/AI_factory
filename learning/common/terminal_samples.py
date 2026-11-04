@@ -53,20 +53,24 @@ def _read_header(stream) -> dict:
     raise ValueError("Missing line-streamed results array")
 
 
-def _read_recipe(dataset_path: Path, header: dict) -> dict:
-    catalog = Path(str(header["catalog"]))
-    if catalog.is_absolute() or not catalog.parts or catalog.parts[0] != "catalog":
-        raise ValueError("Unsupported sample catalog reference")
-    for parent in (dataset_path.parent, *dataset_path.parents):
-        candidate = parent / catalog / "recipe.yaml"
+def _read_recipe(dataset_path: Path, recipe_path: str | Path | None = None) -> dict:
+    # Data headers contain IDs, never installation-specific catalogue paths.
+    candidates = [Path(recipe_path)] if recipe_path is not None else []
+    if recipe_path is None:
+        for parent in dataset_path.parents:
+            if parent.name == "samples":
+                suffix = dataset_path.relative_to(parent).with_suffix("")
+                for root in parent.parents:
+                    candidates.append(root / "catalog/samples" / suffix / "recipe.yaml")
+                break
+        candidates.append(dataset_path.with_suffix(".recipe.yaml"))
+    for candidate in candidates:
         if candidate.is_file():
             recipe = yaml.safe_load(candidate.read_text(encoding="utf-8"))
             if not isinstance(recipe, dict):
                 raise ValueError(f"Sample recipe is not a mapping: {candidate}")
             return recipe
-    raise FileNotFoundError(
-        f"Cannot resolve sample recipe {catalog / 'recipe.yaml'} from {dataset_path}"
-    )
+    raise FileNotFoundError(f"Cannot resolve sample recipe for {dataset_path}; pass recipe_path")
 
 
 def _positive_int(value: object, name: str) -> int:
@@ -123,11 +127,11 @@ def _sample_from_row(row: dict, schema: TerminalSchema, index: int, seed: int) -
         raise ValueError(f"Row {index}: invalid maturity_days")
     theta = tuple(float(row["parameters"][name]) for name in schema.parameter_names)
     values = tuple(float(row["values"][name]) for name in schema.observable_names)
-    maturity = float(row["T"])
+    if type(row.get("id")) is not int or row["id"] != index:
+        raise ValueError(f"Row {index}: invalid observation id")
+    maturity = days / schema.days_per_year
     if not all(math.isfinite(x) for x in (*theta, maturity, *values)):
         raise ValueError(f"Row {index}: non-finite value")
-    if not math.isclose(maturity, days / schema.days_per_year, rel_tol=1e-6, abs_tol=1e-7):
-        raise ValueError(f"Row {index}: T differs from maturity_days / days_per_year")
     group = index // schema.paths_per_parameter
     return TerminalSample(
         conditioning=(*theta, maturity),
@@ -139,7 +143,8 @@ def _sample_from_row(row: dict, schema: TerminalSchema, index: int, seed: int) -
 
 
 def iter_terminal_samples(
-    path: str | Path, *, seed: int = 0, limit: int | None = None
+    path: str | Path, *, seed: int = 0, limit: int | None = None,
+    recipe_path: str | Path | None = None
 ) -> Iterator[tuple[TerminalSchema, TerminalSample]]:
     """Yield schema and rows; validate the declared count on a complete scan."""
     if limit is not None and limit < 0:
@@ -147,7 +152,7 @@ def iter_terminal_samples(
     dataset_path = Path(path).resolve()
     with dataset_path.open(encoding="utf-8") as stream:
         header = _read_header(stream)
-        recipe = _read_recipe(dataset_path, header)
+        recipe = _read_recipe(dataset_path, recipe_path)
         schema: TerminalSchema | None = None
         count = 0
         for line in stream:

@@ -11,7 +11,7 @@ row_count: 100
 selection:
   rule: one seeded permutation position per consecutive ten-row block
   seed: ai-factory-product-shards-20261014-v1
-  source_sha256: 58a573ebf889108bde761d189afbb9b1c6ba1eab28c2981f2fb4f385a5012a0c
+  source_sha256: e57460705c4b6064d974b95d2de670fd789d648dae4b4c7752e96e1e3500f9c9
   shard_index: 0
   total_shards: 10
   core_rows: 90
@@ -126,5 +126,3 @@ quote_convention:
     mode: ratio_to_central_spot
     unit: dimensionless
     effective_level: barrier * S0
-  reference_policy: Resolved at the unbumped model spot S0 for each model-product
-    pair; absolute contract levels remain fixed for model bumps.

@@ -79,3 +79,4 @@ time_representation:
   kind: exact_schedule_transition
   contractual_days_per_year: 252
   maturity_bump_steps_per_year: 504
+row_layout: inline_parameters

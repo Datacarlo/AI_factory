@@ -79,8 +79,6 @@ quote_convention:
     mode: ratio_to_initial_bond_price
     unit: dimensionless
     effective_level: barrier = barrier_ratio * P(0,U)
-  reference_policy: Resolved at the unbumped model and initial curve; absolute K and
-    B stay fixed for model and curve bumps.
 row_selection:
   method: resolved_bond_nonzero_support
   criteria:
@@ -98,3 +96,4 @@ time_grid:
   simulation_steps_per_day: 2
   delta_t: 1 / 504
   monitoring: grid points including t=0 and T; continuous barrier approximate
+row_layout: inline_parameters

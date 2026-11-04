@@ -6,13 +6,13 @@ inputs:
     sha256: 8e2ada31859181a84aeb5110c7ac5c2b1c3372fccfa2f1d95c0b8ac27893fea1
   product:
     path: datasets/parameters/product/zero_coupon_bond_up_and_out/zero_coupon_bond_up_and_outs_01_shard00.json
-    sha256: 598d3d5d811f4d0da1520381d2357553d7a86826ff06e2937ae88bb93c676b32
+    sha256: 6dd330c61b65c336d78e94f31b9c32e436b818c559a2b5f98e918cc777f609e3
   curve:
     path: datasets/parameters/curve/svensson/svensson_01.json
     sha256: c21299e6ea6e15703d33d2dbc1fe803b359043ff8a2590f69772af796646ce77
 output:
   path: datasets/single_asset/fixed_income/cir_plus_plus/price_gradients/svensson/zero_coupon_bond_up_and_out_calls/cir_plus_plus_01__svensson_01__zero_coupon_bond_up_and_out_calls_01__01_cartesian_shard00_price_gradient.json
-  sha256: 42f228e8985f33d4d63acf3075ba96c1b17443e15426661cdc4874ba3cc5d7c4
+  sha256: cbacfc533d3d1bd8cfd7722b2709249f43598a6e0e89ab1d7d18d42dbd2b7ef1
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   device: gpu

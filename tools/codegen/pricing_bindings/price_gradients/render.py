@@ -1540,6 +1540,7 @@ def render_recipes(
         if "row_selection" in metadata:
             metadata = {("candidate_row_count" if k == "row_count" else k): v
                         for k, v in metadata.items()}
+        metadata["row_layout"] = "inline_parameters"
         recipe_text = yaml.safe_dump(metadata, sort_keys=False, allow_unicode=True)
         write_generated(recipe_path, recipe_text)
         generated.append(recipe_path)

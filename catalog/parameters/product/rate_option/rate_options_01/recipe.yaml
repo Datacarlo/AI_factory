@@ -15,8 +15,6 @@ quote_convention:
     mode: additive_to_initial_simple_forward_rate
     unit: annualized_decimal_rate
     effective_level: strike = initial_simple_forward_rate + strike_spread
-  reference_policy: Resolved at the unbumped model and initial curve; absolute contract
-    levels stay fixed for model and curve bumps.
 parameters:
   notional: Normalized contract notional.
   strike: Annualized decimal spread from the initial simple forward rate; 0.005 means

@@ -9,7 +9,7 @@ inputs:
     sha256: 4410b02bdbed74d7b1a8569c01f482f2d6cfb088883984e11386be5d62638f92
 output:
   path: datasets/single_asset/equity/markovian/heston/prices/range_accruals/heston_01__range_accruals_01__01_cartesian_shard00.json
-  sha256: 46d94007a820bed80be77ecab7c412cc32d69fe4ce8f8165b41ebcb41043c801
+  sha256: 8f00241f266ad3fcc4c4a5494a2acb61fc7c2e22cfba56e61aff371d55c0bd0b
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

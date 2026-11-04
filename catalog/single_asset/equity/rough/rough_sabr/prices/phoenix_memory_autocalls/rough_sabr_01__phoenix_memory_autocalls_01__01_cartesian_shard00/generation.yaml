@@ -6,10 +6,10 @@ inputs:
     sha256: 5b4c16d54d626795b3484982ee1195528ab7b2da42154c0e8084563cb7764843
   product:
     path: datasets/parameters/product/phoenix_memory_autocall/phoenix_memory_autocalls_01_shard00.json
-    sha256: 714c41fc5c8c95dfce642775f681336569ac3c81098ac81f50c6b85f62a8408e
+    sha256: 9edcf57db30fdc39263abda60bfe734981cd146002d1fd7dc6b323d69694b500
 output:
   path: datasets/single_asset/equity/rough/rough_sabr/prices/phoenix_memory_autocalls/rough_sabr_01__phoenix_memory_autocalls_01__01_cartesian_shard00.json
-  sha256: eb03c40d90dd33360c4c7ef3ce3918f754dc144abd9b0f2d594df58c19d84423
+  sha256: 24f9f96b41398a674bf2861f8720d90335858f86eca0e56a8f345d92a73a441f
 hardware:
   cpu_model: Intel(R) Core(TM) Ultra 9 285K
   device: gpu

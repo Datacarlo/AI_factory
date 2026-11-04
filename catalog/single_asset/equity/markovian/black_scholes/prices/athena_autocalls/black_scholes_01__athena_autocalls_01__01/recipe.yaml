@@ -19,3 +19,4 @@ option_side: call
 seeds:
   dynamics: 11668826784840810496
 random_number_generator: philox
+row_layout: inline_parameters

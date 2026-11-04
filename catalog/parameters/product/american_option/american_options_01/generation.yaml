@@ -3,7 +3,7 @@ status: complete
 inputs: {}
 output:
   path: datasets/parameters/product/american_option/american_options_01.json
-  sha256: a3b594fdd91c179716f6499212251764f0ce328291894658a057401b2826da8b
+  sha256: c631d3e2ea4a845c1d90975bbe2e44f56c84c2f567abd814f5009284830432e2
 hardware:
   device: cpu
   cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK

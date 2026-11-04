@@ -6,13 +6,13 @@ inputs:
     sha256: b42de4237ad138de56bd90bb24147cbb4c89c9eee08b1adcf48eec23a5268c4c
   product:
     path: datasets/parameters/product/zero_coupon_bond_up_and_out/zero_coupon_bond_up_and_outs_01_shard00.json
-    sha256: 598d3d5d811f4d0da1520381d2357553d7a86826ff06e2937ae88bb93c676b32
+    sha256: 6dd330c61b65c336d78e94f31b9c32e436b818c559a2b5f98e918cc777f609e3
   curve:
     path: datasets/parameters/curve/flat/flat_01.json
     sha256: c4c27cbf9a57ef2b1bfcb9ccabbdd1b22d95946a4ca1413e40e31b04de237d7c
 output:
   path: datasets/single_asset/fixed_income/g2_plus_plus/price_gradients/flat/zero_coupon_bond_up_and_out_calls/g2_plus_plus_01__flat_01__zero_coupon_bond_up_and_out_calls_01__01_cartesian_shard00_price_gradient.json
-  sha256: a616d9594b82d5b1d126b35b7f25bfa4586fa78b5e7bdb044b68a1f42ed8fe84
+  sha256: ad33350ca456ac43da6d07347dcc7b6d4c32a8c44f330a3aae78a4498a38489d
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   device: gpu

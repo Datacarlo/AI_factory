@@ -6,10 +6,10 @@ inputs:
     sha256: 661c88ef80a938cd9ddcddcbaa6f408cfa7f706b1580313cbf8636a0c8281e57
   product:
     path: datasets/parameters/product/american_option/american_options_01_shard00.json
-    sha256: 40edcab26a31f5ebd3d922e8924fe26b9ec064568f3bbf8f67a252d81beda681
+    sha256: 960008a1a9f4eb3d6f016f8661382aec2cb73cc2b75d4ac7ed3df89a59d8af03
 output:
   path: datasets/single_asset/equity/markovian/schobel_zhu/prices/american_puts/schobel_zhu_01__american_puts_01__01_cartesian_shard00.json
-  sha256: 31d8217de2a5e65f09e8b33f59bba3f05ccc1f8c30955daf162a3e2fa53e582d
+  sha256: 40b33829ff004ec5605234118ed98ec2e649d029653bfd2cd6b60d819863043b
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

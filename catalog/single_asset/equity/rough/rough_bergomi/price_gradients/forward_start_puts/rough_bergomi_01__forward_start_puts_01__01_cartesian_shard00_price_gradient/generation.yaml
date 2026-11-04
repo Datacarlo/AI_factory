@@ -9,7 +9,7 @@ inputs:
     sha256: 9f270b7eee9773154f03af684fedec6654a6f603dbadea42378ae60885763220
 output:
   path: datasets/single_asset/equity/rough/rough_bergomi/price_gradients/forward_start_puts/rough_bergomi_01__forward_start_puts_01__01_cartesian_shard00_price_gradient.json
-  sha256: 465bcfe3faa4180bd91d27f66b2c40f6a0b4c45549c759e5dcf2d13008acd9c2
+  sha256: 084c952d7f79bfb2b4b0c11c03ed5f16586259e3649b9969197d58cc7b9275a9
 hardware:
   cpu_model: Intel(R) Core(TM) Ultra 9 285K
   device: gpu
