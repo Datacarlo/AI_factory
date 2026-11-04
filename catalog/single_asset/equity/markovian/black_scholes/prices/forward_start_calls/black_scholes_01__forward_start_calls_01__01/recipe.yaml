@@ -15,3 +15,4 @@ outputs:
 - price
 paths_per_price: 0
 option_side: call
+row_layout: inline_parameters

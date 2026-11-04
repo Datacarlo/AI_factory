@@ -19,8 +19,6 @@ quote_convention:
     mode: ratio_to_initial_bond_price
     unit: dimensionless
     effective_level: barrier = barrier_ratio * P(0,U)
-  reference_policy: Resolved at the unbumped model and initial curve; absolute K and
-    B stay fixed for model and curve bumps.
 parameters:
   notional: Units of a zero-coupon bond paying 1 currency unit at U.
   strike: Dimensionless ratio to P(0,U)/P(0,T).

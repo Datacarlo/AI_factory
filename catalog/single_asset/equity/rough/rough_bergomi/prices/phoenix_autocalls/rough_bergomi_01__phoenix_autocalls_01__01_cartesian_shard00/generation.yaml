@@ -6,10 +6,10 @@ inputs:
     sha256: dc8640a9dd704a06dfcc4c4c2cb134d423220f41744c363959daeeb840d48372
   product:
     path: datasets/parameters/product/phoenix_autocall/phoenix_autocalls_01_shard00.json
-    sha256: 7021f092aedee4e18fe549bb7720c03fe256f10bd6b149aa2aa393707f372392
+    sha256: a8c37d370c1eef4cd4b931bee8eb0cac71479995b8e001eaf032b91193752297
 output:
   path: datasets/single_asset/equity/rough/rough_bergomi/prices/phoenix_autocalls/rough_bergomi_01__phoenix_autocalls_01__01_cartesian_shard00.json
-  sha256: dda80037ceb25ac88fe7dd4a56d8cd91d70697ffe13648091a862f6012376e7b
+  sha256: a8e2aafc2f492f8e8d63501ccef25a353244dcf451319564c198760a89ed91d3
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

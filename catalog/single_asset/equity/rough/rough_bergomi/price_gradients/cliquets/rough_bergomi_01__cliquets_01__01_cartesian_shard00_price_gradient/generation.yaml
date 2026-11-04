@@ -9,7 +9,7 @@ inputs:
     sha256: 3bb4e2b8acc9783638f27e69874db5c9d9b76c54207ad8e5e8ab82fe9cc194e5
 output:
   path: datasets/single_asset/equity/rough/rough_bergomi/price_gradients/cliquets/rough_bergomi_01__cliquets_01__01_cartesian_shard00_price_gradient.json
-  sha256: bced885f0ff7919e5a47e257e0d06305f8ef5c320f443c18a7743d723c82c0df
+  sha256: 2f704e07b602b358b5f67a8799f37c7e32f2f028d8e4269358bff3916f36f85f
 hardware:
   cpu_model: Intel(R) Core(TM) Ultra 9 285K
   device: gpu

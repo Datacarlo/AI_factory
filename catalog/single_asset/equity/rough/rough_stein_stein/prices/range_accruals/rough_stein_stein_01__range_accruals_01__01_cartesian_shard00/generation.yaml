@@ -9,7 +9,7 @@ inputs:
     sha256: 4410b02bdbed74d7b1a8569c01f482f2d6cfb088883984e11386be5d62638f92
 output:
   path: datasets/single_asset/equity/rough/rough_stein_stein/prices/range_accruals/rough_stein_stein_01__range_accruals_01__01_cartesian_shard00.json
-  sha256: c84c889d71600b2d8ccb697176ab1c7f5b000ad7317c6ec833910642871075b4
+  sha256: e58acdf28cbaffa5ed9d5523dd052be6246235c03bb83bb76d838b0878440aa7
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

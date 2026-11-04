@@ -27,7 +27,7 @@ inputs:
     sha256: f9fdeca69342c307b429037af10d65cbf0847ec2dd04c843861454244f9d603e
 output:
   path: datasets/multi_asset/worst_of_option/five_equity_cir_worst_of_puts_01.json
-  sha256: 4cebc9de74e720f98049157aca5dcde8b698b2c59965574d38d8e0df463b1139
+  sha256: 80d7043ff13748fa9dd80aa98dd0f5bd1afbcfb6a4cbd0702e16f39e33e535fd
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

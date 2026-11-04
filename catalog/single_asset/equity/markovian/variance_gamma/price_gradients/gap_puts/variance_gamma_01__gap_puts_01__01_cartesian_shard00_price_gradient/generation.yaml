@@ -6,10 +6,10 @@ inputs:
     sha256: ac15d0efe70e1d173a0ec7dcbc2d7390a4dd419715a675804e76ed5de4a5a92f
   product:
     path: datasets/parameters/product/gap_option/gap_put_options_01_shard00.json
-    sha256: 552093587f66e8e73bba80aec7a484df4b8ba4b61502d4292008a46869eff6a7
+    sha256: 263090a180c1bf482495c4b50734f80e84cb4492259b271e1e88176c2e643ca8
 output:
   path: datasets/single_asset/equity/markovian/variance_gamma/price_gradients/gap_puts/variance_gamma_01__gap_puts_01__01_cartesian_shard00_price_gradient.json
-  sha256: 1959748f6f452292039a13137aaf7ab28dbd6e313f317da7f7a470c99899b9d0
+  sha256: 91a4c0082f128b360ae67ec2ab25dcc5777aafba27b5a32b187942f0c204c205
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   device: gpu

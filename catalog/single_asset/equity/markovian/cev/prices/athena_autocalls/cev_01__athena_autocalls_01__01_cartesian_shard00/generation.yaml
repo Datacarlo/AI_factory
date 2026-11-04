@@ -6,10 +6,10 @@ inputs:
     sha256: eb601cf70e94d2484c5e63fb8579cb5766943c79384454c40bea7d0d8006f3c9
   product:
     path: datasets/parameters/product/athena_autocall/athena_autocalls_01_shard00.json
-    sha256: 37da5c5d72940d08a3811c033284f091a016eac535fce1ff605dc40fb663591e
+    sha256: 44a06d021eba31d46753a81617b9d6f28da6f5ef85b00ca6f9be4f67d7eefd0b
 output:
   path: datasets/single_asset/equity/markovian/cev/prices/athena_autocalls/cev_01__athena_autocalls_01__01_cartesian_shard00.json
-  sha256: 29dc638ec4ad5ea81f85bbea867409eefaddb915e21db6ecdb87274a544f5f1e
+  sha256: ada2ad26d6c1536d0c736808050f3768e18b73df5652fdc91f2978ab1b16f1b2
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

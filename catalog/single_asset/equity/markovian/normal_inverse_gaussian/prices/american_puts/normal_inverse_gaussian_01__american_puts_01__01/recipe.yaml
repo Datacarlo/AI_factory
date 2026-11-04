@@ -22,3 +22,4 @@ fit_and_valuation_paths: same paths
 seeds:
   dynamics: 11668827553639956480
 random_number_generator: philox
+row_layout: inline_parameters

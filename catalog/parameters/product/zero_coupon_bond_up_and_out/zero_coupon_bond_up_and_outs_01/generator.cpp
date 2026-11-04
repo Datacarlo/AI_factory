@@ -65,8 +65,7 @@ int main() {
          {"monitoring", "numerical grid; continuous-barrier price is approximated"}},
         rows,
         { {"strike", { {"mode", "ratio_to_initial_forward_bond_price"}, {"unit", "dimensionless"}, {"effective_level", "strike = strike_ratio * P(0,U)/P(0,T)"} } },
-          {"barrier", { {"mode", "ratio_to_initial_bond_price"}, {"unit", "dimensionless"}, {"effective_level", "barrier = barrier_ratio * P(0,U)"} } },
-          {"reference_policy", "Resolved at the unbumped model and initial curve; absolute K and B stay fixed for model and curve bumps."} }
+          {"barrier", { {"mode", "ratio_to_initial_bond_price"}, {"unit", "dimensionless"}, {"effective_level", "barrier = barrier_ratio * P(0,U)"} } } }
 );
     ai_factory::workbench::product::load_zero_coupon_bond_up_and_outs(dataset_path);
     validate_product_dataset_file(dataset_path);

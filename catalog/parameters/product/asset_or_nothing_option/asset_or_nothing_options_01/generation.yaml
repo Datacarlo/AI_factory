@@ -3,7 +3,7 @@ status: complete
 inputs: {}
 output:
   path: datasets/parameters/product/asset_or_nothing_option/asset_or_nothing_options_01.json
-  sha256: 148d3dcfafcc65eb2789598426f1830976f2593f31c4e2c17931c7e4c6ec5878
+  sha256: 08b628fe8abc425141139acc2e1c7d58cbc6f20738dc55e3cce5b6c226ccb102
 hardware:
   device: cpu
   cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK

@@ -19,8 +19,6 @@ quote_convention:
     mode: ratio_to_initial_bond_price
     unit: dimensionless
     effective_level: barrier = barrier_ratio * P(0,U)
-  reference_policy: Resolved at the unbumped model and initial curve; absolute K and
-    B stay fixed for model and curve bumps.
 row_selection:
   method: resolved_bond_nonzero_support
   criteria:
@@ -80,3 +78,4 @@ central_price_engine:
   - standard_error
   calculation: identical central evaluation, candidate rows, seeds and replay as the
     first-order price-gradient generator
+row_layout: inline_parameters

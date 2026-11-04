@@ -3,7 +3,7 @@ status: complete
 inputs: {}
 output:
   path: datasets/samples/equity/markovian/normal_inverse_gaussian/samples_02.json
-  sha256: ffbd0b8d9e168684ae12ae3991ce31a7f2457521f9eb9a7a38bb742b7357401b
+  sha256: 7eb6e9b23eb5d707586c2ae42816d4263f8d3b1478e9134f004935af9f1b2332
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

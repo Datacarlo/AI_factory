@@ -3,7 +3,7 @@ status: complete
 inputs: {}
 output:
   path: datasets/samples/equity/markovian/cev/samples_02.json
-  sha256: 2a0a955ddeba8ee5344fac0db45e33cfef35640d043424d47666d18ee44c4082
+  sha256: 162f6b14e8d33c6ac222c79a4d086b240abbd591df57a6025fad38fac3ded61f
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

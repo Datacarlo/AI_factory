@@ -273,24 +273,12 @@ def check_samples(path: Path, job: dict, recipe: dict) -> None:
                         and expected_header[key] is not None
                         and record[key] != expected_header[key])):
                 raise ValueError(f"Sample header contradicts recipe: {key}")
-        if stream.readline().strip() != '"parameters": [':
-            raise ValueError("Missing sample parameter table")
-        parameter_count = 0
-        for line in stream:
-            if line.strip() == "],":
-                break
-            row = json.loads(line.rstrip().removesuffix(","))
-            parameter_count += 1
-            if (not {"id", "values"} <= set(row)
-                    or row["id"] != f"{parameter_count:06d}"
-                    or not isinstance(row["values"], dict)
-                    or not row["values"]):
-                raise ValueError(f"Invalid sample parameter row {parameter_count}")
-            finite_values(row)
-        else:
-            raise ValueError("Unfinished sample parameter table")
-        if parameter_count != recipe["shape"]["parameter_count"]:
-            raise ValueError("Sample parameter count contradicts recipe")
+        convention = json.loads("{" + stream.readline().strip().removesuffix(",") + "}")
+        if convention != {"time_convention": {"days_per_year": 252}}:
+            raise ValueError("Invalid sample time convention")
+        if job["rows"] != recipe["shape"]["parameter_count"] * recipe["shape"]["paths_per_parameter"]:
+            raise ValueError("Sample shape contradicts row count")
+        previous_parameters = None
         if stream.readline().strip() != '"results": [':
             raise ValueError("Missing sample results array")
         bounds = recipe["maturity_sampling"]
@@ -300,21 +288,37 @@ def check_samples(path: Path, job: dict, recipe: dict) -> None:
                 break
             row = json.loads(line.rstrip().removesuffix(","))
             count += 1
-            expected_parameter = (count - 1) // recipe["shape"]["paths_per_parameter"] + 1
             days = row.get("maturity_days")
-            if (not {"parameter_id", "maturity_days", "values"} <= set(row)
-                    or row["parameter_id"] != f"{expected_parameter:06d}"
+            if (set(row) != {"id", "parameters", "maturity_days", "values"}
+                    or type(row["id"]) is not int or row["id"] != count - 1
+                    or not isinstance(row["parameters"], dict) or not row["parameters"]
+                    or any(type(v) not in (int, float) for v in row["parameters"].values())
                     or not isinstance(row["values"], dict)
                     or not row["values"]
+                    or any(type(v) not in (int, float) for v in row["values"].values())
                     or type(days) is not int
                     or not bounds["minimum_days"] <= days <= bounds["maximum_days"]
                     or line.rstrip().endswith(",") != (count < job["rows"])):
                 raise ValueError(f"Invalid sample row {count}")
             finite_values(row)
+            if (count - 1) % recipe["shape"]["paths_per_parameter"] == 0:
+                previous_parameters = row["parameters"]
+            elif row["parameters"] != previous_parameters:
+                raise ValueError(f"Parameters differ within sample group at row {count}")
         else:
             raise ValueError("Unfinished sample results array")
         if count != job["rows"] or stream.read().strip() != "}":
             raise ValueError("Incomplete sample artifact")
+
+
+def receipt_sensitivity_strategy(execution: dict) -> str | None:
+    """Read explicit metadata, or the unambiguous historical mono LSM profile."""
+    if "sensitivity_strategy" in execution:
+        return execution["sensitivity_strategy"]
+    if (execution.get("profile_id") == "price_gradients_device_prepared_lsm_v1"
+            and execution.get("family") in {"equity_lsm", "gaussian_rate_lsm", "terminal_forward_lsm"}):
+        return "mono"
+    return None
 
 
 def check_outputs(work: Path, job: dict) -> list[dict]:
@@ -365,7 +369,7 @@ def check_outputs(work: Path, job: dict) -> list[dict]:
             raise ValueError("Native launch profile contradicts the compiled production plan")
         if (job["kind"] == "price_gradients"
                 and "sensitivity_strategy" in job
-                and generation["execution"].get("sensitivity_strategy")
+                and receipt_sensitivity_strategy(generation["execution"])
                 != job["sensitivity_strategy"]):
             raise ValueError(
                 "Generation receipt sensitivity strategy contradicts frozen recipe"

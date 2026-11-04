@@ -6,10 +6,10 @@ inputs:
     sha256: 178ccbc37089fea72cd43879c5f74901cb196ad9422a4713281a7827b1e55714
   product:
     path: datasets/parameters/product/european_swaption/european_swaptions_01.json
-    sha256: e7b9bb19a2930076998c113aadaffb6d7d6ed19959ac7c5d8aa1bf9aed82f559
+    sha256: 0de50c9917de3dda6dc48a8f173e6b3ad815cbc2fc3450e929262d1cc405fab5
 output:
   path: datasets/single_asset/fixed_income/ornstein_uhlenbeck/price_gradients/european_receiver_swaptions/ornstein_uhlenbeck_01__european_receiver_swaptions_01__01_cartesian_price_gradient.json
-  sha256: e3c46e645ae0adced6eb6bb5fdf355e652e07a2efcd14fdde01c2b87b5db5289
+  sha256: 9b9828ed17f94aed7e6d70ed4a238d319720fbdf8cb2c0ba9d1e0a9d4325b1e8
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   device: gpu

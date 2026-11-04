@@ -134,7 +134,49 @@ if(EXISTS "${CMAKE_SOURCE_DIR}/catalog/multi_asset/best_of_option/five_equity_ci
         ai_factory_multi_asset_price_dataset ai_factory_causal_fft ai_factory_cuda_tuning)
 endif()
 
-# Local experiments are present only in a developer work directory.
-if(EXISTS "${CMAKE_SOURCE_DIR}/work/cmake/AIFactoryMultiAssetExperiments.cmake")
+
+if(EXISTS "${CMAKE_SOURCE_DIR}/catalog/multi_asset/basket_option/five_equity_cir_basket_calls_01/generator.cpp")
+    set_source_files_properties(catalog/multi_asset/basket_option/five_equity_cir_basket_calls_01/generator.cpp PROPERTIES LANGUAGE CUDA)
+    add_executable(generate_five_equity_cir_basket_calls_01 EXCLUDE_FROM_ALL catalog/multi_asset/basket_option/five_equity_cir_basket_calls_01/generator.cpp)
+    add_dependencies(price_generators generate_five_equity_cir_basket_calls_01)
+    target_include_directories(generate_five_equity_cir_basket_calls_01 PRIVATE ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src)
+    target_link_libraries(generate_five_equity_cir_basket_calls_01 PRIVATE
+        ai_factory_equity_heston_dataset ai_factory_equity_bates_dataset
+        ai_factory_equity_sabr_dataset ai_factory_equity_quadratic_rough_heston_dataset
+        ai_factory_equity_rough_bergomi_dataset ai_factory_fixed_income_cir_dataset
+        ai_factory_product_basket_call_dataset ai_factory_correlation_dataset
+        ai_factory_multi_asset_price_dataset ai_factory_causal_fft ai_factory_cuda_tuning)
+endif()
+
+if(EXISTS "${CMAKE_SOURCE_DIR}/catalog/multi_asset/basket_option/five_equity_cir_basket_puts_01/generator.cpp")
+    set_source_files_properties(catalog/multi_asset/basket_option/five_equity_cir_basket_puts_01/generator.cpp PROPERTIES LANGUAGE CUDA)
+    add_executable(generate_five_equity_cir_basket_puts_01 EXCLUDE_FROM_ALL catalog/multi_asset/basket_option/five_equity_cir_basket_puts_01/generator.cpp)
+    add_dependencies(price_generators generate_five_equity_cir_basket_puts_01)
+    target_include_directories(generate_five_equity_cir_basket_puts_01 PRIVATE ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src)
+    target_link_libraries(generate_five_equity_cir_basket_puts_01 PRIVATE
+        ai_factory_equity_heston_dataset ai_factory_equity_bates_dataset
+        ai_factory_equity_sabr_dataset ai_factory_equity_quadratic_rough_heston_dataset
+        ai_factory_equity_rough_bergomi_dataset ai_factory_fixed_income_cir_dataset
+        ai_factory_product_basket_call_dataset ai_factory_correlation_dataset
+        ai_factory_multi_asset_price_dataset ai_factory_causal_fft ai_factory_cuda_tuning)
+endif()
+
+if(EXISTS "${CMAKE_SOURCE_DIR}/catalog/multi_asset/basket_down_and_out_call/five_equity_cir_basket_down_and_out_calls_01/generator.cpp")
+    set_source_files_properties(catalog/multi_asset/basket_down_and_out_call/five_equity_cir_basket_down_and_out_calls_01/generator.cpp PROPERTIES LANGUAGE CUDA)
+    add_executable(generate_five_equity_cir_basket_down_and_out_calls_01 EXCLUDE_FROM_ALL catalog/multi_asset/basket_down_and_out_call/five_equity_cir_basket_down_and_out_calls_01/generator.cpp)
+    add_dependencies(price_generators generate_five_equity_cir_basket_down_and_out_calls_01)
+    target_include_directories(generate_five_equity_cir_basket_down_and_out_calls_01 PRIVATE ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src)
+    target_link_libraries(generate_five_equity_cir_basket_down_and_out_calls_01 PRIVATE
+        ai_factory_equity_heston_dataset ai_factory_equity_bates_dataset
+        ai_factory_equity_sabr_dataset ai_factory_equity_quadratic_rough_heston_dataset
+        ai_factory_equity_rough_bergomi_dataset ai_factory_fixed_income_cir_dataset
+        ai_factory_dataset_validation ai_factory_correlation_dataset
+        ai_factory_multi_asset_price_dataset ai_factory_causal_fft ai_factory_cuda_tuning)
+endif()
+
+# Register opt-in local experiments after the published catalogue so they can
+# skip names already owned by public generators.
+if(AI_FACTORY_ENABLE_LOCAL_EXPERIMENTS
+    AND EXISTS "${CMAKE_SOURCE_DIR}/work/cmake/AIFactoryMultiAssetExperiments.cmake")
     include("${CMAKE_SOURCE_DIR}/work/cmake/AIFactoryMultiAssetExperiments.cmake")
 endif()

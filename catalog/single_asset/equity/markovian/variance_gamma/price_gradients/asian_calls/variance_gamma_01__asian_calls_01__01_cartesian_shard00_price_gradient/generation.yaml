@@ -6,10 +6,10 @@ inputs:
     sha256: ac15d0efe70e1d173a0ec7dcbc2d7390a4dd419715a675804e76ed5de4a5a92f
   product:
     path: datasets/parameters/product/asian_option/asian_options_01_shard00.json
-    sha256: 25b5113835fe796afffda654e6b5378348c2653abb7ff1857b7d0fc64cc4efd9
+    sha256: 9584d010e48494ca8a6e9466f4b92b563d3472ee78f6b0b3b00cb08b593a93ce
 output:
   path: datasets/single_asset/equity/markovian/variance_gamma/price_gradients/asian_calls/variance_gamma_01__asian_calls_01__01_cartesian_shard00_price_gradient.json
-  sha256: 6cc47210ba6498dbfeb420edb94184e4c5f03f4a59904645e3a59ac34e325e79
+  sha256: b12e709ef938e09a2193ebb584cc605a070ab1d2afca24c43478e098403b6a47
 hardware:
   device: gpu
   name: Tesla V100-SXM2-32GB

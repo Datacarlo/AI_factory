@@ -1,0 +1,40 @@
+// Generated variance_gamma American selected-gradient recipe with explicit exercise replay.
+#include "model/equity/markovian/variance_gamma/product/american_option_price_gradients.cuh"
+#include "model/equity/markovian/variance_gamma/dataset.hpp"
+#include "product/american_option/dataset.hpp"
+#include "tools/pricing/price_gradients/generation.cuh"
+
+int main() {
+    using namespace ai_factory::workbench;
+    namespace lspg = longstaff_schwartz::price_gradients;
+    namespace pg = price_gradients;
+    try {
+        datasets::price_gradients::Recipe recipe{
+            "datasets/parameters/model/equity/markovian/variance_gamma/parameters/variance_gamma_01.json", "datasets/parameters/product/american_option/american_options_01_shard00.json", "datasets/single_asset/equity/markovian/variance_gamma/price_gradients/american_calls/variance_gamma_01__american_calls_01__01_cartesian_shard00_price_gradient.json", "catalog/single_asset/equity/markovian/variance_gamma/price_gradients/american_calls/variance_gamma_01__american_calls_01__01_cartesian_shard00_price_gradient/generation.yaml", "catalog/single_asset/equity/markovian/variance_gamma/prices/american_calls/variance_gamma_01__american_calls_01__01_cartesian_shard00/recipe.yaml",
+            PriceConstruction::CartesianProduct, {{
+        {"model.spot", {0.005, pg::BumpScale::relative}},
+        {"model.sigma", {0.005, pg::BumpScale::relative}},
+        {"model.nu", {0.005, pg::BumpScale::relative}},
+        {"model.theta", {0.002, pg::BumpScale::absolute}},
+        {"model.risk_free_rate", {0.0005, pg::BumpScale::absolute}},
+        {"model.dividend_yield", {0.0005, pg::BumpScale::absolute}},
+        {"product.strike", {0.005, pg::BumpScale::relative}}
+            }}, {1.0f/504.0f, 2U}, false};
+        constexpr auto exercise_replay =
+            lspg::ExerciseReplayStrategy::frozen_exercise_time;
+        recipe.exercise_replay = exercise_replay;
+        const auto models = model::equity::variance_gamma::load_models(recipe.model_input);
+        const auto products = product::load_american_options(recipe.product_input);
+        return offline::pricing::price_gradients::execute_dataset<
+            true, pg::SensitivityOrders::first>(recipe,
+            {offline::cuda_tuning::PricingFamily::equity_lsm, "variance_gamma", "american_option", ""}, 11668828099100803072ULL,
+            models, products, model::equity::variance_gamma::prepare_variance_gamma_american_option_price_gradients,
+            offline::pricing::price_gradients::with_exercise_replay(
+                model::equity::variance_gamma::launch_variance_gamma_american_option_price_gradients_with_replay_cuda<
+                    OptionSide::call>,
+                exercise_replay
+            ),
+            offline::cuda_tuning::kProductionPathsPerPrice,
+            model::equity::variance_gamma::prepare_american_option_price_gradient_stencils_cuda);
+    } catch (const std::exception& error) { std::cerr << error.what() << '\n'; return 1; }
+}

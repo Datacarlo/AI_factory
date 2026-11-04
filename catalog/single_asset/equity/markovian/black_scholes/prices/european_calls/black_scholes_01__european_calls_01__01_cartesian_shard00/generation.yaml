@@ -6,10 +6,10 @@ inputs:
     sha256: ee10ae56e0b040ea8215a306d78de38332bf0a091ce6161814620a8b19ce96a3
   product:
     path: datasets/parameters/product/european_option/european_options_01_shard00.json
-    sha256: 6da8587ed4a9435a4d8d58bb9353bcce68ee3575afcba18cbee5d28b71d20a27
+    sha256: 0c4160b6db1799a7e4c704ee84224e2e0f33f31918be2d9f645b38bf46695329
 output:
   path: datasets/single_asset/equity/markovian/black_scholes/prices/european_calls/black_scholes_01__european_calls_01__01_cartesian_shard00.json
-  sha256: 06c02eeed3b253c3d8db56e989c1aa6e3769986db0cf45b7ddbee3902e298507
+  sha256: 69c038eeb06c116481a20318cbf2f14be57c41ad52ed8d96ebf1ecaebc38f232
 hardware:
   cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
   device: gpu

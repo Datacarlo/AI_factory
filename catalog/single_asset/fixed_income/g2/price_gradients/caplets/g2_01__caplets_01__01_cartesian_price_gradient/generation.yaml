@@ -6,10 +6,10 @@ inputs:
     sha256: 29f92b1b939b4119934602c3b1c5e0ac6d3554bbd2435cab41b33c037a04d195
   product:
     path: datasets/parameters/product/rate_option/rate_options_01.json
-    sha256: f62468ce286b1a5b684a4ef551aa63cd6375517861af2952925ad76ebb1b6caf
+    sha256: 1a21aec7561aaef37447fe0766eb21a2036346216112207d0bde77985939dba1
 output:
   path: datasets/single_asset/fixed_income/g2/price_gradients/caplets/g2_01__caplets_01__01_cartesian_price_gradient.json
-  sha256: 284054d3b8bbd88b7a6f00438fd1306786c0d22153627d7222133cd9c6d28c6c
+  sha256: 17572dfa6d4e1849d9598154fc735fa147832cba86d73e97874618c02c3fd464
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   device: gpu

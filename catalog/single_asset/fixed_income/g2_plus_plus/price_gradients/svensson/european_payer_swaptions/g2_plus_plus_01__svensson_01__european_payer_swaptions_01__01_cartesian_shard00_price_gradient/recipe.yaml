@@ -75,8 +75,6 @@ quote_convention:
     mode: additive_to_initial_par_swap_rate
     unit: annualized_decimal_rate
     effective_level: strike = initial_par_swap_rate + strike_spread
-  reference_policy: Resolved at the unbumped model and initial curve; absolute contract
-    levels stay fixed for model and curve bumps.
 row_selection:
   method: resolved_rate_strike_above_minimum
   minimum_annualized_decimal_rate: 1.0e-05
@@ -104,3 +102,4 @@ product_shard:
   selection: one seeded permutation position per contiguous ten-row block
   core_products: 90
   stress_products: 10
+row_layout: inline_parameters

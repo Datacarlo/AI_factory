@@ -1,6 +1,7 @@
 // Validate complete sensitivity rows before staging native JSON/YAML artifacts.
 #include "tools/datasets/price_gradients/dataset.hpp"
 #include "tools/datasets/artifact_io.hpp"
+#include "tools/datasets/single_asset_json.hpp"
 #include "pricing_rows/result_index.cuh"
 
 #include <algorithm>
@@ -377,8 +378,42 @@ void write_dataset(const Recipe& recipe, const Results& result) {
         throw std::invalid_argument("Invalid gradient execution timing.");
     }
 
-    auto rows = nlohmann::ordered_json::array();
-    for (std::size_t row = 0U; row < count; ++row) {
+    // Keep identity and input references beside the data. Bump rules remain
+    // in the recipe; measured execution and hardware belong to the receipt.
+    const auto dataset_reference = [](const nlohmann::ordered_json& input) {
+        return nlohmann::ordered_json{
+            {"id", input.at("database_id")},
+        };
+    };
+    nlohmann::ordered_json document = {
+        {"database_id", recipe.dataset.stem().string()},
+        {"model_family", models.at("model_family")},
+        {"product_family", products.at("product_family")},
+    };
+    if (curve_rows != nullptr) {
+        document["curve_family"] = curves.at("curve_family");
+    }
+    if (recipe.option_side.has_value()) {
+        const auto& side = *recipe.option_side;
+        if (side != "call" && side != "put"
+            && side != "payer" && side != "receiver") {
+            throw std::invalid_argument("Unknown priced option side.");
+        }
+        document["option_side"] = side;
+    }
+    document["row_count"] = count;
+    document["model_dataset"] = dataset_reference(models);
+    document["product_dataset"] = dataset_reference(products);
+    if (curve_rows != nullptr) {
+        document["curve_dataset"] = dataset_reference(curves);
+    }
+    if (products.contains("time_convention")) {
+        document["time_convention"] = products.at("time_convention");
+    }
+    if (products.contains("quote_convention")) {
+        document["quote_convention"] = products.at("quote_convention");
+    }
+    write_single_asset_json(recipe.dataset, document, count, [&](std::size_t row) {
         auto gradients = nlohmann::ordered_json::object();
         auto diagonal_hessians = nlohmann::ordered_json::object();
         auto mixed_hessians = nlohmann::ordered_json::object();
@@ -596,8 +631,7 @@ void write_dataset(const Recipe& recipe, const Results& result) {
             const auto& product_row = product_rows.at(indices.product_index);
             model_parameters = &model_row;
             product_parameters = &product_row;
-            output_row["model_id"] = model_row.at("id");
-            output_row["product_id"] = product_row.at("id");
+            output_row = single_asset_observation(row, model_row, product_row);
         } else {
             const auto indices = decode_model_curve_product_result_index(
                 result.candidate_rows.empty() ? row : result.candidate_rows[row],
@@ -609,10 +643,8 @@ void write_dataset(const Recipe& recipe, const Results& result) {
             const auto& product_row = product_rows.at(indices.product_index);
             model_parameters = &model_row;
             product_parameters = &product_row;
-            output_row["model_id"] = model_row.at("id");
-            output_row["product_id"] = product_row.at("id");
-            output_row["curve_id"] =
-                curve_rows->at(indices.curve_index).at("id");
+            output_row = single_asset_observation(row, model_row, product_row,
+                &curve_rows->at(indices.curve_index));
         }
         output_row["price"] = result.prices[row];
         for (const auto& item : recipe.reconstructible_sensitivities) {
@@ -660,43 +692,9 @@ void write_dataset(const Recipe& recipe, const Results& result) {
             output_row.erase("mixed_hessians");
             output_row.erase("mixed_hessian_standard_errors");
         }
-        rows.push_back(std::move(output_row));
-    }
+        return output_row;
+    });
 
-    // Keep identity and input references beside the data. Bump rules remain
-    // in the recipe; measured execution and hardware belong to the receipt.
-    const auto dataset_reference = [](const nlohmann::ordered_json& input) {
-        return nlohmann::ordered_json{
-            {"id", input.at("database_id")},
-        };
-    };
-    nlohmann::ordered_json document = {
-        {"database_id", recipe.dataset.stem().string()},
-        {"model_family", models.at("model_family")},
-        {"product_family", products.at("product_family")},
-    };
-    if (curve_rows != nullptr) {
-        document["curve_family"] = curves.at("curve_family");
-    }
-    if (recipe.option_side.has_value()) {
-        const auto& side = *recipe.option_side;
-        if (side != "call" && side != "put"
-            && side != "payer" && side != "receiver") {
-            throw std::invalid_argument("Unknown priced option side.");
-        }
-        document["option_side"] = side;
-    }
-    if (products.contains("quote_convention")) {
-        document["quote_convention"] = products.at("quote_convention");
-    }
-    document["row_count"] = count;
-    document["model_dataset"] = dataset_reference(models);
-    if (curve_rows != nullptr) {
-        document["curve_dataset"] = dataset_reference(curves);
-    }
-    document["product_dataset"] = dataset_reference(products);
-    document["results"] = std::move(rows);
-    write_json_file(recipe.dataset, document);
     nlohmann::ordered_json receipt_execution = result.execution;
     receipt_execution["paths_per_price"] = result.execution.value(
         "paths_per_price",

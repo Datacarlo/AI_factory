@@ -3,7 +3,7 @@ status: complete
 inputs: {}
 output:
   path: datasets/samples/equity/markovian/kou/samples_02.json
-  sha256: 645bd1de2abb97c99a4131877af96a9fd36ee6e379ce9090cb0dcfaa9d20ba5e
+  sha256: 7db410bce0f6339e389112c216346ac4ac528cc4deeb70f0fb07d23fb74ab651
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

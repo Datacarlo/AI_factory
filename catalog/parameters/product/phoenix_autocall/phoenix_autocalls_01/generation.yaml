@@ -3,7 +3,7 @@ status: complete
 inputs: {}
 output:
   path: datasets/parameters/product/phoenix_autocall/phoenix_autocalls_01.json
-  sha256: 176a58c5c3faa70121a545f9fac997087d2b2e91dfd8a851c7cdd3b31df94d3f
+  sha256: 7a59bc7d492a97d8b7acb7579846eee7a342c204671fce49ed5ea84ca8245c37
 hardware:
   device: cpu
   cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK

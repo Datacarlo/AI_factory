@@ -3,7 +3,7 @@ status: complete
 inputs: {}
 output:
   path: datasets/samples/fixed_income/hull_white/samples_02.json
-  sha256: 05d4da4e0745a3b693081d4d2904064df1b021655fda66fa7aaf217b1887fb3e
+  sha256: 1f19db97ce3794512a49e4bc1c326717dbbe564b5bc3143f398646014000f87f
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

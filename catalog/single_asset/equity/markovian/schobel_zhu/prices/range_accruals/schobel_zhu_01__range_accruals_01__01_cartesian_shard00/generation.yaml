@@ -9,7 +9,7 @@ inputs:
     sha256: 4410b02bdbed74d7b1a8569c01f482f2d6cfb088883984e11386be5d62638f92
 output:
   path: datasets/single_asset/equity/markovian/schobel_zhu/prices/range_accruals/schobel_zhu_01__range_accruals_01__01_cartesian_shard00.json
-  sha256: 39c5657011ebb151d679869054517ed5a37ee82155ff0ac2106a8cb943a2ac7a
+  sha256: 245d4dd2f63e3f96791a0bb4f6ba3cc4fdef5f7be1ae3ea23fb381f77d9f69d1
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

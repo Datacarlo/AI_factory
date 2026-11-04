@@ -6,10 +6,10 @@ inputs:
     sha256: 5b4c16d54d626795b3484982ee1195528ab7b2da42154c0e8084563cb7764843
   product:
     path: datasets/parameters/product/european_option/european_options_01_shard00.json
-    sha256: 6da8587ed4a9435a4d8d58bb9353bcce68ee3575afcba18cbee5d28b71d20a27
+    sha256: 0c4160b6db1799a7e4c704ee84224e2e0f33f31918be2d9f645b38bf46695329
 output:
   path: datasets/single_asset/equity/rough/rough_sabr/prices/european_calls/rough_sabr_01__european_calls_01__01_cartesian_shard00.json
-  sha256: 02ac6202c6c4ab252fa1112830e6b70cb6a17aa43d0e5c9410b7f7c95404f893
+  sha256: a2de37be616009faf85e0384b55dac4fed468cfad7e3996628a3ada8e0a01977
 hardware:
   cpu_model: Intel(R) Core(TM) Ultra 9 285K
   device: gpu

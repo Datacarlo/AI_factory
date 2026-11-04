@@ -52,8 +52,6 @@ quote_convention:
     mode: additive_to_initial_first_exercise_par_swap_rate
     unit: annualized_decimal_rate
     effective_level: strike = initial_first_exercise_par_swap_rate + strike_spread
-  reference_policy: Resolved at the unbumped model and initial curve; absolute contract
-    levels stay fixed for model and curve bumps.
 row_selection:
   method: resolved_rate_strike_above_minimum
   minimum_annualized_decimal_rate: 1.0e-05
@@ -80,3 +78,4 @@ time_grid:
   steps_per_year: 504
   simulation_steps_per_day: 2
   delta_t: 1 / 504
+row_layout: inline_parameters

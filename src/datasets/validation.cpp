@@ -358,6 +358,8 @@ void validate_compact_price_dataset(const nlohmann::json& document) {
     const std::string id = database_id(document);
     require_string(document, "database_id", "Price", id);
     const bool multi_asset = document.contains("model_datasets");
+    if (document.contains("time_convention"))
+        validate_time_convention(document, "Price", id);
     const bool has_rate_model = document.contains("rate_model_dataset");
     if (multi_asset) {
         const auto& models = document.at("model_datasets");
@@ -400,6 +402,7 @@ void validate_compact_price_dataset(const nlohmann::json& document) {
         || results.size() != document.at("row_count").get<std::size_t>()) {
         reject("Price", id, "row_count must match results.size().");
     }
+    std::size_t observation_index = 0U;
     for (const auto& row : results) {
         if (!row.is_object()) reject("Price", id, "results rows must be objects.");
         if (multi_asset) {
@@ -416,7 +419,18 @@ void validate_compact_price_dataset(const nlohmann::json& document) {
         if (has_rate_model) require_string(row, "rate_model_id", "Price", id);
         require_string(row, "product_id", "Price", id);
         if (has_curve) require_string(row, "curve_id", "Price", id);
+        if (!multi_asset && row.contains("id")
+            && (!row.at("id").is_number_unsigned()
+                || row.at("id").get<std::size_t>() != observation_index))
+            reject("Price", id, "observation id must match its zero-based result index.");
+        ++observation_index;
         for (const auto& [name, value] : row.items()) {
+            if (!multi_asset && (name == "model_parameters"
+                || name == "product_parameters" || name == "curve_parameters")) {
+                if (!value.is_object())
+                    reject("Price", id, name + " must be an object.");
+                continue;
+            }
             if (name == "model_id" || name == "model_ids" || name == "product_id"
                 || name == "curve_id" || name == "rate_model_id" || name == "correlation_id")
                 continue;
@@ -436,7 +450,10 @@ void validate_compact_price_dataset(const nlohmann::json& document) {
 void validate_price_dataset(const nlohmann::json& document) {
     if (!document.is_object())
         reject("Price", "<unknown>", "the JSON root must be an object.");
-    if (!document.contains("time_convention")) {
+    // Modern pricing headers also carry time units. Timing belongs
+    // to generation.yaml and distinguishes legacy documents that embed it.
+    if (!document.contains("time_convention")
+        || !document.contains("timing")) {
         validate_compact_price_dataset(document);
         return;
     }

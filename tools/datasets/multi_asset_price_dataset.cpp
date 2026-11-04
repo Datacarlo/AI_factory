@@ -1,3 +1,4 @@
+#include "tools/datasets/json_header.hpp"
 #include "tools/datasets/multi_asset_price_dataset.hpp"
 
 #include "datasets/validation.hpp"
@@ -132,6 +133,8 @@ void write_dataset(
     if(recipe.curve_dataset_path)
         document["curve_family"]=curve.at("curve_family");
     document["option_side"]=recipe.option_side;
+    if(product.contains("time_convention"))
+        document["time_convention"]=product.at("time_convention");
     document["quote_convention"]=product.at("quote_convention");
     document["row_count"]=result_count;
     document["model_datasets"]=model_references;
@@ -141,6 +144,7 @@ void write_dataset(
     document["correlation_dataset"]=reference(correlation);
     if(recipe.curve_dataset_path)
         document["curve_dataset"]=reference(curve);
+    document=ordered_dataset_header(document);
     document["results"]=std::move(results);
     write_json_file(recipe.dataset_path,document);
     validate_price_dataset_file(recipe.dataset_path);

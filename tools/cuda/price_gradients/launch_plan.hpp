@@ -177,6 +177,7 @@ inline nlohmann::ordered_json device_prepared_price_gradient_launch_metadata(
             ? "central LSM plus grid (path shard, price*sensitivity)"
             : "price-only LSM delegation";
         result["profile_id"] = "price_gradients_device_prepared_lsm_v1";
+        result["sensitivity_strategy"] = "mono";
         result["represented_nodes_per_sensitivity"] =
             has_sensitivities ? 3U : 0U;
         return result;

@@ -9,7 +9,7 @@ inputs:
     sha256: 3bb4e2b8acc9783638f27e69874db5c9d9b76c54207ad8e5e8ab82fe9cc194e5
 output:
   path: datasets/single_asset/equity/markovian/bates/price_gradients/cliquets/bates_01__cliquets_01__01_cartesian_shard00_price_gradient.json
-  sha256: e0cef8a5d73463ad32bdd7bc6bfb3de23c1750015e656d3b44134ef4ecbc7227
+  sha256: 3e8f34c27b6ac9b4f725442fae124bffa9eeb8c10ec766fec2a73a57eac55e4f
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   device: gpu

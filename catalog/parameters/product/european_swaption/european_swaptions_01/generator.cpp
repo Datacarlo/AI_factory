@@ -148,8 +148,7 @@ int main() {
             {"normalization", "N = 1"},
         },
         rows,
-        { {"strike", { {"mode", "additive_to_initial_par_swap_rate"}, {"unit", "annualized_decimal_rate"}, {"effective_level", "strike = initial_par_swap_rate + strike_spread"} } },
-          {"reference_policy", "Resolved at the unbumped model and initial curve; absolute contract levels stay fixed for model and curve bumps."} }
+        { {"strike", { {"mode", "additive_to_initial_par_swap_rate"}, {"unit", "annualized_decimal_rate"}, {"effective_level", "strike = initial_par_swap_rate + strike_spread"} } } }
 );
     validate_product_dataset_file(dataset_path);
 }

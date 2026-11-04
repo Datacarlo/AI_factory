@@ -3,7 +3,7 @@ status: complete
 inputs: {}
 output:
   path: datasets/samples/equity/markovian/merton/samples_02.json
-  sha256: 0f5e3b346479644f2fe2d55b74a19cf0a9249e9792b2f99df74b5d23b1645a01
+  sha256: d1ec0076c654e182488836d70d61d61523cf06f595881509840732fdf6c0b7a2
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

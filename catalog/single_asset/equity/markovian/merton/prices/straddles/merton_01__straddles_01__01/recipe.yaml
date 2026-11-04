@@ -18,3 +18,4 @@ paths_per_price: 1048576
 seeds:
   dynamics: 11668827519280218112
 random_number_generator: philox
+row_layout: inline_parameters

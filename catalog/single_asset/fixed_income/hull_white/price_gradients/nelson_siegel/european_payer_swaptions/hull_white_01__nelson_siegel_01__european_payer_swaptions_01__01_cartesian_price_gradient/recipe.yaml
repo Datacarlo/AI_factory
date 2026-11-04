@@ -55,8 +55,6 @@ quote_convention:
     mode: additive_to_initial_par_swap_rate
     unit: annualized_decimal_rate
     effective_level: strike = initial_par_swap_rate + strike_spread
-  reference_policy: Resolved at the unbumped model and initial curve; absolute contract
-    levels stay fixed for model and curve bumps.
 row_selection:
   method: resolved_rate_strike_above_minimum
   minimum_annualized_decimal_rate: 1.0e-05
@@ -72,3 +70,4 @@ time_representation:
   kind: exact_terminal_transition
   contractual_days_per_year: 252
   maturity_bump_steps_per_year: 504
+row_layout: inline_parameters

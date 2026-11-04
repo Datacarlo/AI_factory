@@ -6,10 +6,10 @@ inputs:
     sha256: dc8640a9dd704a06dfcc4c4c2cb134d423220f41744c363959daeeb840d48372
   product:
     path: datasets/parameters/product/geometric_asian_option/geometric_asian_options_01_shard00.json
-    sha256: 0c4e306a34b114cfecaaec9982473edaa158f755d59202ea5250da5b14cb4b6b
+    sha256: fc3625a9c446eebf0e74954cfcc48adf2e70ac52d79435ebbc137736aa797ff8
 output:
   path: datasets/single_asset/equity/rough/rough_bergomi/price_gradients/geometric_asian_calls/rough_bergomi_01__geometric_asian_calls_01__01_cartesian_shard00_price_gradient.json
-  sha256: b51118ffc2b06e1ffc4656d32b43b59c5d31ab1be6c9ec2647f5194f9b569045
+  sha256: 83f138a97c5449561614a37c17c26d48f99cc065b6fdb14c5bda666d7a7ecad3
 hardware:
   cpu_model: Intel(R) Core(TM) Ultra 9 285K
   device: gpu

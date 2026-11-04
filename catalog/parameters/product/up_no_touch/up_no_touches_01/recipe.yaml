@@ -15,8 +15,6 @@ quote_convention:
     mode: ratio_to_central_spot
     unit: dimensionless
     effective_level: barrier * S0
-  reference_policy: Resolved at the unbumped model spot S0 for each model-product
-    pair; absolute contract levels remain fixed for model bumps.
 parameters:
   barrier: Dimensionless ratio of the quoted spot level to the central model spot
     S0; 1.0 means 100% of S0.

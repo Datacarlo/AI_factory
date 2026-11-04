@@ -3,7 +3,7 @@ status: complete
 inputs: {}
 output:
   path: datasets/samples/fixed_income/ornstein_uhlenbeck/samples_02.json
-  sha256: 8cf5e94bf4345a9451ab9738b226aba0b73e3d3ba69c1569f084e09a4765f9f1
+  sha256: 95b7f1d632c623f9f9a2502e2dc5589df5e860c87e48870b7b5b8ea97d65d020
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

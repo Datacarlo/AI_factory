@@ -6,10 +6,10 @@ inputs:
     sha256: afa7eeb075673353fe28b27aa447f917777f4c83bae12d51e59a2bef841d7631
   product:
     path: datasets/parameters/product/phoenix_memory_autocall/phoenix_memory_autocalls_01_shard00.json
-    sha256: 714c41fc5c8c95dfce642775f681336569ac3c81098ac81f50c6b85f62a8408e
+    sha256: 9edcf57db30fdc39263abda60bfe734981cd146002d1fd7dc6b323d69694b500
 output:
   path: datasets/single_asset/equity/rough/rough_heston/prices/phoenix_memory_autocalls/rough_heston_01__phoenix_memory_autocalls_01__01_cartesian_shard00.json
-  sha256: 5f63cc62a1479fd6a71b19d17e33be49e6bb24001263b0e473bbfb8f053973cd
+  sha256: 04dcdf072ca58697c28c32cc08a3f0cdb676f6b41e2fc12d0629eeafeb43bcf1
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

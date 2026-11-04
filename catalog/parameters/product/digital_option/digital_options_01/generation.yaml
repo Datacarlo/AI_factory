@@ -3,7 +3,7 @@ status: complete
 inputs: {}
 output:
   path: datasets/parameters/product/digital_option/digital_options_01.json
-  sha256: 81519f40282ce822544cc1ab18c50ba9f2fbc7d1f2e9bea9d4cb9f7f388b0559
+  sha256: e3f4f831534d162248cadf3c1a94393047976d98cc4550f976b7ca83f32af670
 hardware:
   device: cpu
   cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK

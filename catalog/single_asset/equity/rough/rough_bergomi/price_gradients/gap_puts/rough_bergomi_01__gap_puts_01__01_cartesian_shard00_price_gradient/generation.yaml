@@ -6,10 +6,10 @@ inputs:
     sha256: dc8640a9dd704a06dfcc4c4c2cb134d423220f41744c363959daeeb840d48372
   product:
     path: datasets/parameters/product/gap_option/gap_put_options_01_shard00.json
-    sha256: 552093587f66e8e73bba80aec7a484df4b8ba4b61502d4292008a46869eff6a7
+    sha256: 263090a180c1bf482495c4b50734f80e84cb4492259b271e1e88176c2e643ca8
 output:
   path: datasets/single_asset/equity/rough/rough_bergomi/price_gradients/gap_puts/rough_bergomi_01__gap_puts_01__01_cartesian_shard00_price_gradient.json
-  sha256: e863ae3fd91f8988d716cc9ddf43b61ca6a0d8c395f04061f121e17ccf3e1521
+  sha256: 55ae7bdc4186017b3ba55c4bdf4fd7d193980b788f687dd68bfc25a756534c99
 hardware:
   cpu_model: Intel(R) Core(TM) Ultra 9 285K
   device: gpu

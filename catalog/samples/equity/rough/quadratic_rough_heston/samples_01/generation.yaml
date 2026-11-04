@@ -3,7 +3,7 @@ status: complete
 inputs: {}
 output:
   path: datasets/samples/equity/rough/quadratic_rough_heston/samples_01.json
-  sha256: 41bef83671d82b23b25b683ed97f819138b0de862a3280c05db09633517130b4
+  sha256: c8bdf17fd642f0b7879c638230edd3771a10c400dd0bb2a2e71b4fad2c048187
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

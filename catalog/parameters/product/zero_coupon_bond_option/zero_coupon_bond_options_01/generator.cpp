@@ -92,8 +92,7 @@ int main() {
             {"normalization", "N = 1"},
         },
         rows,
-        { {"strike", { {"mode", "ratio_to_initial_forward_bond_price"}, {"unit", "dimensionless"}, {"effective_level", "strike = strike_ratio * P(0,U)/P(0,T)"} } },
-          {"reference_policy", "Resolved at the unbumped model and initial curve; absolute contract levels stay fixed for model and curve bumps."} }
+        { {"strike", { {"mode", "ratio_to_initial_forward_bond_price"}, {"unit", "dimensionless"}, {"effective_level", "strike = strike_ratio * P(0,U)/P(0,T)"} } } }
     );
     validate_product_dataset_file(dataset_path);
 }

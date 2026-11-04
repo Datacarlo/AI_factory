@@ -3,7 +3,7 @@ status: complete
 inputs: {}
 output:
   path: datasets/samples/equity/rough/rough_bergomi/samples_01.json
-  sha256: 95a407d2190ad60285761b3f78561bde20942a444aff7746c009cc7707a0b4b0
+  sha256: 71759788edb48cff13fe6ef2b35a98cf345dac3a12d4aafce21ea498dd2da06a
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

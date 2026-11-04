@@ -6,10 +6,10 @@ inputs:
     sha256: dc8640a9dd704a06dfcc4c4c2cb134d423220f41744c363959daeeb840d48372
   product:
     path: datasets/parameters/product/european_option/european_options_01_shard00.json
-    sha256: 6da8587ed4a9435a4d8d58bb9353bcce68ee3575afcba18cbee5d28b71d20a27
+    sha256: 0c4160b6db1799a7e4c704ee84224e2e0f33f31918be2d9f645b38bf46695329
 output:
   path: datasets/single_asset/equity/rough/rough_bergomi/prices/european_calls/rough_bergomi_01__european_calls_01__01_cartesian_shard00.json
-  sha256: d3c539230b52eba1a3a8dbe69345ef154440b800da2b4586eb3179839d73af1e
+  sha256: 8ca6d106f1f90905bf2f53552eeb0a51f2b58bb874963b6d500f18581a7569c3
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

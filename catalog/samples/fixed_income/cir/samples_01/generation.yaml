@@ -3,7 +3,7 @@ status: complete
 inputs: {}
 output:
   path: datasets/samples/fixed_income/cir/samples_01.json
-  sha256: 57dbb19c8fd49433965160bb004531bfcb8d9564cd91507c3191bb4da1a7c822
+  sha256: a1338ac421c05f7fa9b41210f76fc3b3eb283eef8a8b5b46fc23d41e0dcde21f
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

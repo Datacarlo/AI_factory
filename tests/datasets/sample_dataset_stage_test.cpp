@@ -87,14 +87,67 @@ int main() {
     if (document.at("database_id") != "samples_01"
         || document.at("model_family") != "Test model"
         || document.at("row_count") != 4U
-        || document.at("parameters").at(0).at("values").at("sigma") != 0.2f
-        || document.at("parameters").at(1).at("values").at("sigma") != 0.3f
-        || document.at("results").at(0).at("parameter_id") != "000001"
-        || document.at("results").at(2).at("parameter_id") != "000002") {
+        || document.contains("parameters")
+        || document.at("time_convention").at("days_per_year") != 252
+        || document.at("results").at(0).at("parameters").at("sigma") != 0.2f
+        || document.at("results").at(1).at("parameters").at("sigma") != 0.2f
+        || document.at("results").at(2).at("parameters").at("sigma") != 0.3f
+        || document.at("results").at(0).at("id") != 0U
+        || document.at("results").at(2).at("id") != 2U) {
         throw std::runtime_error(
             "sample parameter packages are not parameter-major"
         );
     }
+    // One compact observation per line, distinct IDs even within a parameter group.
+    std::ifstream json_lines(recipe.dataset_path);
+    std::size_t observations = 0U;
+    for (std::string line; std::getline(json_lines, line);) {
+        if (line.find("\"id\":") == std::string::npos) continue;
+        if (line.back() == ',') line.pop_back();
+        const auto row = nlohmann::ordered_json::parse(line);
+        if (row.size() != 4U || row.at("id") != observations
+            || row.at("maturity_days") != maturity_days.at(observations)
+            || row.at("values").at("spot") != spots.at(observations)) {
+            throw std::runtime_error("sample observation changed");
+        }
+        ++observations;
+    }
+    if (observations != 4U) throw std::runtime_error("not one sample per line");
+    // The same writer covers one parameter draw per observation and multiple outputs.
+    auto iid_recipe = recipe;
+    iid_recipe.database_id = "samples_02";
+    iid_recipe.dataset_path = directory / "samples_02.json";
+    iid_recipe.catalog_path = directory / "iid_generation.yaml";
+    iid_recipe.production_parameter_count = 4U;
+    iid_recipe.production_paths_per_parameter = 1U;
+    const std::vector<float> variances = {0.01f, 0.04f, 0.09f, 0.16f};
+    std::size_t parameter_calls = 0U;
+    write_model_sample_dataset(
+        iid_recipe, {4U, 1U, true, 0.01, 0.001, {{"threads_per_block", 128U}}},
+        [&](std::size_t index) {
+            ++parameter_calls;
+            return nlohmann::ordered_json{{"sigma", variances.at(index)}};
+        }, maturity_days, {{"spot", &spots}, {"variance", &variances}}
+    );
+    validate_model_sample_dataset_file(iid_recipe.dataset_path, 4U, 63U, 504U);
+    const auto iid = read_json_file(iid_recipe.dataset_path);
+    if (parameter_calls != 4U) throw std::runtime_error("wrong parameter call count");
+    for (std::size_t i = 0; i < 4U; ++i) {
+        const auto& row = iid.at("results").at(i);
+        if (row.at("parameters").at("sigma") != variances[i]
+            || row.at("values").at("spot") != spots[i]
+            || row.at("values").at("variance") != variances[i]) {
+            throw std::runtime_error("iid sample association changed");
+        }
+    }
+    auto corrupted = iid;
+    corrupted["results"][1]["id"] = 0U;
+    { std::ofstream file(iid_recipe.dataset_path); file << corrupted.dump(); }
+    bool rejected = false;
+    try { validate_model_sample_dataset_file(iid_recipe.dataset_path, 4U, 63U, 504U); }
+    catch (const std::runtime_error&) { rejected = true; }
+    if (!rejected) throw std::runtime_error("duplicate observation ID accepted");
+
     std::ifstream yaml(recipe.catalog_path);
     const std::string yaml_text{
         std::istreambuf_iterator<char>(yaml),

@@ -3,7 +3,7 @@ status: complete
 inputs: {}
 output:
   path: datasets/samples/equity/rough/rough_sabr/samples_01.json
-  sha256: e9448b9714b5347788ab3986c90b78ccca24695f9b7f99f837878d23993689a8
+  sha256: ba1312e833d109544b6ac7de400b7352eb914e606f3b98e3c1bd371135e2a717
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

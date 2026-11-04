@@ -6,10 +6,10 @@ inputs:
     sha256: afa7eeb075673353fe28b27aa447f917777f4c83bae12d51e59a2bef841d7631
   product:
     path: datasets/parameters/product/down_and_in_option/down_and_in_options_01_shard00.json
-    sha256: a60e4ebb4a4c352e9dce4a44a7d1fd2703b6ade16a64f99305b929d3c9f92c4c
+    sha256: fe751f1ba02e76f97c8ad20be1d62bddd5923fe0846fd5968e8310067c3ef036
 output:
   path: datasets/single_asset/equity/rough/rough_heston/price_gradients/down_and_in_puts/rough_heston_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient.json
-  sha256: 54a8b5944ebff46672dfaed43e8f4a9dbfd89c6e95e0ae3eda6e8a02456f07e8
+  sha256: 460a3bc061f2f047f92fbbf7972df558188772b8dab8916925dc351d991a1ac8
 hardware:
   device: gpu
   name: NVIDIA GeForce RTX 5090

@@ -16,8 +16,6 @@ quote_convention:
     mode: ratio_to_initial_forward_bond_price
     unit: dimensionless
     effective_level: strike = strike_ratio * P(0,U)/P(0,T)
-  reference_policy: Resolved at the unbumped model and initial curve; absolute contract
-    levels stay fixed for model and curve bumps.
 option_side: put
 curve_assignment:
   method: splitmix64_modulo
@@ -73,3 +71,4 @@ central_price_engine:
   - price
   calculation: identical central evaluation, candidate rows, seeds and replay as the
     first-order price-gradient generator
+row_layout: inline_parameters

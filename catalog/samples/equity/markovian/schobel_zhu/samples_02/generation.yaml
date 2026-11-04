@@ -3,7 +3,7 @@ status: complete
 inputs: {}
 output:
   path: datasets/samples/equity/markovian/schobel_zhu/samples_02.json
-  sha256: 1a412a61729481a90d6feab88ee2cca6c2bdb5c690167878ab09502795ff98a5
+  sha256: 54780853788facc7c03951f2d1f403036695ef1e7ff6aa9ebb7028dbd5730b5a
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

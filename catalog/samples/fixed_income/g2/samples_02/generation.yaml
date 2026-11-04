@@ -3,7 +3,7 @@ status: complete
 inputs: {}
 output:
   path: datasets/samples/fixed_income/g2/samples_02.json
-  sha256: 2d7957ff927fba84f18df7ddaa043db9a776b945e30a32a8ff6bf79f80775cba
+  sha256: da8bd44a391f9dd95cf9fb172d504e8d4755c2e4a20c109d14a46f204c78d4b4
 hardware:
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu

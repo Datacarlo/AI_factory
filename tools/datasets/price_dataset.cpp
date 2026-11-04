@@ -1,6 +1,7 @@
 // Price-result assembly and publication; CUDA execution lives elsewhere.
 #include "tools/datasets/price_dataset.hpp"
 #include "tools/datasets/artifact_io.hpp"
+#include "tools/datasets/single_asset_json.hpp"
 
 #include "pricing_rows/result_index.cuh"
 
@@ -89,39 +90,36 @@ void write_analytical_price_dataset_impl(
         );
     }
 
-    // Reference source identifiers without duplicating their parameters.
-    nlohmann::ordered_json rows = nlohmann::ordered_json::array();
-    for (std::size_t index = 0U; index < row_count; ++index) {
-        const auto indices = decode_model_curve_product_result_index(
-            index, curve_rows.size(), product_rows.size(), construction
-        );
-        const auto model_index = indices.model_index;
-        const auto curve_index = indices.curve_index;
-        const auto product_index = indices.product_index;
-        rows.push_back({
-            {"model_id", model_rows.at(model_index).at("id")},
-            {"product_id", product_rows.at(product_index).at("id")},
-            {"curve_id", curve_rows.at(curve_index).at("id")},
-            {"price", prices[index]},
-        });
-    }
-
+    // Embed quoted inputs without materializing a table of expanded rows.
     nlohmann::ordered_json json_document = {
         {"database_id", database_id},
         {"model_family", model_document.at("model_family")},
         {"product_family", product_document.at("product_family")},
         {"curve_family", curve_document.at("curve_family")},
     };
-    if (product_document.contains("quote_convention")) {
-        json_document["quote_convention"] = product_document.at("quote_convention");
-    }
     add_option_side(json_document, dataset_path);
     json_document["row_count"] = row_count;
     json_document["model_dataset"] = dataset_reference(model_document);
-    json_document["curve_dataset"] = dataset_reference(curve_document);
     json_document["product_dataset"] = dataset_reference(product_document);
-    json_document["results"] = std::move(rows);
-    write_json_file(dataset_path, json_document);
+    json_document["curve_dataset"] = dataset_reference(curve_document);
+    if (product_document.contains("time_convention")) {
+        json_document["time_convention"] = product_document.at("time_convention");
+    }
+    if (product_document.contains("quote_convention")) {
+        json_document["quote_convention"] = product_document.at("quote_convention");
+    }
+    write_single_asset_json(dataset_path, json_document, row_count, [&](std::size_t index) {
+        const auto indices = decode_model_curve_product_result_index(
+            index, curve_rows.size(), product_rows.size(), construction
+        );
+        const auto model_index = indices.model_index;
+        const auto curve_index = indices.curve_index;
+        const auto product_index = indices.product_index;
+        auto row = single_asset_observation(index, model_rows.at(model_index),
+            product_rows.at(product_index), &curve_rows.at(curve_index));
+        row["price"] = prices[index];
+        return row;
+    });
 
     if (!cuda_execution.is_object() || cuda_execution.empty()) {
         throw std::invalid_argument(
@@ -178,8 +176,22 @@ void write_analytical_price_dataset_impl(
             "The price dataset must have a non-empty basename."
         );
     }
-    nlohmann::ordered_json rows = nlohmann::ordered_json::array();
-    for (std::size_t index = 0U; index < row_count; ++index) {
+    nlohmann::ordered_json json_document = {
+        {"database_id", database_id},
+        {"model_family", model_document.at("model_family")},
+        {"product_family", product_document.at("product_family")},
+    };
+    add_option_side(json_document, dataset_path);
+    json_document["row_count"] = row_count;
+    json_document["model_dataset"] = dataset_reference(model_document);
+    json_document["product_dataset"] = dataset_reference(product_document);
+    if (product_document.contains("time_convention")) {
+        json_document["time_convention"] = product_document.at("time_convention");
+    }
+    if (product_document.contains("quote_convention")) {
+        json_document["quote_convention"] = product_document.at("quote_convention");
+    }
+    write_single_asset_json(dataset_path, json_document, row_count, [&](std::size_t index) {
         const std::size_t model_index =
             is_cartesian(construction)
             ? index / product_rows.size()
@@ -188,27 +200,11 @@ void write_analytical_price_dataset_impl(
             is_cartesian(construction)
             ? index % product_rows.size()
             : index;
-        rows.push_back({
-            {"model_id", model_rows.at(model_index).at("id")},
-            {"product_id", product_rows.at(product_index).at("id")},
-            {"price", prices[index]},
-        });
-    }
-
-    nlohmann::ordered_json json_document = {
-        {"database_id", database_id},
-        {"model_family", model_document.at("model_family")},
-        {"product_family", product_document.at("product_family")},
-    };
-    if (product_document.contains("quote_convention")) {
-        json_document["quote_convention"] = product_document.at("quote_convention");
-    }
-    add_option_side(json_document, dataset_path);
-    json_document["row_count"] = row_count;
-    json_document["model_dataset"] = dataset_reference(model_document);
-    json_document["product_dataset"] = dataset_reference(product_document);
-    json_document["results"] = std::move(rows);
-    write_json_file(dataset_path, json_document);
+        auto row = single_asset_observation(index, model_rows.at(model_index),
+            product_rows.at(product_index));
+        row["price"] = prices[index];
+        return row;
+    });
 
     if (!cuda_execution.is_object() || cuda_execution.empty()) {
         throw std::invalid_argument(
@@ -289,10 +285,30 @@ void write_monte_carlo_price_dataset_impl(
             "The price dataset must have a non-empty basename."
         );
     }
-    // Keep only input identifiers and pricing results in the JSON. The
+    // Keep input identifiers, quoted parameters and pricing results. The
     // sampling plan, seed, methodology and measured time live in YAML.
-    nlohmann::ordered_json rows = nlohmann::ordered_json::array();
-    for (std::size_t index = 0; index < row_count; ++index) {
+    nlohmann::ordered_json json_document = {
+        {"database_id", database_id},
+        {"model_family", model_document.at("model_family")},
+        {"product_family", product_document.at("product_family")},
+    };
+    if (has_curve) {
+        json_document["curve_family"] = curve_document.at("curve_family");
+    }
+    add_option_side(json_document, dataset_path);
+    json_document["row_count"] = row_count;
+    json_document["model_dataset"] = dataset_reference(model_document);
+    json_document["product_dataset"] = dataset_reference(product_document);
+    if (has_curve) {
+        json_document["curve_dataset"] = dataset_reference(curve_document);
+    }
+    if (product_document.contains("time_convention")) {
+        json_document["time_convention"] = product_document.at("time_convention");
+    }
+    if (product_document.contains("quote_convention")) {
+        json_document["quote_convention"] = product_document.at("quote_convention");
+    }
+    write_single_asset_json(dataset_path, json_document, row_count, [&](std::size_t index) {
         std::size_t model_index = index;
         std::size_t curve_index = index;
         std::size_t product_index = index;
@@ -311,39 +327,13 @@ void write_monte_carlo_price_dataset_impl(
             model_index = source.model_index;
             product_index = source.product_index;
         }
-        nlohmann::ordered_json row = {
-            {"model_id", model_rows.at(model_index).at("id")},
-            {"product_id", product_rows.at(product_index).at("id")},
-        };
-        if (has_curve) {
-            row["curve_id"] = curve_document.at("curves")
-                .at(curve_index).at("id");
-        }
+        auto row = single_asset_observation(index, model_rows.at(model_index),
+            product_rows.at(product_index), has_curve
+                ? &curve_document.at("curves").at(curve_index) : nullptr);
         row["price"] = prices[index];
         row["standard_error"] = standard_errors[index];
-        rows.push_back(std::move(row));
-    }
-
-    nlohmann::ordered_json json_document = {
-        {"database_id", database_id},
-        {"model_family", model_document.at("model_family")},
-        {"product_family", product_document.at("product_family")},
-    };
-    if (has_curve) {
-        json_document["curve_family"] = curve_document.at("curve_family");
-    }
-    if (product_document.contains("quote_convention")) {
-        json_document["quote_convention"] = product_document.at("quote_convention");
-    }
-    add_option_side(json_document, dataset_path);
-    json_document["row_count"] = row_count;
-    json_document["model_dataset"] = dataset_reference(model_document);
-    if (has_curve) {
-        json_document["curve_dataset"] = dataset_reference(curve_document);
-    }
-    json_document["product_dataset"] = dataset_reference(product_document);
-    json_document["results"] = std::move(rows);
-    write_json_file(dataset_path, json_document);
+        return row;
+    });
 
     if (!cuda_execution.is_object() || cuda_execution.empty()) {
         throw std::invalid_argument(
