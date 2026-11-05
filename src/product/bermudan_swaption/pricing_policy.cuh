@@ -4,6 +4,7 @@
 #include "cuda/check_cuda.cuh"
 #include "pricing_rows/device_inputs.cuh"
 #include "fixed_income/swaption_side.cuh"
+#include "fixed_income/cashflows.cuh"
 #include "longstaff_schwartz/workspace.cuh"
 #include "schedule/early_exercise_schedule.cuh"
 #include "product/bermudan_swaption/parameters.hpp"
@@ -11,6 +12,7 @@
 
 #include <cuda_runtime.h>
 
+#include <algorithm>
 #include <cmath>
 #include <concepts>
 #include <cstddef>
@@ -70,7 +72,17 @@ struct BermudanSwaptionPricingPolicyCore {
     using DeviceInputs = DeviceInputsPolicy;
     using HostInputs = EarlyExerciseProductHostInputs<ProductParameters>;
     using ContinuationState = ContinuationStatePolicy;
-    using StateView = typename ContinuationState::StateView;
+    using BondCoefficients = typename Analytics::BondCoefficients;
+    static constexpr bool kCacheBondCoefficients = [] {
+        if constexpr (requires { Analytics::cache_bond_coefficients; })
+            return Analytics::cache_bond_coefficients;
+        else
+            return true;
+    }();
+    struct StateView : ContinuationState::StateView {
+        unsigned char* bond_tables;
+        std::size_t bond_bytes_per_observation;
+    };
     using RegressionInput = typename ContinuationState::RegressionInput;
 
     static_assert(std::same_as<Dynamics, typename ContinuationState::Dynamics>);
@@ -87,6 +99,7 @@ struct BermudanSwaptionPricingPolicyCore {
             regression_state;
         float time_day_fraction;
         std::uint32_t regression_count;
+        const BondCoefficients* bond_coefficients = nullptr;
     };
 
     static_assert(std::is_trivially_copyable_v<PreparedRow>);
@@ -101,7 +114,75 @@ struct BermudanSwaptionPricingPolicyCore {
         unsigned char* workspace,
         const longstaff_schwartz::WorkspaceLayout& layout
     ) {
-        return ContinuationState::make_state_view(workspace, layout);
+        if constexpr (!kCacheBondCoefficients)
+            return {ContinuationState::make_state_view(workspace, layout), nullptr, 0U};
+        const auto& region = layout.observation_fields.at(0);
+        return {ContinuationState::make_state_view(workspace, layout),
+                workspace + region.offset, region.value_size};
+    }
+
+    template<typename Inputs>
+    static std::vector<longstaff_schwartz::StateFieldDescriptor>
+    observation_field_descriptors(const Inputs& inputs) {
+        if constexpr (!kCacheBondCoefficients) return {};
+        std::size_t maximum_payments = 0U;
+        for (std::size_t i = 0U; i < inputs.product_count; ++i)
+            maximum_payments = std::max(maximum_payments,
+                static_cast<std::size_t>(inputs.products[i].payment_count));
+        return {{checked_workspace_product(maximum_payments + 1U,
+                    sizeof(BondCoefficients), "Bermudan bond table exceeds size_t."),
+                 alignof(BondCoefficients)}};
+    }
+
+    // Rectangular table per node: exercises x (coupon slots + start bond).
+    __host__ __device__ static std::size_t bond_table_count(
+        const ProductParameters& product
+    ) {
+        if constexpr (!kCacheBondCoefficients) return 0U;
+        return static_cast<std::size_t>(product.exercise_count)
+            * (static_cast<std::size_t>(product.payment_count) + 1U);
+    }
+
+    __device__ __forceinline__ static void prepare_bond_table(
+        PreparedRow& row, BondCoefficients* table
+    ) {
+        if constexpr (!kCacheBondCoefficients) {
+            row.bond_coefficients = nullptr;
+            return;
+        }
+        const std::size_t stride = static_cast<std::size_t>(row.product.payment_count) + 1U;
+        for (std::uint32_t exercise = 0U; exercise < row.product.exercise_count; ++exercise) {
+            const float time = exercise_time(row, exercise);
+            const auto schedule = make_bermudan_swaption_schedule_view(
+                row.product, exercise, row.time_day_fraction);
+            for (std::uint32_t payment = 0U; payment < schedule.payment_count(); ++payment)
+                table[exercise * stride + payment] = Analytics::bond_coefficients(
+                    row.analytics, time, schedule.payment_time(payment));
+            table[exercise * stride + row.product.payment_count] =
+                Analytics::bond_coefficients(row.analytics, time, time);
+        }
+        row.bond_coefficients = table;
+    }
+
+    __device__ __forceinline__ static void prepare_observations(
+        PreparedRow& row, const StateView& states
+    ) {
+        if constexpr (!kCacheBondCoefficients) return;
+        auto* table = reinterpret_cast<BondCoefficients*>(states.bond_tables
+            + (row.state_offset / row.paths_per_price) * states.bond_bytes_per_observation);
+        prepare_bond_table(row, table);
+    }
+
+    template<typename FactorState>
+    __device__ __forceinline__ static float prepared_bond(
+        const BondCoefficients& coefficients, const FactorState& state
+    ) {
+        if constexpr (requires { state.state_x; state.state_y; }) {
+            return expf(fmaf(-coefficients.B.state_x, state.state_x,
+                fmaf(-coefficients.B.state_y, state.state_y, coefficients.log_A)));
+        } else {
+            return expf(fmaf(-coefficients.B, state, coefficients.log_A));
+        }
     }
 
     static longstaff_schwartz::EarlyExerciseRowPlan plan_row(
@@ -165,6 +246,20 @@ struct BermudanSwaptionPricingPolicyCore {
             make_bermudan_swaption_schedule_view(
                 row.product, exercise, row.time_day_fraction
             );
+        if constexpr (kCacheBondCoefficients) {
+            if (row.bond_coefficients != nullptr) {
+                const auto* table = row.bond_coefficients
+                    + exercise * (static_cast<std::size_t>(row.product.payment_count) + 1U);
+                float annuity = 0.0f, final_bond = 0.0f;
+                fixed_income::fixed_leg_terms(schedule, [&](std::uint32_t payment) {
+                    return prepared_bond(table[payment], state);
+                }, annuity, final_bond);
+                const float start_bond = prepared_bond(table[row.product.payment_count], state);
+                const float payer_value = start_bond - final_bond - row.product.strike * annuity;
+                constexpr float side_sign = Side == SwaptionSide::payer ? 1.0f : -1.0f;
+                return row.product.notional * fmaxf(side_sign * payer_value, 0.0f);
+            }
+        }
         const float payer_value = Analytics::payer_swap_value(
             row.analytics,
             state,

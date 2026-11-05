@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/equity/markovian/bates/price_gradients/athena_autocalls/bates_01__athena_autocalls_01__01_cartesian_shard00_price_gradient.json
   sha256: e1082e57c0f5317b7df761811199fbb624835c47c42ee8bfa9ea8d7036f1fba9
 hardware:
-  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   name: Tesla V100-SXM2-32GB
   uuid: GPU-c0388c6e-7fcc-dde8-96c3-dc94f06ca5f6
   compute_capability: '7.0'
@@ -23,6 +23,3 @@ software:
   cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 235547.13363840594
-  duration: 2 j 17 h 25 min 47 s 134 ms

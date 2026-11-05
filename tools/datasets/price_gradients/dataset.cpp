@@ -287,7 +287,12 @@ void write_dataset(const Recipe& recipe, const Results& result) {
     const auto first_count = graph.first.size();
     const auto diagonal_count = graph.diagonal_second.size();
     const auto mixed_count = graph.mixed_second.size();
-    if (graph.output_count() == 1U) {
+    if (recipe.price_only_output && sensitivity_count != 0U) {
+        throw std::invalid_argument(
+            "Price-only generation must not request sensitivities."
+        );
+    }
+    if (graph.output_count() == 1U && !recipe.price_only_output) {
         throw std::invalid_argument(
             "Gradient artifact has no requested sensitivity output."
         );

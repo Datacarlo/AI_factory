@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/equity/markovian/variance_gamma/price_gradients/straddles/variance_gamma_01__straddles_01__01_cartesian_shard00_price_gradient.json
   sha256: e464ecb659113ad35e371918426fc11a29d87ccf705dc85060cdc2ae0a0b78ab
 hardware:
-  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   name: Tesla V100-SXM2-32GB
   uuid: GPU-c2c5b606-4c26-00bb-857d-e5e0eb7eda00
   compute_capability: '7.0'
@@ -24,6 +24,3 @@ software:
   cuda_target_architectures: '70'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 107.736389334
-  duration: 1 min 47 s 736 ms

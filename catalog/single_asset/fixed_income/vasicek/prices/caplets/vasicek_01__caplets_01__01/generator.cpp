@@ -12,14 +12,7 @@ int main() {
         datasets::price_gradients::Recipe recipe{
             "datasets/parameters/model/fixed_income/vasicek/parameters/vasicek_01.json", "datasets/parameters/product/rate_option/rate_options_01.json", "datasets/single_asset/fixed_income/vasicek/prices/caplets/vasicek_01__caplets_01__01.json", "catalog/single_asset/fixed_income/vasicek/prices/caplets/vasicek_01__caplets_01__01/generation.yaml",
             "catalog/single_asset/fixed_income/vasicek/prices/caplets/vasicek_01__caplets_01__01/recipe.yaml", PriceConstruction::Aligned,
-            {{
-        {"model.mean_reversion", {0.005, pg::BumpScale::relative}},
-        {"model.long_term_mean", {0.0005, pg::BumpScale::absolute}},
-        {"model.volatility", {0.005, pg::BumpScale::relative}},
-        {"model.initial_state", {0.0005, pg::BumpScale::absolute}},
-        {"product.strike", {0.0005, pg::BumpScale::absolute}},
-        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
-            }}, {1.0f / 504.0f, 2U}, true
+            {}, {1.0f / 504.0f, 2U}, true
         };
         recipe.price_only_output = true;
         recipe.option_side = "call";

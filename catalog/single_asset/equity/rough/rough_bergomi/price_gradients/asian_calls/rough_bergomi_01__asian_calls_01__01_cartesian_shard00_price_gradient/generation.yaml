@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/equity/rough/rough_bergomi/price_gradients/asian_calls/rough_bergomi_01__asian_calls_01__01_cartesian_shard00_price_gradient.json
   sha256: 59d4251960f636fd3e85cfddd99b474cd7475b68ac885e8c0c71e23abbce5ccc
 hardware:
-  cpu_model: Intel(R) Core(TM) Ultra 9 285K
   device: gpu
+  cpu_model: Intel(R) Core(TM) Ultra 9 285K
   name: NVIDIA GeForce RTX 5090
   uuid: GPU-58db2f59-3fa0-ca58-6a4c-4acfbbe0d532
   compute_capability: '12.0'
@@ -23,6 +23,3 @@ software:
   cuda_compiler: Cuda compilation tools, release 13.2, V13.2.86
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 44067.61929399194
-  duration: 12 h 14 min 27 s 619 ms

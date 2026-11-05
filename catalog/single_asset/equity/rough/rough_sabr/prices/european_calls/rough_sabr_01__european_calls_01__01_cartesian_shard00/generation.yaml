@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/equity/rough/rough_sabr/prices/european_calls/rough_sabr_01__european_calls_01__01_cartesian_shard00.json
   sha256: a2de37be616009faf85e0384b55dac4fed468cfad7e3996628a3ada8e0a01977
 hardware:
-  cpu_model: Intel(R) Core(TM) Ultra 9 285K
   device: gpu
+  cpu_model: Intel(R) Core(TM) Ultra 9 285K
   name: NVIDIA GeForce RTX 5090
   uuid: GPU-11b9a6f1-3f11-a2b5-400c-0eee5c2089c6
   compute_capability: '12.0'
@@ -24,6 +24,3 @@ software:
   cuda_target_architectures: '120'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 1998.1972334240563
-  duration: 33 min 18 s 197 ms

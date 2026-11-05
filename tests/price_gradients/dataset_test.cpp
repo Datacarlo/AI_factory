@@ -56,7 +56,18 @@ int main() {
         auto price_recipe = recipe;
         price_recipe.price_only_output = true;
         price_recipe.dataset = directory / "prices.json";
-        data::write_dataset(price_recipe, result);
+        bool discarded_gradients_rejected = false;
+        try { data::write_dataset(price_recipe, result); }
+        catch (const std::invalid_argument&) { discarded_gradients_rejected = true; }
+        require(discarded_gradients_rejected);
+        price_recipe.configuration.sensitivities.clear();
+        auto price_result = result;
+        price_result.gradients.clear();
+        price_result.gradient_errors.clear();
+        price_result.stencils.clear();
+        price_result.execution["sensitivity_count"] = 0U;
+        price_result.execution["scenario_count"] = 1U;
+        data::write_dataset(price_recipe, price_result);
         auto expected_price_row = valid["results"][0];
         expected_price_row.erase("gradients");
         expected_price_row.erase("gradient_standard_errors");

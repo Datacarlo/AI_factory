@@ -1,0 +1,19 @@
+schema_version: 4
+status: complete
+inputs:
+  source_model:
+    path: datasets/parameters/model/equity/rough/quadratic_rough_heston/parameters/quadratic_rough_heston_01.json
+    sha256: 4e24a1b3890b9d492b66ba347b1f7276298a8e61a86ad7ce5ac1e7db0500a539
+output:
+  path: datasets/parameters/model/equity/rough/quadratic_rough_heston/factor_parameters/quadratic_rough_heston_multi100_core_slot0_01.json
+  sha256: 57ec5cdef5ba779fbd5dcad8a6169e2578949c91bc7fabebd8a85cad97f31240
+hardware:
+  device: cpu
+  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
+software:
+  cmake: 3.22.1
+  cxx_compiler: GNU 14.3.0
+  cuda_compiler: 12.9.41
+  cuda_target_architectures: '89'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1

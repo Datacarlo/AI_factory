@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/fixed_income/g2/price_gradients/zero_coupon_bond_up_and_out_calls/g2_01__zero_coupon_bond_up_and_out_calls_01__01_cartesian_shard00_price_gradient.json
   sha256: b971433e7e2b4087a728b55fd98be568efa2d2e974bdf7b4cb5c519860c1f2bf
 hardware:
-  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   name: Tesla V100-SXM2-32GB
   uuid: GPU-eb05268b-e265-c927-124b-f944b18caf0c
   compute_capability: '7.0'
@@ -24,6 +24,3 @@ software:
   cuda_target_architectures: '70'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 5306.413026050897
-  duration: 1 h 28 min 26 s 413 ms

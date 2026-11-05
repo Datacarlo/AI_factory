@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/equity/markovian/merton/prices/european_calls/merton_01__european_calls_01__01_cartesian_shard00.json
   sha256: 2b5b6634de4d11e111fd48344f5950f25ec7a63fc5ed19d652dca9ea938a2fce
 hardware:
-  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   name: NVIDIA A100 80GB PCIe
   uuid: GPU-5102f6b2-92ef-1ca5-849f-649cb3851bf6
   compute_capability: '8.0'
@@ -23,6 +23,3 @@ software:
   cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 6.51494697900489
-  duration: 6 s 515 ms

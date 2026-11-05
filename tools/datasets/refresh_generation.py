@@ -17,6 +17,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
+from tools.datasets.metadata_format import normalize_generation
 from tools.datasets.artifact_publication import contained_path, digest
 from tools.datasets.dataset_provenance import assess, hardware_from_observation, known_fields
 from tools.datasets.metadata_schemas import validate_document
@@ -108,9 +109,7 @@ def refresh(recipe: dict, previous: dict, dataset: Path, root: Path,
         record["hardware"] = hardware
     if software:
         record["software"] = software
-    if (recipe.get("kind") in {"prices", "price_gradients", "price_delta"}
-            and previous.get("timing") and previous.get("schema_version") == 4):
-        record["timing"] = previous["timing"]
+    record = normalize_generation(record)
     validate_document(record, "generation", dataset)
     result = assess(recipe, record, dataset)
     if result["status"] != "compatible":

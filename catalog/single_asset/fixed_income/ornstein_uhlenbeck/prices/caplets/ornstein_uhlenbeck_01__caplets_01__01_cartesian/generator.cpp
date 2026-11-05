@@ -12,13 +12,7 @@ int main() {
         datasets::price_gradients::Recipe recipe{
             "datasets/parameters/model/fixed_income/ornstein_uhlenbeck/parameters/ornstein_uhlenbeck_01.json", "datasets/parameters/product/rate_option/rate_options_01.json", "datasets/single_asset/fixed_income/ornstein_uhlenbeck/prices/caplets/ornstein_uhlenbeck_01__caplets_01__01_cartesian.json", "catalog/single_asset/fixed_income/ornstein_uhlenbeck/prices/caplets/ornstein_uhlenbeck_01__caplets_01__01_cartesian/generation.yaml",
             "catalog/single_asset/fixed_income/ornstein_uhlenbeck/prices/caplets/ornstein_uhlenbeck_01__caplets_01__01_cartesian/recipe.yaml", PriceConstruction::CartesianProduct,
-            {{
-        {"model.mean_reversion", {0.005, pg::BumpScale::relative}},
-        {"model.volatility", {0.005, pg::BumpScale::relative}},
-        {"model.initial_state", {0.0005, pg::BumpScale::absolute}},
-        {"product.strike", {0.0005, pg::BumpScale::absolute}},
-        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
-            }}, {1.0f / 504.0f, 2U}, true
+            {}, {1.0f / 504.0f, 2U}, true
         };
         recipe.price_only_output = true;
         recipe.option_side = "call";

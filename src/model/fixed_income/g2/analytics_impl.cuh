@@ -426,4 +426,12 @@ __device__ __forceinline__ float payer_swap_value(
     );
 }
 
+
+__device__ __forceinline__ BermudanSwaptionAnalyticsPolicy::BondCoefficients
+BermudanSwaptionAnalyticsPolicy::bond_coefficients(
+    const PreparedModel& model, float time, float maturity
+) {
+    return g2::affine_bond_coefficients(model.process, maturity - time);
+}
+
 }  // namespace ai_factory::workbench::model::fixed_income::g2

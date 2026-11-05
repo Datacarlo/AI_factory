@@ -14,17 +14,7 @@ int main() {
         datasets::price_gradients::Recipe recipe{
             "datasets/parameters/model/fixed_income/hull_white/parameters/hull_white_01.json", "datasets/parameters/product/bermudan_swaption/bermudan_swaptions_01_shard00.json", "datasets/single_asset/fixed_income/hull_white/prices/svensson/bermudan_payer_swaptions/hull_white_01__svensson_01__bermudan_payer_swaptions_01__01_cartesian_shard00.json", "catalog/single_asset/fixed_income/hull_white/prices/svensson/bermudan_payer_swaptions/hull_white_01__svensson_01__bermudan_payer_swaptions_01__01_cartesian_shard00/generation.yaml",
             "catalog/single_asset/fixed_income/hull_white/prices/svensson/bermudan_payer_swaptions/hull_white_01__svensson_01__bermudan_payer_swaptions_01__01_cartesian_shard00/recipe.yaml", PriceConstruction::SampledCurveCartesianProduct,
-            {{
-        {"model.mean_reversion", {0.005, pg::BumpScale::relative}},
-        {"model.volatility", {0.005, pg::BumpScale::relative}},
-        {"curve.beta0", {0.0005, pg::BumpScale::absolute}},
-        {"curve.beta1", {0.0005, pg::BumpScale::absolute}},
-        {"curve.beta2", {0.0005, pg::BumpScale::absolute}},
-        {"curve.beta3", {0.0005, pg::BumpScale::absolute}},
-        {"curve.tau1", {0.005, pg::BumpScale::relative}},
-        {"curve.tau2", {0.005, pg::BumpScale::relative}},
-        {"product.strike", {0.0005, pg::BumpScale::absolute}}
-            }}, {1.0f / 504.0f, 2U}, true
+            {}, {1.0f / 504.0f, 2U}, true
         };
         recipe.price_only_output = true;
         recipe.option_side = "payer";

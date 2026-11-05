@@ -20,8 +20,5 @@ software:
   cmake: 3.31.6
   cxx_compiler: GNU 14.2.0
   cuda_compiler: 12.9.41
-  mathdx: 25.12.1
   nlohmann_json: 3.10.5
-timing:
-  wall_seconds: 92.03255323297344
-  duration: 1 min 32 s 33 ms
+  mathdx: 25.12.1

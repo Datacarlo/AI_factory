@@ -8,20 +8,11 @@ inputs:
 output:
   path: datasets/single_asset/equity/markovian/heston/prices/range_accruals/heston_01__range_accruals_01__01_cartesian_shard00.json
   format: json
-row_count: 100000
-numerical_method:
-  engine: equity_markovian
+row_layout: inline_parameters
 outputs:
 - price
 - standard_error
-paths_per_price: 1048576
-seeds:
-  dynamics: 11668827098373423104
-random_number_generator: philox
-time_grid:
-  steps_per_year: 504
-  simulation_steps_per_day: 2
-  delta_t: 1 / 504
+row_count: 100000
 product_shard:
   index: 0
   total_shards: 10
@@ -29,4 +20,13 @@ product_shard:
   selection: one seeded permutation position per contiguous ten-row block
   core_products: 90
   stress_products: 10
-row_layout: inline_parameters
+numerical_method:
+  engine: equity_markovian
+time_grid:
+  steps_per_year: 504
+  simulation_steps_per_day: 2
+  delta_t: 1 / 504
+paths_per_price: 1048576
+random_number_generator: philox
+seeds:
+  dynamics: 11668827098373423104

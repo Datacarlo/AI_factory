@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/equity/rough/rough_bergomi/prices/european_calls/rough_bergomi_01__european_calls_01__01_cartesian_shard00.json
   sha256: 8ca6d106f1f90905bf2f53552eeb0a51f2b58bb874963b6d500f18581a7569c3
 hardware:
-  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   name: NVIDIA A100 80GB PCIe
   uuid: GPU-5102f6b2-92ef-1ca5-849f-649cb3851bf6
   compute_capability: '8.0'
@@ -23,6 +23,3 @@ software:
   cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 5990.267170478124
-  duration: 1 h 39 min 50 s 267 ms

@@ -12,17 +12,7 @@ int main() {
         datasets::price_gradients::Recipe recipe{
             "datasets/parameters/model/fixed_income/g2/parameters/g2_01.json", "datasets/parameters/product/zero_coupon_bond_option/zero_coupon_bond_options_01.json", "datasets/single_asset/fixed_income/g2/prices/zero_coupon_bond_puts/g2_01__zero_coupon_bond_puts_01__01_cartesian.json", "catalog/single_asset/fixed_income/g2/prices/zero_coupon_bond_puts/g2_01__zero_coupon_bond_puts_01__01_cartesian/generation.yaml",
             "catalog/single_asset/fixed_income/g2/prices/zero_coupon_bond_puts/g2_01__zero_coupon_bond_puts_01__01_cartesian/recipe.yaml", PriceConstruction::CartesianProduct,
-            {{
-        {"model.mean_reversion_x", {0.005, pg::BumpScale::relative}},
-        {"model.volatility_x", {0.005, pg::BumpScale::relative}},
-        {"model.mean_reversion_y", {0.005, pg::BumpScale::relative}},
-        {"model.volatility_y", {0.005, pg::BumpScale::relative}},
-        {"model.correlation", {0.002, pg::BumpScale::absolute}},
-        {"model.initial_state_x", {0.0005, pg::BumpScale::absolute}},
-        {"model.initial_state_y", {0.0005, pg::BumpScale::absolute}},
-        {"product.strike", {0.005, pg::BumpScale::relative}},
-        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
-            }}, {1.0f / 504.0f, 2U}, true
+            {}, {1.0f / 504.0f, 2U}, true
         };
         recipe.price_only_output = true;
         recipe.option_side = "put";

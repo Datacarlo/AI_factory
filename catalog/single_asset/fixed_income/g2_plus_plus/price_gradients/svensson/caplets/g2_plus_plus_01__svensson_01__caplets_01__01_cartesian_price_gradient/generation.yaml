@@ -14,8 +14,8 @@ output:
   path: datasets/single_asset/fixed_income/g2_plus_plus/price_gradients/svensson/caplets/g2_plus_plus_01__svensson_01__caplets_01__01_cartesian_price_gradient.json
   sha256: 2817fe5545cff645795d38d0b9659b92615a8eb2edfdb2b3c2b13b05ec247d9e
 hardware:
-  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   name: Tesla V100-SXM2-32GB
   uuid: GPU-eb05268b-e265-c927-124b-f944b18caf0c
   compute_capability: '7.0'
@@ -26,6 +26,3 @@ software:
   cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 17.241633664816618
-  duration: 17 s 242 ms

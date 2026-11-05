@@ -13,12 +13,7 @@ int main() {
         datasets::price_gradients::Recipe recipe{
             "datasets/parameters/model/fixed_income/ornstein_uhlenbeck/parameters/ornstein_uhlenbeck_01.json", "datasets/parameters/product/bermudan_swaption/bermudan_swaptions_01.json", "datasets/single_asset/fixed_income/ornstein_uhlenbeck/prices/bermudan_receiver_swaptions/ornstein_uhlenbeck_01__bermudan_receiver_swaptions_01__01.json", "catalog/single_asset/fixed_income/ornstein_uhlenbeck/prices/bermudan_receiver_swaptions/ornstein_uhlenbeck_01__bermudan_receiver_swaptions_01__01/generation.yaml",
             "catalog/single_asset/fixed_income/ornstein_uhlenbeck/prices/bermudan_receiver_swaptions/ornstein_uhlenbeck_01__bermudan_receiver_swaptions_01__01/recipe.yaml", PriceConstruction::Aligned,
-            {{
-        {"model.mean_reversion", {0.005, pg::BumpScale::relative}},
-        {"model.volatility", {0.005, pg::BumpScale::relative}},
-        {"model.initial_state", {0.0005, pg::BumpScale::absolute}},
-        {"product.strike", {0.0005, pg::BumpScale::absolute}}
-            }}, {1.0f / 504.0f, 2U}, true
+            {}, {1.0f / 504.0f, 2U}, true
         };
         recipe.price_only_output = true;
         recipe.option_side = "receiver";

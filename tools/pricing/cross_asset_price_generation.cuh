@@ -46,7 +46,11 @@ cuda::MonteCarloRun execute_cross_asset_prices(
     CrossAssetBatchGeometry geometry={}
 ) {
     static_assert(EquityPack::kAssetCount+RoughPack::kAssetCount>0U);
-    static_assert(Product::kTerminalCashflow);
+    // Terminal products retain their original path; coupon products consume the
+    // rate integral at each fixing, including with a zero-factor constant rate.
+    static_assert(Product::kTerminalCashflow || requires { requires Product::kDiscountedCashflows; });
+    if constexpr (requires { Product::validate_time_configuration(dt, steps_per_day); })
+        Product::validate_time_configuration(dt, steps_per_day);
     constexpr std::size_t rough_count=RoughPack::kAssetCount;
     constexpr std::size_t dimension=rough_count
         +EquityPack::kFactorCount+RatePolicy::kBrownianDimension

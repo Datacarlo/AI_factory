@@ -1,0 +1,132 @@
+schema_version: 1
+kind: "model_parameters"
+dataset_id: "rough_bergomi_multi100_core_slot4_01"
+generator: "catalog/parameters/model/equity/rough/rough_bergomi/factor_parameters/rough_bergomi_multi100_core_slot4_01/generator.cpp"
+output:
+  path: "datasets/parameters/model/equity/rough/rough_bergomi/factor_parameters/rough_bergomi_multi100_core_slot4_01.json"
+  format: "json"
+model_family: "rough Bergomi"
+row_count: 100
+parameterization: "factorized"
+inputs:
+  source_model: "datasets/parameters/model/equity/rough/rough_bergomi/parameters/rough_bergomi_01.json"
+parameters:
+  spot: "Fixed to one for equal initial asset weights."
+  xi_0: "Model factor parameter."
+  dividend_yield: "Model factor parameter."
+  eta: "Model factor parameter."
+  hurst_exponent: "Model factor parameter."
+dynamics:
+  source_model_dataset: "datasets/parameters/model/equity/rough/rough_bergomi/parameters/rough_bergomi_01.json"
+construction:
+  method: "seeded sample without replacement from core prefix"
+  source_model_dataset: "datasets/parameters/model/equity/rough/rough_bergomi/parameters/rough_bergomi_01.json"
+  source_core_prefix_rows: 900
+  sample_seed: 202611040103
+  source_row_indices:
+    - 742
+    - 161
+    - 131
+    - 607
+    - 233
+    - 221
+    - 441
+    - 840
+    - 703
+    - 481
+    - 628
+    - 868
+    - 645
+    - 473
+    - 12
+    - 310
+    - 486
+    - 384
+    - 467
+    - 568
+    - 229
+    - 137
+    - 77
+    - 252
+    - 32
+    - 786
+    - 294
+    - 753
+    - 423
+    - 595
+    - 826
+    - 593
+    - 519
+    - 298
+    - 276
+    - 108
+    - 387
+    - 123
+    - 274
+    - 846
+    - 548
+    - 611
+    - 694
+    - 116
+    - 206
+    - 623
+    - 699
+    - 772
+    - 53
+    - 534
+    - 680
+    - 789
+    - 642
+    - 662
+    - 118
+    - 143
+    - 600
+    - 360
+    - 415
+    - 286
+    - 838
+    - 332
+    - 835
+    - 848
+    - 345
+    - 690
+    - 56
+    - 476
+    - 200
+    - 264
+    - 20
+    - 49
+    - 391
+    - 728
+    - 854
+    - 510
+    - 496
+    - 207
+    - 320
+    - 803
+    - 464
+    - 555
+    - 61
+    - 386
+    - 643
+    - 429
+    - 689
+    - 8
+    - 22
+    - 557
+    - 733
+    - 587
+    - 432
+    - 125
+    - 110
+    - 527
+    - 311
+    - 620
+    - 257
+    - 806
+  excluded:
+    - "risk_free_rate"
+    - "rho"
+    - "correlation"
+  spot_override: 1.0
+  selection_offset: 400

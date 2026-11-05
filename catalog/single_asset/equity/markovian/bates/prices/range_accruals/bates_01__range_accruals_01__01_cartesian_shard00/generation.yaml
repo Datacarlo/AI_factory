@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/equity/markovian/bates/prices/range_accruals/bates_01__range_accruals_01__01_cartesian_shard00.json
   sha256: 74bf706c3ea63dc8de503c0bf8093e4d0dcfc8eb06b6da4db90800a7d3b68182
 hardware:
-  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   name: NVIDIA A100 80GB PCIe
   uuid: GPU-5102f6b2-92ef-1ca5-849f-649cb3851bf6
   compute_capability: '8.0'
@@ -23,6 +23,3 @@ software:
   cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 5274.118570320774
-  duration: 1 h 27 min 54 s 119 ms

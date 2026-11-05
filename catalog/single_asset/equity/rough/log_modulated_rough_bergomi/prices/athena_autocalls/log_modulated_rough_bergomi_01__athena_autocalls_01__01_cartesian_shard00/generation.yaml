@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/equity/rough/log_modulated_rough_bergomi/prices/athena_autocalls/log_modulated_rough_bergomi_01__athena_autocalls_01__01_cartesian_shard00.json
   sha256: 8a5c799bf9d736fb7bc69e18dff9c7ceafa60cab437c1845ef37e92b57b6c064
 hardware:
-  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   name: NVIDIA A100 80GB PCIe
   uuid: GPU-5102f6b2-92ef-1ca5-849f-649cb3851bf6
   compute_capability: '8.0'
@@ -23,6 +23,3 @@ software:
   cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 12753.496231491212
-  duration: 3 h 32 min 33 s 496 ms

@@ -1,4 +1,4 @@
-// One block per terminal price with the central row prepared on device.
+// Shared central-price kernel; terminal and monitored policies prepare their row on device.
 #pragma once
 
 #include "cuda/cuda_kernel_diagnostics.cuh"
@@ -77,8 +77,8 @@ struct CentralTerminalPolicy {
     }
 };
 
-template<typename Dynamics, typename ProductPolicy, typename Preparation, typename Inputs>
-__global__ void terminal_price_kernel(
+template<typename Policy, typename Preparation, typename Inputs>
+__global__ void central_price_kernel(
     Inputs inputs,
     DevicePreparedPlan plan,
     pg::LaunchConfiguration launch,
@@ -86,9 +86,6 @@ __global__ void terminal_price_kernel(
     DevicePreparedStencilOutputs<3U> preparation_outputs,
     std::uint64_t base_seed
 ) {
-    using Policy = CentralTerminalPolicy<
-        Dynamics, ProductPolicy, Preparation
-    >;
     __shared__ typename Policy::PreparedRow prepared;
     __shared__ philox::PhiloxKey key;
     __shared__ int valid_row;
@@ -176,9 +173,10 @@ void launch_device_prepared_terminal_prices(
         configuration,
         output_ranges
     );
-    const auto function = detail::terminal_price_kernel<
-        Dynamics,
-        ProductPolicy,
+    const auto function = detail::central_price_kernel<
+        detail::CentralTerminalPolicy<
+            Dynamics, ProductPolicy, typename HostPlan::Preparation
+        >,
         typename HostPlan::Preparation,
         typename HostPlan::DeviceInputs
     >;

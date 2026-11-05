@@ -5,8 +5,8 @@ output:
   path: datasets/samples/equity/markovian/variance_gamma/samples_01.json
   sha256: b300842a7537e9845f868a2fa57d07697e63b6d3b3d582e1038e23169fdb3b08
 hardware:
-  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   name: NVIDIA A100 80GB PCIe
   uuid: GPU-5102f6b2-92ef-1ca5-849f-649cb3851bf6
   compute_capability: '8.0'

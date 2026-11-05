@@ -109,6 +109,11 @@ __global__ void prepare_mixed_nodes_kernel(
                 + row_node * workspace.observation_stride;
             Base::prepare_observation_table(prepared, observations);
         }
+        prepared.bond_coefficients = Policy::graph_node_bond_coefficients(
+            row, node, stencils, axis_node_indices);
+        if (prepared.bond_coefficients == nullptr)
+            Base::prepare_bond_table(prepared,
+                workspace.bond_coefficients + row_node * workspace.bond_table_stride);
         workspace.graph.node_metadata[row_node] =
             typename NodePolicy::Metadata{};
     }
@@ -247,6 +252,10 @@ struct FrozenReplayMixedNodeGraphPolicy : BasePolicy {
         unsigned int reduction_threads,
         mcpg::TerminalNodeGraphConfiguration configuration
     ) {
+        std::size_t maximum_payments = 0U;
+        for (const auto& product : host.products)
+            maximum_payments = std::max(maximum_payments,
+                static_cast<std::size_t>(product.payment_count));
         return frozen_replay_mixed_workspace_layout<
             CentralPolicy, Base::kTerminalForward
         >(
@@ -254,7 +263,8 @@ struct FrozenReplayMixedNodeGraphPolicy : BasePolicy {
             host.sensitivity_graph,
             reduction_threads,
             configuration,
-            host.maximum_exercise_count
+            host.maximum_exercise_count,
+            maximum_payments
         );
     }
 

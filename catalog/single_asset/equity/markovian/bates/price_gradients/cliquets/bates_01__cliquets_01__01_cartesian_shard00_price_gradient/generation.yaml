@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/equity/markovian/bates/price_gradients/cliquets/bates_01__cliquets_01__01_cartesian_shard00_price_gradient.json
   sha256: 3e8f34c27b6ac9b4f725442fae124bffa9eeb8c10ec766fec2a73a57eac55e4f
 hardware:
-  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   name: Tesla V100-SXM2-32GB
   uuid: GPU-c0388c6e-7fcc-dde8-96c3-dc94f06ca5f6
   compute_capability: '7.0'
@@ -24,6 +24,3 @@ software:
   cuda_target_architectures: '70'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 234893.78502010508
-  duration: 2 j 17 h 14 min 53 s 785 ms

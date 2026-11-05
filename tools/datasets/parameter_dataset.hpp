@@ -41,7 +41,8 @@ void write_core_factorized_model_dataset(
     std::size_t core_prefix_count,
     std::size_t row_count,
     std::uint64_t seed,
-    std::optional<float> spot_override = std::nullopt
+    std::optional<float> spot_override = std::nullopt,
+    std::size_t selection_offset = 0U
 );
 
 void write_curve_dataset(

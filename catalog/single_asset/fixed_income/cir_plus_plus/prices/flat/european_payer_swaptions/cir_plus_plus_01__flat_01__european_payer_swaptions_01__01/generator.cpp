@@ -13,15 +13,7 @@ int main() {
         datasets::price_gradients::Recipe recipe{
             "datasets/parameters/model/fixed_income/cir_plus_plus/parameters/cir_plus_plus_01.json", "datasets/parameters/product/european_swaption/european_swaptions_01.json", "datasets/single_asset/fixed_income/cir_plus_plus/prices/flat/european_payer_swaptions/cir_plus_plus_01__flat_01__european_payer_swaptions_01__01.json", "catalog/single_asset/fixed_income/cir_plus_plus/prices/flat/european_payer_swaptions/cir_plus_plus_01__flat_01__european_payer_swaptions_01__01/generation.yaml",
             "catalog/single_asset/fixed_income/cir_plus_plus/prices/flat/european_payer_swaptions/cir_plus_plus_01__flat_01__european_payer_swaptions_01__01/recipe.yaml", PriceConstruction::Aligned,
-            {{
-        {"model.mean_reversion", {0.005, pg::BumpScale::relative}},
-        {"model.long_term_mean", {0.005, pg::BumpScale::relative}},
-        {"model.volatility", {0.005, pg::BumpScale::relative}},
-        {"model.initial_state", {0.0005, pg::BumpScale::absolute}},
-        {"curve.rate", {0.0005, pg::BumpScale::absolute}},
-        {"product.strike", {0.0005, pg::BumpScale::absolute}},
-        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
-            }}, {1.0f / 504.0f, 2U}, true
+            {}, {1.0f / 504.0f, 2U}, true
         };
         recipe.price_only_output = true;
         recipe.option_side = "payer";

@@ -2,6 +2,7 @@
 #pragma once
 
 #include "cuda/cuda_kernel_diagnostics.cuh"
+#include "monte_carlo/price_gradients/device_prepared_terminal_price_kernel.cuh"
 #include "equity/price_gradients/device_preparation.cuh"
 #include "monte_carlo/price_gradients/terminal_sensitivity_policy.cuh"
 #include "philox/distributions.cuh"
@@ -232,9 +233,31 @@ void launch_device_prepared_first_sensitivities(
     const char* variant
 ) {
     if (plan.sensitivity_count == 0U) {
-        throw std::invalid_argument(
-            "A device-prepared sensitivity launch requires a selection."
-        );
+        if constexpr (requires { typename Policy::CentralPolicy; }) {
+            const auto function = detail::central_price_kernel<
+                typename Policy::CentralPolicy, Preparation, Inputs
+            >;
+            const std::size_t blocks = std::min(
+                configuration.result_count, configuration.block_count
+            );
+            const std::size_t shared = 2U
+                * (configuration.threads_per_block / 32U) * sizeof(double);
+            report_cuda_kernel_launch_if_enabled(
+                kernel_name, variant, function,
+                dim3(static_cast<unsigned int>(blocks)),
+                dim3(configuration.threads_per_block), shared
+            );
+            function<<<blocks, configuration.threads_per_block, shared>>>(
+                inputs, plan, configuration, outputs, stencil_outputs,
+                configuration.base_seed
+            );
+            check_cuda(cudaGetLastError(), kernel_name);
+            return;
+        } else {
+            throw std::invalid_argument(
+                "This sensitivity policy does not provide a central-only path."
+            );
+        }
     }
     if (configuration.block_count < plan.sensitivity_count) {
         throw std::invalid_argument(

@@ -14,6 +14,10 @@ ai_factory_add_dataset_library(
     ai_factory_product_basket_call_dataset
     src/product/basket_call/dataset.cpp
 )
+ai_factory_add_dataset_library(
+    ai_factory_product_multi_asset_autocall_dataset
+    src/product/multi_asset_autocall/dataset.cpp
+)
 ai_factory_add_offline_library(
     ai_factory_multi_asset_price_dataset
     tools/datasets/multi_asset_price_dataset.cpp
@@ -180,3 +184,5 @@ if(AI_FACTORY_ENABLE_LOCAL_EXPERIMENTS
     AND EXISTS "${CMAKE_SOURCE_DIR}/work/cmake/AIFactoryMultiAssetExperiments.cmake")
     include("${CMAKE_SOURCE_DIR}/work/cmake/AIFactoryMultiAssetExperiments.cmake")
 endif()
+
+include(${CMAKE_SOURCE_DIR}/cmake/AIFactoryHomogeneousMultiAsset.cmake)

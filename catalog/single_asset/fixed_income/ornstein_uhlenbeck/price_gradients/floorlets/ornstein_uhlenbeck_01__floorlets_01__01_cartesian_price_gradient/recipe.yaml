@@ -1,6 +1,7 @@
 schema_version: 1
 kind: price_gradients
 dataset_id: ornstein_uhlenbeck_01__floorlets_01__01_cartesian_price_gradient
+option_side: put
 generator: catalog/single_asset/fixed_income/ornstein_uhlenbeck/price_gradients/floorlets/ornstein_uhlenbeck_01__floorlets_01__01_cartesian_price_gradient/generator.cpp
 inputs:
   model: datasets/parameters/model/fixed_income/ornstein_uhlenbeck/parameters/ornstein_uhlenbeck_01.json
@@ -8,10 +9,27 @@ inputs:
 output:
   path: datasets/single_asset/fixed_income/ornstein_uhlenbeck/price_gradients/floorlets/ornstein_uhlenbeck_01__floorlets_01__01_cartesian_price_gradient.json
   format: json
+row_layout: inline_parameters
 candidate_row_count: 1000000
+row_selection:
+  method: resolved_rate_strike_above_minimum
+  minimum_annualized_decimal_rate: 1.0e-05
+  reference: initial_unbumped_model_and_curve
+  order: stable_candidate_index
+quote_convention:
+  strike:
+    mode: additive_to_initial_simple_forward_rate
+    unit: annualized_decimal_rate
+    effective_level: strike = initial_simple_forward_rate + strike_spread
+time_representation:
+  kind: exact_terminal_transition
+  contractual_days_per_year: 252
+  maturity_bump_steps_per_year: 504
 paths_per_price: 0
 sensitivity:
   method: finite_difference
+  bump_rule: h = displacement (absolute) or displacement * abs(x) (relative); centered
+    when valid, otherwise second-order one-sided.
   parameters:
   - parameter: model.mean_reversion
     displacement: 0.005
@@ -33,23 +51,5 @@ sensitivity:
     displacement: 0.001984126984126984
     scale: absolute
     boundary: central_then_one_sided_order2
-  bump_rule: h = displacement (absolute) or displacement * abs(x) (relative); centered
-    when valid, otherwise second-order one-sided.
   maturity_coordinate: Payment time T2; fixing T1 and the contractual accrual period
     stay fixed.
-quote_convention:
-  strike:
-    mode: additive_to_initial_simple_forward_rate
-    unit: annualized_decimal_rate
-    effective_level: strike = initial_simple_forward_rate + strike_spread
-row_selection:
-  method: resolved_rate_strike_above_minimum
-  minimum_annualized_decimal_rate: 1.0e-05
-  reference: initial_unbumped_model_and_curve
-  order: stable_candidate_index
-option_side: put
-time_representation:
-  kind: exact_terminal_transition
-  contractual_days_per_year: 252
-  maturity_bump_steps_per_year: 504
-row_layout: inline_parameters

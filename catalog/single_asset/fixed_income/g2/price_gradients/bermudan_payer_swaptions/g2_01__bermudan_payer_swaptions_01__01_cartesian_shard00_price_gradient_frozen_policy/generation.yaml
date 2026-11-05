@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/fixed_income/g2/price_gradients/bermudan_payer_swaptions/g2_01__bermudan_payer_swaptions_01__01_cartesian_shard00_price_gradient_frozen_policy.json
   sha256: c2f9af15446b18f8e12cc9b2ea6cb7e9c1732e4a8abe1fca192fc38eb1e13285
 hardware:
-  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   name: Tesla V100-SXM2-32GB
   uuid: GPU-eb05268b-e265-c927-124b-f944b18caf0c
   compute_capability: '7.0'
@@ -24,6 +24,3 @@ software:
   cuda_target_architectures: '70'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 12521.043025242165
-  duration: 3 h 28 min 41 s 43 ms

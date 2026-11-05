@@ -1,0 +1,132 @@
+schema_version: 1
+kind: "model_parameters"
+dataset_id: "sabr_multi100_core_slot2_01"
+generator: "catalog/parameters/model/equity/markovian/sabr/factor_parameters/sabr_multi100_core_slot2_01/generator.cpp"
+output:
+  path: "datasets/parameters/model/equity/markovian/sabr/factor_parameters/sabr_multi100_core_slot2_01.json"
+  format: "json"
+model_family: "SABR equity"
+row_count: 100
+parameterization: "factorized"
+inputs:
+  source_model: "datasets/parameters/model/equity/markovian/sabr/parameters/sabr_01.json"
+parameters:
+  spot: "Fixed to one for equal initial asset weights."
+  dividend_yield: "Model factor parameter."
+  initial_volatility: "Model factor parameter."
+  volatility_of_volatility: "Model factor parameter."
+  beta: "Model factor parameter."
+dynamics:
+  source_model_dataset: "datasets/parameters/model/equity/markovian/sabr/parameters/sabr_01.json"
+construction:
+  method: "seeded sample without replacement from core prefix"
+  source_model_dataset: "datasets/parameters/model/equity/markovian/sabr/parameters/sabr_01.json"
+  source_core_prefix_rows: 900
+  sample_seed: 202611040102
+  source_row_indices:
+    - 429
+    - 248
+    - 807
+    - 229
+    - 713
+    - 115
+    - 481
+    - 690
+    - 522
+    - 29
+    - 719
+    - 407
+    - 64
+    - 252
+    - 666
+    - 170
+    - 93
+    - 163
+    - 9
+    - 741
+    - 696
+    - 490
+    - 186
+    - 785
+    - 861
+    - 843
+    - 890
+    - 32
+    - 730
+    - 215
+    - 428
+    - 442
+    - 302
+    - 416
+    - 879
+    - 633
+    - 230
+    - 566
+    - 420
+    - 33
+    - 624
+    - 74
+    - 710
+    - 576
+    - 551
+    - 47
+    - 475
+    - 83
+    - 273
+    - 347
+    - 820
+    - 529
+    - 543
+    - 388
+    - 597
+    - 122
+    - 150
+    - 340
+    - 516
+    - 585
+    - 538
+    - 893
+    - 870
+    - 841
+    - 148
+    - 513
+    - 297
+    - 426
+    - 569
+    - 342
+    - 151
+    - 57
+    - 606
+    - 563
+    - 757
+    - 808
+    - 279
+    - 113
+    - 274
+    - 828
+    - 39
+    - 800
+    - 283
+    - 723
+    - 281
+    - 172
+    - 636
+    - 500
+    - 644
+    - 15
+    - 886
+    - 497
+    - 327
+    - 211
+    - 165
+    - 876
+    - 775
+    - 221
+    - 318
+    - 537
+  excluded:
+    - "risk_free_rate"
+    - "rho"
+    - "correlation"
+  spot_override: 1.0
+  selection_offset: 200

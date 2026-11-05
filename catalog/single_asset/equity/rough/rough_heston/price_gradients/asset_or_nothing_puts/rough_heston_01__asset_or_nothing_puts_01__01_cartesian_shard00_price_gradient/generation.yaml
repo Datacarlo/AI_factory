@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/equity/rough/rough_heston/price_gradients/asset_or_nothing_puts/rough_heston_01__asset_or_nothing_puts_01__01_cartesian_shard00_price_gradient.json
   sha256: cce1b54de705adc08eb4e3272d05ed276618e58727979b062ba3fdb41a7da16b
 hardware:
-  cpu_model: Intel(R) Core(TM) Ultra 9 285K
   device: gpu
+  cpu_model: Intel(R) Core(TM) Ultra 9 285K
   name: NVIDIA GeForce RTX 5090
   uuid: GPU-11b9a6f1-3f11-a2b5-400c-0eee5c2089c6
   compute_capability: '12.0'
@@ -24,6 +24,3 @@ software:
   cuda_target_architectures: '120'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 28477.156408687122
-  duration: 7 h 54 min 37 s 156 ms

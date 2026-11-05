@@ -3,6 +3,8 @@
 
 #include <nlohmann/json.hpp>
 
+#include <cstddef>
+#include <type_traits>
 #include <filesystem>
 #include <functional>
 #include <stdexcept>
@@ -59,17 +61,21 @@ inline bool fixed_income_relative_quote(
 
 // Apply one family-specific row parser while the common loader owns document
 // I/O, envelope validation, row extraction, capacity planning, and JSON-field
-// diagnostics. The callback owns only conversion and semantic row validation.
-template<typename Output, typename ParseRow>
+// diagnostics. The row callback owns conversion and semantic validation; an
+// optional document callback checks product-specific conventions after one read.
+template<typename Output, typename ParseRow, typename ValidateDocument = std::nullptr_t>
 std::vector<Output> load_parameter_rows(
     const std::filesystem::path& dataset_path,
     ParameterDatasetFamily family,
     const std::string& display_name,
-    ParseRow&& parse_row
+    ParseRow&& parse_row,
+    ValidateDocument&& validate_document = nullptr
 ) {
     const nlohmann::json document = read_parameter_dataset(
         dataset_path, family, display_name
     );
+    if constexpr (!std::is_same_v<ValidateDocument, std::nullptr_t>)
+        std::invoke(validate_document, document);
     const char* collection = family == ParameterDatasetFamily::Model
         ? "models"
         : family == ParameterDatasetFamily::Curve ? "curves" : "products";

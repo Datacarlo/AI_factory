@@ -1,6 +1,7 @@
 schema_version: 1
 kind: prices
 dataset_id: heston_01__phoenix_memory_autocalls_01__01_cartesian_shard00
+option_side: call
 generator: catalog/single_asset/equity/markovian/heston/prices/phoenix_memory_autocalls/heston_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generator.cpp
 inputs:
   model: datasets/parameters/model/equity/markovian/heston/parameters/heston_01.json
@@ -8,21 +9,11 @@ inputs:
 output:
   path: datasets/single_asset/equity/markovian/heston/prices/phoenix_memory_autocalls/heston_01__phoenix_memory_autocalls_01__01_cartesian_shard00.json
   format: json
-row_count: 100000
-numerical_method:
-  engine: equity_markovian
+row_layout: inline_parameters
 outputs:
 - price
 - standard_error
-paths_per_price: 1048576
-option_side: call
-seeds:
-  dynamics: 11668827094078455808
-random_number_generator: philox
-time_grid:
-  steps_per_year: 504
-  simulation_steps_per_day: 2
-  delta_t: 1 / 504
+row_count: 100000
 product_shard:
   index: 0
   total_shards: 10
@@ -30,4 +21,13 @@ product_shard:
   selection: one seeded permutation position per contiguous ten-row block
   core_products: 90
   stress_products: 10
-row_layout: inline_parameters
+numerical_method:
+  engine: equity_markovian
+time_grid:
+  steps_per_year: 504
+  simulation_steps_per_day: 2
+  delta_t: 1 / 504
+paths_per_price: 1048576
+random_number_generator: philox
+seeds:
+  dynamics: 11668827094078455808

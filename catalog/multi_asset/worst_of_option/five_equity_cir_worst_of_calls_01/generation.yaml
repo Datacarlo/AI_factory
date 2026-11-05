@@ -21,7 +21,7 @@ inputs:
     sha256: f9b4c3d82fd0108676329f0d8d203dc2e9b0f96d5ec04002b4d9bef9b07d366b
   product:
     path: datasets/parameters/product/worst_of_option/worst_of_options_multi_01.json
-    sha256: 61e375b54d2c4f8c858354b6e4f453550db14185a53d5aa1100b2e13f36398be
+    sha256: 6c8a95bae128c35abb12a318c2a3877cdc64514b6e8a4a3d659df5192141e629
   correlation:
     path: datasets/parameters/correlation/five_equity_cir_01.json
     sha256: f9fdeca69342c307b429037af10d65cbf0847ec2dd04c843861454244f9d603e
@@ -29,8 +29,8 @@ output:
   path: datasets/multi_asset/worst_of_option/five_equity_cir_worst_of_calls_01.json
   sha256: 587f3057781c39a5b5ba3871ea7b2280a45e1e77304ad22aeb3070fff676fbc0
 hardware:
-  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   name: NVIDIA A100 80GB PCIe
   uuid: GPU-5102f6b2-92ef-1ca5-849f-649cb3851bf6
   compute_capability: '8.0'
@@ -42,6 +42,3 @@ software:
   cuda_target_architectures: '80'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 52938.18434272
-  duration: 14 h 42 min 18 s 184 ms

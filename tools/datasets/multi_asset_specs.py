@@ -64,3 +64,6 @@ REFERENCE_DATASET_SPECS = (
         "constant_rates_01.json",
     ),
 )
+
+from .homogeneous_multi_asset_specs import HOMOGENEOUS_DATASET_ROWS
+REFERENCE_DATASET_SPECS += tuple(ReferenceDatasetSpec(*row) for row in HOMOGENEOUS_DATASET_ROWS)

@@ -5,8 +5,8 @@ output:
   path: datasets/samples/equity/rough/quadratic_rough_heston/samples_01.json
   sha256: c8bdf17fd642f0b7879c638230edd3771a10c400dd0bb2a2e71b4fad2c048187
 hardware:
-  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   name: NVIDIA A100 80GB PCIe
   uuid: GPU-5102f6b2-92ef-1ca5-849f-649cb3851bf6
   compute_capability: '8.0'

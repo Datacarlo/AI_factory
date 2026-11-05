@@ -75,6 +75,17 @@ class ProvenanceTests(unittest.TestCase):
         self.assertNotIn("record_sha256", self.generation)
         self.assertNotIn("execution", self.generation)
 
+    def test_execution_times_never_enter_public_receipt(self):
+        record = provenance.generation_record(
+            self.native, self.recipe_rel, self.dataset_rel, {}, self.root,
+            {}, {}, wall_seconds=123.0)
+        self.assertNotIn("timing", record)
+        previous = {**record, "timing": {"wall_seconds": 123.0, "duration": "2 min 3 s"}}
+        refreshed = refresh_generation.refresh(
+            self.recipe, previous, self.dataset, self.root, [])
+        self.assertEqual(refreshed, record)
+        self.assertEqual(previous["timing"]["wall_seconds"], 123.0)
+
     def test_software_uses_build_compilers_without_executing_remote_tools(self):
         build = self.root / "historical_build"
         compiler_dir = build / "CMakeFiles" / "3.31.6"

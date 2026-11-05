@@ -141,6 +141,8 @@ __device__ __forceinline__ void evaluate_nodes_body(
             row.paths_per_price,
             row.simulation_time
         );
+        prepared_nodes[node].bond_coefficients = Policy::graph_node_bond_coefficients(
+            row, node, stencils, node_indices);
         if constexpr (Policy::kTerminalForward) {
             auto* observations =
                 reinterpret_cast<typename Schedule::Observation*>(

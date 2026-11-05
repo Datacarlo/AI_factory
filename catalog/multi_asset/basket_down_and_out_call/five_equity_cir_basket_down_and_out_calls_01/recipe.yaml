@@ -1,10 +1,8 @@
 schema_version: 1
 kind: prices
 dataset_id: five_equity_cir_basket_down_and_out_calls_01
+option_side: call
 generator: catalog/multi_asset/basket_down_and_out_call/five_equity_cir_basket_down_and_out_calls_01/generator.cpp
-output:
-  path: datasets/multi_asset/basket_down_and_out_call/five_equity_cir_basket_down_and_out_calls_01.json
-  format: json
 inputs:
   model_0: datasets/parameters/model/equity/markovian/heston/factor_parameters/heston_multi_core_01.json
   model_1: datasets/parameters/model/equity/markovian/bates/factor_parameters/bates_multi_core_01.json
@@ -14,24 +12,30 @@ inputs:
   rate_model: datasets/parameters/model/fixed_income/cir/factor_parameters/cir_multi_core_01.json
   product: datasets/parameters/product/basket_down_and_out_call/basket_down_and_out_calls_multi_01.json
   correlation: datasets/parameters/correlation/five_equity_cir_01.json
+output:
+  path: datasets/multi_asset/basket_down_and_out_call/five_equity_cir_basket_down_and_out_calls_01.json
+  format: json
+row_count: 250000
 construction:
   expression: cartesian(product[100], correlation[10], aligned(model_0[250], model_1[250],
     model_2[250], model_3[250], model_4[250], rate_model[250]))
-pricing:
-  steps_per_business_day: 2
-  team_size: 1
+numerical_method:
   payoff_unit: initial-spot-normalized basket
   discount: stochastic CIR short-rate integral
-  rows_per_launch: 16
-  path_chunk_size: 131072
-  streams: 1
-  threads_per_block: 256
-  paths_per_team: 1
-  checkpoint_rows: 128
-  barrier_monitoring: discrete daily, with equality knocking out
-row_count: 250000
+time_grid:
+  steps_per_year: 252
+  simulation_steps_per_day: 1
+  delta_t: 1 / 252
+  monitoring: discrete every two business days, with equality knocking out
 paths_per_price: 1048576
-option_side: call
 random_number_generator: philox
 seeds:
   dynamics: 202610210700
+execution:
+  team_size: 1
+  rows_per_launch: 16
+  streams: 1
+  threads_per_block: 256
+  paths_per_team: 1
+  path_chunk_size: 131072
+  checkpoint_rows: 128

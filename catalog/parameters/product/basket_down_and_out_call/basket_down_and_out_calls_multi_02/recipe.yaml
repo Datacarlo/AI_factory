@@ -1,0 +1,46 @@
+schema_version: 1
+kind: "product_parameters"
+dataset_id: "basket_down_and_out_calls_multi_02"
+generator: "catalog/parameters/product/basket_down_and_out_call/basket_down_and_out_calls_multi_02/generator.cpp"
+output:
+  path: "datasets/parameters/product/basket_down_and_out_call/basket_down_and_out_calls_multi_02.json"
+  format: "json"
+product_family: "Arithmetic-mean basket down-and-out call"
+row_count: 100
+time_convention:
+  unit: "business_day"
+  days_per_year: 252
+quote_convention:
+  strike:
+    mode: "strike_on_mean_normalized_spot"
+    unit: "dimensionless"
+    underlying: "mean_i(S_i(T)/S_i(0))"
+  lower_barrier:
+    mode: "lower_barrier_on_mean_normalized_spot"
+    unit: "dimensionless"
+    underlying: "mean_i(S_i(t)/S_i(0))"
+parameters:
+  strike: "Strike on normalized asset indicator."
+  maturity: "Business days, 252 per year."
+  lower_barrier: "Lower barrier on normalized basket."
+  monitoring_interval_steps: "One simulation step: dt=1/504 year."
+payoff:
+  expression: "1{mean_i(S_i(t)/S_i(0)) > lower_barrier at every simulation step and inception} * max(mean_i(S_i(T)/S_i(0)) - strike, 0)"
+  notional: "one normalized unit"
+construction:
+  method: "ten maturities times ten exponential strikes"
+  maturities_business_days:
+    - 21
+    - 63
+    - 126
+    - 189
+    - 252
+    - 315
+    - 378
+    - 441
+    - 504
+    - 756
+  log_moneyness_slope_min: -0.15
+  log_moneyness_slope_max: 0.15
+  lower_barrier_rule: "exp((-0.30+0.20*i/9)*sqrt(T_years))"
+  monitoring_dt_years: 0.001984126984126984

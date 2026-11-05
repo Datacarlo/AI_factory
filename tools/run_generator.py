@@ -116,7 +116,6 @@ def enrich_receipt(spec, recipe: dict, stage: Path, build: Path, gpu: str | None
     record = generation_record(
         native, spec.recipe_yaml_path, spec.dataset_path, recipe.get("inputs", {}),
         stage, hardware(spec.dataset_kind, gpu), software_versions(build),
-        wall_seconds=wall_seconds if spec.dataset_kind in {"prices", "price_gradients", "price_delta"} else None,
     )
     generation_path.write_text(yaml.safe_dump(record, sort_keys=False))
     return generation_path

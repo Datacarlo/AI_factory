@@ -14,12 +14,7 @@ int main() {
         datasets::price_gradients::Recipe recipe{
             "datasets/parameters/model/fixed_income/hull_white/parameters/hull_white_01.json", "datasets/parameters/product/bermudan_swaption/bermudan_swaptions_01_shard00.json", "datasets/single_asset/fixed_income/hull_white/prices/flat/bermudan_receiver_swaptions/hull_white_01__flat_01__bermudan_receiver_swaptions_01__01_cartesian_shard00.json", "catalog/single_asset/fixed_income/hull_white/prices/flat/bermudan_receiver_swaptions/hull_white_01__flat_01__bermudan_receiver_swaptions_01__01_cartesian_shard00/generation.yaml",
             "catalog/single_asset/fixed_income/hull_white/prices/flat/bermudan_receiver_swaptions/hull_white_01__flat_01__bermudan_receiver_swaptions_01__01_cartesian_shard00/recipe.yaml", PriceConstruction::SampledCurveCartesianProduct,
-            {{
-        {"model.mean_reversion", {0.005, pg::BumpScale::relative}},
-        {"model.volatility", {0.005, pg::BumpScale::relative}},
-        {"curve.rate", {0.0005, pg::BumpScale::absolute}},
-        {"product.strike", {0.0005, pg::BumpScale::absolute}}
-            }}, {1.0f / 504.0f, 2U}, true
+            {}, {1.0f / 504.0f, 2U}, true
         };
         recipe.price_only_output = true;
         recipe.option_side = "receiver";

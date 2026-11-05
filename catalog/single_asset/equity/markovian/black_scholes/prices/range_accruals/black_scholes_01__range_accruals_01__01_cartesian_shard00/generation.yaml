@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/equity/markovian/black_scholes/prices/range_accruals/black_scholes_01__range_accruals_01__01_cartesian_shard00.json
   sha256: a8f8bf5d1f14e4cd831dd8a7614703e6da45b6637a9cafb45bf77efcd0ec2535
 hardware:
-  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
   device: gpu
+  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
   name: NVIDIA GeForce RTX 4090 Laptop GPU
   uuid: GPU-214a7d0d-e7b0-ded2-983c-0c960ec5bcd4
   compute_capability: '8.9'
@@ -24,6 +24,3 @@ software:
   cuda_target_architectures: '89'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 0.311443415
-  duration: 311.443 ms

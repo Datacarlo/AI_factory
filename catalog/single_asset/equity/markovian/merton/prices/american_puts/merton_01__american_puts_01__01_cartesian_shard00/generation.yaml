@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/equity/markovian/merton/prices/american_puts/merton_01__american_puts_01__01_cartesian_shard00.json
   sha256: 9fe7291f56340d923af2a931190b7ec53c8cc2a88b594054c9bf1db2de100fe2
 hardware:
-  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   name: NVIDIA A100 80GB PCIe
   uuid: GPU-5102f6b2-92ef-1ca5-849f-649cb3851bf6
   compute_capability: '8.0'
@@ -24,6 +24,3 @@ software:
   cuda_target_architectures: '80'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 306.51788269891404
-  duration: 5 min 6 s 518 ms

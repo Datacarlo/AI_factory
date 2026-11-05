@@ -414,11 +414,24 @@ __device__ __forceinline__ float payer_swap_value(
 // Curve-independent model adapter consumed by Bermudan pricing policies.
 template<typename FittedModelComposition>
 struct BermudanSwaptionAnalyticsPolicy {
+    static constexpr bool cache_bond_coefficients = [] {
+        if constexpr (requires { FittedModelComposition::cache_bond_coefficients; })
+            return FittedModelComposition::cache_bond_coefficients;
+        else
+            return true;
+    }();
     using ModelParameters =
         typename FittedModelComposition::ModelParameters;
     using CurveParameters =
         typename FittedModelComposition::CurveParameters;
     using PreparedModel = typename FittedModelComposition::FittedModel;
+    using BondCoefficients = model::fixed_income::g2::TwoFactorAffineBondCoefficients;
+    __device__ __forceinline__ static BondCoefficients bond_coefficients(
+        const PreparedModel& model, float time, float maturity
+    ) {
+        return fitted::affine_bond_coefficients(model, time, maturity);
+    }
+
 
     struct PreparedRegressionState {
         float inverse_scale_x;

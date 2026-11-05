@@ -1,6 +1,7 @@
 schema_version: 1
 kind: prices
 dataset_id: bates_01__american_puts_01__01_cartesian_shard00
+option_side: put
 generator: catalog/single_asset/equity/markovian/bates/prices/american_puts/bates_01__american_puts_01__01_cartesian_shard00/generator.cpp
 inputs:
   model: datasets/parameters/model/equity/markovian/bates/parameters/bates_01.json
@@ -8,24 +9,11 @@ inputs:
 output:
   path: datasets/single_asset/equity/markovian/bates/prices/american_puts/bates_01__american_puts_01__01_cartesian_shard00.json
   format: json
-row_count: 100000
-numerical_method:
-  engine: equity_lsm_fixed
+row_layout: inline_parameters
 outputs:
 - price
 - standard_error
-paths_per_price: 1048576
-option_side: put
-standard_error_scope: in-sample discounted cashflow dispersion / sqrt(paths); excludes
-  variation across fitted policies and policy bias
-fit_and_valuation_paths: same paths
-seeds:
-  dynamics: 11668826638811922432
-random_number_generator: philox
-time_grid:
-  steps_per_year: 504
-  simulation_steps_per_day: 2
-  delta_t: 1 / 504
+row_count: 100000
 product_shard:
   index: 0
   total_shards: 10
@@ -33,4 +21,16 @@ product_shard:
   selection: one seeded permutation position per contiguous ten-row block
   core_products: 90
   stress_products: 10
-row_layout: inline_parameters
+numerical_method:
+  engine: equity_lsm_fixed
+time_grid:
+  steps_per_year: 504
+  simulation_steps_per_day: 2
+  delta_t: 1 / 504
+paths_per_price: 1048576
+random_number_generator: philox
+seeds:
+  dynamics: 11668826638811922432
+fit_and_valuation_paths: same paths
+standard_error_scope: in-sample discounted cashflow dispersion / sqrt(paths); excludes
+  variation across fitted policies and policy bias
