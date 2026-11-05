@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/equity/markovian/heston/prices/american_puts/heston_01__american_puts_01__01_cartesian_shard00.json
   sha256: 927bf98b0478efc82ffdff38a8f2f7122465f061d08f7d9a65d36cf12c471f1b
 hardware:
-  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   name: NVIDIA A100 80GB PCIe
   uuid: GPU-5102f6b2-92ef-1ca5-849f-649cb3851bf6
   compute_capability: '8.0'
@@ -24,6 +24,3 @@ software:
   cuda_target_architectures: '80'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 2493.7184313889593
-  duration: 41 min 33 s 718 ms

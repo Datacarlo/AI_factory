@@ -3,6 +3,7 @@
 #include "model/equity/markovian/black_scholes/dynamics_impl.cuh"
 #include "model/equity/rough/quadratic_rough_heston/causal_fft_dynamics.cuh"
 #include "model/fixed_income/vasicek/correlated_dynamics.cuh"
+#include "model/fixed_income/constant_rate/correlated_dynamics.cuh"
 #include "product/basket_down_and_out_call/pricing_policy.cuh"
 #include "product/worst_of_call/pricing_policy.cuh"
 #include "product/best_of_call/pricing_policy.cuh"
@@ -10,6 +11,7 @@
 #include "tools/pricing/cross_asset_price_generation.cuh"
 
 #include <cmath>
+#include <cstdio>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -128,7 +130,55 @@ void rough_rate() {
         "rough/rate terminal basket payoffs are misordered");
 }
 
+// Independent deterministic price: refining the grid must not lengthen time.
+void business_day_clock() {
+    using ConstantRate=wb::model::fixed_income::constant_rate::CorrelatedRatePolicy;
+    wb::offline::pricing::MultiAssetHostModels<OneBS> equities;
+    equities.models={{1.7f,0.0f,0.01f,0.0f}};
+    wb::offline::pricing::MultiRoughHostModels<NoRough> rough;
+    const std::vector<std::string> factors{"equity.spot"};
+    const std::vector<wb::correlation::MatrixRow> matrices{{"one",factors,{1.0f}}};
+    const auto plan=single_plan(4U);
+    for (const unsigned days : {42U,252U,1512U}) {
+        const double years=double(days)/252.0;
+        const double expected=std::exp(-0.01*years)-0.8*std::exp(-0.05*years);
+        for (const unsigned steps_per_day : {1U,2U,4U}) {
+            const auto run=wb::offline::pricing::execute_cross_asset_prices<
+                OneBS,NoRough,ConstantRate,Worst>(equities,rough,{{0.05f}},
+                    {{0.8f,days}},matrices,factors,factors,plan,
+                    128U,128U,1.0f/(252.0f*steps_per_day),steps_per_day,32U,4511U);
+            std::printf("clock days=%u steps_per_day=%u price=%.9g expected=%.12g error=%.9g\n",
+                days,steps_per_day,run.prices[0],expected,double(run.prices[0])-expected);
+            std::fflush(stdout);
+            // Thousands of FP32 spot/rate updates accumulate rounding. This
+            // clock check distinguishes horizons (percent-level errors), not
+            // exact analytical pricing from a discretized floating-point path.
+            const double tolerance=5e-5*std::max(1.0,years);
+            require(std::abs(double(run.prices[0])-expected)<tolerance,
+                "calendar horizon or discount depends on steps per day");
+            require(run.standard_errors[0]<1e-6f,"deterministic path has sampling noise");
+        }
+    }
+    // New contracts can monitor every half-day without changing historical day calendars.
+    const Barrier::ProductParameters half_day{0.8f,0.7f,252U,0U,1U};
+    const Barrier::ProductParameters daily{0.8f,0.7f,252U,1U,0U};
+    require(Barrier::valid_parameters(half_day,2U),"half-day monitoring rejected");
+    require(!Barrier::valid_parameters({0.8f,0.7f,252U,1U,1U},2U),"ambiguous monitoring accepted");
+    for(unsigned step=0;step<504U;++step) {
+        require(Barrier::is_observation_step(step,504U,2U,half_day),"half-day observation missed");
+        require(Barrier::is_observation_step(step,504U,2U,daily)==((step+1U)%2U==0U),"daily calendar changed");
+    }
+    // The relabelled barrier must observe exactly the same simulation steps.
+    const Barrier::ProductParameters old_product{0.8f,0.7f,252U,1U};
+    const Barrier::ProductParameters new_product{0.8f,0.7f,504U,2U};
+    for (unsigned step=0;step<504U;++step)
+        require(Barrier::is_observation_step(step,504U,2U,old_product)
+            ==Barrier::is_observation_step(step,504U,1U,new_product),
+            "barrier relabelling changes a monitoring date");
+}
+
 int main() {
+    business_day_clock();
     markov_rate();
     rough_rate();
 }

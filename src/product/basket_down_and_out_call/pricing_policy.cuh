@@ -41,7 +41,10 @@ struct BasketDownAndOutCallPathPolicy {
             && std::isfinite(product.lower_barrier)
             && product.lower_barrier > 0.0f
             && product.maturity_days > 0U
-            && product.monitoring_interval_days > 0U
+            && ((product.monitoring_interval_days > 0U
+                 && product.monitoring_interval_steps == 0U)
+                || (product.monitoring_interval_days == 0U
+                    && product.monitoring_interval_steps > 0U))
             && product.monitoring_interval_days <= 8192U
             && steps_per_day > 0U
             && static_cast<std::uint64_t>(steps_per_day)
@@ -51,7 +54,9 @@ struct BasketDownAndOutCallPathPolicy {
     __host__ __device__ static std::uint32_t observation_stride(
         std::uint32_t steps_per_day, const ProductParameters& product
     ) {
-        return steps_per_day * product.monitoring_interval_days;
+        return product.monitoring_interval_steps > 0U
+            ? product.monitoring_interval_steps
+            : steps_per_day * product.monitoring_interval_days;
     }
 
     __host__ __device__ static bool is_observation_step(

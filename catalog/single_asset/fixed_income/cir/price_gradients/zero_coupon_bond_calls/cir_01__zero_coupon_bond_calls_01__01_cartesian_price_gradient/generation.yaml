@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/fixed_income/cir/price_gradients/zero_coupon_bond_calls/cir_01__zero_coupon_bond_calls_01__01_cartesian_price_gradient.json
   sha256: 3a1056b02c7ca53bdd081ea3f8ce73e25d20689168c4f4d1bcc6848a706f6126
 hardware:
-  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
   device: gpu
+  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
   name: NVIDIA GeForce RTX 4090 Laptop GPU
   uuid: GPU-214a7d0d-e7b0-ded2-983c-0c960ec5bcd4
   compute_capability: '8.9'
@@ -23,6 +23,3 @@ software:
   cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 1.884652
-  duration: 1 s 885 ms

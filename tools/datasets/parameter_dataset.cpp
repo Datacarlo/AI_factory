@@ -40,7 +40,7 @@ void write_parameter_dataset(
     if (generated.rows.empty()) {
         throw std::invalid_argument("A parameter dataset cannot be empty.");
     }
-    validate_dataset_url(url);
+    if (!url.empty()) validate_dataset_url(url);
 
     nlohmann::ordered_json dataset = {
         {"database_id", database_id},
@@ -169,19 +169,22 @@ void write_core_factorized_model_dataset(
     std::size_t core_prefix_count,
     std::size_t row_count,
     std::uint64_t seed,
-    std::optional<float> spot_override
+    std::optional<float> spot_override,
+    std::size_t selection_offset
 ) {
     const auto source = read_json_file(source_dataset_path);
     validate_model_dataset(source);
     const auto& source_rows = source.at("models");
     if (row_count == 0U || core_prefix_count < row_count
-        || core_prefix_count > source_rows.size())
+        || core_prefix_count > source_rows.size()
+        || selection_offset > core_prefix_count - row_count)
         throw std::invalid_argument("Invalid core factor sample size");
     std::vector<std::size_t> indices(core_prefix_count);
     std::iota(indices.begin(), indices.end(), 0U);
     std::mt19937_64 random(seed);
     std::shuffle(indices.begin(), indices.end(), random);
-    indices.resize(row_count);
+    indices = std::vector<std::size_t>(indices.begin() + selection_offset,
+                                      indices.begin() + selection_offset + row_count);
     GeneratedRows generated;
     nlohmann::ordered_json descriptions =
         nlohmann::ordered_json::object();
@@ -213,6 +216,8 @@ void write_core_factorized_model_dataset(
     };
     if (spot_override)
         generated.construction["spot_override"] = *spot_override;
+    if (selection_offset)
+        generated.construction["selection_offset"] = selection_offset;
     write_parameter_dataset(
         database_id, source.at("model_family").get<std::string>(),
         "model_family", "models", "dynamics", dataset_path, catalog_path,

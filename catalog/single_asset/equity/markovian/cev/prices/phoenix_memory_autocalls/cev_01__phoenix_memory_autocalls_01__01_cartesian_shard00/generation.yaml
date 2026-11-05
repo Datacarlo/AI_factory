@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/equity/markovian/cev/prices/phoenix_memory_autocalls/cev_01__phoenix_memory_autocalls_01__01_cartesian_shard00.json
   sha256: 0e283599386da9c7bc19a365a3c4de41d8a5ac8dc3419e251218d160694fc874
 hardware:
-  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   name: NVIDIA A100 80GB PCIe
   uuid: GPU-5102f6b2-92ef-1ca5-849f-649cb3851bf6
   compute_capability: '8.0'
@@ -24,6 +24,3 @@ software:
   cuda_target_architectures: '80'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 2178.5425858160015
-  duration: 36 min 18 s 543 ms

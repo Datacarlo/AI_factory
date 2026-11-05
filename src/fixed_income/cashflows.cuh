@@ -87,6 +87,21 @@ __device__ __forceinline__ float forward_rate(
     return (start_bond / end_bond - 1.0f) / accrual_fraction;
 }
 
+// Accumulate coupons in contract order, independently of bond preparation.
+template<typename ScheduleView, typename BondAtPayment>
+__device__ __forceinline__ void fixed_leg_terms(
+    const ScheduleView& schedule, BondAtPayment bond_at_payment,
+    float& annuity, float& final_bond
+) {
+    annuity = 0.0f;
+    final_bond = 0.0f;
+    for (std::uint32_t payment = 0U; payment < schedule.payment_count(); ++payment) {
+        const float current_bond = bond_at_payment(payment);
+        annuity = fmaf(schedule.accrual_fraction(payment), current_bond, annuity);
+        final_bond = current_bond;
+    }
+}
+
 // Return the fixed-leg annuity and final zero-coupon in one schedule pass.
 template<
     typename BondProvider,
@@ -103,23 +118,11 @@ __device__ __forceinline__ void fixed_leg_terms(
     float& annuity,
     float& final_bond
 ) {
-    annuity = 0.0f;
-    final_bond = 0.0f;
-    const std::uint32_t payment_count = schedule.payment_count();
-    for (std::uint32_t payment = 0U;
-         payment < payment_count;
-         ++payment) {
-        const float current_bond = bonds.zero_coupon_bond(
-            parameters,
-            state,
-            valuation_time_years,
-            schedule.payment_time(payment)
+    fixed_leg_terms(schedule, [&](std::uint32_t payment) {
+        return bonds.zero_coupon_bond(
+            parameters, state, valuation_time_years, schedule.payment_time(payment)
         );
-        annuity = fmaf(
-            schedule.accrual_fraction(payment), current_bond, annuity
-        );
-        final_bond = current_bond;
-    }
+    }, annuity, final_bond);
 }
 
 // Return S(t) = (P(t,T_0)-P(t,T_N))/A(t) in the single-curve framework.

@@ -5,8 +5,8 @@ output:
   path: datasets/samples/equity/markovian/bates/samples_02.json
   sha256: 45bff12878a1bd23f96cb3b385586ff38ad992e45a66ac5464eeb69362166462
 hardware:
-  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   name: NVIDIA A100 80GB PCIe
   uuid: GPU-5102f6b2-92ef-1ca5-849f-649cb3851bf6
   compute_capability: '8.0'

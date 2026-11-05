@@ -60,7 +60,7 @@ WorkspaceRegion append_region(
         throw std::overflow_error(error);
     }
     cursor += bytes;
-    return {offset};
+    return {offset, value_size};
 }
 
 void validate_descriptor(const WorkspaceDescriptor& descriptor) {

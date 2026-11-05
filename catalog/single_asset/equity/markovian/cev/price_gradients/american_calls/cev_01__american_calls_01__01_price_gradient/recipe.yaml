@@ -8,10 +8,28 @@ inputs:
 output:
   path: datasets/single_asset/equity/markovian/cev/price_gradients/american_calls/cev_01__american_calls_01__01_price_gradient.json
   format: json
+row_layout: inline_parameters
 row_count: 1000
+numerical_method:
+  engine: equity_lsm_fixed
+  algorithm: longstaff_schwartz
+  regression:
+    basis: laguerre_polynomial_two_factor_6_term
+    feature_normalization: central_lsm_row
+    solver: ridge_regularized_fp64_normal_equations_cholesky
+    refinement: none
+time_grid:
+  steps_per_year: 504
+  simulation_steps_per_day: 2
+  delta_t: 1 / 504
 paths_per_price: 1048576
+random_number_generator: philox
+seeds:
+  dynamics: 11668826849265319936
 sensitivity:
   method: finite_difference_shared_innovations
+  bump_rule: h = displacement (absolute) or displacement * abs(x) (relative); centered
+    when valid, otherwise second-order one-sided.
   parameters:
   - parameter: model.spot
     displacement: 0.005
@@ -37,29 +55,11 @@ sensitivity:
     displacement: 0.005
     scale: relative
     boundary: central_then_one_sided_order2
-  bump_rule: h = displacement (absolute) or displacement * abs(x) (relative); centered
-    when valid, otherwise second-order one-sided.
   spot_contract_rule: Spot bumps keep absolute strikes and barriers resolved at the
     central spot fixed; product gradients use quoted ratios.
 sensitivity_strategy: mono
-numerical_method:
-  engine: equity_lsm_fixed
-  algorithm: longstaff_schwartz
-  regression:
-    basis: laguerre_polynomial_two_factor_6_term
-    feature_normalization: central_lsm_row
-    solver: ridge_regularized_fp64_normal_equations_cholesky
-    refinement: none
 exercise_replay: frozen_exercise_time
+fit_and_valuation_paths: same paths
 standard_error_scope: paired path dispersion conditional on the central in-sample
   LSM fit; excludes fit variability, policy bias, stencil bias and discretization
   bias
-fit_and_valuation_paths: same paths
-seeds:
-  dynamics: 11668826849265319936
-random_number_generator: philox
-time_grid:
-  steps_per_year: 504
-  simulation_steps_per_day: 2
-  delta_t: 1 / 504
-row_layout: inline_parameters

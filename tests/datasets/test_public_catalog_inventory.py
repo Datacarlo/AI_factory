@@ -39,6 +39,18 @@ class PublicCatalogInventoryTest(unittest.TestCase):
                     )
                     self.assertEqual(recipe["exercise_replay"], "frozen_regression_policy")
 
+    def test_fixed_income_prices_request_no_bumps(self):
+        for generator in (ROOT / "catalog/single_asset/fixed_income").rglob("generator.cpp"):
+            if "prices" not in generator.parts:
+                continue
+            with self.subTest(generator=str(generator.relative_to(ROOT))):
+                source = generator.read_text()
+                self.assertNotIn("pg::BumpScale::", source)
+                recipe = yaml.safe_load(generator.with_name("recipe.yaml").read_text())
+                self.assertNotIn("sensitivity", recipe)
+                self.assertNotIn("internal_sensitivity_plan", recipe)
+                self.assertNotIn("exercise_replay", recipe)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -160,6 +160,10 @@ __device__ __forceinline__ float payer_swap_value(
 // Model-side analytics and regression projection used by Bermudan swaptions.
 struct BermudanSwaptionAnalyticsPolicy {
     using PreparedModel = ModelParameters;
+    using BondCoefficients = TwoFactorAffineBondCoefficients;
+    __device__ __forceinline__ static BondCoefficients bond_coefficients(
+        const PreparedModel& model, float time, float maturity
+    );
 
     struct PreparedRegressionState {
         float inverse_scale_x;

@@ -609,6 +609,13 @@ struct BermudanSwaptionAnalyticsPolicy {
     using CurveParameters =
         typename FittedModelComposition::CurveParameters;
     using PreparedModel = typename FittedModelComposition::FittedModel;
+    using BondCoefficients = ::ai_factory::workbench::fixed_income::OneFactorAffineBondCoefficients;
+    __device__ __forceinline__ static BondCoefficients bond_coefficients(
+        const PreparedModel& model, float time, float maturity
+    ) {
+        return fitted::affine_bond_coefficients(model, time, maturity);
+    }
+
 
     struct PreparedRegressionState {
         float inverse_scale;

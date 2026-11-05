@@ -1,0 +1,133 @@
+schema_version: 1
+kind: "model_parameters"
+dataset_id: "heston_multi100_core_slot3_01"
+generator: "catalog/parameters/model/equity/markovian/heston/factor_parameters/heston_multi100_core_slot3_01/generator.cpp"
+output:
+  path: "datasets/parameters/model/equity/markovian/heston/factor_parameters/heston_multi100_core_slot3_01.json"
+  format: "json"
+model_family: "Heston"
+row_count: 100
+parameterization: "factorized"
+inputs:
+  source_model: "datasets/parameters/model/equity/markovian/heston/parameters/heston_01.json"
+parameters:
+  spot: "Fixed to one for equal initial asset weights."
+  dividend_yield: "Model factor parameter."
+  initial_variance: "Model factor parameter."
+  kappa: "Model factor parameter."
+  theta: "Model factor parameter."
+  gamma: "Model factor parameter."
+dynamics:
+  source_model_dataset: "datasets/parameters/model/equity/markovian/heston/parameters/heston_01.json"
+construction:
+  method: "seeded sample without replacement from core prefix"
+  source_model_dataset: "datasets/parameters/model/equity/markovian/heston/parameters/heston_01.json"
+  source_core_prefix_rows: 900
+  sample_seed: 202611040101
+  source_row_indices:
+    - 39
+    - 884
+    - 13
+    - 465
+    - 176
+    - 306
+    - 300
+    - 119
+    - 242
+    - 599
+    - 415
+    - 583
+    - 320
+    - 426
+    - 603
+    - 227
+    - 864
+    - 860
+    - 866
+    - 826
+    - 779
+    - 567
+    - 770
+    - 879
+    - 34
+    - 2
+    - 854
+    - 358
+    - 645
+    - 403
+    - 650
+    - 335
+    - 823
+    - 421
+    - 737
+    - 620
+    - 570
+    - 474
+    - 537
+    - 520
+    - 51
+    - 272
+    - 132
+    - 126
+    - 319
+    - 281
+    - 143
+    - 330
+    - 822
+    - 595
+    - 381
+    - 393
+    - 448
+    - 704
+    - 138
+    - 661
+    - 672
+    - 394
+    - 7
+    - 100
+    - 774
+    - 16
+    - 162
+    - 191
+    - 180
+    - 107
+    - 525
+    - 128
+    - 552
+    - 190
+    - 557
+    - 442
+    - 93
+    - 96
+    - 865
+    - 682
+    - 755
+    - 636
+    - 9
+    - 565
+    - 175
+    - 641
+    - 428
+    - 280
+    - 75
+    - 120
+    - 216
+    - 258
+    - 633
+    - 498
+    - 167
+    - 741
+    - 789
+    - 810
+    - 832
+    - 773
+    - 857
+    - 214
+    - 816
+    - 634
+  excluded:
+    - "risk_free_rate"
+    - "rho"
+    - "correlation"
+  spot_override: 1.0
+  selection_offset: 300

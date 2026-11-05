@@ -8,10 +8,10 @@
 int main() {
     using namespace ai_factory::workbench::datasets;
     constexpr std::uint32_t maturities[] = {
-        21U,63U,126U,189U,252U,315U,378U,441U,504U,756U
+        42U,126U,252U,378U,504U,630U,756U,882U,1008U,1512U
     };
-    constexpr float slope_min=-0.06f;
-    constexpr float slope_max=0.25f;
+    constexpr float slope_min=-0.03f;
+    constexpr float slope_max=0.125f;
     GeneratedRows rows;
     for (const auto maturity : maturities) {
         const float years=business_days_to_years(maturity);

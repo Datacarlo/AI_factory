@@ -76,6 +76,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parents[2]
 sys.path.insert(0, str(PROJECT_ROOT))
 from tools.datasets.catalog_layout import physical_path  # noqa: E402
+from tools.datasets.metadata_format import recipe_yaml  # noqa: E402
 
 
 def layout_relative(path: str) -> str:
@@ -87,6 +88,8 @@ TEMPLATE_DIR = SCRIPT_DIR / "templates"
 
 def _write_generated(path: Path, contents: str) -> None:
     """Keep unchanged outputs' timestamps so regeneration does not rebuild CUDA."""
+    if path.name == "recipe.yaml":
+        contents = recipe_yaml(yaml.safe_load(contents))
     if not path.exists() or path.read_text() != contents:
         path.write_text(contents)
 
@@ -1733,11 +1736,11 @@ def generate_price_recipe_metadata(output_root: Path) -> list[Path]:
 
 
 def generate_fixed_income_price_central_mirrors(output_root: Path) -> list[Path]:
-    """Use the corresponding first-order engine for bitwise central-price parity.
+    """Use the common central evaluation without requesting sensitivities.
 
     Fixed-income Cartesian gradients may reject resolved contracts. Reusing
     their plan preserves the candidate order, Philox keys and frozen Bermudan
-    replay. The price recipe writes only the central channels.
+    policy. An empty sensitivity configuration skips stencil and replay work.
     """
     generated: list[Path] = []
     sources = set()
@@ -1767,6 +1770,16 @@ def generate_fixed_income_price_central_mirrors(output_root: Path) -> list[Path]
         start = body.index("datasets::price_gradients::Recipe recipe{")
         marker = "\n        };"
         end = body.index(marker, start) + len(marker)
+        recipe_body, replacements = re.subn(
+            r"            \{\{\n.*?\n            \}\},",
+            "            {},",
+            body[start:end],
+            flags=re.DOTALL,
+        )
+        if replacements != 1:
+            raise ValueError(f"Expected one sensitivity configuration in {source}")
+        body = body[:start] + recipe_body + body[end:]
+        end = start + len(recipe_body)
         body = body[:end] + "\n        recipe.price_only_output = true;" + body[end:]
         first_line, newline, remainder = body.partition("\n")
         if not first_line.startswith("// Generated ") or not newline:
@@ -1785,15 +1798,23 @@ def generate_fixed_income_price_central_mirrors(output_root: Path) -> list[Path]
         metadata["dataset_id"] = price.dataset_id
         metadata["generator"] = price.generator_path
         metadata["output"]["path"] = price.dataset_path
-        internal = metadata.pop("sensitivity", None)
-        if internal is not None:
-            metadata["internal_sensitivity_plan"] = internal
+        metadata.pop("sensitivity", None)
+        metadata.pop("internal_sensitivity_plan", None)
+        metadata.pop("exercise_replay", None)
+        metadata.get("time_representation", {}).pop("maturity_bump_steps_per_year", None)
+        if "standard_error_scope" in metadata:
+            metadata["standard_error_scope"] = (
+                "path dispersion conditional on the central in-sample LSM fit; "
+                "excludes fit variability, policy bias and discretization bias"
+                if gradient.product == "bermudan_swaption"
+                else "Monte Carlo standard error of the central price"
+            )
         metadata["central_price_engine"] = {
             "gradient_dataset_id": gradient.dataset_id,
             "output_channels": ["price", "standard_error"]
                 if gradient.engine != "fixed_income_closed_form"
                 else ["price"],
-            "calculation": "identical central evaluation, candidate rows, seeds and replay as the first-order price-gradient generator",
+            "calculation": "identical central evaluation, candidate rows and seeds as the price-gradient generator; no sensitivity nodes or gradient replay",
         }
         _write_generated(destination_recipe, yaml.safe_dump(
             metadata, sort_keys=False, allow_unicode=True

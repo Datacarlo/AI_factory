@@ -337,10 +337,13 @@ struct BermudanSwaptionDevicePreparedSensitivityPolicy
     }
 
     static std::vector<longstaff_schwartz::StateFieldDescriptor>
-    observation_field_descriptors() {
-        std::vector<longstaff_schwartz::StateFieldDescriptor> descriptors;
-        if constexpr (requires { Base::observation_field_descriptors(); }) {
-            descriptors = Base::observation_field_descriptors();
+    observation_field_descriptors(const HostInputs& inputs) {
+        auto descriptors = Base::observation_field_descriptors(inputs);
+        if constexpr (Base::kCacheBondCoefficients) {
+            const auto tables = 1U + checked_workspace_product(
+                inputs.sensitivity_count, kNodeCapacity - 1U, "Bermudan node table count overflow.");
+            descriptors.front().value_size = checked_workspace_product(
+                descriptors.front().value_size, tables, "Bermudan node table bytes overflow.");
         }
         if constexpr (kFrozenRegressionPolicy) {
             descriptors = longstaff_schwartz::price_gradients::
@@ -470,6 +473,32 @@ struct BermudanSwaptionDevicePreparedSensitivityPolicy
         };
     }
 
+    __device__ __forceinline__ static const typename Base::BondCoefficients*
+    node_bond_coefficients(
+        const PreparedRow& row, std::size_t sensitivity, std::size_t node
+    ) {
+        if constexpr (!Base::kCacheBondCoefficients) return nullptr;
+        // Node zero is the common central contract, shared by every stencil.
+        const std::size_t table = node == 0U ? 0U : sensitivity * (kNodeCapacity - 1U) + node;
+        return row.bond_coefficients + table * Base::bond_table_count(row.product);
+    }
+
+    template<typename StencilT, typename NodeIndices>
+    __device__ __forceinline__ static const typename Base::BondCoefficients*
+    graph_node_bond_coefficients(
+        const PreparedRow& row, std::size_t node,
+        const StencilT* stencils, const NodeIndices* indices
+    ) {
+        if (node == 0U) return row.bond_coefficients;
+        for (std::size_t sensitivity = 0U; sensitivity < row.sensitivity_count; ++sensitivity) {
+            const auto active = pg::active_node_count(stencils[sensitivity]);
+            for (std::size_t local = 1U; local < active; ++local)
+                if (indices[sensitivity][local] == node)
+                    return node_bond_coefficients(row, sensitivity, local);
+        }
+        return nullptr; // A mixed node needs its own table.
+    }
+
     __device__ __forceinline__ static void prepare_observations(
         PreparedRow& row,
         const StateView& states
@@ -478,6 +507,26 @@ struct BermudanSwaptionDevicePreparedSensitivityPolicy
             Base::prepare_observations(row, states);
         }) {
             Base::prepare_observations(row, states);
+        }
+        // Same node construction as the replay, outside the path/block loops.
+        if constexpr (Base::kCacheBondCoefficients) {
+            for (std::size_t sensitivity = 0U; sensitivity < row.sensitivity_count; ++sensitivity) {
+                pg::SensitivityTask<Scenario, kNodeCapacity> task{};
+                int error = sensitivity_preparation::valid;
+                if (!sensitivity_preparation::build_sensitivity_task<Orders, Preparation>(
+                        row.central, row.sensitivities[sensitivity], row.time, task, error)) {
+                    sensitivity_preparation::record_error(row.preparation_error, error,
+                        row.result_index, sensitivity);
+                    continue;
+                }
+                const auto count = pg::active_node_count(task.stencil);
+                for (std::size_t node = 1U; node < count; ++node) {
+                    auto prepared = prepare_node_row(task.nodes[node], row.key,
+                        row.result_index, row.state_offset, row.paths_per_price, row.simulation_time);
+                    Base::prepare_bond_table(prepared,
+                        const_cast<typename Base::BondCoefficients*>(node_bond_coefficients(row, sensitivity, node)));
+                }
+            }
         }
         if constexpr (kFrozenRegressionPolicy) {
             row.frozen_regressions = states.frozen_regressions
@@ -616,6 +665,7 @@ struct BermudanSwaptionDevicePreparedSensitivityPolicy
                 row.paths_per_price,
                 row.simulation_time
             );
+            prepared.nodes[node].bond_coefficients = node_bond_coefficients(row, sensitivity, node);
             if constexpr (TerminalForward) {
                 auto* observations =
                     reinterpret_cast<typename Schedule::Observation*>(

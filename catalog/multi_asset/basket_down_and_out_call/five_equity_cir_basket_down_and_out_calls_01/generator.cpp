@@ -1,4 +1,4 @@
-// Five equities, correlated CIR rate and a daily monitored basket barrier.
+// Five equities, correlated CIR rate and a basket barrier monitored every two business days.
 #include "product/basket_down_and_out_call/pricing_policy.cuh"
 #include "tools/pricing/five_equity_cir_generation.cuh"
 #include "datasets/validation.hpp"

@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/equity/rough/rough_stein_stein/prices/phoenix_memory_autocalls/rough_stein_stein_01__phoenix_memory_autocalls_01__01_cartesian_shard00.json
   sha256: 40f1286c212b123a5fe400b71ebeb19f09b47961ea884bf6c4f73a02df5b5d48
 hardware:
-  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   name: NVIDIA A100 80GB PCIe
   uuid: GPU-5102f6b2-92ef-1ca5-849f-649cb3851bf6
   compute_capability: '8.0'
@@ -24,6 +24,3 @@ software:
   cuda_target_architectures: '80'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 12246.217827666085
-  duration: 3 h 24 min 6 s 218 ms

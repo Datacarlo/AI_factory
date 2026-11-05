@@ -110,6 +110,17 @@ if(BUILD_TESTING)
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         LABELS "workbench;offline;multi_asset;fixed_income" TIMEOUT 30)
 
+    add_executable(test_multi_asset_autocall_dataset EXCLUDE_FROM_ALL
+        tests/datasets/multi_asset_autocall_dataset_test.cpp)
+    target_include_directories(test_multi_asset_autocall_dataset PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+    target_link_libraries(test_multi_asset_autocall_dataset PRIVATE
+        ai_factory_product_multi_asset_autocall_dataset ai_factory_multi_asset_price_dataset)
+    target_compile_features(test_multi_asset_autocall_dataset PRIVATE cxx_std_20)
+    add_dependencies(ai_factory_host_tests test_multi_asset_autocall_dataset)
+    add_test(NAME multi_asset_autocall_dataset COMMAND test_multi_asset_autocall_dataset)
+    set_tests_properties(multi_asset_autocall_dataset PROPERTIES
+        LABELS "workbench;offline;multi_asset;autocall" TIMEOUT 30)
+
     add_executable(test_sample_host_memory EXCLUDE_FROM_ALL
         tests/sampling/host_memory_test.cpp)
     target_include_directories(test_sample_host_memory PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -289,6 +300,13 @@ if(BUILD_TESTING)
         "multi_asset;fixed_income;quadratic_rough_heston;cross_asset" 180
     )
     target_link_libraries(test_cross_asset_cuda PRIVATE
+        ai_factory_causal_fft ai_factory_correlation_dataset
+    )
+    add_cuda_workbench_test(
+        multi_asset_autocall_cuda tests/simulation/multi_asset_autocall_kernel_cuda_test.cu
+        "multi_asset;autocall;fixed_income;rough" 180
+    )
+    target_link_libraries(test_multi_asset_autocall_cuda PRIVATE
         ai_factory_causal_fft ai_factory_correlation_dataset
     )
     add_cuda_workbench_test(

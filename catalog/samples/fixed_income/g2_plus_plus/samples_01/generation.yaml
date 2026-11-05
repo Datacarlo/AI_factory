@@ -5,8 +5,8 @@ output:
   path: datasets/samples/fixed_income/g2_plus_plus/samples_01.json
   sha256: 2ee05bd6854937ac3ee00d48ba7a80a33bd6e85c8ca9176642c975c8cfb3e3ac
 hardware:
-  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   name: NVIDIA A100 80GB PCIe
   uuid: GPU-5102f6b2-92ef-1ca5-849f-649cb3851bf6
   compute_capability: '8.0'

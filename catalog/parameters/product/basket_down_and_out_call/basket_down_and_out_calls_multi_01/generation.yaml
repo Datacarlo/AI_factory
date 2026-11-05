@@ -3,7 +3,7 @@ status: complete
 inputs: {}
 output:
   path: datasets/parameters/product/basket_down_and_out_call/basket_down_and_out_calls_multi_01.json
-  sha256: 9b77d9888c050faddcdb94e3a98f8ccf8e768d3212b98b8cf6e8c0a24da19774
+  sha256: d8403ec6d95835b11df5014f01a2b61e721a6f9fbe71f9e8c040fca840bbcd28
 hardware:
   device: cpu
   cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK

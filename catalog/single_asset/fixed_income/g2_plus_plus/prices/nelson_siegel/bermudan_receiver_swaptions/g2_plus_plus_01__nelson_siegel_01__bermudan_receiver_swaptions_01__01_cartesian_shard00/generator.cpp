@@ -14,18 +14,7 @@ int main() {
         datasets::price_gradients::Recipe recipe{
             "datasets/parameters/model/fixed_income/g2_plus_plus/parameters/g2_plus_plus_01.json", "datasets/parameters/product/bermudan_swaption/bermudan_swaptions_01_shard00.json", "datasets/single_asset/fixed_income/g2_plus_plus/prices/nelson_siegel/bermudan_receiver_swaptions/g2_plus_plus_01__nelson_siegel_01__bermudan_receiver_swaptions_01__01_cartesian_shard00.json", "catalog/single_asset/fixed_income/g2_plus_plus/prices/nelson_siegel/bermudan_receiver_swaptions/g2_plus_plus_01__nelson_siegel_01__bermudan_receiver_swaptions_01__01_cartesian_shard00/generation.yaml",
             "catalog/single_asset/fixed_income/g2_plus_plus/prices/nelson_siegel/bermudan_receiver_swaptions/g2_plus_plus_01__nelson_siegel_01__bermudan_receiver_swaptions_01__01_cartesian_shard00/recipe.yaml", PriceConstruction::SampledCurveCartesianProduct,
-            {{
-        {"model.mean_reversion_x", {0.005, pg::BumpScale::relative}},
-        {"model.volatility_x", {0.005, pg::BumpScale::relative}},
-        {"model.mean_reversion_y", {0.005, pg::BumpScale::relative}},
-        {"model.volatility_y", {0.005, pg::BumpScale::relative}},
-        {"model.correlation", {0.002, pg::BumpScale::absolute}},
-        {"curve.beta0", {0.0005, pg::BumpScale::absolute}},
-        {"curve.beta1", {0.0005, pg::BumpScale::absolute}},
-        {"curve.beta2", {0.0005, pg::BumpScale::absolute}},
-        {"curve.tau", {0.005, pg::BumpScale::relative}},
-        {"product.strike", {0.0005, pg::BumpScale::absolute}}
-            }}, {1.0f / 504.0f, 2U}, true
+            {}, {1.0f / 504.0f, 2U}, true
         };
         recipe.price_only_output = true;
         recipe.option_side = "receiver";

@@ -1,0 +1,19 @@
+schema_version: 4
+status: complete
+inputs:
+  source_model:
+    path: datasets/parameters/model/fixed_income/cir/parameters/cir_01.json
+    sha256: fed757eaebe17e53f542816e9b65dffed06c2dacfd9d692d6461879b70710afa
+output:
+  path: datasets/parameters/model/fixed_income/cir/factor_parameters/cir_multi100_core_01.json
+  sha256: d7660c4127f395fdec0758b99bf6045ecc7bea3b7ce8e57392ebe7622f1b147d
+hardware:
+  device: cpu
+  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
+software:
+  cmake: 3.22.1
+  cxx_compiler: GNU 14.3.0
+  cuda_compiler: 12.9.41
+  cuda_target_architectures: '89'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1

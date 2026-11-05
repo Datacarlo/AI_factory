@@ -11,6 +11,8 @@ struct BasketDownAndOutCallParameters {
     float lower_barrier;
     std::uint32_t maturity_days;
     std::uint32_t monitoring_interval_days;
+    // Zero retains the historical day calendar; otherwise use this grid stride.
+    std::uint32_t monitoring_interval_steps;
 };
 
 static_assert(std::is_trivially_copyable_v<BasketDownAndOutCallParameters>);

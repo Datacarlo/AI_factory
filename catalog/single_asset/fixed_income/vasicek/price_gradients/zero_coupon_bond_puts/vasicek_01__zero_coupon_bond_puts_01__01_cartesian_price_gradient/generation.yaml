@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/fixed_income/vasicek/price_gradients/zero_coupon_bond_puts/vasicek_01__zero_coupon_bond_puts_01__01_cartesian_price_gradient.json
   sha256: a34ef60ddecb6d321629a57c60e1c1c60c350ddeca62eb4d35258377d4a9808d
 hardware:
-  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
   name: Tesla V100-SXM2-32GB
   uuid: GPU-eb05268b-e265-c927-124b-f944b18caf0c
   compute_capability: '7.0'
@@ -23,6 +23,3 @@ software:
   cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 10.46776317502372
-  duration: 10 s 468 ms

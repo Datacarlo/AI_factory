@@ -1,0 +1,136 @@
+schema_version: 1
+kind: "model_parameters"
+dataset_id: "quadratic_rough_heston_multi100_core_slot3_01"
+generator: "catalog/parameters/model/equity/rough/quadratic_rough_heston/factor_parameters/quadratic_rough_heston_multi100_core_slot3_01/generator.cpp"
+output:
+  path: "datasets/parameters/model/equity/rough/quadratic_rough_heston/factor_parameters/quadratic_rough_heston_multi100_core_slot3_01.json"
+  format: "json"
+model_family: "quadratic rough Heston"
+row_count: 100
+parameterization: "factorized"
+inputs:
+  source_model: "datasets/parameters/model/equity/rough/quadratic_rough_heston/parameters/quadratic_rough_heston_01.json"
+parameters:
+  dividend_yield: "Model factor parameter."
+  initial_feedback: "Model factor parameter."
+  quadratic_scale: "Model factor parameter."
+  quadratic_shift: "Model factor parameter."
+  variance_floor: "Model factor parameter."
+  feedback_rate: "Model factor parameter."
+  feedback_volatility: "Model factor parameter."
+  hurst_exponent: "Model factor parameter."
+  spot: "Fixed to one for equal initial asset weights."
+dynamics:
+  source_model_dataset: "datasets/parameters/model/equity/rough/quadratic_rough_heston/parameters/quadratic_rough_heston_01.json"
+construction:
+  method: "seeded sample without replacement from core prefix"
+  source_model_dataset: "datasets/parameters/model/equity/rough/quadratic_rough_heston/parameters/quadratic_rough_heston_01.json"
+  source_core_prefix_rows: 900
+  sample_seed: 202611040104
+  source_row_indices:
+    - 724
+    - 265
+    - 216
+    - 450
+    - 445
+    - 291
+    - 503
+    - 578
+    - 389
+    - 755
+    - 17
+    - 560
+    - 369
+    - 531
+    - 366
+    - 712
+    - 92
+    - 645
+    - 745
+    - 273
+    - 691
+    - 700
+    - 734
+    - 112
+    - 592
+    - 381
+    - 471
+    - 888
+    - 577
+    - 449
+    - 188
+    - 121
+    - 68
+    - 589
+    - 604
+    - 241
+    - 288
+    - 178
+    - 555
+    - 836
+    - 738
+    - 858
+    - 844
+    - 801
+    - 157
+    - 422
+    - 699
+    - 703
+    - 781
+    - 185
+    - 384
+    - 413
+    - 772
+    - 506
+    - 549
+    - 196
+    - 869
+    - 248
+    - 826
+    - 416
+    - 404
+    - 546
+    - 825
+    - 132
+    - 284
+    - 813
+    - 744
+    - 126
+    - 607
+    - 221
+    - 786
+    - 438
+    - 616
+    - 244
+    - 350
+    - 306
+    - 874
+    - 133
+    - 559
+    - 446
+    - 630
+    - 282
+    - 532
+    - 268
+    - 618
+    - 173
+    - 397
+    - 323
+    - 670
+    - 338
+    - 774
+    - 167
+    - 71
+    - 314
+    - 181
+    - 193
+    - 0
+    - 144
+    - 100
+    - 487
+  excluded:
+    - "risk_free_rate"
+    - "rho"
+    - "correlation"
+  spot_override: 1.0
+  selection_offset: 300

@@ -347,8 +347,7 @@ def check_outputs(work: Path, job: dict) -> list[dict]:
     if (generation.get("schema_version") != 1
             or generation.get("status") != "complete"
             or not valid_row_count
-            or not isinstance(generation.get("execution"), dict)
-            or not isinstance(generation.get("timing"), dict)):
+            or not isinstance(generation.get("execution"), dict)):
         raise ValueError("Invalid native generation receipt")
     forbidden = {
         "database_id", "dataset_id", "model_dataset", "curve_dataset",

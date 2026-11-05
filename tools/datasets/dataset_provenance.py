@@ -13,6 +13,7 @@ import tarfile
 
 import yaml
 
+from tools.datasets.metadata_format import normalize_generation
 from tools.datasets.artifact_publication import contained_path, digest
 from tools.datasets.metadata_schemas import validate_document
 
@@ -230,11 +231,9 @@ def generation_record(native: dict, recipe_path: str, dataset_path: str,
         record["hardware"] = hardware
     if software:
         record["software"] = software
-    if wall_seconds is not None:
-        record["timing"] = {
-            "wall_seconds": wall_seconds,
-            "duration": readable_duration(wall_seconds),
-        }
+    # wall_seconds is accepted for older collection scripts; never publish it.
+    # Campaign logs keep measured durations independently of this receipt.
+    record = normalize_generation(record)
     validate_document(record, "generation", recipe_path)
     return record
 
@@ -273,10 +272,6 @@ def attach_generation(work: Path, job: dict, state: dict) -> None:
             cpu=job["kind"] in {"model_parameters", "product_parameters", "curve_parameters",
                                  "correlation_parameters"}),
         software_versions(Path(state["build"])),
-        wall_seconds=(measured_attempt_wall_seconds(
-            work, job.get("generation_wall_seconds"))
-            if job["kind"] in {"prices", "price_gradients", "price_delta"}
-            else None),
     )
     path.write_text(yaml.safe_dump(record, sort_keys=False))
 

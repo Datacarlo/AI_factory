@@ -8,16 +8,11 @@ inputs:
 output:
   path: datasets/single_asset/equity/markovian/variance_gamma/prices/range_accruals/variance_gamma_01__range_accruals_01__01_cartesian_shard00.json
   format: json
-row_count: 100000
-numerical_method:
-  engine: equity_markovian
+row_layout: inline_parameters
 outputs:
 - price
 - standard_error
-paths_per_price: 1048576
-seeds:
-  dynamics: 11668828206474985472
-random_number_generator: philox
+row_count: 100000
 product_shard:
   index: 0
   total_shards: 10
@@ -25,4 +20,9 @@ product_shard:
   selection: one seeded permutation position per contiguous ten-row block
   core_products: 90
   stress_products: 10
-row_layout: inline_parameters
+numerical_method:
+  engine: equity_markovian
+paths_per_price: 1048576
+random_number_generator: philox
+seeds:
+  dynamics: 11668828206474985472

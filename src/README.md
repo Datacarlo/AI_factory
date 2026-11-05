@@ -35,3 +35,7 @@ functions have `kernel` in their filename.
 
 `sample.cuh` is the public sampling facade. The small cross-cutting primitives
 `compensated_sum.cuh` and `workspace_layout.hpp` remain at the root.
+
+Multi-asset Athena, Phoenix and Phoenix Memory contracts are documented in
+[`product/multi_asset_autocall`](product/multi_asset_autocall/README.md). They
+reuse the joint equity/rate engine and discount each payment at its observation.

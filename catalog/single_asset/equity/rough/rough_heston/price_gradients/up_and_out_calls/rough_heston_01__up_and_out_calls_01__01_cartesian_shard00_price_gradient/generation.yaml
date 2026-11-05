@@ -23,6 +23,3 @@ software:
   cuda_target_architectures: '120'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 39114.32418028405
-  duration: 10 h 51 min 54 s 324 ms

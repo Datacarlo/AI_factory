@@ -1,0 +1,41 @@
+schema_version: 1
+kind: prices
+dataset_id: five_quadratic_rough_heston_cir_worst_of_calls_100k_01
+option_side: call
+generator: catalog/multi_asset/worst_of_option/five_quadratic_rough_heston_cir_worst_of_calls_100k_01/generator.cpp
+inputs:
+  model_0: datasets/parameters/model/equity/rough/quadratic_rough_heston/factor_parameters/quadratic_rough_heston_multi100_core_slot0_01.json
+  model_1: datasets/parameters/model/equity/rough/quadratic_rough_heston/factor_parameters/quadratic_rough_heston_multi100_core_slot1_01.json
+  model_2: datasets/parameters/model/equity/rough/quadratic_rough_heston/factor_parameters/quadratic_rough_heston_multi100_core_slot2_01.json
+  model_3: datasets/parameters/model/equity/rough/quadratic_rough_heston/factor_parameters/quadratic_rough_heston_multi100_core_slot3_01.json
+  model_4: datasets/parameters/model/equity/rough/quadratic_rough_heston/factor_parameters/quadratic_rough_heston_multi100_core_slot4_01.json
+  rate_model: datasets/parameters/model/fixed_income/cir/factor_parameters/cir_multi100_core_01.json
+  product: datasets/parameters/product/worst_of_option/worst_of_options_multi_02.json
+  correlation: datasets/parameters/correlation/five_quadratic_rough_heston_cir_01.json
+output:
+  path: datasets/multi_asset/worst_of_option/five_quadratic_rough_heston_cir_worst_of_calls_100k_01.json
+  format: json
+row_count: 100000
+construction:
+  expression: cartesian(product[100], correlation[10], aligned(model_0[100], model_1[100],
+    model_2[100], model_3[100], model_4[100], rate_model[100]))
+numerical_method:
+  discount: stochastic CIR integral at each cashflow
+  rate_scheme: CIR full-truncation Euler; trapezoidal rate integral
+  rough_scheme: causal FFT feedback (not a lift)
+time_grid:
+  steps_per_year: 504
+  simulation_steps_per_day: 2
+  delta_t: 1 / 504
+paths_per_price: 1048576
+random_number_generator: philox
+seeds:
+  dynamics: 202611041100
+execution:
+  team_size: 1
+  rows_per_launch: 1
+  streams: 1
+  threads_per_block: 256
+  paths_per_team: 1
+  path_chunk_size: 8192
+  checkpoint_rows: 128

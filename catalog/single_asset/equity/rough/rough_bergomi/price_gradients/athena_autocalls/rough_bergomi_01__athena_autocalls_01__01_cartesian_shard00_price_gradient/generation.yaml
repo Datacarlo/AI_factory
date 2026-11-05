@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/equity/rough/rough_bergomi/price_gradients/athena_autocalls/rough_bergomi_01__athena_autocalls_01__01_cartesian_shard00_price_gradient.json
   sha256: db8801873fd48fea5025de5fb65ace2a40215aa7809911f1c0a7e4144d8f0f31
 hardware:
-  cpu_model: Intel(R) Core(TM) Ultra 9 285K
   device: gpu
+  cpu_model: Intel(R) Core(TM) Ultra 9 285K
   name: NVIDIA GeForce RTX 5090
   uuid: GPU-58db2f59-3fa0-ca58-6a4c-4acfbbe0d532
   compute_capability: '12.0'
@@ -23,6 +23,3 @@ software:
   cuda_compiler: Cuda compilation tools, release 13.2, V13.2.86
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 122867.50795677607
-  duration: 1 j 10 h 7 min 47 s 508 ms

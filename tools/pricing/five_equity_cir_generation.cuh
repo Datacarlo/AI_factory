@@ -45,7 +45,7 @@ using FiveEquityRate=model::fixed_income::cir::CorrelatedRatePolicy;
 inline constexpr std::uint64_t kFiveEquitySeed=202610210700ULL;
 inline constexpr std::size_t kFiveEquityPaths=1U<<20U;
 inline constexpr std::size_t kFiveEquityPathChunk=8192U;
-inline constexpr std::uint32_t kFiveEquityStepsPerDay=2U;
+inline constexpr std::uint32_t kFiveEquityStepsPerDay=1U;
 
 inline const std::vector<std::string>& five_equity_external_factors() {
     static const std::vector<std::string> names{
@@ -153,7 +153,7 @@ int generate_five_equity_cir_prices(
         equity,rough,rate_models,products,correlations,
         five_equity_external_factors(),five_equity_internal_factors(),
         plan,paths,std::min(paths,path_chunk_size),
-        1.0f/252.0f,kFiveEquityStepsPerDay,32U,kFiveEquitySeed,{},geometry);
+        1.0f/(252.0f*kFiveEquityStepsPerDay),kFiveEquityStepsPerDay,32U,kFiveEquitySeed,{},geometry);
     if(pilot) {
         std::cout << "product=" << product_index
                   << " correlation=" << correlation_index

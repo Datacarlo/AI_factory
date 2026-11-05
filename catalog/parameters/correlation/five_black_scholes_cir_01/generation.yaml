@@ -1,0 +1,16 @@
+schema_version: 4
+status: complete
+inputs: {}
+output:
+  path: datasets/parameters/correlation/five_black_scholes_cir_01.json
+  sha256: f4f0b68dfd1a8d14d96ee58d3ec092e747b8bdb3083c9dab9ba1384ee2727065
+hardware:
+  device: cpu
+  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
+software:
+  cmake: 3.22.1
+  cxx_compiler: GNU 14.3.0
+  cuda_compiler: 12.9.41
+  cuda_target_architectures: '89'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1

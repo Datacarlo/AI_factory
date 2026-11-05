@@ -84,6 +84,15 @@ class GenerationTests(unittest.TestCase):
             path.write_text(text)
         return 0.125
 
+    def test_native_receipt_without_timing_can_be_published(self):
+        self.receipt.pop("timing")
+        with patch.object(campaign, "run_generator", side_effect=self.generator):
+            campaign.execute(self.run, self.state)
+        self.assertEqual(self.job["state"], "complete")
+        receipt = yaml.safe_load((Path(self.job["work"]) / self.job["generation"]).read_text())
+        self.assertNotIn("timing", receipt)
+        self.assertEqual(self.job["generation_wall_seconds"], 0.125)
+
     def test_matching_central_prices(self):
         price_work = self.root / "price_work"
         gradient_work = self.root / "gradient_work"

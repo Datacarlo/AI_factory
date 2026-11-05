@@ -255,6 +255,10 @@ __device__ __forceinline__ float european_receiver_swaption_price(
 // Model-side analytics and regression projection used by Bermudan swaptions.
 struct BermudanSwaptionAnalyticsPolicy {
     using PreparedModel = ModelParameters;
+    using BondCoefficients = ::ai_factory::workbench::fixed_income::OneFactorAffineBondCoefficients;
+    __device__ __forceinline__ static BondCoefficients bond_coefficients(
+        const PreparedModel& model, float time, float maturity
+    );
 
     struct PreparedRegressionState {
         float center;

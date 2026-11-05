@@ -23,6 +23,37 @@ struct BondBarrierFirstPolicy {
     using Nodes = pg::SensitivityNodes<Scenario, kNodeCapacity>;
     using Stencil = pg::SensitivityStencil<kNodeCapacity>;
 
+    struct CentralPolicy {
+        using PreparedRow = typename Pricing::PreparedRow;
+
+        __device__ __forceinline__ static PreparedRow prepare(
+            const Scenario& scenario, pg::TimeConfiguration time
+        ) {
+            const typename Pricing::TimeConfiguration schedule_time{
+                time.dt, time.simulation_steps_per_day
+            };
+            PreparedRow row{};
+            if constexpr (requires { scenario.curve; }) {
+                row = Pricing::prepare_row(
+                    scenario.model, scenario.curve, scenario.product, schedule_time
+                );
+            } else {
+                row = Pricing::prepare_row(
+                    scenario.model, scenario.product, schedule_time
+                );
+            }
+            // U is continuously bumped; the contract's observation calendar is frozen.
+            row.maturity_years = scenario.maturity_years;
+            return row;
+        }
+
+        __device__ __forceinline__ static float evaluate_path(
+            const PreparedRow& row, philox::PhiloxKey key, std::size_t path
+        ) {
+            return Pricing::evaluate_path(row, key, path);
+        }
+    };
+
     struct PreparedRow {
         typename Pricing::PreparedRow pricing[kNodeCapacity];
         const Stencil* stencil;
@@ -40,24 +71,8 @@ struct BondBarrierFirstPolicy {
         row.node_count = static_cast<std::uint8_t>(
             pg::active_node_count(*stencil)
         );
-        const typename Pricing::TimeConfiguration schedule_time{
-            time.dt, time.simulation_steps_per_day
-        };
         for (unsigned int node = 0U; node < row.node_count; ++node) {
-            const auto& scenario = (*nodes)[node];
-            if constexpr (requires { scenario.curve; }) {
-                row.pricing[node] = Pricing::prepare_row(
-                    scenario.model, scenario.curve, scenario.product,
-                    schedule_time
-                );
-            } else {
-                row.pricing[node] = Pricing::prepare_row(
-                    scenario.model, scenario.product, schedule_time
-                );
-            }
-            // U is the sole continuously bumped date. T and the observation
-            // calendar remain frozen in the product contract.
-            row.pricing[node].maturity_years = scenario.maturity_years;
+            row.pricing[node] = CentralPolicy::prepare((*nodes)[node], time);
         }
         return row;
     }

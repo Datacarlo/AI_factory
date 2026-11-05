@@ -13,16 +13,7 @@ int main() {
         datasets::price_gradients::Recipe recipe{
             "datasets/parameters/model/fixed_income/hull_white/parameters/hull_white_01.json", "datasets/parameters/product/zero_coupon_bond_option/zero_coupon_bond_options_01.json", "datasets/single_asset/fixed_income/hull_white/prices/nelson_siegel/zero_coupon_bond_puts/hull_white_01__nelson_siegel_01__zero_coupon_bond_puts_01__01_cartesian.json", "catalog/single_asset/fixed_income/hull_white/prices/nelson_siegel/zero_coupon_bond_puts/hull_white_01__nelson_siegel_01__zero_coupon_bond_puts_01__01_cartesian/generation.yaml",
             "catalog/single_asset/fixed_income/hull_white/prices/nelson_siegel/zero_coupon_bond_puts/hull_white_01__nelson_siegel_01__zero_coupon_bond_puts_01__01_cartesian/recipe.yaml", PriceConstruction::SampledCurveCartesianProduct,
-            {{
-        {"model.mean_reversion", {0.005, pg::BumpScale::relative}},
-        {"model.volatility", {0.005, pg::BumpScale::relative}},
-        {"curve.beta0", {0.0005, pg::BumpScale::absolute}},
-        {"curve.beta1", {0.0005, pg::BumpScale::absolute}},
-        {"curve.beta2", {0.0005, pg::BumpScale::absolute}},
-        {"curve.tau", {0.005, pg::BumpScale::relative}},
-        {"product.strike", {0.005, pg::BumpScale::relative}},
-        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
-            }}, {1.0f / 504.0f, 2U}, true
+            {}, {1.0f / 504.0f, 2U}, true
         };
         recipe.price_only_output = true;
         recipe.option_side = "put";

@@ -1,0 +1,129 @@
+schema_version: 1
+kind: "model_parameters"
+dataset_id: "cir_multi100_core_01"
+generator: "catalog/parameters/model/fixed_income/cir/factor_parameters/cir_multi100_core_01/generator.cpp"
+output:
+  path: "datasets/parameters/model/fixed_income/cir/factor_parameters/cir_multi100_core_01.json"
+  format: "json"
+model_family: "CIR short rate"
+row_count: 100
+parameterization: "factorized"
+inputs:
+  source_model: "datasets/parameters/model/fixed_income/cir/parameters/cir_01.json"
+parameters:
+  mean_reversion: "Model factor parameter."
+  long_term_mean: "Model factor parameter."
+  initial_state: "Model factor parameter."
+  volatility: "Model factor parameter."
+dynamics:
+  source_model_dataset: "datasets/parameters/model/fixed_income/cir/parameters/cir_01.json"
+construction:
+  method: "seeded sample without replacement from core prefix"
+  source_model_dataset: "datasets/parameters/model/fixed_income/cir/parameters/cir_01.json"
+  source_core_prefix_rows: 900
+  sample_seed: 202611040105
+  source_row_indices:
+    - 441
+    - 736
+    - 11
+    - 767
+    - 253
+    - 60
+    - 593
+    - 401
+    - 69
+    - 568
+    - 789
+    - 136
+    - 281
+    - 422
+    - 588
+    - 28
+    - 214
+    - 800
+    - 707
+    - 289
+    - 854
+    - 46
+    - 162
+    - 875
+    - 893
+    - 163
+    - 733
+    - 697
+    - 658
+    - 573
+    - 42
+    - 383
+    - 671
+    - 472
+    - 1
+    - 601
+    - 672
+    - 567
+    - 886
+    - 868
+    - 189
+    - 790
+    - 546
+    - 50
+    - 143
+    - 160
+    - 827
+    - 430
+    - 864
+    - 579
+    - 305
+    - 199
+    - 30
+    - 55
+    - 602
+    - 849
+    - 242
+    - 139
+    - 743
+    - 350
+    - 732
+    - 622
+    - 70
+    - 45
+    - 62
+    - 64
+    - 765
+    - 535
+    - 550
+    - 714
+    - 831
+    - 365
+    - 594
+    - 312
+    - 770
+    - 861
+    - 738
+    - 421
+    - 607
+    - 176
+    - 38
+    - 723
+    - 646
+    - 263
+    - 754
+    - 590
+    - 570
+    - 820
+    - 331
+    - 124
+    - 408
+    - 828
+    - 664
+    - 98
+    - 513
+    - 110
+    - 20
+    - 93
+    - 118
+    - 741
+  excluded:
+    - "risk_free_rate"
+    - "rho"
+    - "correlation"

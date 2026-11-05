@@ -22,6 +22,3 @@ software:
   cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 74912.560551876
-  duration: 20 h 48 min 32 s 561 ms

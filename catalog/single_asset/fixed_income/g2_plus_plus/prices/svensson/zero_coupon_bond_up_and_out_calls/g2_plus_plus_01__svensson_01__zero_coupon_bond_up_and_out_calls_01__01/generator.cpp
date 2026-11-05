@@ -13,22 +13,7 @@ int main() {
         datasets::price_gradients::Recipe recipe{
             "datasets/parameters/model/fixed_income/g2_plus_plus/parameters/g2_plus_plus_01.json", "datasets/parameters/product/zero_coupon_bond_up_and_out/zero_coupon_bond_up_and_outs_01.json", "datasets/single_asset/fixed_income/g2_plus_plus/prices/svensson/zero_coupon_bond_up_and_out_calls/g2_plus_plus_01__svensson_01__zero_coupon_bond_up_and_out_calls_01__01.json", "catalog/single_asset/fixed_income/g2_plus_plus/prices/svensson/zero_coupon_bond_up_and_out_calls/g2_plus_plus_01__svensson_01__zero_coupon_bond_up_and_out_calls_01__01/generation.yaml",
             "catalog/single_asset/fixed_income/g2_plus_plus/prices/svensson/zero_coupon_bond_up_and_out_calls/g2_plus_plus_01__svensson_01__zero_coupon_bond_up_and_out_calls_01__01/recipe.yaml", PriceConstruction::Aligned,
-            {{
-        {"model.mean_reversion_x", {0.005, pg::BumpScale::relative}},
-        {"model.volatility_x", {0.005, pg::BumpScale::relative}},
-        {"model.mean_reversion_y", {0.005, pg::BumpScale::relative}},
-        {"model.volatility_y", {0.005, pg::BumpScale::relative}},
-        {"model.correlation", {0.002, pg::BumpScale::absolute}},
-        {"curve.beta0", {0.0005, pg::BumpScale::absolute}},
-        {"curve.beta1", {0.0005, pg::BumpScale::absolute}},
-        {"curve.beta2", {0.0005, pg::BumpScale::absolute}},
-        {"curve.beta3", {0.0005, pg::BumpScale::absolute}},
-        {"curve.tau1", {0.005, pg::BumpScale::relative}},
-        {"curve.tau2", {0.005, pg::BumpScale::relative}},
-        {"product.strike", {0.005, pg::BumpScale::relative}},
-        {"product.barrier", {0.005, pg::BumpScale::relative}},
-        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
-            }}, {1.0f / 504.0f, 2U}, true
+            {}, {1.0f / 504.0f, 2U}, true
         };
         recipe.price_only_output = true;
         recipe.option_side = "call";

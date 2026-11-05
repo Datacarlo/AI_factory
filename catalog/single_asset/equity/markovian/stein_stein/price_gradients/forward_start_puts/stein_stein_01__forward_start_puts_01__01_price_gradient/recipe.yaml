@@ -1,6 +1,7 @@
 schema_version: 1
 kind: price_gradients
 dataset_id: stein_stein_01__forward_start_puts_01__01_price_gradient
+option_side: put
 generator: catalog/single_asset/equity/markovian/stein_stein/price_gradients/forward_start_puts/stein_stein_01__forward_start_puts_01__01_price_gradient/generator.cpp
 inputs:
   model: datasets/parameters/model/equity/markovian/stein_stein/parameters/stein_stein_01.json
@@ -8,10 +9,20 @@ inputs:
 output:
   path: datasets/single_asset/equity/markovian/stein_stein/price_gradients/forward_start_puts/stein_stein_01__forward_start_puts_01__01_price_gradient.json
   format: json
+row_layout: inline_parameters
 row_count: 1000
+time_grid:
+  steps_per_year: 504
+  simulation_steps_per_day: 2
+  delta_t: 1 / 504
 paths_per_price: 1048576
+random_number_generator: philox
+seeds:
+  dynamics: 11668828030381326336
 sensitivity:
   method: finite_difference_shared_innovations
+  bump_rule: h = displacement (absolute) or displacement * abs(x) (relative); centered
+    when valid, otherwise second-order one-sided.
   parameters:
   - parameter: model.initial_volatility
     displacement: 0.005
@@ -45,23 +56,12 @@ sensitivity:
     displacement: 0.001984126984126984
     scale: absolute
     boundary: central_then_one_sided_order2
-  bump_rule: h = displacement (absolute) or displacement * abs(x) (relative); centered
-    when valid, otherwise second-order one-sided.
   reconstructible_from_price:
   - parameter: model.spot
     formula: price / model.spot
     standard_error: standard_error / model.spot
   spot_contract_rule: Spot bumps keep absolute strikes and barriers resolved at the
     central spot fixed; product gradients use quoted ratios.
-option_side: put
 sensitivity_strategy: mono
 standard_error_scope: paired Monte Carlo sampling error; excludes bump and discretization
   bias
-seeds:
-  dynamics: 11668828030381326336
-random_number_generator: philox
-time_grid:
-  steps_per_year: 504
-  simulation_steps_per_day: 2
-  delta_t: 1 / 504
-row_layout: inline_parameters

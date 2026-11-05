@@ -1,6 +1,7 @@
 schema_version: 1
 kind: price_gradients
 dataset_id: g2_plus_plus_01__flat_01__zero_coupon_bond_up_and_out_calls_01__01_price_gradient
+option_side: call
 generator: catalog/single_asset/fixed_income/g2_plus_plus/price_gradients/flat/zero_coupon_bond_up_and_out_calls/g2_plus_plus_01__flat_01__zero_coupon_bond_up_and_out_calls_01__01_price_gradient/generator.cpp
 inputs:
   model: datasets/parameters/model/fixed_income/g2_plus_plus/parameters/g2_plus_plus_01.json
@@ -9,10 +10,36 @@ inputs:
 output:
   path: datasets/single_asset/fixed_income/g2_plus_plus/price_gradients/flat/zero_coupon_bond_up_and_out_calls/g2_plus_plus_01__flat_01__zero_coupon_bond_up_and_out_calls_01__01_price_gradient.json
   format: json
+row_layout: inline_parameters
 candidate_row_count: 1000
+row_selection:
+  method: resolved_bond_nonzero_support
+  criteria:
+  - strike_below_barrier
+  reference: initial_unbumped_model_and_curve
+  order: stable_candidate_index
+quote_convention:
+  strike:
+    mode: ratio_to_initial_forward_bond_price
+    unit: dimensionless
+    effective_level: strike = strike_ratio * P(0,U)/P(0,T)
+  barrier:
+    mode: ratio_to_initial_bond_price
+    unit: dimensionless
+    effective_level: barrier = barrier_ratio * P(0,U)
+time_grid:
+  steps_per_year: 504
+  simulation_steps_per_day: 2
+  delta_t: 1 / 504
+  monitoring: grid points including t=0 and T; continuous barrier approximate
 paths_per_price: 1048576
+random_number_generator: philox
+seeds:
+  dynamics: 11668829271626874880
 sensitivity:
   method: finite_difference_shared_innovations
+  bump_rule: h = displacement (absolute) or displacement * abs(x) (relative); centered
+    when valid, otherwise second-order one-sided.
   parameters:
   - parameter: model.mean_reversion_x
     displacement: 0.005
@@ -50,34 +77,7 @@ sensitivity:
     displacement: 0.001984126984126984
     scale: absolute
     boundary: central_then_one_sided_order2
-  bump_rule: h = displacement (absolute) or displacement * abs(x) (relative); centered
-    when valid, otherwise second-order one-sided.
   maturity_coordinate: Underlying bond maturity U; option expiry T, monitoring grid,
     and central absolute K and B stay fixed.
-quote_convention:
-  strike:
-    mode: ratio_to_initial_forward_bond_price
-    unit: dimensionless
-    effective_level: strike = strike_ratio * P(0,U)/P(0,T)
-  barrier:
-    mode: ratio_to_initial_bond_price
-    unit: dimensionless
-    effective_level: barrier = barrier_ratio * P(0,U)
-row_selection:
-  method: resolved_bond_nonzero_support
-  criteria:
-  - strike_below_barrier
-  reference: initial_unbumped_model_and_curve
-  order: stable_candidate_index
-option_side: call
 standard_error_scope: paired Monte Carlo sampling error; excludes bump and discretization
   bias
-seeds:
-  dynamics: 11668829271626874880
-random_number_generator: philox
-time_grid:
-  steps_per_year: 504
-  simulation_steps_per_day: 2
-  delta_t: 1 / 504
-  monitoring: grid points including t=0 and T; continuous barrier approximate
-row_layout: inline_parameters

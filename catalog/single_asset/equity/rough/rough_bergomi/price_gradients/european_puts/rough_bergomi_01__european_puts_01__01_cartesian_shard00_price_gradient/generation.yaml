@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/equity/rough/rough_bergomi/price_gradients/european_puts/rough_bergomi_01__european_puts_01__01_cartesian_shard00_price_gradient.json
   sha256: eef864b85ec7272b3c15fa02de0d67265c7160cb45162b68919183bd8808e9fa
 hardware:
-  cpu_model: Intel(R) Core(TM) Ultra 9 285K
   device: gpu
+  cpu_model: Intel(R) Core(TM) Ultra 9 285K
   name: NVIDIA GeForce RTX 5090
   uuid: GPU-58db2f59-3fa0-ca58-6a4c-4acfbbe0d532
   compute_capability: '12.0'
@@ -24,6 +24,3 @@ software:
   cuda_target_architectures: '120'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 42374.9623371
-  duration: 11 h 46 min 14 s 962 ms

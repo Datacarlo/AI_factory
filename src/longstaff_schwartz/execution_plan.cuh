@@ -40,7 +40,9 @@ ExecutionPlan make_execution_plan(
         descriptor.moment_value_count =
             PricingPolicy::moment_value_count(inputs);
     }
-    if constexpr (requires { PricingPolicy::observation_field_descriptors(); }) {
+    if constexpr (requires { PricingPolicy::observation_field_descriptors(inputs); }) {
+        descriptor.observation_fields = PricingPolicy::observation_field_descriptors(inputs);
+    } else if constexpr (requires { PricingPolicy::observation_field_descriptors(); }) {
         descriptor.observation_fields = PricingPolicy::observation_field_descriptors();
     }
     if constexpr (requires { PricingPolicy::path_field_descriptors(); }) {

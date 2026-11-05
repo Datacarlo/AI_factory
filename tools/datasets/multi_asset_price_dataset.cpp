@@ -132,7 +132,8 @@ void write_dataset(
         document["rate_model_family"]=rates.at("model_family");
     if(recipe.curve_dataset_path)
         document["curve_family"]=curve.at("curve_family");
-    document["option_side"]=recipe.option_side;
+    if (!recipe.option_side.empty())
+        document["option_side"]=recipe.option_side;
     if(product.contains("time_convention"))
         document["time_convention"]=product.at("time_convention");
     document["quote_convention"]=product.at("quote_convention");

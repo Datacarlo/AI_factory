@@ -3,7 +3,7 @@ status: complete
 inputs: {}
 output:
   path: datasets/parameters/product/worst_of_option/worst_of_options_multi_01.json
-  sha256: 61e375b54d2c4f8c858354b6e4f453550db14185a53d5aa1100b2e13f36398be
+  sha256: 6c8a95bae128c35abb12a318c2a3877cdc64514b6e8a4a3d659df5192141e629
 hardware:
   device: cpu
   cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK

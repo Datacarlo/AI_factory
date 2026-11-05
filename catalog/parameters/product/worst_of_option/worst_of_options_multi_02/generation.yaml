@@ -1,0 +1,16 @@
+schema_version: 4
+status: complete
+inputs: {}
+output:
+  path: datasets/parameters/product/worst_of_option/worst_of_options_multi_02.json
+  sha256: 7f0c100e3be649a745de351e7ed7c0f6fdbff7b887eefb02e40fe0cd22c2ce29
+hardware:
+  device: cpu
+  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
+software:
+  cmake: 3.22.1
+  cxx_compiler: GNU 14.3.0
+  cuda_compiler: 12.9.41
+  cuda_target_architectures: '89'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1

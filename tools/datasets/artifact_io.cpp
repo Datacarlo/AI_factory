@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <fstream>
 #include <iomanip>
+#include <iostream>
 #include <ostream>
 #include <sstream>
 #include <stdexcept>
@@ -178,11 +179,14 @@ void write_generation_receipt(
         {"status", "complete"},
         {"artifact", {{"row_count", row_count}}},
         {"execution", execution},
-        {"timing", {
-            {"wall_seconds", wall_seconds},
-            {"kernel_seconds", kernel_seconds},
-        }},
     });
+    // Operational measurements belong in run logs, not public receipts.
+    std::clog << nlohmann::ordered_json{
+        {"event", "generation_timing"},
+        {"generation_path", path.generic_string()},
+        {"wall_seconds", wall_seconds},
+        {"kernel_seconds", kernel_seconds},
+    }.dump() << '\n';
 }
 
 }  // namespace ai_factory::workbench::datasets

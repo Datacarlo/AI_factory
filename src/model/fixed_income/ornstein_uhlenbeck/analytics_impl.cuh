@@ -545,4 +545,12 @@ __device__ __forceinline__ float european_receiver_swaption_price(
     );
 }
 
+
+__device__ __forceinline__ BermudanSwaptionAnalyticsPolicy::BondCoefficients
+BermudanSwaptionAnalyticsPolicy::bond_coefficients(
+    const PreparedModel& model, float time, float maturity
+) {
+    return ornstein_uhlenbeck::affine_bond_coefficients(model.process, maturity - time);
+}
+
 }  // namespace ai_factory::workbench::model::fixed_income::ornstein_uhlenbeck

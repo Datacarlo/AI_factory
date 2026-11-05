@@ -21,6 +21,3 @@ software:
   cxx_compiler: g++-14 (Debian 14.2.0-19) 14.2.0
   cuda_compiler: Cuda compilation tools, release 13.2, V13.2.86
   cuda_target_architectures: '120'
-timing:
-  wall_seconds: 90658.96496215
-  duration: 1 j 1 h 10 min 58 s 965 ms

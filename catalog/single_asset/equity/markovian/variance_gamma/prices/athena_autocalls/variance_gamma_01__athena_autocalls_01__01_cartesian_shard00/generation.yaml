@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/equity/markovian/variance_gamma/prices/athena_autocalls/variance_gamma_01__athena_autocalls_01__01_cartesian_shard00.json
   sha256: 7c00a0b64efad9bf85d1742c1fa3f30d295af1da40763ae941726b07d4017ac5
 hardware:
-  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   name: NVIDIA A100 80GB PCIe
   uuid: GPU-5102f6b2-92ef-1ca5-849f-649cb3851bf6
   compute_capability: '8.0'
@@ -23,6 +23,3 @@ software:
   cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 119.49345196411014
-  duration: 1 min 59 s 493 ms

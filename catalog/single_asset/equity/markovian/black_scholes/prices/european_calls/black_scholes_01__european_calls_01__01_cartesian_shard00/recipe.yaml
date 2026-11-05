@@ -1,6 +1,7 @@
 schema_version: 1
 kind: prices
 dataset_id: black_scholes_01__european_calls_01__01_cartesian_shard00
+option_side: call
 generator: catalog/single_asset/equity/markovian/black_scholes/prices/european_calls/black_scholes_01__european_calls_01__01_cartesian_shard00/generator.cpp
 inputs:
   model: datasets/parameters/model/equity/markovian/black_scholes/parameters/black_scholes_01.json
@@ -8,13 +9,10 @@ inputs:
 output:
   path: datasets/single_asset/equity/markovian/black_scholes/prices/european_calls/black_scholes_01__european_calls_01__01_cartesian_shard00.json
   format: json
-row_count: 100000
-numerical_method:
-  engine: equity_closed_form
+row_layout: inline_parameters
 outputs:
 - price
-paths_per_price: 0
-option_side: call
+row_count: 100000
 product_shard:
   index: 0
   total_shards: 10
@@ -22,4 +20,6 @@ product_shard:
   selection: one seeded permutation position per contiguous ten-row block
   core_products: 90
   stress_products: 10
-row_layout: inline_parameters
+numerical_method:
+  engine: equity_closed_form
+paths_per_price: 0

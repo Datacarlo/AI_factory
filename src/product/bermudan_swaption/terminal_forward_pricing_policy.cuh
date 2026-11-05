@@ -17,18 +17,23 @@ struct TerminalForwardBermudanSwaptionPricingPolicy : BasePricingPolicy {
     using Observation = typename Schedule::Observation;
     struct StateView : Base::StateView { Observation* observations; };
 
-    static std::vector<longstaff_schwartz::StateFieldDescriptor> observation_field_descriptors() {
-        return {{sizeof(Observation), alignof(Observation)}};
+    template<typename Inputs>
+    static std::vector<longstaff_schwartz::StateFieldDescriptor>
+    observation_field_descriptors(const Inputs& inputs) {
+        auto fields = Base::observation_field_descriptors(inputs);
+        fields.push_back({sizeof(Observation), alignof(Observation)});
+        return fields;
     }
     static StateView make_state_view(
         unsigned char* workspace, const longstaff_schwartz::WorkspaceLayout& layout
     ) {
-        if (layout.observation_fields.empty())
+        constexpr std::size_t field = Base::kCacheBondCoefficients ? 1U : 0U;
+        if (layout.observation_fields.size() <= field)
             throw std::logic_error(
                 "A terminal-forward policy requires an observation table."
             );
         return {Base::make_state_view(workspace, layout),
-            longstaff_schwartz::workspace_pointer<Observation>(workspace, layout.observation_fields[0])};
+            longstaff_schwartz::workspace_pointer<Observation>(workspace, layout.observation_fields[field])};
     }
 
     __device__ __forceinline__ static void prepare_observation_table(
@@ -64,6 +69,7 @@ struct TerminalForwardBermudanSwaptionPricingPolicy : BasePricingPolicy {
         PreparedRow& row,
         StateView states
     ) {
+        Base::prepare_observations(row, states);
         prepare_observation_table(
             row,
             states.observations

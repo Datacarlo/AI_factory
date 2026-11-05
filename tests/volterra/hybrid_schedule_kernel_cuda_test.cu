@@ -30,7 +30,7 @@ __global__ void exercise(typename Schedule::Calendar calendar,
                          unsigned int observations, Result* output) {
     const auto schedule = Schedule::prepare(calendar, time, steps);
     auto cursor = Schedule::make_cursor(schedule);
-    Handler handler{{observations, 10.0f, 0.8f, 0.01f, 1.0f}};
+    Handler handler{{observations, 10.0f, 0.8f, 1.0f, 0.01f, 1.0f}};
     bool keep_running = Schedule::on_initial_state(schedule, cursor, 1.0f, handler);
     unsigned int final_step = 0;
     for (unsigned int step = 0; step < steps && keep_running; ++step) {

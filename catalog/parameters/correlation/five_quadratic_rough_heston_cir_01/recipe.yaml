@@ -1,0 +1,91 @@
+schema_version: 1
+kind: "correlation_parameters"
+dataset_id: "five_quadratic_rough_heston_cir_01"
+generator: "catalog/parameters/correlation/five_quadratic_rough_heston_cir_01/generator.cpp"
+output:
+  path: "datasets/parameters/correlation/five_quadratic_rough_heston_cir_01.json"
+  format: "json"
+row_count: 10
+factor_order:
+  - "quadratic_rough_heston_0.spot"
+  - "quadratic_rough_heston_1.spot"
+  - "quadratic_rough_heston_2.spot"
+  - "quadratic_rough_heston_3.spot"
+  - "quadratic_rough_heston_4.spot"
+  - "cir.rate"
+construction:
+  method: "Gram matrix of common and independent residual drivers"
+  spot_common_factor_loadings:
+    -
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+    -
+      - 0.3
+      - 0.3
+      - 0.3
+      - 0.3
+      - 0.3
+    -
+      - 0.55
+      - -0.55
+      - 0.55
+      - -0.55
+      - 0.55
+    -
+      - 0.75
+      - 0.75
+      - 0.75
+      - 0.75
+      - 0.75
+    -
+      - 0.85
+      - 0.68
+      - -0.55
+      - -0.35
+      - 0.1
+    -
+      - 0.9
+      - 0.65
+      - 0.4
+      - -0.25
+      - -0.8
+    -
+      - 0.8
+      - 0.8
+      - 0.8
+      - -0.8
+      - -0.8
+    -
+      - 0.35
+      - -0.85
+      - 0.9
+      - 0.15
+      - -0.55
+    -
+      - 0.95
+      - 0.95
+      - 0.95
+      - 0.95
+      - 0.95
+    -
+      - 0.92
+      - 0.92
+      - -0.92
+      - -0.92
+      - -0.92
+  rate_common_driver_loadings:
+    - 0.0
+    - 0.2
+    - -0.15
+    - -0.25
+    - 0.25
+    - -0.3
+    - 0.35
+    - -0.4
+    - 0.4
+    - -0.45
+  own_spot_volatility_correlation_range:
+  positive_definite: "Cholesky verified"

@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/equity/rough/rough_sabr/prices/range_accruals/rough_sabr_01__range_accruals_01__01_cartesian_shard00.json
   sha256: c4028211e5860e1dd5efec1156042e69e7d3dad01c12dfbf8cd3ae6c7503e7c0
 hardware:
-  cpu_model: Intel(R) Core(TM) Ultra 9 285K
   device: gpu
+  cpu_model: Intel(R) Core(TM) Ultra 9 285K
   name: NVIDIA GeForce RTX 5090
   uuid: GPU-11b9a6f1-3f11-a2b5-400c-0eee5c2089c6
   compute_capability: '12.0'
@@ -24,6 +24,3 @@ software:
   cuda_target_architectures: '120'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 4427.391383240931
-  duration: 1 h 13 min 47 s 391 ms

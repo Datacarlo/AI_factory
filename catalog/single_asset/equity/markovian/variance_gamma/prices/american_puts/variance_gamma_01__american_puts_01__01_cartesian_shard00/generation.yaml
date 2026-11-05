@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/equity/markovian/variance_gamma/prices/american_puts/variance_gamma_01__american_puts_01__01_cartesian_shard00.json
   sha256: 30b83d08dc2d3dd1c1ed00792af43f65a666c12e6fd04b3c2c82fba51022def2
 hardware:
-  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
   name: NVIDIA A100 80GB PCIe
   uuid: GPU-5102f6b2-92ef-1ca5-849f-649cb3851bf6
   compute_capability: '8.0'
@@ -24,6 +24,3 @@ software:
   cuda_target_architectures: '80'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 421.9845310708042
-  duration: 7 min 1 s 985 ms

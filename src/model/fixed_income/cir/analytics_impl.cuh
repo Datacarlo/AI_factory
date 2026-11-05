@@ -568,4 +568,12 @@ __device__ __forceinline__ float european_receiver_swaption_price(
     );
 }
 
+
+__device__ __forceinline__ BermudanSwaptionAnalyticsPolicy::BondCoefficients
+BermudanSwaptionAnalyticsPolicy::bond_coefficients(
+    const PreparedModel& model, float time, float maturity
+) {
+    return AnalyticsProvider{}.affine_bond_coefficients(model, time, maturity);
+}
+
 }  // namespace ai_factory::workbench::model::fixed_income::cir

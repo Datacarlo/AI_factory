@@ -44,7 +44,9 @@ __device__ __forceinline__ float evaluate_cross_asset_path(
     philox::PhiloxKey key,std::uint64_t path,
     std::uint32_t steps,std::uint32_t steps_per_day,unsigned lane
 ) {
-    static_assert(Product::kTerminalCashflow);
+    static_assert(Product::kTerminalCashflow || requires {
+        requires Product::kDiscountedCashflows;
+    }, "Product must expose terminal or observation-discounted cashflows");
     constexpr std::size_t rough_count=RoughPack::kAssetCount;
     constexpr std::size_t rate_factor=rough_count+EquityPack::kFactorCount;
     constexpr std::size_t dimension=rate_factor+RatePolicy::kBrownianDimension
@@ -105,7 +107,17 @@ __device__ __forceinline__ float evaluate_cross_asset_path(
         if(Product::is_observation_step(
             step,steps,steps_per_day,product_parameters)) {
             const auto observation = [&]() {
-                if constexpr (rough_count == 0U)
+                if constexpr (!Product::kTerminalCashflow) {
+                    if constexpr (rough_count == 0U)
+                        return Product::template observe<EquityPack, TeamSize>(
+                            equity_states, equity_prepared, lane,
+                            prepared_product, step + 1U == steps);
+                    else
+                        return Product::template observe_joint_group<
+                            EquityPack, RoughPack, rough_count, TeamSize>(
+                                equity_states, equity_prepared, rough_logs,
+                                rough_initial, lane, prepared_product, step + 1U == steps);
+                } else if constexpr (rough_count == 0U)
                     return Product::template observe<EquityPack, TeamSize>(
                         equity_states, equity_prepared, lane);
                 else
@@ -115,8 +127,14 @@ __device__ __forceinline__ float evaluate_cross_asset_path(
                             rough_logs, rough_initial, lane);
             }();
             bool keep_going=true;
-            if(lane==0U)
-                keep_going=handler.on_observation(step,observation);
+            if(lane==0U) {
+                if constexpr (Product::kTerminalCashflow)
+                    keep_going=handler.on_observation(step,observation);
+                else
+                    keep_going=handler.on_observation(
+                        Product::observation_index(step, steps_per_day, product_parameters),
+                        observation, expf(-rate_state.integral));
+            }
             if constexpr (TeamSize>1U)
                 keep_going=__shfl_sync(
                     simulation::subgroup_mask<TeamSize>(),
@@ -124,8 +142,11 @@ __device__ __forceinline__ float evaluate_cross_asset_path(
             if(!keep_going) break;
         }
     }
-    return lane==0U ? expf(-rate_state.integral)
-        *Product::finalize(prepared_product,handler) : 0.0f;
+    if constexpr (Product::kTerminalCashflow)
+        return lane==0U ? expf(-rate_state.integral)
+            *Product::finalize(prepared_product,handler) : 0.0f;
+    else
+        return lane==0U ? Product::finalize(prepared_product,handler) : 0.0f;
 }
 
 template<typename EquityPack,typename RoughPack,typename RatePolicy,
@@ -292,9 +313,13 @@ void launch_cross_asset_batch_cuda(
             <=kMaximumSharedCholeskyFactors,
         "Cross-asset Brownian dimension exceeds the shared-Cholesky factor limit.");
     static_assert(EquityPack::kAssetCount+RoughPack::kAssetCount<=253U);
-    static_assert(Product::kTerminalCashflow);
+    static_assert(Product::kTerminalCashflow || requires {
+        requires Product::kDiscountedCashflows;
+    }, "Product must expose terminal or observation-discounted cashflows");
     static_assert(TeamSize>=1U && TeamSize<=32U
         && (TeamSize&(TeamSize-1U))==0U);
+    if constexpr (requires { Product::validate_time_configuration(dt, steps_per_day); })
+        Product::validate_time_configuration(dt, steps_per_day);
     if(!inputs.products || !inputs.row_selectors
         || !inputs.packed_factors || !inputs.rate_models
         || (RatePolicy::kUsesCurve && !inputs.curves)

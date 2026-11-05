@@ -256,6 +256,16 @@ __device__ __forceinline__ float european_receiver_swaption_price(
 template<typename Composition>
 struct BermudanSwaptionAnalyticsPolicy : cir::BermudanSwaptionAnalyticsPolicy {
     using PreparedModel = typename Composition::FittedModel;
+    using BondCoefficients = ::ai_factory::workbench::fixed_income::OneFactorAffineBondCoefficients;
+    // Hoisting the fitted intercept changed replay bits in qualification.
+    // Retain the historical evaluation until cached CIR++ is bitwise qualified.
+    static constexpr bool cache_bond_coefficients = false;
+    __device__ __forceinline__ static BondCoefficients bond_coefficients(
+        const PreparedModel& model, float time, float maturity
+    ) {
+        return fitted::affine_bond_coefficients(model, time, maturity);
+    }
+
     using CurveParameters = typename Composition::CurveParameters;
     __device__ __forceinline__ static PreparedModel prepare_model(
         const ModelParameters& factor, const CurveParameters& curve

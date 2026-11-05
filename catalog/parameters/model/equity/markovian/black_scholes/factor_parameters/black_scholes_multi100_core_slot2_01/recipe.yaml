@@ -1,0 +1,130 @@
+schema_version: 1
+kind: "model_parameters"
+dataset_id: "black_scholes_multi100_core_slot2_01"
+generator: "catalog/parameters/model/equity/markovian/black_scholes/factor_parameters/black_scholes_multi100_core_slot2_01/generator.cpp"
+output:
+  path: "datasets/parameters/model/equity/markovian/black_scholes/factor_parameters/black_scholes_multi100_core_slot2_01.json"
+  format: "json"
+model_family: "Black-Scholes"
+row_count: 100
+parameterization: "factorized"
+inputs:
+  source_model: "datasets/parameters/model/equity/markovian/black_scholes/parameters/black_scholes_01.json"
+parameters:
+  spot: "Fixed to one for equal initial asset weights."
+  dividend_yield: "Model factor parameter."
+  volatility: "Model factor parameter."
+dynamics:
+  source_model_dataset: "datasets/parameters/model/equity/markovian/black_scholes/parameters/black_scholes_01.json"
+construction:
+  method: "seeded sample without replacement from core prefix"
+  source_model_dataset: "datasets/parameters/model/equity/markovian/black_scholes/parameters/black_scholes_01.json"
+  source_core_prefix_rows: 900
+  sample_seed: 202611040100
+  source_row_indices:
+    - 206
+    - 342
+    - 96
+    - 602
+    - 893
+    - 430
+    - 850
+    - 731
+    - 404
+    - 633
+    - 678
+    - 527
+    - 392
+    - 644
+    - 425
+    - 768
+    - 271
+    - 432
+    - 823
+    - 450
+    - 513
+    - 147
+    - 624
+    - 266
+    - 897
+    - 375
+    - 387
+    - 606
+    - 128
+    - 16
+    - 567
+    - 403
+    - 618
+    - 177
+    - 187
+    - 708
+    - 84
+    - 523
+    - 555
+    - 690
+    - 104
+    - 78
+    - 840
+    - 454
+    - 601
+    - 292
+    - 526
+    - 878
+    - 75
+    - 885
+    - 698
+    - 429
+    - 745
+    - 145
+    - 202
+    - 627
+    - 609
+    - 135
+    - 368
+    - 142
+    - 534
+    - 137
+    - 831
+    - 167
+    - 243
+    - 120
+    - 746
+    - 651
+    - 398
+    - 287
+    - 715
+    - 863
+    - 592
+    - 482
+    - 283
+    - 348
+    - 443
+    - 274
+    - 127
+    - 60
+    - 211
+    - 181
+    - 363
+    - 262
+    - 608
+    - 27
+    - 376
+    - 359
+    - 158
+    - 154
+    - 356
+    - 552
+    - 647
+    - 586
+    - 175
+    - 803
+    - 264
+    - 21
+    - 607
+    - 640
+  excluded:
+    - "risk_free_rate"
+    - "rho"
+    - "correlation"
+  spot_override: 1.0
+  selection_offset: 200

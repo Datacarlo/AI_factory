@@ -38,6 +38,7 @@ using observation_t =
 template<typename CentralPolicy, bool TerminalForward>
 struct FrozenReplayMixedWorkspace {
     using PreparedRow = typename CentralPolicy::PreparedRow;
+    using BondCoefficients = typename CentralPolicy::BondCoefficients;
     using Observation = mixed_workspace_detail::observation_t<
         CentralPolicy, TerminalForward
     >;
@@ -52,6 +53,9 @@ struct FrozenReplayMixedWorkspace {
     std::size_t observation_stride = 0U;
     std::uint16_t* node_counts = nullptr;
     std::size_t node_count_capacity = 0U;
+    BondCoefficients* bond_coefficients = nullptr;
+    std::size_t bond_coefficient_capacity = 0U;
+    std::size_t bond_table_stride = 0U;
 };
 
 struct FrozenReplayMixedWorkspaceRequirements {
@@ -59,6 +63,7 @@ struct FrozenReplayMixedWorkspaceRequirements {
     std::size_t prepared_nodes = 0U;
     std::size_t observations = 0U;
     std::size_t node_counts = 0U;
+    std::size_t bond_coefficients = 0U;
 };
 
 struct FrozenReplayMixedWorkspaceLayout {
@@ -68,6 +73,8 @@ struct FrozenReplayMixedWorkspaceLayout {
     std::size_t observations_offset = 0U;
     std::size_t observation_stride = 0U;
     std::size_t node_counts_offset = 0U;
+    std::size_t bond_coefficients_offset = 0U;
+    std::size_t bond_table_stride = 0U;
     std::size_t bytes = 0U;
 };
 
@@ -77,7 +84,8 @@ FrozenReplayMixedWorkspaceLayout frozen_replay_mixed_workspace_layout(
     const pg::SensitivityGraphPlan& graph_plan,
     unsigned int reduction_threads,
     mcpg::TerminalNodeGraphConfiguration configuration,
-    std::size_t maximum_exercise_count
+    std::size_t maximum_exercise_count,
+    std::size_t maximum_payment_count
 ) {
     const auto graph_layout =
         mcpg::mixed_node_graph_workspace_layout<
@@ -110,6 +118,12 @@ FrozenReplayMixedWorkspaceLayout frozen_replay_mixed_workspace_layout(
         ? maximum_exercise_count
         : 0U;
 
+    layout.bond_table_stride = CentralPolicy::kCacheBondCoefficients ? checked_workspace_product(
+        maximum_exercise_count, maximum_payment_count + 1U,
+        "Bermudan mixed bond table size overflow.") : 0U;
+    layout.capacities.bond_coefficients = checked_workspace_product(
+        row_nodes, layout.bond_table_stride, "Bermudan mixed bond cache size overflow.");
+
     std::size_t offset = graph_layout.bytes;
     layout.prepared_nodes_offset =
         mcpg::workspace_detail::append_workspace_array<
@@ -124,6 +138,8 @@ FrozenReplayMixedWorkspaceLayout frozen_replay_mixed_workspace_layout(
         mcpg::workspace_detail::append_workspace_array<std::uint16_t>(
             offset, layout.capacities.node_counts
         );
+    layout.bond_coefficients_offset = mcpg::workspace_detail::append_workspace_array<
+        typename CentralPolicy::BondCoefficients>(offset, layout.capacities.bond_coefficients);
     layout.bytes = offset;
     return layout;
 }
@@ -159,6 +175,9 @@ make_frozen_replay_mixed_workspace(
         layout.observation_stride,
         reinterpret_cast<std::uint16_t*>(base + layout.node_counts_offset),
         layout.capacities.node_counts,
+        reinterpret_cast<typename Workspace::BondCoefficients*>(base + layout.bond_coefficients_offset),
+        layout.capacities.bond_coefficients,
+        layout.bond_table_stride,
     };
 }
 
@@ -181,6 +200,8 @@ void validate_frozen_replay_mixed_workspace(
         }
         if (needed != 0U) validate_device_pointer(pointer, name);
     };
+    validate(workspace.bond_coefficients, workspace.bond_coefficient_capacity,
+             required.bond_coefficients, "Bermudan mixed bond coefficients");
     validate(
         workspace.prepared_nodes,
         workspace.prepared_node_capacity,

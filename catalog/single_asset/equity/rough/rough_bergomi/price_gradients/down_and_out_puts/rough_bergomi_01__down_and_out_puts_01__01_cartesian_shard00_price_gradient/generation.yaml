@@ -11,8 +11,8 @@ output:
   path: datasets/single_asset/equity/rough/rough_bergomi/price_gradients/down_and_out_puts/rough_bergomi_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient.json
   sha256: 3a4ec8088860c50b7229f7ee35d453945e316b44eaf13701ee74b4401812b5e1
 hardware:
-  cpu_model: Intel(R) Core(TM) Ultra 9 285K
   device: gpu
+  cpu_model: Intel(R) Core(TM) Ultra 9 285K
   name: NVIDIA GeForce RTX 5090
   uuid: GPU-58db2f59-3fa0-ca58-6a4c-4acfbbe0d532
   compute_capability: '12.0'
@@ -24,6 +24,3 @@ software:
   cuda_target_architectures: '120'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
-timing:
-  wall_seconds: 44633.3817596
-  duration: 12 h 23 min 53 s 382 ms
