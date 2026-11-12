@@ -2,6 +2,7 @@
 #pragma once
 
 #include "multi_asset/rough_price_kernel.cuh"
+#include "multi_asset/fractional_hybrid_bridge.cuh"
 #include "volterra/causal_fft_volatility_kernel.cuh"
 #include "volterra/hybrid_fft_volatility_kernel.cuh"
 #include "tools/pricing/multi_asset_price_generation.cuh"
@@ -139,6 +140,29 @@ struct MultiRoughDeviceModels<simulation::MultiRoughPack<Head,Tail...>> {
         std::size_t correlation_slot,
         std::size_t batch_rows=1U,std::size_t workspace_stride=0U,std::size_t output_stride=0U
     ) const {
+        using Traits=simulation::HybridBridgeTraits<Pack>;
+        if constexpr(Traits::count>1 && !Traits::supported)
+            throw std::invalid_argument("Joint hybrid bridge requires fractional power kernels");
+        launch_volatilities_with_bridge<Dimension,MarkovAssets,AssetOffset>(
+            packed_factors,result_index,path_offset,path_count,dt,steps,direct_tile_size,seed,
+            workspace,workspace_bytes,volatility_paths,stream,row_selectors,correlation_slot,
+            batch_rows,workspace_stride,output_stride,
+            simulation::FractionalHybridBridge<Pack>{inputs(row_selectors,MarkovAssets)});
+    }
+
+    template<std::size_t Dimension,std::size_t MarkovAssets,
+             std::size_t AssetOffset,typename Bridge>
+    void launch_volatilities_with_bridge(
+        const float* packed_factors,
+        std::size_t result_index,std::size_t path_offset,
+        std::size_t path_count,float dt,std::uint32_t steps,
+        std::uint32_t direct_tile_size,std::uint64_t seed,
+        void* workspace,std::size_t workspace_bytes,
+        float* volatility_paths,cudaStream_t stream,
+        const RowIndexSelector* row_selectors,
+        std::size_t correlation_slot,
+        std::size_t batch_rows,std::size_t workspace_stride,std::size_t output_stride,Bridge bridge
+    ) const {
         constexpr std::uint32_t source=static_cast<std::uint32_t>(
             2U+MarkovAssets+AssetOffset);
         float* output=volatility_paths+AssetOffset*path_count*steps;
@@ -157,15 +181,15 @@ struct MultiRoughDeviceModels<simulation::MultiRoughPack<Head,Tail...>> {
                     result_index,path_offset,path_count,dt,steps,seed,
                     workspace,workspace_bytes,output,AssetOffset,source,
                     stream,row_selectors,
-                    MarkovAssets+AssetOffset,correlation_slot,batch_rows,workspace_stride,output_stride);
+                    MarkovAssets+AssetOffset,correlation_slot,batch_rows,workspace_stride,output_stride,bridge);
         }
         if constexpr (Rest::kAssetCount>0U)
-            tail.template launch_volatilities<
+            tail.template launch_volatilities_with_bridge<
                 Dimension,MarkovAssets,AssetOffset+1U>(
                     packed_factors,result_index,path_offset,
                     path_count,dt,steps,direct_tile_size,seed,
                     workspace,workspace_bytes,volatility_paths,stream,
-                    row_selectors,correlation_slot,batch_rows,workspace_stride,output_stride);
+                    row_selectors,correlation_slot,batch_rows,workspace_stride,output_stride,bridge);
     }
 };
 
@@ -212,6 +236,10 @@ struct MultiRoughDeviceModels<
         std::size_t correlation_slot,
         std::size_t batch_rows=1U, std::size_t workspace_stride=0U, std::size_t output_stride=0U
     ) const {
+        using Traits=simulation::HybridBridgeTraits<Pack>;
+        if constexpr(Traits::count>1 && !Traits::supported)
+            throw std::invalid_argument("Joint hybrid bridge requires fractional power kernels");
+        const simulation::FractionalHybridBridge<Pack> bridge{inputs(row_selectors,MarkovAssets)};
         for (std::size_t asset = 0U; asset < Count; ++asset) {
             float* output = volatility_paths
                 + asset * path_count * steps;
@@ -233,7 +261,7 @@ struct MultiRoughDeviceModels<
                             path_count, dt, steps, seed, workspace,
                             workspace_bytes, output, asset, source,
                             stream,row_selectors,
-                            MarkovAssets+asset,correlation_slot,batch_rows,workspace_stride,output_stride);
+                            MarkovAssets+asset,correlation_slot,batch_rows,workspace_stride,output_stride,bridge);
             }
         }
     }

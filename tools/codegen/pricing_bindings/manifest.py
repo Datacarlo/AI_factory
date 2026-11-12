@@ -428,6 +428,13 @@ PRICE_VARIANTS = (
 
 AMERICAN_RECIPE_SPECS = (
     AmericanRecipeSpec(
+        "black_scholes", "Black-Scholes", "exact", "Exact geometric Brownian transition",
+        "Spot and log-moneyness six-term basis",
+        ("spot", "log_moneyness"), ("spot / strike", "log(spot / strike)"),
+        ("1", "L1(spot / strike)", "L2(spot / strike)", "log(spot / strike)",
+         "log(spot / strike)^2", "L1(spot / strike) * log(spot / strike)"),
+    ),
+    AmericanRecipeSpec(
         "bates",
         "Bates",
         "fixed",

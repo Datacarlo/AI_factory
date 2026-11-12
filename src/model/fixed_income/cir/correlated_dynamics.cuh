@@ -9,7 +9,11 @@ namespace ai_factory::workbench::model::fixed_income::cir {
 struct CorrelatedRatePolicy {
     using Parameters = ModelParameters;
     using CurveParameters = ::ai_factory::workbench::fixed_income::NoCurveParameters;
-    struct State { float short_rate; float integral; };
+    struct State {
+        float short_rate;
+        float integral;
+        float raw_rate;
+    };
     struct Prepared {
         float kappa_dt, theta, sigma_sqrt_dt, dt, initial_rate;
     };
@@ -25,18 +29,21 @@ struct CorrelatedRatePolicy {
                 p.process.volatility*sqrtf(dt),dt,p.initial_state};
     }
     __device__ __forceinline__ static State initial_state(const Prepared& p) {
-        return {p.initial_rate,0.0f};
+        return {p.initial_rate,0.0f,p.initial_rate};
     }
     __device__ __forceinline__ static float one_step_transition(
         const Prepared& p, const float* z, philox::PhiloxKey,
         std::uint64_t, std::uint32_t, std::uint32_t, State& state) {
         const float previous=state.short_rate;
-        // Full-truncation Euler; the shared z is the physical CIR Brownian driver.
-        const float next=fmaxf(0.0f,previous+p.kappa_dt*(p.theta-previous)
-            +p.sigma_sqrt_dt*sqrtf(fmaxf(previous,0.0f))*z[0]);
+        // Keep the auxiliary Euler state signed. Only the drift/diffusion
+        // coefficients and observable short rate use its positive part.
+        const float raw=state.raw_rate+p.kappa_dt*(p.theta-previous)
+            +p.sigma_sqrt_dt*sqrtf(fmaxf(previous,0.0f))*z[0];
+        const float next=fmaxf(0.0f,raw);
         const float increment=0.5f*p.dt*(previous+next);
         state.short_rate=next;
         state.integral+=increment;
+        state.raw_rate=raw;
         return increment;
     }
 };

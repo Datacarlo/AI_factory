@@ -1,0 +1,74 @@
+schema_version: 1
+kind: price_gradients
+dataset_id: black_scholes_01__american_calls_01__01_cartesian_shard00_price_gradient
+option_side: call
+generator: catalog/single_asset/equity/markovian/black_scholes/price_gradients/american_calls/black_scholes_01__american_calls_01__01_cartesian_shard00_price_gradient/generator.cpp
+inputs:
+  model: datasets/parameters/model/equity/markovian/black_scholes/parameters/black_scholes_01.json
+  product: datasets/parameters/product/american_option/american_options_01_shard00.json
+output:
+  path: datasets/single_asset/equity/markovian/black_scholes/price_gradients/american_calls/black_scholes_01__american_calls_01__01_cartesian_shard00_price_gradient.json
+  format: json
+row_layout: inline_parameters
+row_count: 100000
+product_shard:
+  index: 0
+  total_shards: 10
+  source_dataset: datasets/parameters/product/american_option/american_options_01.json
+  selection: one seeded permutation position per contiguous ten-row block
+  core_products: 90
+  stress_products: 10
+quote_convention:
+  strike:
+    mode: ratio_to_central_spot
+    unit: dimensionless
+    effective_level: strike * S0
+numerical_method:
+  engine: equity_lsm_exact
+  algorithm: longstaff_schwartz
+  regression:
+    basis: laguerre_polynomial_two_factor_6_term
+    feature_normalization: central_lsm_row
+    solver: ridge_regularized_fp64_normal_equations_cholesky
+    refinement: none
+time_grid:
+  steps_per_year: 504
+  simulation_steps_per_day: 2
+  delta_t: 1 / 504
+paths_per_price: 1048576
+random_number_generator: philox
+seeds:
+  dynamics: 11668826776250875904
+sensitivity:
+  method: finite_difference_shared_innovations
+  bump_rule: h = displacement (absolute) or displacement * abs(x) (relative); centered
+    when valid, otherwise second-order one-sided.
+  parameters:
+  - parameter: model.spot
+    displacement: 0.005
+    scale: relative
+    boundary: central_then_one_sided_order2
+  - parameter: model.volatility
+    displacement: 0.005
+    scale: relative
+    boundary: central_then_one_sided_order2
+  - parameter: model.risk_free_rate
+    displacement: 0.0005
+    scale: absolute
+    boundary: central_then_one_sided_order2
+  - parameter: model.dividend_yield
+    displacement: 0.0005
+    scale: absolute
+    boundary: central_then_one_sided_order2
+  - parameter: product.strike
+    displacement: 0.005
+    scale: relative
+    boundary: central_then_one_sided_order2
+  spot_contract_rule: Spot bumps keep absolute strikes and barriers resolved at the
+    central spot fixed; product gradients use quoted ratios.
+sensitivity_strategy: mono
+exercise_replay: frozen_exercise_time
+fit_and_valuation_paths: same paths
+standard_error_scope: paired path dispersion conditional on the central in-sample
+  LSM fit; excludes fit variability, policy bias, stencil bias and discretization
+  bias

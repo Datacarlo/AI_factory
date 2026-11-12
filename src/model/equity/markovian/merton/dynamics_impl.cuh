@@ -186,14 +186,18 @@ __device__ __forceinline__ void DynamicsPolicy::one_step_transition(
     State& state
 ) {
     const auto& transition = dynamics.transition;
+    auto count_uniforms = auxiliary.template source<
+        compound_poisson::kCountSource>();
+    auto mark_uniforms = auxiliary.template source<
+        compound_poisson::kMarkSource>();
     const std::uint32_t jump_count = compound_poisson::draw_count(
-        auxiliary, transition.poisson_mean,
+        count_uniforms, transition.poisson_mean,
         transition.zero_jump_probability
     );
     philox::NormalPairCache mark_cache;
     float jump_normal_sum = 0.0f;
     for (std::uint32_t event = 0U; event < jump_count; ++event) {
-        jump_normal_sum += philox::next_normal(auxiliary, mark_cache);
+        jump_normal_sum += philox::next_normal(mark_uniforms, mark_cache);
     }
     merton::one_step_transition(
         dynamics.model, transition, jump_count, brownian.spot,

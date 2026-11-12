@@ -862,6 +862,7 @@ def default_sensitivities(
             ("model.volatility_of_volatility", .005, "relative"),
             ("model.hurst_exponent", .001, "absolute"),
             ("model.rho", .002, "absolute"),
+            ("model.initial_volatility", .005, "relative"),
         ),
         "rough_sabr": (
             ("model.spot", .005, "relative"),

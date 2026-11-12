@@ -1,5 +1,6 @@
 // Terminal sensitivity graph for Gaussian Volterra paths using shared FFTs.
 #pragma once
+#include "volterra/path_time_coefficient.cuh"
 
 #include "cuda/check_cuda.cuh"
 #include "monte_carlo/price_gradients/node_graph/row_preparation.cuh"
@@ -463,7 +464,7 @@ __global__ void prepare_gaussian_fft_kernel_cache_entry(
             reinterpret_cast<float2*>(data)[item] = {weight, 0.0f};
             if (index < maximum_steps) {
                 output->variances[index] =
-                    KernelPolicy::volterra_variance(
+                    path_time_coefficient<KernelPolicy>(
                         kernel, static_cast<float>(index + 1U) * dt
                     );
             }

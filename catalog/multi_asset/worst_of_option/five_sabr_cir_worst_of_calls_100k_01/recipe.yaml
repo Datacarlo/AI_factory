@@ -19,6 +19,11 @@ row_count: 100000
 construction:
   expression: cartesian(product[100], correlation[10], aligned(model_0[100], model_1[100],
     model_2[100], model_3[100], model_4[100], rate_model[100]))
+quote_convention:
+  strike:
+    mode: strike_on_min_normalized_spot
+    unit: dimensionless
+    underlying: min_i(S_i(T)/S_i(0))
 numerical_method:
   discount: stochastic CIR integral at each cashflow
   rate_scheme: CIR full-truncation Euler; trapezoidal rate integral

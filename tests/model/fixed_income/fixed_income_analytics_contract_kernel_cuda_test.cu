@@ -653,6 +653,45 @@ __global__ void fixed_income_analytics_matrix_kernel(
 #undef AI_FACTORY_ASSERT_FIXED_INCOME_ANALYTICS
 #undef AI_FACTORY_DEFINE_ANALYTICS_FACADE
 
+// Compare the shift against a separate CPU quadrature of phi(t). Low-a
+// intervals used to subtract nearly equal O(h) terms before dividing by a^2.
+__global__ void hull_white_small_reversion_kernel(float a, float start,
+                                                 float end, float* output) {
+    const auto fitted = hw_flat::compose_fitted_model({a, 0.15f}, {0.03f});
+    *output = ai_factory::workbench::model::fixed_income::hull_white::fitted::shift_integral(fitted, start, end);
+}
+void check_hull_white_small_reversion() {
+    using ai_factory::workbench::check_cuda;
+    float* device = nullptr;
+    check_cuda(cudaMalloc(&device, sizeof(float)), "HW small a allocation");
+    for (const float a : {1e-6f, 1e-4f, 0.005f, 0.009999f}) {
+        for (const float start : {0.0f, 0.001f, 1.0f, 3.0f}) {
+            for (const float length : {1.0f / 504.0f, 2.0f, 100.0f}) {
+                const float end = start + length;
+                hull_white_small_reversion_kernel<<<1,1>>>(a, start, end, device);
+                float actual = 0.0f;
+                check_cuda(cudaMemcpy(&actual, device, sizeof(float),
+                    cudaMemcpyDeviceToHost), "HW small a copy");
+                constexpr unsigned int n = 10000U;
+                const double h = (double(end) - start) / n;
+                double integral = 0.0;
+                for (unsigned int j = 0; j <= n; ++j) {
+                    const double t = start + j * h;
+                    const double b = -std::expm1(-double(a) * t) / a;
+                    integral += (j == 0U || j == n ? 1 : j % 2U ? 4 : 2)
+                        * b * b;
+                }
+                const double expected = double(0.03f) * (double(end) - start)
+                    + 0.5 * double(0.15f) * double(0.15f) * integral * h / 3.0;
+                if (!std::isfinite(actual)
+                    || std::abs(actual - expected) > 2e-6 * expected + 2e-8)
+                    throw std::runtime_error("HW shift disagrees with independent quadrature");
+            }
+        }
+    }
+    check_cuda(cudaFree(device), "HW small a free");
+}
+
 }  // namespace
 
 int main() {
@@ -666,6 +705,8 @@ int main() {
     ai_factory::workbench::check_cuda(
         availability, "analytics contract cudaGetDeviceCount"
     );
+
+    check_hull_white_small_reversion();
 
     constexpr std::size_t row_count = 11U;
     AnalyticsMatrixRow* device_rows = nullptr;

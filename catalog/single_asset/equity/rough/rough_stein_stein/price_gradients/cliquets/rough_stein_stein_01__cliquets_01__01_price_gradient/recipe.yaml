@@ -51,6 +51,10 @@ sensitivity:
     displacement: 0.002
     scale: absolute
     boundary: central_then_one_sided_order2
+  - parameter: model.initial_volatility
+    displacement: 0.005
+    scale: relative
+    boundary: central_then_one_sided_order2
   - parameter: product.participation_rate
     displacement: 0.005
     scale: relative
@@ -80,3 +84,5 @@ sensitivity:
 sensitivity_strategy: node_graph
 standard_error_scope: paired Monte Carlo sampling error; excludes bump and discretization
   bias
+payoff:
+  periodic_return: R_i = S(t_i) / S(t_{i-1}) - 1; R_i = 0 when both spots are zero. The first loss into zero is retained. Local bounds apply afterwards.

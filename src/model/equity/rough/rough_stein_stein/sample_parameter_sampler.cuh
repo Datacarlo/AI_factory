@@ -17,7 +17,7 @@ namespace ai_factory::workbench::model::equity::rough_stein_stein {
 struct SampleParameterSampler {
     using Parameters = ModelParameters;
     struct Configuration {
-        sample::ParameterUniformBounds bounds[6];
+        sample::ParameterUniformBounds bounds[7];
     };
 
     static void validate(const Configuration& configuration) {
@@ -50,8 +50,9 @@ struct SampleParameterSampler {
             const float volatility_of_volatility = uniform(configuration.bounds[3], uniforms);
             const float hurst_exponent = uniform(configuration.bounds[4], uniforms);
             const float rho = uniform(configuration.bounds[5], uniforms);
+            const float initial_volatility = uniform(configuration.bounds[6], uniforms);
 
-            if (true) return {spot, 0.0f, 0.0f, volatility_level, mean_reversion, volatility_of_volatility, hurst_exponent, rho};
+            if (true) return {spot, 0.0f, 0.0f, volatility_level, mean_reversion, volatility_of_volatility, hurst_exponent, rho, initial_volatility};
         }
         asm volatile("trap;");
         return {};

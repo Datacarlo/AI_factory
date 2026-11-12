@@ -14,6 +14,7 @@ from string import Template
 
 import yaml
 from fixed_income_quote import quote_convention
+from product_payoff import payoff_metadata
 
 from manifest import (
     AMERICAN_RECIPE_SPECS,
@@ -48,6 +49,7 @@ from capability_manifest import (
     GENERATED_PRODUCT_BINDING_PATHS,
     MODEL_BY_NAME,
     MODEL_SPECS,
+    RETIRED_CATALOG_MODELS,
     PRODUCT_SPECS,
     PRODUCT_BINDING_SPECS,
     PRICE_DELTA_BINDING_SPECS,
@@ -567,6 +569,8 @@ def generate_samples(output_root: Path) -> list[Path]:
         helper.parent.mkdir(parents=True, exist_ok=True)
         _write_generated(helper, _render_sample_generation_header(model))
         generated.append(helper)
+        if model.name in RETIRED_CATALOG_MODELS:
+            continue
         for recipe_index in (1, 2):
             recipe = (
                 output_root / layout_relative(
@@ -1667,6 +1671,7 @@ def _price_recipe_metadata(dataset, source: str) -> dict:
         ),
         "paths_per_price": 1_048_576 if stochastic else 0,
     }
+    metadata.update(payoff_metadata(dataset.product))
     if dataset.asset_class == "fixed_income":
         metadata["quote_convention"] = quote_convention(dataset.product)
     variant = dataset.variant or ""

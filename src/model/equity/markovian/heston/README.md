@@ -37,6 +37,15 @@ simulated with the QE-M scheme.
 
 The model follows [Heston (1993)](https://doi.org/10.1093/rfs/6.2.327); simulation uses the QE-M scheme of [Andersen (2008)](https://doi.org/10.21314/JCF.2008.189).
 
+## Correlated multi-asset transition
+
+The multi-asset adapter uses the variance normal from the joint Brownian
+correlation matrix in both QE branches. In the exponential branch,
+$`U=\Phi(Z_v)`$; the inverse is evaluated using a stable normal log-survival
+function, without clipping the Gaussian tail. Bates reuses this adapter.
+The single-asset transition retains its existing independent QE uniform and
+Philox replay convention.
+
 ## Related contracts
 
 Shared product and engine contracts: [Markovian equity entry point](../README.md).

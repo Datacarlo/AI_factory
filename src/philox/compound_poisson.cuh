@@ -17,6 +17,7 @@ inline constexpr std::uint8_t kMarkSource = 3U;
 inline constexpr std::uint8_t kThinningSource = 4U;
 inline constexpr std::uint8_t kExtensionArrivalSource = 5U;
 inline constexpr std::uint8_t kExtensionMarkSource = 6U;
+inline constexpr std::uint8_t kDirectionSource = 7U;
 
 template<typename UniformSequence>
 __device__ __forceinline__ std::uint32_t draw_count(

@@ -14,6 +14,7 @@ struct ModelParameters {
     float volatility_of_volatility;
     float hurst_exponent;
     float rho;
+    float initial_volatility;
 };
 
 static_assert(std::is_trivially_copyable_v<ModelParameters>);

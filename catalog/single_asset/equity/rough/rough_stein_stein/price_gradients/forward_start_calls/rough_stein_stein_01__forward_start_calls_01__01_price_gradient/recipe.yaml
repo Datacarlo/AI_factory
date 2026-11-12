@@ -52,6 +52,10 @@ sensitivity:
     displacement: 0.002
     scale: absolute
     boundary: central_then_one_sided_order2
+  - parameter: model.initial_volatility
+    displacement: 0.005
+    scale: relative
+    boundary: central_then_one_sided_order2
   - parameter: product.moneyness
     displacement: 0.005
     scale: relative

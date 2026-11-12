@@ -7,5 +7,6 @@ int main(int argc,char** argv) {
         wb::offline::pricing::FiveMarkov<wb::model::equity::sabr::DynamicsPolicy>, wb::simulation::MultiRoughPack<>, wb::product::MultiAssetAthenaAutocallPathPolicy, 1U>(
         argc,argv,wb::model::equity::sabr::load_models,wb::product::load_multi_asset_athena_autocalls,
         "equity/markovian/sabr","sabr",{"spot","volatility"},
-        "datasets/parameters/product/multi_asset_athena_autocall/athena_autocalls_multi_01.json","datasets/multi_asset/multi_asset_athena_autocall/five_sabr_cir_athena_autocalls_100k_01.json","catalog/multi_asset/multi_asset_athena_autocall/five_sabr_cir_athena_autocalls_100k_01/generation.yaml","",202611040900ULL);
+        "datasets/parameters/product/multi_asset_athena_autocall/athena_autocalls_multi_01.json","datasets/multi_asset/multi_asset_athena_autocall/five_sabr_cir_athena_autocalls_100k_01.json","catalog/multi_asset/multi_asset_athena_autocall/five_sabr_cir_athena_autocalls_100k_01/generation.yaml","",202611040900ULL,
+        wb::offline::pricing::CrossAssetBatchGeometry{128U,0U,256U,1U,1U,1U},8192U);
 }

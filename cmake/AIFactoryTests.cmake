@@ -342,6 +342,19 @@ if(BUILD_TESTING)
     )
 
     add_cuda_workbench_test(
+        fractional_hybrid_bridge_cuda tests/simulation/fractional_hybrid_bridge_kernel_cuda_test.cu
+        "multi_asset;hybrid_fft;correlation" 120
+    )
+    target_link_libraries(test_fractional_hybrid_bridge_cuda PRIVATE
+        ai_factory_causal_fft ai_factory_correlation_dataset
+    )
+
+    add_cuda_workbench_test(
+        correlated_qe_cuda tests/simulation/correlated_qe_kernel_cuda_test.cu
+        "multi_asset;heston;bates;philox" 60
+    )
+
+    add_cuda_workbench_test(
         philox_cuda tests/numerical/philox_kernel_cuda_test.cu philox 30
     )
     add_cuda_workbench_test(
@@ -428,6 +441,12 @@ if(BUILD_TESTING)
         tests/longstaff_schwartz/kou_geometry_cuda_test.cpp
         "longstaff_schwartz;kou;numerical_robustness"
         180
+    )
+    add_cuda_workbench_test(
+        cliquet_absorption_cuda
+        tests/product/cliquet_absorption_kernel_cuda_test.cu
+        "products;cliquet;numerical_robustness"
+        60
     )
     add_cuda_workbench_test(
         path_product_factorization_cuda

@@ -112,3 +112,13 @@ Shared rate and swap identities: [fixed-income rate reference](../../../fixed_in
 ## Related contracts
 
 Shared product and engine contracts: [fixed-income entry point](../README.md).
+
+### Correlated multi-asset rate
+
+`CorrelatedRatePolicy` uses full-truncation Euler driven by the shared CIR
+Brownian factor: the auxiliary rate may be negative, while drift/diffusion
+coefficients and the observed short rate use its positive part. The discount
+integral uses the trapezoidal rule on the observed rate. This is a time-discrete
+approximation, distinct from the exact transitions used by standalone CIR
+pricing. The earlier projected-Euler multi-asset outputs were withdrawn;
+new generations use this scheme.

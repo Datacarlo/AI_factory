@@ -1,0 +1,90 @@
+schema_version: 1
+kind: price_gradients
+dataset_id: quadratic_rough_heston_01__lookback_options_01__01_cartesian_shard00_price_gradient
+generator: catalog/single_asset/equity/rough/quadratic_rough_heston/price_gradients/lookback_options/quadratic_rough_heston_01__lookback_options_01__01_cartesian_shard00_price_gradient/generator.cpp
+inputs:
+  model: datasets/parameters/model/equity/rough/quadratic_rough_heston/parameters/quadratic_rough_heston_01.json
+  product: datasets/parameters/product/lookback_option/lookback_options_01_shard00.json
+output:
+  path: datasets/single_asset/equity/rough/quadratic_rough_heston/price_gradients/lookback_options/quadratic_rough_heston_01__lookback_options_01__01_cartesian_shard00_price_gradient.json
+  format: json
+row_layout: inline_parameters
+row_count: 100000
+product_shard:
+  index: 0
+  total_shards: 10
+  source_dataset: datasets/parameters/product/lookback_option/lookback_options_01.json
+  selection: one seeded permutation position per contiguous ten-row block
+  core_products: 90
+  stress_products: 10
+quote_convention:
+  strike:
+    mode: ratio_to_central_spot
+    unit: dimensionless
+    effective_level: strike * S0
+time_grid:
+  steps_per_year: 504
+  simulation_steps_per_day: 2
+  delta_t: 1 / 504
+paths_per_price: 1048576
+random_number_generator: philox
+seeds:
+  dynamics: 11668828459878055936
+sensitivity:
+  method: finite_difference_shared_innovations
+  bump_rule: h = displacement (absolute) or displacement * abs(x) (relative); centered
+    when valid, otherwise second-order one-sided.
+  parameters:
+  - parameter: model.spot
+    displacement: 0.005
+    scale: relative
+    boundary: central_then_one_sided_order2
+  - parameter: model.risk_free_rate
+    displacement: 0.0005
+    scale: absolute
+    boundary: central_then_one_sided_order2
+  - parameter: model.dividend_yield
+    displacement: 0.0005
+    scale: absolute
+    boundary: central_then_one_sided_order2
+  - parameter: model.initial_feedback
+    displacement: 0.002
+    scale: absolute
+    boundary: central_then_one_sided_order2
+  - parameter: model.quadratic_scale
+    displacement: 0.005
+    scale: relative
+    boundary: central_then_one_sided_order2
+  - parameter: model.quadratic_shift
+    displacement: 0.002
+    scale: absolute
+    boundary: central_then_one_sided_order2
+  - parameter: model.variance_floor
+    displacement: 0.0005
+    scale: absolute
+    boundary: central_then_one_sided_order2
+  - parameter: model.feedback_rate
+    displacement: 0.005
+    scale: relative
+    boundary: central_then_one_sided_order2
+  - parameter: model.feedback_volatility
+    displacement: 0.005
+    scale: relative
+    boundary: central_then_one_sided_order2
+  - parameter: model.hurst_exponent
+    displacement: 0.001
+    scale: absolute
+    boundary: central_then_one_sided_order2
+  - parameter: product.strike
+    displacement: 0.005
+    scale: relative
+    boundary: central_then_one_sided_order2
+  - parameter: product.maturity_years
+    displacement: 0.001984126984126984
+    scale: absolute
+    boundary: central_then_one_sided_order2
+  spot_contract_rule: Spot bumps keep absolute strikes and barriers resolved at the
+    central spot fixed; product gradients use quoted ratios.
+sensitivity_strategy: node_graph
+standard_error_scope: paired Monte Carlo sampling error; excludes bump and discretization
+  bias

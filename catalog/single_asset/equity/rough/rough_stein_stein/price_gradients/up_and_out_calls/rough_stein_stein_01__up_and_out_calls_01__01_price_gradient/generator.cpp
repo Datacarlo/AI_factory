@@ -21,6 +21,7 @@ int main() {
         {"model.volatility_of_volatility", {0.01, pg::BumpScale::relative}},
         {"model.hurst_exponent", {0.002, pg::BumpScale::absolute}},
         {"model.rho", {0.004, pg::BumpScale::absolute}},
+        {"model.initial_volatility", {0.005, pg::BumpScale::relative}},
         {"product.strike", {0.005, pg::BumpScale::relative}},
         {"product.barrier", {0.01, pg::BumpScale::relative}},
         {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}

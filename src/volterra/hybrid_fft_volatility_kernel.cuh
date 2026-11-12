@@ -1,6 +1,7 @@
 #include "volterra/row_workspace.cuh"
 // Product-independent Gaussian-Volterra FFT driven by correlated Brownian cells.
 #pragma once
+#include "volterra/path_time_coefficient.cuh"
 
 #include "cuda/check_cuda.cuh"
 #include "pricing_rows/row_index_plan.cuh"
@@ -18,6 +19,10 @@
 
 namespace ai_factory::workbench::volterra::hybrid_fft {
 
+struct IndependentHybridBridge {
+    __device__ unsigned prepare(unsigned,unsigned,const float*,float*) const { return 0; }
+};
+
 template<typename Policy>
 struct CorrelatedVolatilityRow {
     using Kernel = typename Policy::KernelPolicy;
@@ -25,6 +30,8 @@ struct CorrelatedVolatilityRow {
     typename Policy::PreparedModel model;
     philox::PhiloxKey key;
     const float* lower;
+    float bridge_lower[32];
+    unsigned bridge_count;
     float sqrt_dt;
     float dt;
 };
@@ -68,7 +75,7 @@ CorrelatedVolatilityPlan plan_correlated_volatility_workspace(
     return {spectrum,variance,convolution,end};
 }
 
-template<typename Policy,std::size_t Dimension>
+template<typename Policy,std::size_t Dimension,typename Bridge>
 __global__ void prepare_correlated_volatility_row(
     const typename Policy::Parameters* models,
     const float* packed_factors,
@@ -77,7 +84,7 @@ __global__ void prepare_correlated_volatility_row(
     CorrelatedVolatilityRow<Policy>* output,
     const RowIndexSelector* row_selectors,
     std::size_t model_slot,std::size_t correlation_slot,
-    std::size_t workspace_stride=0U
+    std::size_t workspace_stride, std::size_t volatility_factor, Bridge bridge
 ) {
     result_index+=blockIdx.y;
     output=::ai_factory::workbench::volterra::row_workspace_pointer(output,workspace_stride);
@@ -95,6 +102,7 @@ __global__ void prepare_correlated_volatility_row(
     output->lower=packed_factors
         +static_cast<std::size_t>(correlation_index)
             *Dimension*(Dimension+1U)/2U;
+    output->bridge_count=bridge.prepare(result_index,volatility_factor,output->lower,output->bridge_lower);
     output->sqrt_dt=sqrtf(dt);
     output->dt=dt;
 }
@@ -123,10 +131,9 @@ __global__ void prepare_correlated_hybrid_spectrum(
                     row.kernel,index+2U) : 0.0f;
             reinterpret_cast<float2*>(values)[item]={weight,0.0f};
             if(index<steps) {
-                if constexpr (Policy::kUsesVolterraVariance)
-                    variances[index]=Policy::KernelPolicy::volterra_variance(
+                variances[index]=path_time_coefficient<
+                    typename Policy::KernelPolicy, Policy::kUsesVolterraVariance>(
                         row.kernel,(index+1U)*row.dt);
-                else variances[index]=0.0f;
             }
         }
     }
@@ -226,11 +233,25 @@ __global__ void reconstruct_correlated_hybrid_volatility(
         const float far=(path&1U)!=0U ? pair.y : pair.x;
         const float rough=simulation::correlated_brownian_factor(
             row.key,path_offset+path,step,volatility_factor,row.lower);
-        const auto uniforms=philox::domain_uniform_quad(
-            row.key,path_offset+path,0U,
-            (auxiliary_source<<24U)|step);
-        const float singular=philox::box_muller(
-            uniforms.first,uniforms.second).first;
+        float singular=0.0f;
+        if(row.bridge_count==0U) {
+            // Preserve the historical single Gaussian-factor stream.
+            const auto uniforms=philox::domain_uniform_quad(row.key,path_offset+path,0U,
+                (auxiliary_source<<24U)|step);
+            singular=philox::box_muller(uniforms.first,uniforms.second).first;
+        } else {
+            // Source 255 is reserved for the joint hybrid bridge. The Brownian
+            // cell averages (source 1) and all asset auxiliaries remain distinct.
+            for(unsigned group=0;group*4<row.bridge_count;++group) {
+                const auto u=philox::domain_uniform_quad(row.key,path_offset+path,group,
+                    philox::source_step_domain<255U>(step));
+                const auto a=philox::box_muller(u.first,u.second);
+                const auto b=philox::box_muller(u.third,u.fourth);
+                const float z[4]={a.first,a.second,b.first,b.second};
+                for(unsigned k=0;k<4 && group*4+k<row.bridge_count;++k)
+                    singular=fmaf(row.bridge_lower[group*4+k],z[k],singular);
+            }
+        }
         const float value=Policy::KernelPolicy::reconstruct_volterra_value(
             row.kernel,far,rough,singular);
         volatility=Policy::map_volatility(
@@ -238,7 +259,7 @@ __global__ void reconstruct_correlated_hybrid_volatility(
     }
 }
 
-template<typename Policy,std::size_t Dimension>
+template<typename Policy,std::size_t Dimension,typename Bridge=IndependentHybridBridge>
 void launch_correlated_hybrid_volatility_cuda(
     const typename Policy::Parameters* models,
     const float* packed_factors,std::size_t result_index,
@@ -250,7 +271,8 @@ void launch_correlated_hybrid_volatility_cuda(
     cudaStream_t stream,
     const RowIndexSelector* row_selectors,
     std::size_t model_slot,std::size_t correlation_slot,
-    std::size_t batch_rows=1U,std::size_t workspace_stride=0U,std::size_t output_stride=0U
+    std::size_t batch_rows=1U,std::size_t workspace_stride=0U,std::size_t output_stride=0U,
+    Bridge bridge={}
 ) {
     if(!models || !row_selectors || !packed_factors
         || !workspace || !volatility_path || path_count==0U
@@ -267,9 +289,9 @@ void launch_correlated_hybrid_volatility_cuda(
     auto* variances=reinterpret_cast<float*>(bytes+plan.variance_offset);
     auto* convolutions=reinterpret_cast<float2*>(
         bytes+plan.convolution_offset);
-    prepare_correlated_volatility_row<Policy,Dimension><<<dim3(1U,batch_rows),1U,0U,stream>>>(
+    prepare_correlated_volatility_row<Policy,Dimension,Bridge><<<dim3(1U,batch_rows),1U,0U,stream>>>(
         models,packed_factors,result_index,dt,seed,row,
-        row_selectors,model_slot,correlation_slot,workspace_stride);
+        row_selectors,model_slot,correlation_slot,workspace_stride,volatility_factor,bridge);
     check_cuda(cudaGetLastError(),"hybrid volatility row preparation");
     tuning::dispatch_hybrid_fft_specialization<8192U>(
         steps,[&]<typename Specialization>() {

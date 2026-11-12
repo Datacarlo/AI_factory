@@ -1,0 +1,26 @@
+schema_version: 4
+status: complete
+inputs:
+  model:
+    path: datasets/parameters/model/equity/markovian/bates/parameters/bates_01.json
+    sha256: 84eeb1797d0f77b4c56baac0d8f1eedf35130bc91bdfcbcdf2877fea02b991d5
+  product:
+    path: datasets/parameters/product/down_and_in_option/down_and_in_options_01_shard00.json
+    sha256: fe751f1ba02e76f97c8ad20be1d62bddd5923fe0846fd5968e8310067c3ef036
+output:
+  path: datasets/single_asset/equity/markovian/bates/price_gradients/down_and_in_puts/bates_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient.json
+  sha256: 71886a960a84deff02eaf52df035588bed188a584d9a5b597b56c8df1f06e17e
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+  name: Tesla V100-SXM2-32GB
+  uuid: GPU-c0388c6e-7fcc-dde8-96c3-dc94f06ca5f6
+  compute_capability: '7.0'
+  driver_version: 580.178.04
+software:
+  cmake: 3.31.6
+  cxx_compiler: GNU 14.2.0
+  cuda_compiler: 12.9.41
+  cuda_target_architectures: '70'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1

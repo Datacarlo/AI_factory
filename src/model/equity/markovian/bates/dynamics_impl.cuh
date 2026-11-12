@@ -251,19 +251,22 @@ __device__ __forceinline__ void DynamicsPolicy::one_step_transition(
         ? (brownian.spot - heston.rho * brownian.variance)
             / heston.correlation_residual
         : 0.0f;
-    const float variance_uniform = auxiliary.next();
+    auto count_uniforms = auxiliary.template source<
+        compound_poisson::kCountSource>();
     const std::uint32_t jump_count = compound_poisson::draw_count(
-        auxiliary, dynamics.poisson_mean, dynamics.zero_jump_probability
+        count_uniforms, dynamics.poisson_mean, dynamics.zero_jump_probability
     );
+    auto mark_uniforms = auxiliary.template source<
+        compound_poisson::kMarkSource>();
     philox::NormalPairCache mark_cache;
     float jump_normal_sum = 0.0f;
     for (std::uint32_t event = 0U; event < jump_count; ++event) {
-        jump_normal_sum += philox::next_normal(auxiliary, mark_cache);
+        jump_normal_sum += philox::next_normal(mark_uniforms, mark_cache);
     }
-    bates::one_step_transition(
-        dynamics, brownian.variance, variance_uniform, residual,
-        jump_count, jump_normal_sum, state
+    heston::correlated_one_step_transition(
+        heston, brownian.variance, residual, state
     );
+    bates::apply_jump_interval(dynamics, 1U, jump_count, jump_normal_sum, state);
 }
 
 __device__ __forceinline__ void DynamicsPolicy::advance(

@@ -83,6 +83,12 @@ D(0,t)
 =\exp\!\left(-I_t-\int_0^t\phi(u)\,\mathrm du\right).
 ```
 
+For weak mean reversion ($`a<0.01`$), the integrated shift is evaluated with
+$`B(t+u)=B(t)+e^{-at}B(u)`$ and stable Gaussian integral moments. This avoids
+subtracting nearly equal terms before division by $`a^2`$. The formula is
+shared by the single-asset analytics and correlated rate adapter; the
+simulation law is unchanged.
+
 Shared rate and swap identities: [fixed-income rate reference](../../../fixed_income/fixed-income-rate-identities-reference.md).
 
 ## Related contracts

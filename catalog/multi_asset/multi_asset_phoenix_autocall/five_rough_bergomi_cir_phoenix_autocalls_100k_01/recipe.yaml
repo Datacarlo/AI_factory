@@ -21,7 +21,8 @@ construction:
 numerical_method:
   discount: stochastic CIR integral at each cashflow
   rate_scheme: CIR full-truncation Euler; trapezoidal rate integral
-  rough_scheme: hybrid FFT volatility
+  rough_scheme: hybrid FFT volatility with jointly conditioned fractional singular
+    cells
 time_grid:
   steps_per_year: 504
   simulation_steps_per_day: 2
@@ -31,10 +32,10 @@ random_number_generator: philox
 seeds:
   dynamics: 202611041000
 execution:
-  team_size: 1
-  rows_per_launch: 1
-  streams: 1
-  threads_per_block: 256
-  paths_per_team: 1
+  team_size: 8
+  rows_per_launch: 16
+  streams: 2
+  threads_per_block: 128
+  paths_per_team: 4
   path_chunk_size: 8192
   checkpoint_rows: 128

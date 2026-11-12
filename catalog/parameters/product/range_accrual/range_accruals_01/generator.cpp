@@ -50,7 +50,7 @@ int main() {
             },
             {
                 "accrued_coupon",
-                "coupon_rate * observation_interval * in_range_count"
+                "coupon_rate * (observation_interval / 252) * in_range_count"
             },
             {
                 "maturity_payment",

@@ -27,9 +27,12 @@ std::vector<ModelParameters> load_models(
                 row.at("volatility_of_volatility").get<float>(),
                 row.at("hurst_exponent").get<float>(),
                 row.at("rho").get<float>(),
+                row.at("initial_volatility").get<float>(),
             };
             const auto finite = [](float value) { return std::isfinite(value); };
             if (!finite(model.spot) || model.spot <= 0.0f
+                || !finite(model.initial_volatility)
+                || model.initial_volatility < 0.0f
                 || !finite(model.volatility_level)
                 || model.volatility_level < 0.0f
                 || !finite(model.mean_reversion)

@@ -51,7 +51,8 @@ int main() {
         {
             {
                 "periodic_return",
-                "R_i = S(t_i) / S(t_{i-1}) - 1, with S(t_0) at issuance."
+                "R_i = S(t_i) / S(t_{i-1}) - 1; R_i = 0 when both spots are zero. "
+                "The first loss into zero is retained. Local bounds apply afterwards."
             },
             {
                 "local_return",

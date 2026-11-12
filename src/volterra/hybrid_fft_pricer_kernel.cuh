@@ -1,5 +1,6 @@
 // Product-generic hybrid/FFT Monte Carlo engine for Gaussian Volterra paths.
 #pragma once
+#include "volterra/path_time_coefficient.cuh"
 
 #include "cuda/check_cuda.cuh"
 #include "equity/path_product_policy.cuh"
@@ -123,14 +124,8 @@ __global__ void prepare_direct_row_kernel(
          step += blockDim.x) {
         const float time_years = static_cast<float>(step + 1U)
             * schedule.time_step;
-        if constexpr (ModelPathPolicy::kUsesVolterraVariance) {
-            volterra_variances[step] = KernelPolicy::volterra_variance(
-                kernel,
-                time_years
-            );
-        } else {
-            volterra_variances[step] = 0.0f;
-        }
+        volterra_variances[step] = path_time_coefficient<
+            KernelPolicy, ModelPathPolicy::kUsesVolterraVariance>(kernel, time_years);
     }
 }
 #endif
@@ -238,12 +233,8 @@ __global__ void prepare_row_kernel(
             if (index < step_count) {
                 const float time_years =
                     static_cast<float>(index + 1U) * schedule.time_step;
-                if constexpr (ModelPathPolicy::kUsesVolterraVariance) {
-                    volterra_variances[index] =
-                        KernelPolicy::volterra_variance(kernel, time_years);
-                } else {
-                    volterra_variances[index] = 0.0f;
-                }
+                volterra_variances[index] = path_time_coefficient<
+                    KernelPolicy, ModelPathPolicy::kUsesVolterraVariance>(kernel, time_years);
             }
         }
     }

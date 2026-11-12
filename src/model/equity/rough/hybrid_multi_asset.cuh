@@ -150,7 +150,7 @@ struct HybridPolicy<rough_stein_stein::PathPolicy> {
         return Path::prepare_model(p,dt);
     }
     __device__ static float initial_volatility(const PreparedModel& p) {
-        return p.volatility_level;
+        return p.initial_volatility;
     }
     __device__ static float map_volatility(
         const PreparedModel& model, float value, float variance

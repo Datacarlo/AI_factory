@@ -93,17 +93,35 @@ __device__ __forceinline__ float shift_integral(
                     parameters.process, end_time_years
                 );
     }
-    const float convexity_integral =
+    if (mean_reversion < 0.01f) {
+        // B(t+u) = B(t) + exp(-a*t) B(u). Integrate its square as
+        // three nonnegative terms, avoiding cancellation amplified by 1/a^2.
+        // Retain the historical arithmetic in the current catalog domain
+        // (a >= 0.02), including its single-asset replay.
+        namespace gaussian = ::ai_factory::workbench::fixed_income::mean_reverting_gaussian;
+        const float loading = gaussian::integral_state_loading(
+            mean_reversion, start_time_years);
+        const float decay = expf(-mean_reversion * start_time_years);
+        const float integrated_square = loading * loading * time_interval
+            + 2.0f * loading * decay * gaussian::integrated_state_loading(
+                mean_reversion, time_interval)
+            + decay * decay * gaussian::integral_variance(
+                mean_reversion, 1.0f, time_interval);
+        return forward_integral + 0.5f * parameters.process.volatility
+            * parameters.process.volatility * integrated_square;
+    }
+    const float convexity_scale =
         parameters.process.volatility * parameters.process.volatility
-        / (2.0f * mean_reversion * mean_reversion)
-        * (
-            time_interval
-            - 2.0f * expf(-mean_reversion * start_time_years)
-                * one_minus_decay / mean_reversion
-            + expf(-2.0f * mean_reversion * start_time_years)
-                * one_minus_decay_squared / (2.0f * mean_reversion)
-        );
-    return forward_integral + convexity_integral;
+        / (2.0f * mean_reversion * mean_reversion);
+    const float convexity_bracket =
+        time_interval
+        - 2.0f * expf(-mean_reversion * start_time_years)
+            * one_minus_decay / mean_reversion
+        + expf(-2.0f * mean_reversion * start_time_years)
+            * one_minus_decay_squared / (2.0f * mean_reversion);
+    // Preserve the original contracted multiply-add even if the compiler
+    // shares the return block with the small-reversion branch above.
+    return fmaf(convexity_scale, convexity_bracket, forward_integral);
 }
 
 template<typename CurveProvider>

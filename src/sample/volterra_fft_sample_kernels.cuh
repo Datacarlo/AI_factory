@@ -1,5 +1,6 @@
 // Block-cooperative cuFFTDx sampling for Gaussian-Volterra model paths.
 #pragma once
+#include "volterra/path_time_coefficient.cuh"
 
 #include "cuda/check_cuda.cuh"
 #include "cuda/cuda_kernel_diagnostics.cuh"
@@ -259,11 +260,8 @@ __global__ void parameter_block_sample_kernel(
              step < maximum_step_count;
              step += threads_per_block) {
             const float variance=[&]() {
-                if constexpr (Path::kUsesVolterraVariance)
-                    return Kernel::volterra_variance(
-                        row.kernel,
-                        static_cast<float>(step+1U)*kSampleFixedStepDt);
-                else return 0.0f;
+                return volterra::path_time_coefficient<Kernel, Path::kUsesVolterraVariance>(
+                    row.kernel, static_cast<float>(step+1U)*kSampleFixedStepDt);
             }();
             if constexpr (SplitScan)
                 prepared_variances[

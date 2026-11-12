@@ -181,10 +181,7 @@ foreach(unit_path IN LISTS
     AI_FACTORY_GENERATED_EQUITY_EARLY_EXERCISE_UNITS)
     ai_factory_add_cuda_unit(equity ${unit_path})
 endforeach()
-# Black--Scholes American pricing is the exact-transition one-factor control
-# used by tests and performance baselines. It has no catalogue recipe, so it
-# is deliberately registered outside the generated recipe capability matrix.
-ai_factory_add_cuda_unit(equity black_scholes/product/american_option)
+# Black--Scholes American pricing is registered by the recipe capability matrix.
 
 if(AI_FACTORY_MATHDX_ROOT)
     if(NOT EXISTS "${AI_FACTORY_MATHDX_ROOT}/include/cufftdx.hpp")

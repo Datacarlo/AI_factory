@@ -145,11 +145,11 @@ int main() {
             log_modulated_rough_bergomi::launch_log_modulated_rough_bergomi_up_and_out_option_price_delta_cuda<OptionSide::call>,
             4097U);
         namespace rough_stein_stein = model::equity::rough_stein_stein;
-        run_case("rough_stein_stein european_option", rough_stein_stein::ModelParameters{1.2f,.03f,.01f,.2f,1.5f,.3f,.1f,-.7f},
+        run_case("rough_stein_stein european_option", rough_stein_stein::ModelParameters{1.2f,.03f,.01f,.2f,1.5f,.3f,.1f,-.7f,.32f},
             product::EuropeanOptionParameters{1.2f,4U}, rough_stein_stein::launch_rough_stein_stein_european_option_cuda<OptionSide::call>,
             rough_stein_stein::launch_rough_stein_stein_european_option_price_delta_cuda<OptionSide::call>,
             1048576U);
-        run_case("rough_stein_stein up_and_out_option", rough_stein_stein::ModelParameters{1.2f,.03f,.01f,.2f,1.5f,.3f,.1f,-.7f},
+        run_case("rough_stein_stein up_and_out_option", rough_stein_stein::ModelParameters{1.2f,.03f,.01f,.2f,1.5f,.3f,.1f,-.7f,.32f},
             product::UpAndOutOptionParameters{1.1f,1.202f,4U}, rough_stein_stein::launch_rough_stein_stein_up_and_out_option_cuda<OptionSide::call>,
             rough_stein_stein::launch_rough_stein_stein_up_and_out_option_price_delta_cuda<OptionSide::call>,
             4097U);

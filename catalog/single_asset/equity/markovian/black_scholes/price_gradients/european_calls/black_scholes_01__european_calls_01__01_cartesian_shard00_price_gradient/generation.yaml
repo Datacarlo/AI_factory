@@ -1,0 +1,26 @@
+schema_version: 4
+status: complete
+inputs:
+  model:
+    path: datasets/parameters/model/equity/markovian/black_scholes/parameters/black_scholes_01.json
+    sha256: ee10ae56e0b040ea8215a306d78de38332bf0a091ce6161814620a8b19ce96a3
+  product:
+    path: datasets/parameters/product/european_option/european_options_01_shard00.json
+    sha256: 0c4160b6db1799a7e4c704ee84224e2e0f33f31918be2d9f645b38bf46695329
+output:
+  path: datasets/single_asset/equity/markovian/black_scholes/price_gradients/european_calls/black_scholes_01__european_calls_01__01_cartesian_shard00_price_gradient.json
+  sha256: 295276ecc53d927e0ce77f6a9f7a136de2251e495576fd1c8abd71162a10f919
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
+  name: NVIDIA A100 80GB PCIe
+  uuid: GPU-5102f6b2-92ef-1ca5-849f-649cb3851bf6
+  compute_capability: '8.0'
+  driver_version: 590.48.01
+software:
+  cmake: 3.31.6
+  cxx_compiler: GNU 14.2.0
+  cuda_compiler: 12.9.41
+  cuda_target_architectures: '80'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1

@@ -43,8 +43,11 @@ struct CliquetPathPolicy {
             std::uint32_t,
             float spot
         ) {
-            const float participated_return = participation_rate
-                * (spot / previous_spot - 1.0f);
+            // Once absorbed, no further return accrues. Keep the first loss
+            // into zero and the arithmetic on positive paths unchanged.
+            const float participated_return = spot == 0.0f && previous_spot == 0.0f
+                ? 0.0f
+                : participation_rate * (spot / previous_spot - 1.0f);
             accumulated_return += fminf(
                 local_cap,
                 fmaxf(local_floor, participated_return)

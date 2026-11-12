@@ -1154,7 +1154,9 @@ RNG_DOMAIN_SPECS = tuple(
                     if dataset.curve is not None else 0,
                     int(dataset.engine == "fixed_income_monte_carlo"),
                     (4 if dataset.model == "ornstein_uhlenbeck" else 5)
-                    if dataset.product == "zero_coupon_bond_up_and_out" else 0),
+                    if dataset.product == "zero_coupon_bond_up_and_out" else 0,
+                    6 if (dataset.model == "black_scholes"
+                          and dataset.product == "american_option") else 0),
                 _rng_sort_identity(dataset),
             ),
         )
@@ -1710,6 +1712,31 @@ CARTESIAN_PRICE_SOURCE_BY_GENERATOR = {
         strict=True,
     )
 }
+# Published BS formula shards complement the existing million-row recipes.
+# Keep both cardinalities: each publication retains its own dataset identity.
+_BLACK_SCHOLES_FORMULA_SHARDS = tuple(
+    (source, replace(
+        source,
+        dataset_id=source.dataset_id + "_cartesian_shard00",
+        generator_path=source.generator_path.replace(
+            "/" + source.dataset_id + "/",
+            "/" + source.dataset_id + "_cartesian_shard00/",
+        ),
+        construction="cartesian", product_shard=0,
+        layout="model_major_product_fastest_cartesian_price_rows",
+    ))
+    for source in CARTESIAN_SOURCE_DATASET_SPECS
+    if source.model == "black_scholes"
+    and source.engine == "equity_closed_form"
+    and cartesian_suffix(source) != "_cartesian_shard00"
+)
+CARTESIAN_PRICE_DATASET_SPECS += tuple(
+    shard for _, shard in _BLACK_SCHOLES_FORMULA_SHARDS
+)
+CARTESIAN_PRICE_SOURCE_BY_GENERATOR.update({
+    shard.generator_path: source
+    for source, shard in _BLACK_SCHOLES_FORMULA_SHARDS
+})
 DATASET_SPECS += CARTESIAN_PRICE_DATASET_SPECS
 AVAILABLE_DATASET_SPECS += CARTESIAN_PRICE_DATASET_SPECS
 RNG_DOMAIN_SPECS += tuple(
@@ -1862,6 +1889,49 @@ _RNG_ALIAS_ROOT_BY_GENERATOR.update({
     if (source := CARTESIAN_PRICE_SOURCE_BY_GENERATOR[cartesian.generator_path]).generator_path
     in RNG_DOMAIN_BY_GENERATOR
 })
+# The BS gradient shards generated on 2026-11-05 used a campaign-local
+# catalogue with Americans inserted ahead of the other BS products. Preserve
+# those published seeds explicitly, without rekeying any unrelated dataset.
+# Some historical reservations consequently coincide with other recipes;
+# these are replay compatibility aliases, not a new independence guarantee.
+_BLACK_SCHOLES_PUBLISHED_GRADIENT_ORDINALS = {
+    'american_calls': 33,
+    'american_puts': 34,
+    'asian_calls': 35,
+    'asian_puts': 36,
+    'athena_autocalls': 37,
+    'cliquets': 38,
+    'double_knock_out_calls': 39,
+    'double_knock_out_puts': 40,
+    'down_and_in_puts': 41,
+    'down_and_out_puts': 42,
+    'lookback_options': 43,
+    'phoenix_autocalls': 44,
+    'phoenix_memory_autocalls': 45,
+    'up_and_in_calls': 46,
+    'up_and_out_calls': 47,
+    'up_no_touches': 48,
+    'up_one_touches': 49,
+}
+_BS_REPLAY_GENERATORS = {
+    d.generator_path: _BLACK_SCHOLES_PUBLISHED_GRADIENT_ORDINALS[d.variant]
+    for d in ALL_PRICE_GRADIENT_DATASET_SPECS
+    if d.model == "black_scholes" and d.product_shard == 0
+    and d.variant in _BLACK_SCHOLES_PUBLISHED_GRADIENT_ORDINALS
+}
+RNG_DOMAIN_SPECS = tuple(
+    replace(d, ordinal=_BS_REPLAY_GENERATORS[d.generator_path])
+    if d.generator_path in _BS_REPLAY_GENERATORS else d
+    for d in RNG_DOMAIN_SPECS
+)
+RNG_DOMAIN_BY_GENERATOR = {d.generator_path: d for d in RNG_DOMAIN_SPECS}
+# Group legacy replay aliases by the reservation they actually reuse.
+for _path, _ordinal in _BS_REPLAY_GENERATORS.items():
+    _root = next(d.generator_path for d in RNG_DOMAIN_SPECS
+                 if d.ordinal == _ordinal
+                 and d.generator_path not in _BS_REPLAY_GENERATORS)
+    _RNG_ALIAS_ROOT_BY_GENERATOR.setdefault(_root, _root)
+    _RNG_ALIAS_ROOT_BY_GENERATOR[_path] = _RNG_ALIAS_ROOT_BY_GENERATOR[_root]
 RNG_COMMON_RANDOM_NUMBER_ALLOWLIST = frozenset(
     tuple(sorted((left, right)))
     for left, left_root in _RNG_ALIAS_ROOT_BY_GENERATOR.items()
@@ -1895,6 +1965,55 @@ def pricing_launch_family(binding: ProductBindingSpec) -> str:
 
 
 validate_price_capability_graph(DATASET_SPECS, PRODUCT_BINDING_SPECS)
+
+# Retire catalogue offerings only after assigning historical RNG reservations.
+# Removing a model before that assignment would shift seeds of other models.
+# Keep numerical bindings available for historical replay. The former
+# Stein--Stein implementation is a correlated zero-mean OU specialization;
+# Schobel--Zhu is the retained general model. Rough Stein--Stein stays active.
+RETIRED_CATALOG_MODELS = frozenset({"stein_stein"})
+
+
+def _active_catalog_datasets(specs):
+    return tuple(spec for spec in specs
+                 if spec.model not in RETIRED_CATALOG_MODELS)
+
+
+DATASET_SPECS = _active_catalog_datasets(
+    DATASET_SPECS
+)
+AVAILABLE_DATASET_SPECS = _active_catalog_datasets(
+    AVAILABLE_DATASET_SPECS
+)
+DEFERRED_DATASET_SPECS = _active_catalog_datasets(
+    DEFERRED_DATASET_SPECS
+)
+ALIGNED_PRICE_DATASET_SPECS = _active_catalog_datasets(
+    ALIGNED_PRICE_DATASET_SPECS
+)
+CARTESIAN_SOURCE_DATASET_SPECS = _active_catalog_datasets(
+    CARTESIAN_SOURCE_DATASET_SPECS
+)
+CARTESIAN_PRICE_DATASET_SPECS = _active_catalog_datasets(
+    CARTESIAN_PRICE_DATASET_SPECS
+)
+PRICE_DELTA_DATASET_SPECS = _active_catalog_datasets(
+    PRICE_DELTA_DATASET_SPECS
+)
+PRICE_GRADIENT_DATASET_VARIANTS = _active_catalog_datasets(
+    PRICE_GRADIENT_DATASET_VARIANTS
+)
+PRICE_GRADIENT_DATASET_SPECS = _active_catalog_datasets(
+    PRICE_GRADIENT_DATASET_SPECS
+)
+CARTESIAN_PRICE_GRADIENT_DATASET_SPECS = _active_catalog_datasets(
+    CARTESIAN_PRICE_GRADIENT_DATASET_SPECS
+)
+ALL_PRICE_GRADIENT_DATASET_SPECS = _active_catalog_datasets(
+    ALL_PRICE_GRADIENT_DATASET_SPECS
+)
+# Source aliases and RNG domains retain retired reservations for replay.
+
 GENERATED_PRODUCT_BINDING_SPECS = tuple(
     spec for spec in PRODUCT_BINDING_SPECS if spec.owner == "generated"
 )

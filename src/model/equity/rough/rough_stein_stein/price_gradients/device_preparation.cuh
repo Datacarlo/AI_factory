@@ -33,7 +33,8 @@ struct DevicePreparation {
         std::string_view{"model.mean_reversion"},
         std::string_view{"model.volatility_of_volatility"},
         std::string_view{"model.hurst_exponent"},
-        std::string_view{"model.rho"}
+        std::string_view{"model.rho"},
+        std::string_view{"model.initial_volatility"}
     };
 
     __host__ __device__ static bool finite(float x) {
@@ -46,6 +47,7 @@ struct DevicePreparation {
     __host__ __device__ static bool valid(const Model& m) {
         return finite(m.spot) && m.spot > 0.0f
             && finite(m.risk_free_rate) && finite(m.dividend_yield)
+            && finite(m.initial_volatility) && m.initial_volatility >= 0.0f
             && finite(m.volatility_level) && m.volatility_level >= 0.0f && finite(m.mean_reversion) && m.mean_reversion >= 0.0f && finite(m.volatility_of_volatility) && m.volatility_of_volatility > 0.0f && finite(m.hurst_exponent) && m.hurst_exponent > 0.0f && m.hurst_exponent < 0.5f && finite(m.rho) && m.rho >= -1.0f && m.rho <= 1.0f;
     }
     __host__ __device__ static float read(std::uint8_t index, const Model& m) {
@@ -58,6 +60,7 @@ struct DevicePreparation {
         case 5U: return m.volatility_of_volatility;
         case 6U: return m.hurst_exponent;
         case 7U: return m.rho;
+        case 8U: return m.initial_volatility;
         }
         return ::nanf("");
     }
@@ -73,6 +76,7 @@ struct DevicePreparation {
         case 5U: m.volatility_of_volatility = value; break;
         case 6U: m.hurst_exponent = value; break;
         case 7U: m.rho = value; break;
+        case 8U: m.initial_volatility = value; break;
         }
     }
     __host__ __device__ static bool same_dynamics(
@@ -80,6 +84,7 @@ struct DevicePreparation {
     ) {
         return a.risk_free_rate == b.risk_free_rate
             && a.dividend_yield == b.dividend_yield
+            && a.initial_volatility == b.initial_volatility
             && a.volatility_level == b.volatility_level
             && a.mean_reversion == b.mean_reversion
             && a.volatility_of_volatility == b.volatility_of_volatility

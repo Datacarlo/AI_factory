@@ -27,7 +27,7 @@ parameters:
   coupon_rate: Annualized coupon rate accrued in range.
 payoff:
   in_range_count: Sum of 1{lower_barrier <= S(t_i) / S(0) <= upper_barrier}.
-  accrued_coupon: coupon_rate * observation_interval * in_range_count
+  accrued_coupon: coupon_rate * (observation_interval / 252) * in_range_count
   maturity_payment: Normalized nominal 1 plus the accrued coupon.
   intermediate_payments: None.
 construction:

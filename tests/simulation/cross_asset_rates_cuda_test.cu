@@ -112,6 +112,23 @@ void independent_cir_discount() {
                 "CIR stochastic discount disagrees with affine bond formula");
     }
 }
+// A core campaign row with an attainable zero boundary. Projecting the
+// auxiliary state to zero caused a systematic discount bias at three years.
+void cir_discount_near_zero_boundary() {
+    using CIR=model::fixed_income::cir::CorrelatedRatePolicy;
+    constexpr float kappa=0.1330951452255249f;
+    constexpr float theta=0.05961136519908905f;
+    constexpr float sigma=0.25304508209228516f;
+    constexpr float r0=0.028657494112849236f;
+    const CIR::Parameters rate{{kappa,theta,sigma},r0};
+    float standard_error=0.0f;
+    const double actual=1.0-price<CIR>(rate,{},0U,1.0f,
+        756U,2U,1U<<20U,&standard_error);
+    const double expected=cir_bond_price(kappa,theta,sigma,r0,3.0);
+    if(std::abs(actual-expected)>5.0*standard_error+2.0e-5)
+        throw std::runtime_error("CIR boundary discount bias exceeds MC uncertainty");
+}
+
 void correlated_equity_rate_martingale() {
     using CIR=model::fixed_income::cir::CorrelatedRatePolicy;
     const CIR::Parameters rate{{0.6f,0.04f,0.14f},0.03f};
@@ -238,5 +255,6 @@ int main() {
     all_rate_families();
     compact_rate_and_curve_selection();
     independent_cir_discount();
+    cir_discount_near_zero_boundary();
     correlated_equity_rate_martingale();
 }

@@ -56,3 +56,11 @@ The model follows [Bates (1996)](https://doi.org/10.1093/rfs/9.1.69).
 ## Related contracts
 
 Shared product and engine contracts: [Markovian equity entry point](../README.md).
+
+## Correlated multi-asset innovations
+
+The continuous component uses the [correlated Heston QE-M adapter](../heston/README.md#correlated-multi-asset-transition).
+Brownian normals belong to the common correlated factor stream. Jump counts
+and Gaussian marks use separate Philox substreams within each asset/step:
+Poisson rejection never advances the mark sequence or another asset's driver.
+Single-asset simulation and its source addresses are unchanged.

@@ -32,10 +32,10 @@ random_number_generator: philox
 seeds:
   dynamics: 202611041100
 execution:
-  team_size: 1
-  rows_per_launch: 1
+  team_size: 4
+  rows_per_launch: 16
   streams: 1
   threads_per_block: 256
-  paths_per_team: 1
-  path_chunk_size: 8192
+  paths_per_team: 4
+  path_chunk_size: 32768
   checkpoint_rows: 128

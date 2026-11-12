@@ -40,6 +40,8 @@ using FiveEquityRough=simulation::MultiRoughPack<
     model::equity::quadratic_rough_heston::CausalFftPathPolicy,
     model::equity::rough_multi_asset::HybridPolicy<
         model::equity::rough_bergomi::PathPolicy>>;
+// Uses the shared full-truncation CIR adapter; former projected-rate outputs
+// are retired and must not be presented as replays of this generator.
 using FiveEquityRate=model::fixed_income::cir::CorrelatedRatePolicy;
 
 inline constexpr std::uint64_t kFiveEquitySeed=202610210700ULL;
