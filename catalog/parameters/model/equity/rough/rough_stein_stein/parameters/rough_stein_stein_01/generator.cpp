@@ -13,7 +13,8 @@ int main() {
         uniform_rows(900U, seed, {
             {"risk_free_rate", 0.001f, 0.08f},
             {"dividend_yield", 0.0f, 0.06f},
-            {"volatility_level", 0.10f, 0.35f},
+            {"volatility_level", 0.08f, 0.45f},
+            {"initial_volatility", 0.08f, 0.45f},
             {"mean_reversion", 0.2f, 4.0f},
             {"volatility_of_volatility", 0.05f, 0.50f},
             {"hurst_exponent", 0.03f, 0.25f},
@@ -22,7 +23,8 @@ int main() {
         uniform_rows(100U, seed + 1U, {
             {"risk_free_rate", -0.03f, 0.12f},
             {"dividend_yield", 0.0f, 0.10f},
-            {"volatility_level", 0.02f, 0.60f},
+            {"volatility_level", 0.04f, 0.60f},
+            {"initial_volatility", 0.04f, 0.60f},
             {"mean_reversion", 0.10f, 6.0f},
             {"volatility_of_volatility", 0.02f, 0.80f},
             {"hurst_exponent", 0.02f, 0.35f},
@@ -40,16 +42,17 @@ int main() {
             {"spot", "Initial spot; fixed to 1."},
             {"risk_free_rate", "Continuously compounded risk-free rate."},
             {"dividend_yield", "Continuously compounded dividend yield."},
-            {"volatility_level", "Constant mean arithmetic volatility."},
+            {"volatility_level", "Long-run signed volatility level, independent of initial_volatility."},
+            {"initial_volatility", "Initial signed volatility factor, independent of volatility_level."},
             {"mean_reversion", "Linear Volterra mean-reversion rate."},
             {"volatility_of_volatility", "Gaussian Volterra scale."},
             {"hurst_exponent", "Fractional roughness H."},
             {"rho", "Spot/volatility Brownian correlation."},
         },
         {
-            {"volatility", "X=theta-kappa K*(X-theta)dt+nu K*dW."},
+            {"volatility", "X=X0+kappa K*(theta-X)dt+nu K*dW; K(t)=sqrt(2H)*t^(H-1/2)."},
             {"spot", "dS/S=(r-q)dt+X dB."},
-            {"simulation", "Linear resolvent followed by one hybrid FFT."},
+            {"simulation", "Linear resolvent hybrid FFT with precomputed deterministic mean response."},
         },
         rows
     );

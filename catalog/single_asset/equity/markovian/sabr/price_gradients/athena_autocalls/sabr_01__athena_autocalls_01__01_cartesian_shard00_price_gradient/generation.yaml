@@ -1,0 +1,26 @@
+schema_version: 4
+status: complete
+inputs:
+  model:
+    path: datasets/parameters/model/equity/markovian/sabr/parameters/sabr_01.json
+    sha256: c02e005bd3eb40858e3d9ade80a31cdcee309cc0d73540a5035405ae2b35382f
+  product:
+    path: datasets/parameters/product/athena_autocall/athena_autocalls_01_shard00.json
+    sha256: 44a06d021eba31d46753a81617b9d6f28da6f5ef85b00ca6f9be4f67d7eefd0b
+output:
+  path: datasets/single_asset/equity/markovian/sabr/price_gradients/athena_autocalls/sabr_01__athena_autocalls_01__01_cartesian_shard00_price_gradient.json
+  sha256: a04c51b5816ef3d5800f580c038ddec141c2849a0a8611acfd7ba8334f2e3eb0
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+  name: Tesla V100-SXM2-32GB
+  uuid: GPU-c2c5b606-4c26-00bb-857d-e5e0eb7eda00
+  compute_capability: '7.0'
+  driver_version: 580.178.04
+software:
+  cmake: 3.31.6
+  cxx_compiler: GNU 14.2.0
+  cuda_compiler: 12.9.41
+  cuda_target_architectures: '70'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1

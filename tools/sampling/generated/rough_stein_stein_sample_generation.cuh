@@ -28,7 +28,8 @@ inline nlohmann::ordered_json parameter_json(
         {"mean_reversion", parameters.mean_reversion},
         {"volatility_of_volatility", parameters.volatility_of_volatility},
         {"hurst_exponent", parameters.hurst_exponent},
-        {"rho", parameters.rho}
+        {"rho", parameters.rho},
+        {"initial_volatility", parameters.initial_volatility}
     };
 }
 
@@ -53,14 +54,15 @@ inline datasets::ModelSampleRecipe recipe(
         {
             {"regime", "plausible core only"},
             {"distribution", "independent Philox uniform proposals with counter-local rejection per parameter row"},
-            {"proposal_draw_order", {"spot", "volatility_level", "mean_reversion", "volatility_of_volatility", "hurst_exponent", "rho"}},
+            {"proposal_draw_order", {"spot", "volatility_level", "mean_reversion", "volatility_of_volatility", "hurst_exponent", "rho", "initial_volatility"}},
             {"latent_uniform_bounds", {
                 {"spot", {1.0f, 1.0f}},
-                {"volatility_level", {0.1f, 0.35f}},
+                {"volatility_level", {0.08f, 0.45f}},
                 {"mean_reversion", {0.2f, 4.0f}},
                 {"volatility_of_volatility", {0.05f, 0.5f}},
                 {"hurst_exponent", {0.03f, 0.25f}},
-                {"rho", {-0.9f, -0.1f}}
+                {"rho", {-0.9f, -0.1f}},
+                {"initial_volatility", {0.08f, 0.45f}}
             }},
             {"acceptance", "true"},
             {"fixed_model_inputs", {{"risk_free_rate", 0.0f}, {"dividend_yield", 0.0f}}}
@@ -73,7 +75,7 @@ inline datasets::ModelSampleRecipe recipe(
 }
 
 inline int generate(int argc, char** argv, datasets::ModelSampleRecipe value) {
-    const auto native_block = model_binding::rough_stein_stein_sample_block_dimensions(value.maximum_maturity_days);    const model_binding::SampleParameterSampler::Configuration bounds{{{1.0f, 1.0f}, {0.1f, 0.35f}, {0.2f, 4.0f}, {0.05f, 0.5f}, {0.03f, 0.25f}, {-0.9f, -0.1f}}};
+    const auto native_block = model_binding::rough_stein_stein_sample_block_dimensions(value.maximum_maturity_days);    const model_binding::SampleParameterSampler::Configuration bounds{{{1.0f, 1.0f}, {0.08f, 0.45f}, {0.2f, 4.0f}, {0.05f, 0.5f}, {0.03f, 0.25f}, {-0.9f, -0.1f}, {0.08f, 0.45f}}};
     const std::uint64_t parameter_seed = value.seeds.parameters;
 
     return generate_device_model_sample_dataset<ModelParameters>(

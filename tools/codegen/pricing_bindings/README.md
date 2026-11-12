@@ -27,3 +27,7 @@ The comparison checks generated files in the repository. Handwritten model, curv
 The capability manifest rejects missing and ambiguous compositions. Generated C++ and recipe bodies live in templates; renderers supply bounded substitutions. Parameter and product quote conventions are resolved before a price or gradient calculation. A `recipe.yaml` describes the intended computation and bump coordinates; a `generation.yaml` receipt appears only after a real execution.
 
 The public catalogue includes aligned and selected Cartesian recipes. Price-only and first-order price-gradient generators are selected for publication; second-order bindings may be present in source without a published dataset. Monte Carlo recipes use 2^20 paths per price. Fixed-income Bermudan sensitivities use `frozen_regression_policy`.
+
+## Retired catalogue models
+
+`RETIRED_CATALOG_MODELS` in `capability_manifest.py` excludes retired models from parameter, sample and pricing offerings after historical Philox reservations have been assigned. Keep those reservations and replay aliases: removing them would change other datasets’ seeds. Numerical bindings can remain available for historical replay. The zero-mean correlated `stein_stein` specialization is retired from the catalogue; `schobel_zhu` and `rough_stein_stein` remain available.

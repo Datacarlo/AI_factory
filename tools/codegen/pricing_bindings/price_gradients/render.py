@@ -18,6 +18,7 @@ from .manifest import (
 )
 from manifest import PRICE_VARIANTS
 from fixed_income_quote import quote_convention
+from product_payoff import payoff_metadata
 from capability_manifest import CURVE_ASSIGNMENT
 
 
@@ -1216,7 +1217,7 @@ def render_recipes(
             side = "call" if spec.variant.endswith("calls") else "put"
         option_side = (
             side if spec.asset_class == "fixed_income"
-            or (spec.product != "american_option" and variant.side is not None)
+            or spec.product == "american_option" or variant.side is not None
             else None
         )
         product_loader_expression = ""
@@ -1427,6 +1428,7 @@ def render_recipes(
                 ),
             },
         }
+        metadata.update(payoff_metadata(spec.product))
         if spec.asset_class == "fixed_income":
             metadata["quote_convention"] = quote_convention(spec.product)
             if spec.product in {"rate_option", "european_swaption", "bermudan_swaption"}:

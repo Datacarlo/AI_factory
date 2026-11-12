@@ -64,3 +64,5 @@ sensitivity:
 sensitivity_strategy: mono
 standard_error_scope: paired Monte Carlo sampling error; excludes bump and discretization
   bias
+payoff:
+  periodic_return: R_i = S(t_i) / S(t_{i-1}) - 1; R_i = 0 when both spots are zero. The first loss into zero is retained. Local bounds apply afterwards.

@@ -48,13 +48,17 @@ __device__ __forceinline__ RandomQuad domain_uniform_quad(
 
 // Construct this small stream only while its source is used. Rejections in
 // this source/step cannot shift another source or the next step.
-class DomainUniformSequence {
+template<std::uint32_t GroupStride = 1U>
+class StridedDomainUniformSequence {
+    static_assert(GroupStride > 0U);
 public:
-    __device__ __forceinline__ DomainUniformSequence(
+    __device__ __forceinline__ StridedDomainUniformSequence(
         PhiloxKey key,
         std::uint64_t path_index,
-        std::uint32_t domain
-    ) : key_(key), path_index_(path_index), domain_(domain) {}
+        std::uint32_t domain,
+        std::uint32_t first_group = 0U
+    ) : key_(key), path_index_(path_index), domain_(domain),
+        next_group_(first_group) {}
 
     __device__ __forceinline__ float next() {
         if (component_index_ == 4U) {
@@ -62,9 +66,10 @@ public:
                 asm volatile("trap;");
             }
             values_ = domain_uniform_quad(
-                key_, path_index_, static_cast<std::uint32_t>(next_group_++),
+                key_, path_index_, static_cast<std::uint32_t>(next_group_),
                 domain_
             );
+            next_group_ += GroupStride;
             component_index_ = 0U;
         }
         const auto component = component_index_++;
@@ -72,6 +77,18 @@ public:
         if (component == 1U) return values_.second;
         if (component == 2U) return values_.third;
         return values_.fourth;
+    }
+
+    // Independent auxiliary laws inside one asset/step domain. The group
+    // address is 8 * draw_group + SourceId; count rejection cannot shift
+    // marks. Use either the parent sequence or its sources for a transition,
+    // never both as independent laws (their address ranges overlap).
+    // Brownian addresses and single-asset source domains are unchanged.
+    // Construct only the sources used by a transition (no array of RNG caches).
+    template<std::uint32_t SourceId>
+    __device__ __forceinline__ StridedDomainUniformSequence<8U> source() const {
+        static_assert(GroupStride == 1U && SourceId < 8U);
+        return {key_, path_index_, domain_, SourceId};
     }
 
 private:
@@ -82,6 +99,8 @@ private:
     RandomQuad values_{};
     std::uint32_t component_index_ = 4U;
 };
+
+using DomainUniformSequence = StridedDomainUniformSequence<1U>;
 
 // A model retains one path identity and step cursor, not a cached quad and
 // Box--Muller pair for every possible source.

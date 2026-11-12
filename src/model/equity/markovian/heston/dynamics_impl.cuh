@@ -4,6 +4,7 @@
 #include "model/equity/markovian/heston/dynamics.cuh"
 
 #include "philox/distributions.cuh"
+#include "probability/normal_distribution.cuh"
 
 #include <cuda_runtime.h>
 
@@ -78,7 +79,8 @@ __device__ __forceinline__ State initial_state(
 }
 
 // Apply one variance and log-spot update with the QE-M martingale correction.
-__device__ __forceinline__ void one_step_transition(
+template<bool CorrelatedVariance>
+__device__ __forceinline__ void one_step_transition_impl(
     const PreparedModel& prepared_model,
     float variance_normal,
     float variance_uniform,
@@ -127,23 +129,44 @@ __device__ __forceinline__ void one_step_transition(
             }
         } else {
             // Use the mass-at-zero exponential branch for high variance.
-            const float probability_zero = (psi - 1.0f) / (psi + 1.0f);
-            const float beta =
-                (1.0f - probability_zero) / conditional_mean;
-            next_variance = variance_uniform <= probability_zero
-                ? 0.0f
-                : logf((1.0f - probability_zero) / (1.0f - variance_uniform))
-                      / beta;
-
-            if (prepared_model.martingale_a < beta) {
-                const float moment =
-                    probability_zero
-                    + beta * (1.0f - probability_zero)
-                          / (beta - prepared_model.martingale_a);
-                martingale_valid = moment > 0.0f;
-                if (martingale_valid) log_moment = logf(moment);
+            if constexpr (CorrelatedVariance) {
+                // U = Phi(Z_variance): keep the Gaussian copula supplied by
+                // the multi-asset correlation matrix, including at V = 0.
+                // Evaluate the inverse exponential in log-tail coordinates
+                // instead of forming 1 - Phi(Z) or 1 - p in FP32.
+                const float positive_probability = 2.0f / (psi + 1.0f);
+                const float log_positive_probability =
+                    0.69314718055994530942f - log1pf(psi);
+                const float log_tail = normal_log_survival(variance_normal);
+                const float beta = positive_probability / conditional_mean;
+                next_variance = log_tail >= log_positive_probability
+                    ? 0.0f : (log_positive_probability - log_tail) / beta;
+                if (prepared_model.martingale_a < beta) {
+                    log_moment = log1pf(positive_probability
+                        * prepared_model.martingale_a
+                        / (beta - prepared_model.martingale_a));
+                } else {
+                    martingale_valid = false;
+                }
             } else {
-                martingale_valid = false;
+                const float probability_zero = (psi - 1.0f) / (psi + 1.0f);
+                const float beta =
+                    (1.0f - probability_zero) / conditional_mean;
+                next_variance = variance_uniform <= probability_zero
+                    ? 0.0f
+                    : logf((1.0f - probability_zero) / (1.0f - variance_uniform))
+                          / beta;
+
+                if (prepared_model.martingale_a < beta) {
+                    const float moment =
+                        probability_zero
+                        + beta * (1.0f - probability_zero)
+                              / (beta - prepared_model.martingale_a);
+                    martingale_valid = moment > 0.0f;
+                    if (martingale_valid) log_moment = logf(moment);
+                } else {
+                    martingale_valid = false;
+                }
             }
         }
     }
@@ -172,6 +195,24 @@ __device__ __forceinline__ void one_step_transition(
         state.log_spot += fmaf(diffusion_scale, stock_normal, increment);
     }
     state.variance = next_variance;
+}
+
+// Preserve the historical single-asset QE-M transition and random mapping.
+__device__ __forceinline__ void one_step_transition(
+    const PreparedModel& prepared_model, float variance_normal,
+    float variance_uniform, float stock_normal, State& state
+) {
+    one_step_transition_impl<false>(prepared_model, variance_normal,
+        variance_uniform, stock_normal, state);
+}
+
+// The multi-asset adapter receives normals already correlated by the pack.
+__device__ __forceinline__ void correlated_one_step_transition(
+    const PreparedModel& prepared_model, float variance_normal,
+    float stock_normal, State& state
+) {
+    one_step_transition_impl<true>(prepared_model, variance_normal,
+        0.0f, stock_normal, state);
 }
 
 // ==================== Model-specific implementation =======================
@@ -236,15 +277,15 @@ template<typename AuxiliaryRandom>
 __device__ __forceinline__ void DynamicsPolicy::one_step_transition(
     const PreparedDynamics& dynamics,
     BrownianStep brownian,
-    AuxiliaryRandom& auxiliary,
+    AuxiliaryRandom&,
     State& state
 ) {
     const float residual = dynamics.correlation_residual > 0.0f
         ? (brownian.spot - dynamics.rho * brownian.variance)
             / dynamics.correlation_residual
         : 0.0f;
-    heston::one_step_transition(
-        dynamics, brownian.variance, auxiliary.next(), residual, state
+    heston::correlated_one_step_transition(
+        dynamics, brownian.variance, residual, state
     );
 }
 

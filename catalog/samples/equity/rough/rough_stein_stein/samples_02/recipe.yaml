@@ -30,13 +30,14 @@ parameter_sampling:
   - volatility_of_volatility
   - hurst_exponent
   - rho
+  - initial_volatility
   latent_uniform_bounds:
     spot:
     - 1.0
     - 1.0
     volatility_level:
-    - 0.1
-    - 0.35
+    - 0.08
+    - 0.45
     mean_reversion:
     - 0.2
     - 4.0
@@ -49,6 +50,9 @@ parameter_sampling:
     rho:
     - -0.9
     - -0.1
+    initial_volatility:
+    - 0.08
+    - 0.45
   acceptance: 'true'
   derived_parameters: {}
   fixed_model_inputs:

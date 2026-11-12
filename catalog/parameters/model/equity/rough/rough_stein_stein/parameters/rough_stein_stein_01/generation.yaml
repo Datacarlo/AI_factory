@@ -3,11 +3,11 @@ status: complete
 inputs: {}
 output:
   path: datasets/parameters/model/equity/rough/rough_stein_stein/parameters/rough_stein_stein_01.json
-  sha256: 44d7daef29bc284e3de0380d1b65b63c924250e0f73a27d0f301a8d1ac858ae0
+  sha256: f825412964e8fca949e0a4cf4cf93a40a3a6105ebfd4c4eff46f9c774d0aeac0
 hardware:
   device: cpu
   cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
 software:
-  cmake: cmake version 3.22.1
-  cxx_compiler: g++-14 (Ubuntu 14.3.0-12ubuntu1~22~ppa2) 14.3.0
+  cmake: 3.22.1
+  cxx_compiler: GNU 14.3.0
   nlohmann_json: 3.10.5

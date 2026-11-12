@@ -90,7 +90,7 @@ int main() {
     };
 #elif ROUGH_GAUSSIAN_TEST_MODEL == 2
     const std::vector<rb::ModelParameters> models{
-        {1.0f, .02f, .01f, .20f, .30f, .40f, .10f, -.7f}
+        {1.0f, .02f, .01f, .20f, .30f, .40f, .10f, -.7f, .32f}
     };
 #else
     const std::vector<rb::ModelParameters> models{

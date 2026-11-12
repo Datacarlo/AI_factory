@@ -157,6 +157,28 @@ __device__ __forceinline__ float integral_variance(
     );
 }
 
+// Integral_0^delta B(u) du. The series avoids delta - B(delta)
+// cancellation and has the finite mean_reversion -> 0 limit delta^2/2.
+__device__ __forceinline__ float integrated_state_loading(
+    float mean_reversion, float delta
+) {
+    const float x = mean_reversion * delta;
+    if (fabsf(x) < 0.5f) {
+        float normalized = 1.0f / 3628800.0f;
+        normalized = fmaf(x, normalized, -1.0f / 362880.0f);
+        normalized = fmaf(x, normalized, 1.0f / 40320.0f);
+        normalized = fmaf(x, normalized, -1.0f / 5040.0f);
+        normalized = fmaf(x, normalized, 1.0f / 720.0f);
+        normalized = fmaf(x, normalized, -1.0f / 120.0f);
+        normalized = fmaf(x, normalized, 1.0f / 24.0f);
+        normalized = fmaf(x, normalized, -1.0f / 6.0f);
+        normalized = fmaf(x, normalized, 0.5f);
+        return delta * delta * normalized;
+    }
+    return (delta - integral_state_loading(mean_reversion, delta))
+        / mean_reversion;
+}
+
 // Compute loading and variance while sharing the exponential decay.
 __device__ __forceinline__ IntegralMoments integral_moments(
     float mean_reversion,

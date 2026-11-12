@@ -7,5 +7,6 @@ int main(int argc,char** argv) {
         wb::offline::pricing::FiveMarkov<wb::model::equity::black_scholes::DynamicsPolicy>, wb::simulation::MultiRoughPack<>, wb::product::BestOfCallPathPolicy, 1U>(
         argc,argv,wb::model::equity::black_scholes::load_models,wb::product::load_best_of_options,
         "equity/markovian/black_scholes","black_scholes",{"spot"},
-        "datasets/parameters/product/best_of_option/best_of_options_multi_02.json","datasets/multi_asset/best_of_option/five_black_scholes_cir_best_of_calls_100k_01.json","catalog/multi_asset/best_of_option/five_black_scholes_cir_best_of_calls_100k_01/generation.yaml","call",202611040700ULL);
+        "datasets/parameters/product/best_of_option/best_of_options_multi_02.json","datasets/multi_asset/best_of_option/five_black_scholes_cir_best_of_calls_100k_01.json","catalog/multi_asset/best_of_option/five_black_scholes_cir_best_of_calls_100k_01/generation.yaml","call",202611040700ULL,
+        wb::offline::pricing::CrossAssetBatchGeometry{128U,0U,256U,1U,1U,1U},8192U);
 }

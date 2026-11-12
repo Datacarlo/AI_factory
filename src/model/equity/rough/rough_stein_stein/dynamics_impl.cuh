@@ -19,6 +19,7 @@ __device__ __forceinline__ PathPolicy::PreparedModel PathPolicy::prepare_model(
 ) {
     return {
         logf(parameters.spot),
+        parameters.initial_volatility,
         parameters.volatility_level,
         parameters.volatility_of_volatility,
         time_step,
@@ -32,14 +33,19 @@ __device__ __forceinline__ PathPolicy::PreparedModel PathPolicy::prepare_model(
 __device__ __forceinline__ PathPolicy::State PathPolicy::initial_state(
     const PreparedModel& model
 ) {
-    return {model.initial_log_spot, model.volatility_level};
+    return {model.initial_log_spot, model.initial_volatility};
 }
 
 __device__ __forceinline__ float map_volatility(
-    const PreparedModel& model, float value, float
+    const PreparedModel& model, float value, float mean_response
 ) {
-    return model.volatility_level
-        + model.volatility_of_volatility * value;
+    // Prepared once per kernel/grid, shared by all paths and X0/theta bumps.
+    // Keep the original arithmetic exactly for the X0 == theta subfamily.
+    const float mean = model.initial_volatility == model.volatility_level
+        ? model.volatility_level
+        : fmaf(model.initial_volatility - model.volatility_level,
+               mean_response, model.volatility_level);
+    return mean + model.volatility_of_volatility * value;
 }
 
 __device__ __forceinline__ void advance_spot_cell(
@@ -55,7 +61,7 @@ __device__ __forceinline__ void advance_spot_cell(
 __device__ __forceinline__ void PathPolicy::advance(
     const PreparedModel& model,
     float volterra_value,
-    float,
+    float mean_response,
     float rough_normal,
     float independent_spot_normal,
     State& state
@@ -67,7 +73,7 @@ __device__ __forceinline__ void PathPolicy::advance(
     );
     advance_spot_cell(model, state.volatility,
                       spot_normal, state.log_spot);
-    state.volatility = map_volatility(model, volterra_value, 0.0f);
+    state.volatility = map_volatility(model, volterra_value, mean_response);
 }
 
 __device__ __forceinline__ float PathPolicy::spot(const State& state) {

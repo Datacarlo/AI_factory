@@ -7,5 +7,6 @@ int main(int argc,char** argv) {
         wb::offline::pricing::FiveMarkov<wb::model::equity::heston::DynamicsPolicy>, wb::simulation::MultiRoughPack<>, wb::product::MultiAssetPhoenixAutocallPathPolicy, 1U>(
         argc,argv,wb::model::equity::heston::load_models,wb::product::load_multi_asset_phoenix_autocalls,
         "equity/markovian/heston","heston",{"spot","variance"},
-        "datasets/parameters/product/multi_asset_phoenix_autocall/phoenix_autocalls_multi_01.json","datasets/multi_asset/multi_asset_phoenix_autocall/five_heston_cir_phoenix_autocalls_100k_01.json","catalog/multi_asset/multi_asset_phoenix_autocall/five_heston_cir_phoenix_autocalls_100k_01/generation.yaml","",202611040800ULL);
+        "datasets/parameters/product/multi_asset_phoenix_autocall/phoenix_autocalls_multi_01.json","datasets/multi_asset/multi_asset_phoenix_autocall/five_heston_cir_phoenix_autocalls_100k_01.json","catalog/multi_asset/multi_asset_phoenix_autocall/five_heston_cir_phoenix_autocalls_100k_01/generation.yaml","",202611040800ULL,
+        wb::offline::pricing::CrossAssetBatchGeometry{128U,0U,256U,1U,1U,1U},8192U);
 }

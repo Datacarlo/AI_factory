@@ -20,6 +20,7 @@ int main() {
         {"model.volatility_of_volatility", {0.005, pg::BumpScale::relative}},
         {"model.hurst_exponent", {0.001, pg::BumpScale::absolute}},
         {"model.rho", {0.002, pg::BumpScale::absolute}},
+        {"model.initial_volatility", {0.005, pg::BumpScale::relative}},
         {"product.participation_rate", {0.005, pg::BumpScale::relative}},
         {"product.local_floor", {0.001, pg::BumpScale::absolute}},
         {"product.local_cap", {0.001, pg::BumpScale::absolute}},

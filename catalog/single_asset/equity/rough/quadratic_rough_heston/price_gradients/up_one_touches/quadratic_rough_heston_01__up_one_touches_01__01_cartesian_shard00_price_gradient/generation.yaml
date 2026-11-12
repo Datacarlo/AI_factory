@@ -1,0 +1,26 @@
+schema_version: 4
+status: complete
+inputs:
+  model:
+    path: datasets/parameters/model/equity/rough/quadratic_rough_heston/parameters/quadratic_rough_heston_01.json
+    sha256: 4e24a1b3890b9d492b66ba347b1f7276298a8e61a86ad7ce5ac1e7db0500a539
+  product:
+    path: datasets/parameters/product/up_one_touch/up_one_touches_01_shard00.json
+    sha256: f98f18b07a3ef522ffae7b99ea4716094212e294b153dfd56da007ba0387c12a
+output:
+  path: datasets/single_asset/equity/rough/quadratic_rough_heston/price_gradients/up_one_touches/quadratic_rough_heston_01__up_one_touches_01__01_cartesian_shard00_price_gradient.json
+  sha256: 81fb6f051ecc017d84af51119b459a911f5a0e16919cdb0eca2bb8ed9a2700c9
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Core(TM) Ultra 9 285K
+  name: NVIDIA GeForce RTX 5090
+  uuid: GPU-11b9a6f1-3f11-a2b5-400c-0eee5c2089c6
+  compute_capability: '12.0'
+  driver_version: 615.71.09
+software:
+  cmake: 3.31.6
+  cxx_compiler: GNU 14.2.0
+  cuda_compiler: 13.2.86
+  cuda_target_architectures: '120'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1

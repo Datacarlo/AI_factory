@@ -164,19 +164,17 @@ def inventory(
         if recipe_candidate_count(recipe) != spec.row_count:
             raise ValueError(f"Recipe row count contradicts manifest: {recipe_path}")
         if spec.dataset_kind == "price_gradients":
-            # Price-only recipes can live in a local work catalogue. Validate
-            # the gradient against the typed source capability, which remains
-            # available in a clean delivery checkout.
-            price_source = PRICE_GRADIENT_SOURCE_BY_GENERATOR[spec.generator_path]
-            source_domain = RNG_DOMAIN_BY_GENERATOR.get(price_source.generator_path)
-            expected_rng = "philox" if source_domain else None
+            # Check this recipe's reservation: historical published gradients
+            # can retain a seed different from their price-only counterpart.
+            gradient_domain = RNG_DOMAIN_BY_GENERATOR.get(spec.generator_path)
+            expected_rng = "philox" if gradient_domain else None
             if recipe.get("random_number_generator") != expected_rng:
                 raise ValueError(
-                    f"Sensitivity and source random generators differ: {recipe_path}"
+                    f"Sensitivity random generator contradicts its domain: {recipe_path}"
                 )
-            if source_domain and recipe.get("seeds", {}).get("dynamics") != source_domain.seed("dynamics"):
+            if gradient_domain and recipe.get("seeds", {}).get("dynamics") != gradient_domain.seed("dynamics"):
                 raise ValueError(
-                    f"Sensitivity seed contradicts the source random domain: {recipe_path}"
+                    f"Sensitivity seed contradicts its registered random domain: {recipe_path}"
                 )
         # Join adjacent C++ literals, including split output paths. No evaluation.
         strings = ["".join(json.loads(token) for token in re.findall(r'"(?:[^"\\]|\\.)*"', group))

@@ -1,16 +1,16 @@
 {
   "schema_version": 2,
-  "source_sha256": "d01a4ad3f2245398c555a8c82a1d06bcc68f6074b6f156c390f9b727bbaf51fe",
+  "source_sha256": "6577cb5801775e13e83e016943ac0606b412740150a8b42f602c510c55ab2774",
   "counts": {
     "engines": 13,
     "models": 25,
     "products": 27,
-    "available_datasets": 2726,
+    "available_datasets": 2639,
     "deferred_datasets": 0,
     "bounded_exceptions": 1,
-    "generated_outputs": 8208
+    "generated_outputs": 8036
   },
-  "outputs_sha256": "bdabd430e6d9ddd5ceef16985e29069376c0ad5ba155ba5ef026a3575b9f4357",
+  "outputs_sha256": "2c4e2fb549a5aee5f3dcacdbf82480be95d0b7c6daba6e33a1509ba05d341e92",
   "price_delta_bindings": {
     "src/model/equity/markovian/bates/product/asian_option_price_delta": {
       "pricing": "src/model/equity/markovian/bates/product/asian_option",
@@ -6463,7 +6463,7 @@
     },
     "src/model/equity/rough/rough_stein_stein/product/asian_option_price_gradients": {
       "identity": "rough_stein_stein/asian_option",
-      "maximum_sensitivities": 10,
+      "maximum_sensitivities": 11,
       "preparation_strategy": "device_prepared_rough_graph",
       "supported_orders": [
         "first"
@@ -6472,7 +6472,7 @@
     },
     "src/model/equity/rough/rough_stein_stein/product/asset_or_nothing_option_price_gradients": {
       "identity": "rough_stein_stein/asset_or_nothing_option",
-      "maximum_sensitivities": 10,
+      "maximum_sensitivities": 11,
       "preparation_strategy": "device_prepared_rough_graph",
       "supported_orders": [
         "first"
@@ -6481,7 +6481,7 @@
     },
     "src/model/equity/rough/rough_stein_stein/product/athena_autocall_price_gradients": {
       "identity": "rough_stein_stein/athena_autocall",
-      "maximum_sensitivities": 12,
+      "maximum_sensitivities": 13,
       "preparation_strategy": "device_prepared_rough_graph",
       "supported_orders": [
         "first"
@@ -6490,7 +6490,7 @@
     },
     "src/model/equity/rough/rough_stein_stein/product/cliquet_price_gradients": {
       "identity": "rough_stein_stein/cliquet",
-      "maximum_sensitivities": 14,
+      "maximum_sensitivities": 15,
       "preparation_strategy": "device_prepared_rough_graph",
       "supported_orders": [
         "first"
@@ -6499,7 +6499,7 @@
     },
     "src/model/equity/rough/rough_stein_stein/product/digital_option_price_gradients": {
       "identity": "rough_stein_stein/digital_option",
-      "maximum_sensitivities": 11,
+      "maximum_sensitivities": 12,
       "preparation_strategy": "device_prepared_rough_graph",
       "supported_orders": [
         "first"
@@ -6508,7 +6508,7 @@
     },
     "src/model/equity/rough/rough_stein_stein/product/double_knock_out_option_price_gradients": {
       "identity": "rough_stein_stein/double_knock_out_option",
-      "maximum_sensitivities": 12,
+      "maximum_sensitivities": 13,
       "preparation_strategy": "device_prepared_rough_graph",
       "supported_orders": [
         "first"
@@ -6517,7 +6517,7 @@
     },
     "src/model/equity/rough/rough_stein_stein/product/down_and_in_option_price_gradients": {
       "identity": "rough_stein_stein/down_and_in_option",
-      "maximum_sensitivities": 11,
+      "maximum_sensitivities": 12,
       "preparation_strategy": "device_prepared_rough_graph",
       "supported_orders": [
         "first"
@@ -6526,7 +6526,7 @@
     },
     "src/model/equity/rough/rough_stein_stein/product/down_and_out_option_price_gradients": {
       "identity": "rough_stein_stein/down_and_out_option",
-      "maximum_sensitivities": 11,
+      "maximum_sensitivities": 12,
       "preparation_strategy": "device_prepared_rough_graph",
       "supported_orders": [
         "first"
@@ -6535,7 +6535,7 @@
     },
     "src/model/equity/rough/rough_stein_stein/product/european_option_price_gradients": {
       "identity": "rough_stein_stein/european_option",
-      "maximum_sensitivities": 10,
+      "maximum_sensitivities": 11,
       "preparation_strategy": "device_prepared_rough_graph",
       "supported_orders": [
         "first"
@@ -6544,7 +6544,7 @@
     },
     "src/model/equity/rough/rough_stein_stein/product/forward_start_option_price_gradients": {
       "identity": "rough_stein_stein/forward_start_option",
-      "maximum_sensitivities": 10,
+      "maximum_sensitivities": 11,
       "preparation_strategy": "device_prepared_rough_graph",
       "supported_orders": [
         "first"
@@ -6553,7 +6553,7 @@
     },
     "src/model/equity/rough/rough_stein_stein/product/gap_option_price_gradients": {
       "identity": "rough_stein_stein/gap_option",
-      "maximum_sensitivities": 11,
+      "maximum_sensitivities": 12,
       "preparation_strategy": "device_prepared_rough_graph",
       "supported_orders": [
         "first"
@@ -6562,7 +6562,7 @@
     },
     "src/model/equity/rough/rough_stein_stein/product/geometric_asian_option_price_gradients": {
       "identity": "rough_stein_stein/geometric_asian_option",
-      "maximum_sensitivities": 10,
+      "maximum_sensitivities": 11,
       "preparation_strategy": "device_prepared_rough_graph",
       "supported_orders": [
         "first"
@@ -6571,7 +6571,7 @@
     },
     "src/model/equity/rough/rough_stein_stein/product/lookback_option_price_gradients": {
       "identity": "rough_stein_stein/lookback_option",
-      "maximum_sensitivities": 10,
+      "maximum_sensitivities": 11,
       "preparation_strategy": "device_prepared_rough_graph",
       "supported_orders": [
         "first"
@@ -6580,7 +6580,7 @@
     },
     "src/model/equity/rough/rough_stein_stein/product/phoenix_autocall_price_gradients": {
       "identity": "rough_stein_stein/phoenix_autocall",
-      "maximum_sensitivities": 13,
+      "maximum_sensitivities": 14,
       "preparation_strategy": "device_prepared_rough_graph",
       "supported_orders": [
         "first"
@@ -6589,7 +6589,7 @@
     },
     "src/model/equity/rough/rough_stein_stein/product/phoenix_memory_autocall_price_gradients": {
       "identity": "rough_stein_stein/phoenix_memory_autocall",
-      "maximum_sensitivities": 13,
+      "maximum_sensitivities": 14,
       "preparation_strategy": "device_prepared_rough_graph",
       "supported_orders": [
         "first"
@@ -6598,7 +6598,7 @@
     },
     "src/model/equity/rough/rough_stein_stein/product/range_accrual_price_gradients": {
       "identity": "rough_stein_stein/range_accrual",
-      "maximum_sensitivities": 12,
+      "maximum_sensitivities": 13,
       "preparation_strategy": "device_prepared_rough_graph",
       "supported_orders": [
         "first"
@@ -6607,7 +6607,7 @@
     },
     "src/model/equity/rough/rough_stein_stein/product/straddle_price_gradients": {
       "identity": "rough_stein_stein/straddle",
-      "maximum_sensitivities": 10,
+      "maximum_sensitivities": 11,
       "preparation_strategy": "device_prepared_rough_graph",
       "supported_orders": [
         "first"
@@ -6616,7 +6616,7 @@
     },
     "src/model/equity/rough/rough_stein_stein/product/up_and_in_option_price_gradients": {
       "identity": "rough_stein_stein/up_and_in_option",
-      "maximum_sensitivities": 11,
+      "maximum_sensitivities": 12,
       "preparation_strategy": "device_prepared_rough_graph",
       "supported_orders": [
         "first"
@@ -6625,7 +6625,7 @@
     },
     "src/model/equity/rough/rough_stein_stein/product/up_and_out_option_price_gradients": {
       "identity": "rough_stein_stein/up_and_out_option",
-      "maximum_sensitivities": 11,
+      "maximum_sensitivities": 12,
       "preparation_strategy": "device_prepared_rough_graph",
       "supported_orders": [
         "first"
@@ -6634,7 +6634,7 @@
     },
     "src/model/equity/rough/rough_stein_stein/product/up_no_touch_price_gradients": {
       "identity": "rough_stein_stein/up_no_touch",
-      "maximum_sensitivities": 11,
+      "maximum_sensitivities": 12,
       "preparation_strategy": "device_prepared_rough_graph",
       "supported_orders": [
         "first"
@@ -6643,7 +6643,7 @@
     },
     "src/model/equity/rough/rough_stein_stein/product/up_one_touch_price_gradients": {
       "identity": "rough_stein_stein/up_one_touch",
-      "maximum_sensitivities": 11,
+      "maximum_sensitivities": 12,
       "preparation_strategy": "device_prepared_rough_graph",
       "supported_orders": [
         "first"

@@ -542,6 +542,7 @@ int main() {
             {"risk_free_rate", 0.03f},
             {"dividend_yield", 0.01f},
             {"volatility_level", 0.2f},
+            {"initial_volatility", 0.32f},
             {"mean_reversion", 1.0f},
             {"volatility_of_volatility", 0.3f},
             {"hurst_exponent", 0.1f},

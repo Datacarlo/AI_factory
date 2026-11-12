@@ -1,0 +1,26 @@
+schema_version: 4
+status: complete
+inputs:
+  model:
+    path: datasets/parameters/model/equity/markovian/heston/parameters/heston_01.json
+    sha256: 8255401c973dbf12f75d08788a68ae1aed4a95ac6329bfa313f233e51621e730
+  product:
+    path: datasets/parameters/product/straddle/straddles_01_shard00.json
+    sha256: 1a26335ee13168c06c587a926d852f2fd74f951b1142e2c02a8696a43202749e
+output:
+  path: datasets/single_asset/equity/markovian/heston/price_gradients/straddles/heston_01__straddles_01__01_cartesian_shard00_price_gradient.json
+  sha256: 5bb762f01722733b8a0b11c8113aeffeb6e1434dd2179369d3ff91dd5422fc46
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+  name: Tesla V100-SXM2-32GB
+  uuid: GPU-ffb1fd41-c0b7-008f-20de-9d7a92b52a3d
+  compute_capability: '7.0'
+  driver_version: 580.178.04
+software:
+  cmake: 3.31.6
+  cxx_compiler: GNU 14.2.0
+  cuda_compiler: 12.9.41
+  cuda_target_architectures: '70'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1

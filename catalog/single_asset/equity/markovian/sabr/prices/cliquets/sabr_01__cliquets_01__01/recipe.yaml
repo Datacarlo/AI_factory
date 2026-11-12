@@ -23,3 +23,5 @@ paths_per_price: 1048576
 random_number_generator: philox
 seeds:
   dynamics: 11668827712553746432
+payoff:
+  periodic_return: R_i = S(t_i) / S(t_{i-1}) - 1; R_i = 0 when both spots are zero. The first loss into zero is retained. Local bounds apply afterwards.

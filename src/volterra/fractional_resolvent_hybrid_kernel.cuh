@@ -2,6 +2,7 @@
 #pragma once
 
 #include "compensated_sum.cuh"
+#include "volterra/fractional_relaxation.cuh"
 #include "volterra/concepts.cuh"
 
 #include <cuda_runtime.h>
@@ -84,6 +85,15 @@ struct FractionalResolventHybridKernelPolicy {
             power *= argument;
         }
         return sum.value();
+    }
+
+    __host__ __device__ static float mean_response(
+        const PreparedKernel& kernel, float time_years
+    ) {
+        if (!(time_years > 0.0f)) return 1.0f;
+        const double x = static_cast<double>(kernel.parameters.mean_reversion)
+            * kernel.laplace_scale * pow(static_cast<double>(time_years), kernel.alpha);
+        return fractional_relaxation(kernel.alpha, x);
     }
 
     __host__ __device__ __noinline__ static float kernel(

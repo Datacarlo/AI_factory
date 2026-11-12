@@ -13,6 +13,7 @@ namespace ai_factory::workbench::model::equity::rough_stein_stein {
 
 struct PreparedModel {
     float initial_log_spot;
+    float initial_volatility;
     float volatility_level;
     float volatility_of_volatility;
     float time_step;

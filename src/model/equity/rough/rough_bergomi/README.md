@@ -33,3 +33,20 @@ size is independent of the total Monte Carlo path count.
 
 The model follows Bayer, Friz and Gatheral (2016). The simulation follows the
 hybrid scheme of Bennedsen, Lunde and Pakkanen (2017).
+
+## Several correlated rough assets
+
+The multi-asset hybrid engine correlates both the Brownian cell averages and
+the conditional residuals of the singular cell. For two fractional kernels
+with Hurst exponents `H_i,H_j < 1/2`, the residual correlation is
+`rho_ij * 2*sqrt(H_i*H_j)/(H_i+H_j)`. Using independent residuals would preserve
+each marginal variance but understate the joint covariance. The small residual
+Cholesky is prepared from the selected model rows and the global correlation
+matrix; its normals use a separate Philox domain. A single Gaussian rough
+factor retains its existing auxiliary stream.
+
+Joint residuals are currently supported for fractional power kernels (rough
+Bergomi and rough SABR). Combining several Gaussian rough factors that include
+a resolvent or log-modulated kernel is rejected until their cross-kernel
+singular-cell integrals are implemented. Causal feedback factors do not need
+these Gaussian bridge residuals.
