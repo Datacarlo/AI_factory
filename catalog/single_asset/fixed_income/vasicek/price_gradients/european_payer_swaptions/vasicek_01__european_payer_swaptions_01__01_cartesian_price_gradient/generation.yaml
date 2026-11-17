@@ -9,7 +9,7 @@ inputs:
     sha256: 0de50c9917de3dda6dc48a8f173e6b3ad815cbc2fc3450e929262d1cc405fab5
 output:
   path: datasets/single_asset/fixed_income/vasicek/price_gradients/european_payer_swaptions/vasicek_01__european_payer_swaptions_01__01_cartesian_price_gradient.json
-  sha256: 247ae28f1639223f26624f07b5866ed2a057279d4b74d56e208ae5f15ab1123c
+  sha256: 1b6525e7075857c4c539e57246e86e8e641de5179ba04bea247b88f0e8eaf32b
 hardware:
   device: gpu
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz

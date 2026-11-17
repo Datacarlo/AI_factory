@@ -25,8 +25,7 @@ int main() {
         {"curve.beta3", {0.0005, pg::BumpScale::absolute}},
         {"curve.tau1", {0.005, pg::BumpScale::relative}},
         {"curve.tau2", {0.005, pg::BumpScale::relative}},
-        {"product.strike", {0.0005, pg::BumpScale::absolute}},
-        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
+        {"product.strike", {0.0005, pg::BumpScale::absolute}}
             }}, {1.0f / 504.0f, 2U}, true
         };
         recipe.option_side = "receiver";

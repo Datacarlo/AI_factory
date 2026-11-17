@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "count": 1948,
+  "count": 1949,
   "datasets": [
     {
       "source": "multi_asset/basket_down_and_out_call/five_black_scholes_cir_basket_down_and_out_calls_100k_01",
@@ -14011,6 +14011,20 @@
       "recipeMatchesReceipt": false,
       "catalogPath": "catalog/single_asset/equity/markovian/variance_gamma/price_gradients/up_no_touches/variance_gamma_01__up_no_touches_01__01_price_gradient",
       "originalOutput": "datasets/single_asset/equity/markovian/variance_gamma/price_gradients/up_no_touches/variance_gamma_01__up_no_touches_01__01_price_gradient.json"
+    },
+    {
+      "source": "single_asset/equity/markovian/variance_gamma/price_gradients/up_one_touches/variance_gamma_01__up_one_touches_01__01_cartesian_shard00_price_gradient",
+      "id": "variance_gamma_01__up_one_touches_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "variance_gamma",
+      "collection": "price_gradients",
+      "product": "up_one_touches",
+      "output": "datasets/single_asset/equity/markovian/variance_gamma/price_gradients/up_one_touches/variance_gamma_01__up_one_touches_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/single_asset/equity/markovian/variance_gamma/price_gradients/up_one_touches/variance_gamma_01__up_one_touches_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/single_asset/equity/markovian/variance_gamma/price_gradients/up_one_touches/variance_gamma_01__up_one_touches_01__01_cartesian_shard00_price_gradient.json"
     },
     {
       "source": "single_asset/equity/markovian/variance_gamma/price_gradients/up_one_touches/variance_gamma_01__up_one_touches_01__01_price_gradient",

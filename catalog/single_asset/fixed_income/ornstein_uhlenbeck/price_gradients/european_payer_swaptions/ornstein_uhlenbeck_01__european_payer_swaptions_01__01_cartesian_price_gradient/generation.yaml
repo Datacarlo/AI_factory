@@ -9,7 +9,7 @@ inputs:
     sha256: 0de50c9917de3dda6dc48a8f173e6b3ad815cbc2fc3450e929262d1cc405fab5
 output:
   path: datasets/single_asset/fixed_income/ornstein_uhlenbeck/price_gradients/european_payer_swaptions/ornstein_uhlenbeck_01__european_payer_swaptions_01__01_cartesian_price_gradient.json
-  sha256: 408b239b7effd6019265ab1f833908e0c8d38f079c771f4221bb545643f5a408
+  sha256: c54b55f8dd0627b0ba36ee47aa44ab2441eb99f95f22e389d47ff4b9c968a227
 hardware:
   device: gpu
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz

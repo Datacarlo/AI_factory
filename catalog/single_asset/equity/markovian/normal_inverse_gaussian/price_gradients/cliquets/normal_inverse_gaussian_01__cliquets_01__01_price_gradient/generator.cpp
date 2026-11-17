@@ -20,8 +20,7 @@ int main() {
         {"product.local_floor", {0.002, pg::BumpScale::absolute}},
         {"product.local_cap", {0.002, pg::BumpScale::absolute}},
         {"product.global_floor", {0.002, pg::BumpScale::absolute}},
-        {"product.global_cap", {0.002, pg::BumpScale::absolute}},
-        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
+        {"product.global_cap", {0.002, pg::BumpScale::absolute}}
             }}, {1.0f/504.0f, 2U}, true};
         recipe.exact_schedule_transition = true;
         const auto models = model::equity::normal_inverse_gaussian::load_models(recipe.model_input);

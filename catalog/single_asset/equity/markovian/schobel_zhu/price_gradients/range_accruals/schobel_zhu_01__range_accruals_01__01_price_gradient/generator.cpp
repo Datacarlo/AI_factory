@@ -19,8 +19,7 @@ int main() {
         {"model.long_run_volatility", {0.005, pg::BumpScale::relative}},
         {"model.volatility_of_volatility", {0.005, pg::BumpScale::relative}},
         {"product.lower_barrier", {0.005, pg::BumpScale::relative}},
-        {"product.upper_barrier", {0.005, pg::BumpScale::relative}},
-        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
+        {"product.upper_barrier", {0.005, pg::BumpScale::relative}}
             }}, {1.0f/504.0f, 2U}, false};
         recipe.reconstructible_sensitivities = {{"product.coupon_rate", "(price - exp(-model.risk_free_rate * product.maturity / 252)) / product.coupon_rate", "standard_error / product.coupon_rate"}};
         const auto models = model::equity::schobel_zhu::load_models(recipe.model_input);

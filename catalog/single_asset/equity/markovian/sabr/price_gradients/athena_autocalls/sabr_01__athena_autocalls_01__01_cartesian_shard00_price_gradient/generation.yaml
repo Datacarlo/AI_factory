@@ -9,7 +9,7 @@ inputs:
     sha256: 44a06d021eba31d46753a81617b9d6f28da6f5ef85b00ca6f9be4f67d7eefd0b
 output:
   path: datasets/single_asset/equity/markovian/sabr/price_gradients/athena_autocalls/sabr_01__athena_autocalls_01__01_cartesian_shard00_price_gradient.json
-  sha256: a04c51b5816ef3d5800f580c038ddec141c2849a0a8611acfd7ba8334f2e3eb0
+  sha256: 797a807efd6bbb05d94cb81d8ba95ded1b02afd02dca4aedefcffdc4d76c97a4
 hardware:
   device: gpu
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz

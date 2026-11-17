@@ -9,7 +9,7 @@ inputs:
     sha256: a8c37d370c1eef4cd4b931bee8eb0cac71479995b8e001eaf032b91193752297
 output:
   path: datasets/single_asset/equity/markovian/heston/price_gradients/phoenix_autocalls/heston_01__phoenix_autocalls_01__01_cartesian_shard00_price_gradient.json
-  sha256: 561b85adff94f1a99a4ed0e3405d9ec165d27841ec63565bd4a83e418853bf3f
+  sha256: 2f246ec89060ba9358eed847cb8a57514d2170cc57564f80539e966ab9e0f17d
 hardware:
   device: gpu
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz

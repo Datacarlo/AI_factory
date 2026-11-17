@@ -9,7 +9,7 @@ inputs:
     sha256: 0de50c9917de3dda6dc48a8f173e6b3ad815cbc2fc3450e929262d1cc405fab5
 output:
   path: datasets/single_asset/fixed_income/cir/price_gradients/european_payer_swaptions/cir_01__european_payer_swaptions_01__01_cartesian_price_gradient.json
-  sha256: b61c7c574e9f760e95c78faadb95ff9ac7fa8959755e42a6500018b05b10ad31
+  sha256: b970b51cfc8a042555a41b03fa1896f61a49103ed923797b928a2f9df0043ee5
 hardware:
   device: gpu
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz

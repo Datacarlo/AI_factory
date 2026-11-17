@@ -18,8 +18,7 @@ int main() {
         {"model.jump_intensity", {0.05, pg::BumpScale::absolute}},
         {"model.jump_log_volatility", {0.005, pg::BumpScale::relative}},
         {"product.lower_barrier", {0.005, pg::BumpScale::relative}},
-        {"product.upper_barrier", {0.005, pg::BumpScale::relative}},
-        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
+        {"product.upper_barrier", {0.005, pg::BumpScale::relative}}
             }}, {1.0f/504.0f, 2U}, true};
         recipe.exact_schedule_transition = true;
         recipe.reconstructible_sensitivities = {{"product.coupon_rate", "(price - exp(-model.risk_free_rate * product.maturity / 252)) / product.coupon_rate", "standard_error / product.coupon_rate"}};

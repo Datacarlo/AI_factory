@@ -12,7 +12,7 @@ inputs:
     sha256: c4c27cbf9a57ef2b1bfcb9ccabbdd1b22d95946a4ca1413e40e31b04de237d7c
 output:
   path: datasets/single_asset/fixed_income/cir_plus_plus/price_gradients/flat/european_receiver_swaptions/cir_plus_plus_01__flat_01__european_receiver_swaptions_01__01_cartesian_price_gradient.json
-  sha256: 0d8d4beef172286ca308654b257b3885233012e6fa7fc63ac92acf24559190a0
+  sha256: c9995752d8065515e2801870bf117739c181a8ceaf1475e6c489a3ba055fb0a7
 hardware:
   device: gpu
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz

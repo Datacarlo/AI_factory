@@ -20,8 +20,7 @@ int main() {
         {"model.volatility_of_volatility", {0.005, pg::BumpScale::relative}},
         {"product.autocall_barrier", {0.005, pg::BumpScale::relative}},
         {"product.protection_barrier", {0.005, pg::BumpScale::relative}},
-        {"product.annual_coupon_rate", {0.0005, pg::BumpScale::absolute}},
-        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
+        {"product.annual_coupon_rate", {0.0005, pg::BumpScale::absolute}}
             }}, {1.0f/504.0f, 2U}, false};
         const auto models = model::equity::sabr::load_models(recipe.model_input);
         const auto products = product::load_athena_autocalls(recipe.product_input);

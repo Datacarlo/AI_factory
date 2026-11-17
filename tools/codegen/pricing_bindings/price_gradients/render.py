@@ -1534,8 +1534,9 @@ def render_recipes(
                     else "exact_terminal_transition"
                 ),
                 "contractual_days_per_year": 252,
-                "maturity_bump_steps_per_year": 504,
             }
+            if any(item["parameter"] == "product.maturity_years" for item in selected):
+                metadata["time_representation"]["maturity_bump_steps_per_year"] = 504
         else:
             metadata["time_grid"] = {"steps_per_year":504,"simulation_steps_per_day":2,"delta_t":"1 / 504"}
         recipe_path = destination.with_name("recipe.yaml")

@@ -25,8 +25,7 @@ int main() {
         {"product.local_floor", {0.001, pg::BumpScale::absolute}},
         {"product.local_cap", {0.001, pg::BumpScale::absolute}},
         {"product.global_floor", {0.002, pg::BumpScale::absolute}},
-        {"product.global_cap", {0.002, pg::BumpScale::absolute}},
-        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
+        {"product.global_cap", {0.002, pg::BumpScale::absolute}}
             }}, {1.0f / 504.0f, 2U}, false,
             pg::SensitivityOrders::first, {},
             pg::SensitivityStrategy::node_graph

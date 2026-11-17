@@ -9,7 +9,7 @@ inputs:
     sha256: a8c37d370c1eef4cd4b931bee8eb0cac71479995b8e001eaf032b91193752297
 output:
   path: datasets/single_asset/equity/rough/rough_bergomi/price_gradients/phoenix_autocalls/rough_bergomi_01__phoenix_autocalls_01__01_cartesian_shard00_price_gradient.json
-  sha256: 96a79943aee86bfd1f4816393bbbd652f9b7616f79ae9a6e4dbfc2ed51d0d54d
+  sha256: b798fc5efc1c61a16f267f21dad8c91bacec924563de6a1c80bf0161e9e847b7
 hardware:
   device: gpu
   cpu_model: Intel(R) Core(TM) Ultra 9 285K

@@ -9,7 +9,7 @@ inputs:
     sha256: 1a21aec7561aaef37447fe0766eb21a2036346216112207d0bde77985939dba1
 output:
   path: datasets/single_asset/fixed_income/vasicek/price_gradients/floorlets/vasicek_01__floorlets_01__01_cartesian_price_gradient.json
-  sha256: 9682f150639a16adef5ee3aaa96eeea32647993208b9ffe892ae6b8412c80b36
+  sha256: 6b77e5f58d132291cfad51a04a5828af5c50efa83d4bedce44d15703071e8036
 hardware:
   device: gpu
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz

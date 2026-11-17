@@ -10,6 +10,9 @@ from typing import Mapping
 
 import yaml
 
+from .calendar import product_features
+from tools.datasets.catalog_layout import physical_path
+
 
 _ROLE_ORDER = {"model": 0, "curve": 1, "product": 2}
 
@@ -44,6 +47,8 @@ def load_dataset_recipe(dataset_path: Path) -> dict:
         relative = dataset_path.resolve().relative_to(root / "datasets")
     except ValueError as error:
         raise ValueError("Cannot resolve dataset recipe outside datasets/") from error
+    if relative.parts[0] in {"published", "unpublished"}:
+        relative = Path(*relative.parts[1:])
     recipe_path = root / "catalog" / relative.with_suffix("") / "recipe.yaml"
     if not recipe_path.is_file():
         raise FileNotFoundError(f"Missing adjacent dataset recipe: {recipe_path}")
@@ -132,7 +137,7 @@ def load_entity_tables(
             recipe_input = recipe["inputs"].get(role) if recipe is not None else None
             if not isinstance(recipe_input, str):
                 raise ValueError(f"Recipe has no input path for role {role!r}")
-            path = (find_repository_root(dataset_path) / recipe_input).resolve()
+            path = physical_path(find_repository_root(dataset_path), recipe_input, publication_state=True)
         if not path.is_file():
             raise FileNotFoundError(f"Missing {role} parameter dataset: {path}")
         document = json.loads(path.read_text(encoding="utf-8"))
@@ -146,28 +151,26 @@ def load_entity_tables(
         rows = _row_array(document, role)
         if not rows:
             raise ValueError(f"Empty {role} parameter dataset")
-        first = _flatten_scalars(rows[0].get("parameters"), role)
+        def features(row):
+            values = row.get("parameters")
+            if role == "product":
+                values = product_features(values, document.get("time_convention"))
+            return _flatten_scalars(values, role)
+
+        first = features(rows[0])
         names = tuple(sorted(first))
         mapped: dict[str, EntityRow] = {}
         for ordinal, row in enumerate(rows):
             row_id = str(row.get("id", ""))
             if not row_id or row_id in mapped:
                 raise ValueError(f"Missing or duplicate {role} row id {row_id!r}")
-            flattened = _flatten_scalars(row.get("parameters"), role)
+            flattened = features(row)
             if tuple(sorted(flattened)) != names:
                 raise ValueError(f"Inconsistent features in {role} row {row_id}")
             mapped[row_id] = EntityRow(
                 values=tuple(flattened[name] for name in names), ordinal=ordinal
             )
         feature_names = names
-        if role == "product":
-            time = document.get("time_convention")
-            if isinstance(time, dict) and time.get("unit") == "business_day":
-                feature_names = tuple(
-                    name.removesuffix("maturity") + "maturity_years"
-                    if name.endswith("maturity") else name
-                    for name in names
-                )
         tables.append(
             EntityTable(
                 role=role,

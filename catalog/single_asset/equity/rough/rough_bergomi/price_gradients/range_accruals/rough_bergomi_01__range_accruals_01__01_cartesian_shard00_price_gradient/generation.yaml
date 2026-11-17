@@ -9,7 +9,7 @@ inputs:
     sha256: 4410b02bdbed74d7b1a8569c01f482f2d6cfb088883984e11386be5d62638f92
 output:
   path: datasets/single_asset/equity/rough/rough_bergomi/price_gradients/range_accruals/rough_bergomi_01__range_accruals_01__01_cartesian_shard00_price_gradient.json
-  sha256: e7ba3e971298af6a077282418933b1c0acd0e8c6036d3670553f327e124d0e39
+  sha256: 67102e376e14aeec55b08510ed74a0ac8c3e5a8c06679d80b3b8182c6f2c5e1c
 hardware:
   device: gpu
   cpu_model: Intel(R) Core(TM) Ultra 9 285K

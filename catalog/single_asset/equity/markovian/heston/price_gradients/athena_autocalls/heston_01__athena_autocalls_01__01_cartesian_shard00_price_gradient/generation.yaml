@@ -9,7 +9,7 @@ inputs:
     sha256: 44a06d021eba31d46753a81617b9d6f28da6f5ef85b00ca6f9be4f67d7eefd0b
 output:
   path: datasets/single_asset/equity/markovian/heston/price_gradients/athena_autocalls/heston_01__athena_autocalls_01__01_cartesian_shard00_price_gradient.json
-  sha256: 0aef6c44067756be21ea99ef8d7754ecca4af91f5e8b855c42ab27935dc3554a
+  sha256: f7ca5c6effbc43a60510f7b21dd782775a55f32b23d7fda2aa7c5f6126f8598f
 hardware:
   device: gpu
   name: Tesla V100-SXM2-32GB

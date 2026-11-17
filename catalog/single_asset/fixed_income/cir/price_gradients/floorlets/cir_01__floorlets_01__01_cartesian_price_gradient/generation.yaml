@@ -9,7 +9,7 @@ inputs:
     sha256: 1a21aec7561aaef37447fe0766eb21a2036346216112207d0bde77985939dba1
 output:
   path: datasets/single_asset/fixed_income/cir/price_gradients/floorlets/cir_01__floorlets_01__01_cartesian_price_gradient.json
-  sha256: f40c8cf7f3311bf23072e4d8ca9f926b7a671f22d3104fcf28cc836889bb7859
+  sha256: 7ec304fbdfd7e58449445bf3acfb8d2949d17e7a6083a9b7f2cee7159a775440
 hardware:
   device: gpu
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
