@@ -20,8 +20,7 @@ int main() {
         {"model.volatility_y", {0.005, pg::BumpScale::relative}},
         {"model.correlation", {0.002, pg::BumpScale::absolute}},
         {"curve.rate", {0.0005, pg::BumpScale::absolute}},
-        {"product.strike", {0.0005, pg::BumpScale::absolute}},
-        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
+        {"product.strike", {0.0005, pg::BumpScale::absolute}}
             }}, {1.0f / 504.0f, 2U}, true
         };
         recipe.option_side = "payer";

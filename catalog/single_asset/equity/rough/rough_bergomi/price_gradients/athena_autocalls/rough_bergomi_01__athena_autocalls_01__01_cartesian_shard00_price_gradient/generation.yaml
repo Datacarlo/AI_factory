@@ -9,7 +9,7 @@ inputs:
     sha256: 44a06d021eba31d46753a81617b9d6f28da6f5ef85b00ca6f9be4f67d7eefd0b
 output:
   path: datasets/single_asset/equity/rough/rough_bergomi/price_gradients/athena_autocalls/rough_bergomi_01__athena_autocalls_01__01_cartesian_shard00_price_gradient.json
-  sha256: db8801873fd48fea5025de5fb65ace2a40215aa7809911f1c0a7e4144d8f0f31
+  sha256: cabdae2f7d3c8fe42789ac4fb668717638f5aba9d9c057e824d9d34ba9cf9e47
 hardware:
   device: gpu
   cpu_model: Intel(R) Core(TM) Ultra 9 285K

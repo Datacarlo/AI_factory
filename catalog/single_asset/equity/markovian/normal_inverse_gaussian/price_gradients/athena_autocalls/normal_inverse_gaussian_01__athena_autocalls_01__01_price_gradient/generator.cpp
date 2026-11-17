@@ -19,8 +19,7 @@ int main() {
         {"model.dividend_yield", {0.0005, pg::BumpScale::absolute}},
         {"product.autocall_barrier", {0.005, pg::BumpScale::relative}},
         {"product.protection_barrier", {0.005, pg::BumpScale::relative}},
-        {"product.annual_coupon_rate", {0.0005, pg::BumpScale::absolute}},
-        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
+        {"product.annual_coupon_rate", {0.0005, pg::BumpScale::absolute}}
             }}, {1.0f/504.0f, 2U}, true};
         recipe.exact_schedule_transition = true;
         const auto models = model::equity::normal_inverse_gaussian::load_models(recipe.model_input);

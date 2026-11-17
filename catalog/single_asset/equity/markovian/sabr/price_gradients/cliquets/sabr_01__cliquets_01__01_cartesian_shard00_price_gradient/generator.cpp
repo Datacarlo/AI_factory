@@ -21,8 +21,7 @@ int main() {
         {"product.local_floor", {0.002, pg::BumpScale::absolute}},
         {"product.local_cap", {0.002, pg::BumpScale::absolute}},
         {"product.global_floor", {0.002, pg::BumpScale::absolute}},
-        {"product.global_cap", {0.002, pg::BumpScale::absolute}},
-        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
+        {"product.global_cap", {0.002, pg::BumpScale::absolute}}
             }}, {1.0f/504.0f, 2U}, false};
         const auto models = model::equity::sabr::load_models(recipe.model_input);
         const auto products = product::load_cliquets(recipe.product_input);

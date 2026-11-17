@@ -12,7 +12,7 @@ inputs:
     sha256: c4c27cbf9a57ef2b1bfcb9ccabbdd1b22d95946a4ca1413e40e31b04de237d7c
 output:
   path: datasets/single_asset/fixed_income/hull_white/price_gradients/flat/floorlets/hull_white_01__flat_01__floorlets_01__01_cartesian_price_gradient.json
-  sha256: b60c4be7658bd555ebbbd0c828d47a4d9165f624d0e63e718d730abdca5f1cbc
+  sha256: 0ffaf3adcc8babe024b076abda9339617e930ced657e16586cf4a08bf0ea9e14
 hardware:
   device: gpu
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz

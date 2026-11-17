@@ -22,8 +22,7 @@ int main() {
         {"model.rho", {0.004, pg::BumpScale::absolute}},
         {"model.initial_volatility", {0.005, pg::BumpScale::relative}},
         {"product.lower_barrier", {0.005, pg::BumpScale::relative}},
-        {"product.upper_barrier", {0.005, pg::BumpScale::relative}},
-        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
+        {"product.upper_barrier", {0.005, pg::BumpScale::relative}}
             }}, {1.0f / 504.0f, 2U}, false,
             pg::SensitivityOrders::first, {},
             pg::SensitivityStrategy::node_graph

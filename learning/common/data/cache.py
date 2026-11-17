@@ -13,8 +13,8 @@ from typing import Iterator, Mapping
 
 import numpy as np
 
+from .calendar import rejects_legacy_maturity
 from .conventions import (
-    business_days_to_years,
     ratio_strike_gradient_to_absolute,
     ratio_strike_to_absolute,
 )
@@ -29,7 +29,7 @@ from .references import (
 )
 
 
-_CACHE_SCHEMA_VERSION = 3
+_CACHE_SCHEMA_VERSION = 4
 
 
 def _sha256(path: Path) -> str:
@@ -50,6 +50,11 @@ def _infer_gradients(
     header: dict, outputs: dict, feature_names: tuple[str, ...]
 ) -> tuple[GradientTarget, ...]:
     def resolve(parameter: str) -> tuple[int, str]:
+        if parameter == "product.maturity_years":
+            if rejects_legacy_maturity(feature_names):
+                raise ValueError("Retired calendar maturity gradient: migrate this dataset before training")
+            if "product.bond_maturity_years" in feature_names:
+                parameter = "product.bond_maturity_years"
         suffix = f".{parameter}"
         matches = [
             (index, name)
@@ -323,14 +328,6 @@ def _feature_row(row: dict, tables: tuple[EntityTable, ...]) -> tuple[list[float
         row_values = list(entity.values)
         if table.role == "product":
             names = table.feature_names
-            time = table.conventions.get("time_convention")
-            if isinstance(time, dict) and time.get("unit") == "business_day":
-                days_per_year = float(time.get("days_per_year", 0))
-                if days_per_year <= 0:
-                    raise ValueError("Business-day convention requires days_per_year")
-                for index, name in enumerate(names):
-                    if name.endswith("maturity_years"):
-                        row_values[index] = business_days_to_years(row_values[index], days_per_year)
             quote = table.conventions.get("quote_convention")
             strike = quote.get("strike") if isinstance(quote, dict) else None
             if isinstance(strike, dict) and strike.get("mode") == "ratio_to_central_spot":

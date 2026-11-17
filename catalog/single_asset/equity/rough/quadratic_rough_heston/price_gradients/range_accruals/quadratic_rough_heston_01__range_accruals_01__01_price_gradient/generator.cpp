@@ -23,8 +23,7 @@ int main() {
         {"model.feedback_volatility", {0.01, pg::BumpScale::relative}},
         {"model.hurst_exponent", {0.002, pg::BumpScale::absolute}},
         {"product.lower_barrier", {0.005, pg::BumpScale::relative}},
-        {"product.upper_barrier", {0.005, pg::BumpScale::relative}},
-        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
+        {"product.upper_barrier", {0.005, pg::BumpScale::relative}}
             }}, {1.0f / 504.0f, 2U}, false,
             pg::SensitivityOrders::first, {},
             pg::SensitivityStrategy::node_graph

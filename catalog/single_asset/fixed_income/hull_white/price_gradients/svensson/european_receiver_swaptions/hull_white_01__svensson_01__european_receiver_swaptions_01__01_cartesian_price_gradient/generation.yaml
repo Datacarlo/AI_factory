@@ -12,7 +12,7 @@ inputs:
     sha256: c21299e6ea6e15703d33d2dbc1fe803b359043ff8a2590f69772af796646ce77
 output:
   path: datasets/single_asset/fixed_income/hull_white/price_gradients/svensson/european_receiver_swaptions/hull_white_01__svensson_01__european_receiver_swaptions_01__01_cartesian_price_gradient.json
-  sha256: 2233f2191a1e4b0b22ad38c6491c360e4c197d48e79fdbe992510e7a1eccbcf9
+  sha256: 1e708be641944662db383e35109624af60400e2b30e9acc77441c1100fad5ca5
 hardware:
   device: gpu
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz

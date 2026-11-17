@@ -9,7 +9,7 @@ inputs:
     sha256: a8c37d370c1eef4cd4b931bee8eb0cac71479995b8e001eaf032b91193752297
 output:
   path: datasets/single_asset/equity/markovian/black_scholes/price_gradients/phoenix_autocalls/black_scholes_01__phoenix_autocalls_01__01_cartesian_shard00_price_gradient.json
-  sha256: 96e725dc6b86641bc78f7f2ecebe66c51372d4aa328bd4582660341014c1dc56
+  sha256: 046fbf15e5eb1e62545b80cd86d492a9cb8e5f9af658685416eaa94d9e569c81
 hardware:
   device: gpu
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz

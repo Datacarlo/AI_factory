@@ -9,7 +9,7 @@ inputs:
     sha256: 3bb4e2b8acc9783638f27e69874db5c9d9b76c54207ad8e5e8ab82fe9cc194e5
 output:
   path: datasets/single_asset/equity/rough/rough_heston/price_gradients/cliquets/rough_heston_01__cliquets_01__01_cartesian_shard00_price_gradient.json
-  sha256: 352ae9b4b99ce124836d6b356386f234e1e2fc078d7e11cd652d8618cf79756c
+  sha256: d291a37aa6a41ff6fe7894dbc42babcfe221e9a9de9d829839b98732ae043a4c
 hardware:
   device: gpu
   cpu_model: Intel(R) Core(TM) Ultra 9 285K

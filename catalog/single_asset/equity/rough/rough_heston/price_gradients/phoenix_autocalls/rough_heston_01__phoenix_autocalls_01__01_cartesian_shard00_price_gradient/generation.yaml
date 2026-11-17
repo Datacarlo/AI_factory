@@ -9,7 +9,7 @@ inputs:
     sha256: a8c37d370c1eef4cd4b931bee8eb0cac71479995b8e001eaf032b91193752297
 output:
   path: datasets/single_asset/equity/rough/rough_heston/price_gradients/phoenix_autocalls/rough_heston_01__phoenix_autocalls_01__01_cartesian_shard00_price_gradient.json
-  sha256: 9c70d43ba96c92155ff2e975e6f21d2955bf9211ae00b71acc34535fcfcbb58e
+  sha256: 4ebfb9da08f7ed195667173bb7321ad7758ebb4cb12bdecc1a503d4b9d2c73d1
 hardware:
   device: gpu
   name: NVIDIA GeForce RTX 5090

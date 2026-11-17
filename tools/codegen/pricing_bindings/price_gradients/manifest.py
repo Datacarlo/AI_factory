@@ -9,6 +9,17 @@ if TYPE_CHECKING:
     from capability_manifest import ProductBindingSpec
 
 
+# Publication policy: these calendar endpoint bumps are not theta and are no
+# longer offered by dataset generators. Pricing APIs remain available unchanged.
+RETIRED_CALENDAR_MATURITY_PRODUCTS = frozenset({
+    "range_accrual", "cliquet", "athena_autocall", "phoenix_autocall",
+    "phoenix_memory_autocall", "rate_option", "european_swaption",
+})
+NO_MATURITY_SENSITIVITY_PRODUCTS = RETIRED_CALENDAR_MATURITY_PRODUCTS | {
+    "american_option", "bermudan_swaption",
+}
+
+
 TERMINAL_PRODUCT_METADATA = {
     "european_option": {
         "product_type": "EuropeanOption",
@@ -1102,9 +1113,7 @@ def default_sensitivities(
             ("product.barrier", .005, "relative"),
         ),
     }[product]
-    maturities = () if product in {
-        "american_option", "bermudan_swaption"
-    } else (
+    maturities = () if product in NO_MATURITY_SENSITIVITY_PRODUCTS else (
         ("product.maturity_years", 1.0 / 504.0, "absolute"),
     )
     coordinates = (*coordinates, *curves, *products, *maturities)

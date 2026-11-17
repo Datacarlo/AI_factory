@@ -9,7 +9,7 @@ inputs:
     sha256: 4410b02bdbed74d7b1a8569c01f482f2d6cfb088883984e11386be5d62638f92
 output:
   path: datasets/single_asset/equity/markovian/black_scholes/price_gradients/range_accruals/black_scholes_01__range_accruals_01__01_cartesian_shard00_price_gradient.json
-  sha256: ff3294956b39a4a7c0c22dac2bea7fd40d6e8c6012f09b32624d3d2a5b6798be
+  sha256: 4a876b45274e1cd18cffff7d3991fd8c66e4541b676dca6f475659b8e60b077d
 hardware:
   device: gpu
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz

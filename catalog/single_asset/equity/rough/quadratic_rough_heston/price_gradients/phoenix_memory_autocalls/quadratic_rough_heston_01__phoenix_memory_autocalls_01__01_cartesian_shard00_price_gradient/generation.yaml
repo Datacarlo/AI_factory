@@ -9,7 +9,7 @@ inputs:
     sha256: 9edcf57db30fdc39263abda60bfe734981cd146002d1fd7dc6b323d69694b500
 output:
   path: datasets/single_asset/equity/rough/quadratic_rough_heston/price_gradients/phoenix_memory_autocalls/quadratic_rough_heston_01__phoenix_memory_autocalls_01__01_cartesian_shard00_price_gradient.json
-  sha256: 3d5c5d67700847ce86a38f2c1421675a3b7344491c6832df447c084942a5a8dd
+  sha256: 6a1c6a496b3bc1c54dda42778f13113f4d0b61205b11c9cec3be5dc869b8491a
 hardware:
   device: gpu
   cpu_model: Intel(R) Core(TM) Ultra 9 285K

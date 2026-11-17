@@ -12,7 +12,7 @@ inputs:
     sha256: c4c27cbf9a57ef2b1bfcb9ccabbdd1b22d95946a4ca1413e40e31b04de237d7c
 output:
   path: datasets/single_asset/fixed_income/g2_plus_plus/price_gradients/flat/caplets/g2_plus_plus_01__flat_01__caplets_01__01_cartesian_price_gradient.json
-  sha256: 1909679c935dd847e321ed38218ddfce9abe376781754ae406b5f12b2d66a36c
+  sha256: f199ca4290616c8f3e68b0f343b05c6d2891edeee2968b5c81ed365209546405
 hardware:
   device: gpu
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz

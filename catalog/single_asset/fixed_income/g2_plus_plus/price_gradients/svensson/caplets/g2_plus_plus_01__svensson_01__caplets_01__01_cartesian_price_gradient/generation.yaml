@@ -12,7 +12,7 @@ inputs:
     sha256: c21299e6ea6e15703d33d2dbc1fe803b359043ff8a2590f69772af796646ce77
 output:
   path: datasets/single_asset/fixed_income/g2_plus_plus/price_gradients/svensson/caplets/g2_plus_plus_01__svensson_01__caplets_01__01_cartesian_price_gradient.json
-  sha256: 2817fe5545cff645795d38d0b9659b92615a8eb2edfdb2b3c2b13b05ec247d9e
+  sha256: 16a8292446a1935455a13786e7ef8de9b4d888bc49fd65c7f4394906f2302e49
 hardware:
   device: gpu
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz

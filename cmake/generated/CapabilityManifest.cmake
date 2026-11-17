@@ -2145,6 +2145,7 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     catalog/single_asset/equity/markovian/variance_gamma/price_gradients/up_and_out_calls/variance_gamma_01__up_and_out_calls_01__01_price_gradient/generator.cpp
     catalog/single_asset/equity/markovian/variance_gamma/price_gradients/up_no_touches/variance_gamma_01__up_no_touches_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/single_asset/equity/markovian/variance_gamma/price_gradients/up_no_touches/variance_gamma_01__up_no_touches_01__01_price_gradient/generator.cpp
+    catalog/single_asset/equity/markovian/variance_gamma/price_gradients/up_one_touches/variance_gamma_01__up_one_touches_01__01_cartesian_shard00_price_gradient/generator.cpp
     catalog/single_asset/equity/markovian/variance_gamma/price_gradients/up_one_touches/variance_gamma_01__up_one_touches_01__01_price_gradient/generator.cpp
     catalog/single_asset/equity/markovian/variance_gamma/prices/american_calls/variance_gamma_01__american_calls_01__01/generator.cpp
     catalog/single_asset/equity/markovian/variance_gamma/prices/american_puts/variance_gamma_01__american_puts_01__01/generator.cpp
@@ -3621,7 +3622,6 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
     work/catalog/single_asset/equity/markovian/schobel_zhu/prices/up_and_out_calls/schobel_zhu_01__up_and_out_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/single_asset/equity/markovian/schobel_zhu/prices/up_no_touches/schobel_zhu_01__up_no_touches_01__01_cartesian_shard00/generator.cpp
     work/catalog/single_asset/equity/markovian/schobel_zhu/prices/up_one_touches/schobel_zhu_01__up_one_touches_01__01_cartesian_shard00/generator.cpp
-    work/catalog/single_asset/equity/markovian/variance_gamma/price_gradients/up_one_touches/variance_gamma_01__up_one_touches_01__01_cartesian_shard00_price_gradient/generator.cpp
     work/catalog/single_asset/equity/markovian/variance_gamma/prices/american_calls/variance_gamma_01__american_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/single_asset/equity/markovian/variance_gamma/prices/asian_calls/variance_gamma_01__asian_calls_01__01_cartesian_shard00/generator.cpp
     work/catalog/single_asset/equity/markovian/variance_gamma/prices/asian_puts/variance_gamma_01__asian_puts_01__01_cartesian_shard00/generator.cpp

@@ -9,7 +9,7 @@ inputs:
     sha256: 3bb4e2b8acc9783638f27e69874db5c9d9b76c54207ad8e5e8ab82fe9cc194e5
 output:
   path: datasets/single_asset/equity/markovian/heston/price_gradients/cliquets/heston_01__cliquets_01__01_cartesian_shard00_price_gradient.json
-  sha256: edb95fa1cc268418fbb11048761e3b2ddf52b09bd6719955ce5d8ea1b0046572
+  sha256: 9cfe3a1967628be3d5cee9cdb9a4c54b82bae5643a5057e38c75b395a4b2f75c
 hardware:
   device: gpu
   name: Tesla V100-SXM2-32GB

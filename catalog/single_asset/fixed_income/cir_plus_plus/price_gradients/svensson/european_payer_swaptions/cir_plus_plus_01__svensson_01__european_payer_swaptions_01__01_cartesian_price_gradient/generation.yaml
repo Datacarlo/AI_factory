@@ -12,7 +12,7 @@ inputs:
     sha256: c21299e6ea6e15703d33d2dbc1fe803b359043ff8a2590f69772af796646ce77
 output:
   path: datasets/single_asset/fixed_income/cir_plus_plus/price_gradients/svensson/european_payer_swaptions/cir_plus_plus_01__svensson_01__european_payer_swaptions_01__01_cartesian_price_gradient.json
-  sha256: 992f9f9995603082a0273a42079b840ec39358f24165f516fd7c03146ce3f19d
+  sha256: 95b03c6176b5d1497136d2a8c8f21728d3e4a3033b490f86ba87bb6d2c171018
 hardware:
   device: gpu
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz

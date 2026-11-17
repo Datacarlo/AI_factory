@@ -17,8 +17,7 @@ int main() {
         {"model.mean_reversion", {0.005, pg::BumpScale::relative}},
         {"model.volatility", {0.005, pg::BumpScale::relative}},
         {"curve.rate", {0.0005, pg::BumpScale::absolute}},
-        {"product.strike", {0.0005, pg::BumpScale::absolute}},
-        {"product.maturity_years", {0.001984126984126984, pg::BumpScale::absolute}}
+        {"product.strike", {0.0005, pg::BumpScale::absolute}}
             }}, {1.0f / 504.0f, 2U}, true
         };
         recipe.option_side = "payer";

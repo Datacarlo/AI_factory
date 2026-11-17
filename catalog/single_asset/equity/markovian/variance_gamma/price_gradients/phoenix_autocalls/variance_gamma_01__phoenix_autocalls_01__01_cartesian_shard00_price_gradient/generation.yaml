@@ -9,7 +9,7 @@ inputs:
     sha256: a8c37d370c1eef4cd4b931bee8eb0cac71479995b8e001eaf032b91193752297
 output:
   path: datasets/single_asset/equity/markovian/variance_gamma/price_gradients/phoenix_autocalls/variance_gamma_01__phoenix_autocalls_01__01_cartesian_shard00_price_gradient.json
-  sha256: 8b0d781b159352b7a2dd69195c0e97e5d0565908de26e4e7fb5da395fc611c65
+  sha256: 4e25c1aaa555539c567a57b79c36010e18252e4be289813193dfe93e71454206
 hardware:
   device: gpu
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
