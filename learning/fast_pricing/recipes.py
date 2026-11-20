@@ -10,7 +10,7 @@ import yaml
 from learning.common.data.transforms import fit_standardization
 from .data import prepare_equity, split_dataset
 from .engine import train_experiment
-from .io import sha256, write_json, write_yaml
+from .io import pricer_output_path, sha256, write_json, write_yaml
 from .supervision import gradient_statistics
 
 ARCHITECTURES = {'small': [64] * 3, 'medium': [128] * 4, 'large': [512] * 4}
@@ -28,7 +28,7 @@ def make_recipe(record, inputs, size, method, lam=0.):
     identity = f"{record['id']}__{size}__{suffix}"
     logical = record['logical_path']
     dataset_rel = Path(*Path(logical).parts[1:]).with_suffix('')
-    leaf = Path('learning/fast_pricing/catalog') / dataset_rel / size / suffix
+    leaf = Path('catalog/fast_pricers') / dataset_rel / size / suffix
     output = Path('fast_pricers') / dataset_rel / size / suffix
     return dict(schema_version=1, kind='fast_pricer', id=identity,
         training=str(leaf / 'training.py'),
@@ -99,7 +99,6 @@ def run_recipe(recipe_path: Path, root: Path, *, cache_root=None, prepared=None,
                output_root=None, resident=None, resume=False):
     recipe = yaml.safe_load(recipe_path.read_text())
     cache_root = cache_root or root/'work/learning/fast_pricing/cache'
-    output_root = output_root or root/'work/learning'
     if prepared is None:
         prepared = prepare_equity(root, recipe['dataset']['path'], cache_root,
                                   row_limit=recipe['data']['max_rows'])
@@ -110,8 +109,8 @@ def run_recipe(recipe_path: Path, root: Path, *, cache_root=None, prepared=None,
         raise ValueError('Input specification changed; update the recipe explicitly')
     selection = split_dataset(prepared, recipe['data'])
     config = configuration(recipe, prepared, selection)
-    model_path = output_root/recipe['output']['model']
-    run_directory = output_root/'runs'/recipe['id']
+    model_path = pricer_output_path(root, recipe['output']['model'], output_root=output_root)
+    run_directory = (output_root or root/'work/learning/fast_pricing')/'runs'/recipe['id']
     result = train_experiment(prepared, selection, config, run_directory,
                               resident=resident, resume=resume)
     model_path.parent.mkdir(parents=True, exist_ok=True)
@@ -120,7 +119,7 @@ def run_recipe(recipe_path: Path, root: Path, *, cache_root=None, prepared=None,
     temporary = model_path.with_suffix('.tmp')
     shutil.copyfile(run_directory/'best_model.pt', temporary)
     temporary.replace(model_path)
-    metrics_path = output_root/recipe['output']['metrics']
+    metrics_path = pricer_output_path(root, recipe['output']['metrics'], output_root=output_root)
     write_json(metrics_path, dict(validation=result.manifest['metrics']['validation'],
         test=result.manifest['metrics']['test'], strata=result.manifest['metrics']['strata'],
         selection=selection.manifest(),

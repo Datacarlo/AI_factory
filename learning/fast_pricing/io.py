@@ -53,3 +53,14 @@ def dataset_path(root: Path, relative: str) -> Path:
             if candidate.is_file():
                 return candidate
     return root / path
+
+
+def pricer_output_path(root: Path, relative: str, *, output_root: Path | None = None) -> Path:
+    """Route new models to the local collection, or an explicit campaign directory."""
+    path = Path(relative)
+    if (path.is_absolute() or '..' in path.parts
+            or path.parts[:1] != ('fast_pricers',) or len(path.parts) < 2):
+        raise ValueError('Expected a logical fast_pricers/... output path')
+    if output_root is not None:
+        return output_root / path
+    return root / 'fast_pricers/unpublished' / Path(*path.parts[1:])

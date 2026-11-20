@@ -1,0 +1,80 @@
+schema_version: 1
+kind: fast_pricer
+id: rough_bergomi_01__straddles_01__01_cartesian_shard00_price_gradient__medium__sobolev_lambda_1
+training: catalog/fast_pricers/single_asset/equity/rough/rough_bergomi/price_gradients/straddles/rough_bergomi_01__straddles_01__01_cartesian_shard00_price_gradient/medium/sobolev_lambda_1/training.py
+dataset:
+  id: rough_bergomi_01__straddles_01__01_cartesian_shard00_price_gradient
+  path: datasets/single_asset/equity/rough/rough_bergomi/price_gradients/straddles/rough_bergomi_01__straddles_01__01_cartesian_shard00_price_gradient.json
+inputs:
+  policy: equity_contract_coordinates_v1
+  features:
+  - model.dividend_yield
+  - model.eta
+  - model.hurst_exponent
+  - model.rho
+  - model.risk_free_rate
+  - model.xi_0
+  - product.maturity_years
+  - product.strike
+  fixed_inputs:
+    model.spot: 1.0
+  absolute_contract_levels: []
+  eligible_gradients:
+  - model.risk_free_rate
+  - model.dividend_yield
+  - model.xi_0
+  - model.eta
+  - model.hurst_exponent
+  - model.rho
+  - product.strike
+  - product.maturity_years
+  omitted_gradients:
+    model.spot: constant parent domain
+  time_unit: year
+  business_days_per_year: 252
+  target: price in original dataset units
+data:
+  max_rows: 100000
+  split: model_groups
+  split_seed: 20261023
+  selection_seed: 1729
+  core_model_count: 900
+  validation_fraction: 0.1
+  test_fraction: 0.1
+network:
+  name: mlp
+  hidden_sizes:
+  - 128
+  - 128
+  - 128
+  - 128
+  activation: silu
+objective:
+  method: sobolev
+  lambda: 1.0
+  gradient_weighting: train_rms
+  Rj_threshold: 0.04
+  cell_mask: false
+training_options:
+  seed: 4242
+  epochs: 500
+  min_epochs: 50
+  batch_size: 1024
+  learning_rate: 0.001
+  optimizer: adam
+  weight_decay: 0.0
+  scheduler: plateau
+  lr_factor: 0.5
+  lr_patience: 10
+  min_learning_rate: 1.0e-06
+  improvement_threshold: 0.0001
+  early_stopping_patience: 40
+  validation_interval: 1
+  checkpoint_interval: 10
+  deterministic: true
+  resident: true
+  device: cuda
+  evaluate_test: true
+output:
+  model: fast_pricers/single_asset/equity/rough/rough_bergomi/price_gradients/straddles/rough_bergomi_01__straddles_01__01_cartesian_shard00_price_gradient/medium/sobolev_lambda_1/model.pt
+  metrics: fast_pricers/single_asset/equity/rough/rough_bergomi/price_gradients/straddles/rough_bergomi_01__straddles_01__01_cartesian_shard00_price_gradient/medium/sobolev_lambda_1/metrics.json

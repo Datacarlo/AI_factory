@@ -1,6 +1,10 @@
-# Dataset catalogue
+# Catalogue
 
-`catalog/` contains native `generator.cpp` programs and their `recipe.yaml` specifications. A `generation.yaml` is present only for a completed generation. Generated JSON datasets are distributed separately and are not committed to this repository.
+`catalog/` contains dataset-generation and neural-network training recipes.
+[`fast_pricers/`](fast_pricers/README.md) holds training scripts that use the shared
+[`learning/fast_pricing`](../learning/fast_pricing/README.md) engine.
+
+The dataset branches contain native `generator.cpp` programs and their `recipe.yaml` specifications. A `generation.yaml` is present only for a completed generation. Generated JSON datasets are distributed separately and are not committed to this repository.
 
 [`manifest.json`](manifest.json) lists the selected catalogue inventory, including each output path, kind, row count and recipe readiness. It is the source of truth for recipe counts: `ready` does not mean the JSON exists. Check for the JSON and its `generation.yaml` receipt before treating a dataset as published. The selected set includes generated price and price-gradient recipes alongside handwritten parameter generators. Additional source-only generators can be present without a manifest entry.
 
@@ -24,12 +28,19 @@ catalog/
   samples/{equity,fixed_income}/
   single_asset/{equity,fixed_income}/
   multi_asset/
+  fast_pricers/
 ```
 
 Each dataset `datasets/<path>/<id>.json` has its generator and recipe under
 `catalog/<path>/<id>/`. A completed dataset also has its generation receipt
 there. Parameter datasets are linked from the pricing recipes that use them;
 sample recipes declare their own parameter-generation bounds.
+
+A network leaf in `catalog/fast_pricers/<path>/` contains `training.py`,
+`recipe.yaml` and, after training, `generation.yaml`. Its weights and inference
+metadata are exported to the separate local `fast_pricers/` collection. Dataset
+and training inventories remain distinct: `manifest.json` lists datasets, while
+`fast_pricers/manifest.json` lists networks grouped by their source dataset.
 
 ### Sample observations
 
