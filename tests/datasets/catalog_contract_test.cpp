@@ -164,6 +164,8 @@ int main() {
     std::size_t recipes = 0U;
     std::size_t generations = 0U;
     for (const auto& entry : std::filesystem::recursive_directory_iterator("catalog")) {
+        // Network recipes are checked by the Python learning tests.
+        if (entry.path().generic_string().starts_with("catalog/fast_pricers/")) continue;
         if (!entry.is_regular_file()) continue;
         const auto name = entry.path().filename();
         require(name != "dataset.yaml", "obsolete dataset.yaml remains in catalog");

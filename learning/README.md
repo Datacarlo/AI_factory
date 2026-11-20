@@ -19,7 +19,7 @@ Terminal samples support terminal observables. A payoff requiring the full path 
 ## Fast pricing
 
 [`fast_pricing/`](fast_pricing/README.md) provides the shared price/Sobolev training
-engine and its catalogue of network recipes. Catalogue runs share data preparation,
+engine. Network recipes live in [`catalog/fast_pricers/`](../catalog/fast_pricers/README.md). Catalogue runs share data preparation,
 train-only normalization, grouped partitions, scheduling and checkpointing. Equity
 Sobolev recipes use RMS gradient balancing and Rj ≤ 0.04, without cell masks.
 
@@ -28,5 +28,5 @@ python3 -m learning.fast_pricing.train --recipe /path/to/recipe.yaml
 ```
 
 Each leaf contains `training.py`, `recipe.yaml`, and, after successful training,
-`generation.yaml`. Generated weights, metrics, caches and checkpoints are stored
-under `work/learning/` by default. The datasets and pricing generators are unchanged.
+`generation.yaml`. Completed weights and metrics are stored in `fast_pricers/unpublished/`; caches
+and checkpoints remain under `work/learning/fast_pricing/`. The datasets and pricing generators are unchanged.

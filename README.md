@@ -2,20 +2,24 @@
 
 AI Factory is a C++20/CUDA library for model simulation, financial-product pricing, sensitivity calculation, and dataset generation. It provides shared engines for Markovian and rough equity models, fixed-income models, early exercise, and correlated multi-asset products.
 
-This repository contains the code and the [catalogue](catalog/README.md) of generators and recipes. Large generated JSON datasets are distributed separately. A `generation.yaml` in the catalogue records a completed generation; a recipe alone does not imply that its dataset has been generated.
+This repository contains the code and the [catalogue](catalog/README.md) of dataset generators and neural-network training recipes. Large generated JSON datasets are distributed separately. A `generation.yaml` in the catalogue records a completed generation; a recipe alone does not imply that its dataset has been generated.
 
 ## Repository map
 
 | Directory | Contents |
 | --- | --- |
 | [`src/`](src/README.md) | C++/CUDA models, products, curves, simulation and pricing engines |
-| [`catalog/`](catalog/README.md) | Dataset generators, recipes, completed-generation receipts and inventory |
+| [`catalog/`](catalog/README.md) | Dataset generators, network training scripts, recipes, receipts and inventories |
 | [`tools/`](tools/README.md) | Dataset orchestration, sampling and code generation |
 | [`tests/`](tests/README.md) | Host and CUDA contract tests |
 | [`cmake/`](cmake/README.md) | Build and test registration |
-| [`learning/`](learning/README.md) | Python readers, GANs and deep-pricing training |
+| [`learning/`](learning/README.md) | Python readers, GANs and shared fast-pricing training |
 
 The [capability manifest](tools/codegen/pricing_bindings/capability_manifest.py) defines supported model-product compositions. The [catalogue manifest](catalog/manifest.json) lists selected dataset recipes and their readiness. A `ready` entry does not prove that its JSON has been generated; check for the JSON and its `generation.yaml` receipt.
+
+The [fast-pricer catalogue](catalog/fast_pricers/README.md) contains one training
+script and recipe per network, backed by the shared `learning/fast_pricing` engine.
+Trained weights are distributed separately from the source code.
 
 ## Build
 

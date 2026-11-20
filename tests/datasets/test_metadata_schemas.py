@@ -3,7 +3,7 @@
 from pathlib import Path
 import unittest
 
-from tools.datasets.metadata_schemas import load_document, validate_document
+from tools.datasets.metadata_schemas import catalogue_documents, load_document, validate_document
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -37,7 +37,7 @@ class MetadataSchemaTest(unittest.TestCase):
     def test_catalogue_recipes_name_existing_generators(self):
         # Unpublished work can have partial receipts, so recipe metadata is
         # checked independently from generation.yaml and the current manifest.
-        recipes = list((ROOT / "catalog").rglob("recipe.yaml"))
+        recipes = [path for kind, path in catalogue_documents(ROOT) if kind == "recipe"]
         self.assertTrue(recipes)
         for path in recipes:
             with self.subTest(recipe=str(path.relative_to(ROOT))):

@@ -1,17 +1,18 @@
 # Fast pricing
 
 A single training engine handles price supervision and Sobolev supervision. Each
-network has a short `training.py` and an explicit `recipe.yaml` in `catalog/`.
+network has a short `training.py` and an explicit `recipe.yaml` in [`catalog/fast_pricers/`](../../catalog/fast_pricers/README.md).
 Successful training adds `generation.yaml`, with input/output checksums and the
 software and hardware used. Weights and metrics are written under
-`work/learning/fast_pricers/` by default.
+`fast_pricers/unpublished/` by default. Caches and resumable runs remain under
+`work/learning/fast_pricing/`.
 
 ## Train one network
 
 Run a catalogue leaf from the repository containing its datasets:
 
 ```sh
-python learning/fast_pricing/catalog/<dataset>/<architecture>/<objective>/training.py
+python catalog/fast_pricers/<dataset>/<architecture>/<objective>/training.py
 ```
 
 Alternatively:
@@ -19,6 +20,10 @@ Alternatively:
 ```sh
 python -m learning.fast_pricing.train --recipe path/to/recipe.yaml
 ```
+
+`--output-root /path/to/campaign` retains the isolated campaign layout: exports
+under `/path/to/campaign/fast_pricers/` and runs under `/path/to/campaign/runs/`.
+Recipe output paths remain logical `fast_pricers/...` paths, independent of publication status.
 
 `--resume` restores weights, optimizer, scheduler, best validation checkpoint and
 batch shuffle state. It requires the same configuration and prepared data.
