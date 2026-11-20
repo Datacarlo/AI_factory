@@ -189,7 +189,8 @@ void run(std::size_t block_count) {
     constexpr std::size_t sensitivity_count = 4U;
     constexpr std::size_t paths = 65U;
     const std::vector<Model> models(rows, {1.0f, 0.5f, 0.0f});
-    const std::vector<Product> products(rows, {0.0f, 1U});
+    // Positive strike respects the shared product-quote contract.
+    const std::vector<Product> products(rows, {1.0f, 1U});
     const pg::PriceGradientConfiguration configuration{{
         {"model.spot", {.125, pg::BumpScale::relative}},
         {"model.coefficient", {.125, pg::BumpScale::absolute}},
@@ -292,7 +293,7 @@ void run(std::size_t block_count) {
     for (std::size_t row = 0U; row < rows; ++row) {
         const auto gradient = 2U * rows + row * sensitivity_count;
         require(
-            std::abs(host[row] - (1.0f + 0.5f * mean_innovation)) < 1.e-6f,
+            std::abs(host[row] - (0.5f * mean_innovation)) < 1.e-6f,
             "Compact central price is incorrect."
         );
         require(

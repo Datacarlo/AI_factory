@@ -4,13 +4,14 @@
 #include "model/fixed_income/cir/dynamics_impl.cuh"
 #include "model/fixed_income/cir_plus_plus/svensson/analytics_impl.cuh"
 #include "monte_carlo/monte_carlo_kernel.cuh"
-#include "product/zero_coupon_bond_up_and_out/pricing_policy.cuh"
+#include "product/zero_coupon_bond_up_and_out/prepared_bond_policy.cuh"
 
 namespace ai_factory::workbench::model::fixed_income::cir_plus_plus::svensson {
 namespace {
 using Schedule = simulation::FixedStepDenseSchedule<cir_plus_plus::joint::DynamicsPolicy>;
-using Pricing = product::FittedZeroCouponBondUpAndOutPricingPolicy<
-    Schedule, FittedModelComposition>;
+using Pricing = product::PreparedBondBarrierPricingPolicy<
+    product::FittedZeroCouponBondUpAndOutPricingPolicy<
+    Schedule, FittedModelComposition>, BermudanSwaptionAnalyticsPolicy>;
 static_assert(monte_carlo::ScalarMonteCarloPricingPolicy<Pricing>);
 }  // namespace
 

@@ -173,6 +173,22 @@ def path_product_metadata(binding):
 
 
 AMERICAN_LSM_METADATA = {
+    "sabr": {
+        "schedule": "FixedStepMaturityAlignedExerciseSchedule",
+        "replay_header": "device_prepared_fixed_step_frozen_exercise_replay.cuh",
+        "replay": "DevicePreparedFixedStepFrozenExerciseReplay",
+        "continuation": "sabr::AmericanOptionContinuationState",
+        "continuation_include": '#include "model/equity/markovian/sabr/product/american_option_continuation.cuh"',
+        "refinement": "none",
+    },
+    "heston_3_2": {
+        "schedule": "FixedStepMaturityAlignedExerciseSchedule",
+        "replay_header": "device_prepared_fixed_step_frozen_exercise_replay.cuh",
+        "replay": "DevicePreparedFixedStepFrozenExerciseReplay",
+        "continuation": "heston_3_2::AmericanOptionContinuationState",
+        "continuation_include": '#include "model/equity/markovian/heston_3_2/product/american_option_continuation.cuh"',
+        "refinement": "none",
+    },
     "bates": {
         "schedule": "FixedStepMaturityAlignedExerciseSchedule",
         "replay_header": (
@@ -660,6 +676,19 @@ def compose_datasets(price_datasets, bindings):
         for dataset in (*equity, *fixed_income)
         if dataset.product in {"american_option", "bermudan_swaption"}
     )
+    # Both Bermudan replay contracts have explicit, distinct dataset IDs.
+    frozen_exercise_first = tuple(
+        replace(
+            dataset,
+            dataset_id=dataset.dataset_id + "_frozen_exercise",
+            generator_path=dataset.generator_path.replace(
+                "/" + dataset.dataset_id + "/",
+                "/" + dataset.dataset_id + "_frozen_exercise/",
+            ),
+        )
+        for dataset in fixed_income
+        if dataset.product == "bermudan_swaption"
+    )
     diagonal = tuple(replace(dataset,
         dataset_id=dataset.dataset_id + "_diagonal_hessian",
         generator_path=dataset.generator_path.replace(
@@ -715,6 +744,7 @@ def compose_datasets(price_datasets, bindings):
         *rough,
         *fixed_income,
         *frozen_policy_first,
+        *frozen_exercise_first,
         *diagonal,
         *frozen_policy_diagonal,
         *full_hessian,

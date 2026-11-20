@@ -146,3 +146,7 @@ if(Python3_Interpreter_FOUND)
     set_tests_properties(price_gradients_artifact_contract PROPERTIES
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} LABELS "workbench;price_gradients;offline;codegen" TIMEOUT 30)
 endif()
+
+add_cuda_workbench_test(price_gradients_sabr_heston32_american_cuda
+    tests/price_gradients/sabr_heston32_american_kernel_cuda_test.cu
+    "price_gradients;parity;american_option;longstaff_schwartz;sabr;heston_3_2" 300)

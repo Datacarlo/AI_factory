@@ -140,6 +140,63 @@ def _correlation(values: np.ndarray) -> np.ndarray:
     return correlation
 
 
+
+def grouped_distribution_metrics(
+    conditions: np.ndarray, real: np.ndarray, generated: np.ndarray,
+    *, call_strikes: tuple[float, ...] = (),
+) -> dict[str, float | int]:
+    """Compare repeated draws at identical conditions without mixing laws.
+
+    Conditions have equal weight; distances use their reference standard
+    deviations. Finite reference samples create a sampling noise floor.
+    """
+    if real.shape != generated.shape or real.ndim != 2:
+        raise ValueError("Grouped metrics require equally shaped matrices")
+    if conditions.shape[0] != real.shape[0]:
+        raise ValueError("Conditions and observations need the same row count")
+    _, groups = np.unique(conditions, axis=0, return_inverse=True)
+    w1, ks, log_std, collapsed = [], [], [], []
+    call_errors = []
+    group_count = 0
+    if call_strikes and real.shape[1] != 1:
+        raise ValueError("Call diagnostics require one spot observable")
+    for group in range(int(groups.max()) + 1):
+        mask = groups == group
+        if mask.sum() < 16:
+            continue
+        group_count += 1
+        for column in range(real.shape[1]):
+            x = np.sort(real[mask, column])
+            y = np.sort(generated[mask, column])
+            scale = max(float(x.std()), 1e-8)
+            ratio = float(y.std()) / scale
+            w1.append(float(np.mean(np.abs(x - y))) / scale)
+            support = np.sort(np.concatenate((x, y)))
+            ks.append(float(np.max(np.abs(
+                np.searchsorted(x, support, side="right") / len(x)
+                - np.searchsorted(y, support, side="right") / len(y)
+            ))))
+            log_std.append(abs(float(np.log(max(ratio, 1e-8)))))
+            collapsed.append(float(ratio < 0.1))
+            for strike in call_strikes:
+                call_errors.append(float(np.maximum(y-strike, 0).mean()
+                                         - np.maximum(x-strike, 0).mean()))
+    if not group_count:
+        raise ValueError("Grouped evaluation needs at least 16 draws per condition")
+    result = {
+        "grouped_condition_count": group_count,
+        "grouped_scaled_w1_mean": float(np.mean(w1)),
+        "grouped_scaled_w1_p95": float(np.quantile(w1, 0.95)),
+        "grouped_ks_mean": float(np.mean(ks)),
+        "grouped_abs_log_std_ratio_mean": float(np.mean(log_std)),
+        "grouped_collapsed_fraction": float(np.mean(collapsed)),
+    }
+    if call_errors:
+        result["grouped_call_rmse"] = float(np.sqrt(np.mean(np.square(call_errors))))
+        result["grouped_call_mae"] = float(np.mean(np.abs(call_errors)))
+    return result
+
+
 def evaluate_generator(
     generator: ConditionalGenerator,
     loader: Iterable[dict[str, torch.Tensor]],
@@ -385,6 +442,15 @@ def evaluate_generator(
         + float(specification.get("std_ratio_penalty_weight", 0.0))
         * metrics["mean_absolute_log_std_ratio"]
     )
+    if specification.get("grouped_conditions", False):
+        metrics.update(grouped_distribution_metrics(
+            conditions, real_raw, fake_raw,
+            call_strikes=tuple(specification.get("call_strikes", ())),
+        ))
+        metrics["selection_score"] = float(
+            metrics["grouped_scaled_w1_mean"]
+            + 0.1 * metrics["grouped_abs_log_std_ratio_mean"]
+        )
     if not all(
         math.isfinite(float(value)) for value in metrics.values()
     ):

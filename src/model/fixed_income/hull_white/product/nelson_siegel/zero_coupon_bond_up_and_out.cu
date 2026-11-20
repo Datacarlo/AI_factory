@@ -4,13 +4,14 @@
 #include "model/fixed_income/ornstein_uhlenbeck/dynamics_impl.cuh"
 #include "model/fixed_income/hull_white/nelson_siegel/analytics_impl.cuh"
 #include "monte_carlo/monte_carlo_kernel.cuh"
-#include "product/zero_coupon_bond_up_and_out/pricing_policy.cuh"
+#include "product/zero_coupon_bond_up_and_out/prepared_bond_policy.cuh"
 
 namespace ai_factory::workbench::model::fixed_income::hull_white::nelson_siegel {
 namespace {
 using Schedule = simulation::FixedStepDenseSchedule<hull_white::joint::DynamicsPolicy>;
-using Pricing = product::FittedZeroCouponBondUpAndOutPricingPolicy<
-    Schedule, FittedModelComposition>;
+using Pricing = product::PreparedBondBarrierPricingPolicy<
+    product::FittedZeroCouponBondUpAndOutPricingPolicy<
+    Schedule, FittedModelComposition>, BermudanSwaptionAnalyticsPolicy>;
 static_assert(monte_carlo::ScalarMonteCarloPricingPolicy<Pricing>);
 }  // namespace
 

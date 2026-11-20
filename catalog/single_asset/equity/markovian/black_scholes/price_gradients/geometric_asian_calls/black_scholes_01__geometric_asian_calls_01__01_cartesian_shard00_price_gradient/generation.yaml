@@ -9,7 +9,7 @@ inputs:
     sha256: fc3625a9c446eebf0e74954cfcc48adf2e70ac52d79435ebbc137736aa797ff8
 output:
   path: datasets/single_asset/equity/markovian/black_scholes/price_gradients/geometric_asian_calls/black_scholes_01__geometric_asian_calls_01__01_cartesian_shard00_price_gradient.json
-  sha256: 99dde0ef3a60c1ac3adcfeac92ccc6a45aeeaf0e55cfaec02e64a9db669b5d75
+  sha256: 8c4ad8b15d1d2135eef4ddeffab81ae0a8ecc8f1881a64096487be3cb901f633
 hardware:
   device: gpu
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz

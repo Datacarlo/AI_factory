@@ -128,6 +128,14 @@ struct ZeroCouponBondUpAndOutPricingPolicy {
     ) {
         Handler handler{row.analytics, row.barrier, row.maturity_years,
                         row.expiry_years, row.dt, row.transition_count};
+        return evaluate_path_with_handler(row, key, path, handler);
+    }
+
+    template<typename PathHandler>
+    __device__ __forceinline__ static float evaluate_path_with_handler(
+        const PreparedRow& row, philox::PhiloxKey key, std::size_t path,
+        PathHandler& handler
+    ) {
         const auto terminal = Schedule::simulate(row.simulation, key, path, handler);
         if (handler.invalid) return nanf("");
         if (handler.breached) return 0.0f;

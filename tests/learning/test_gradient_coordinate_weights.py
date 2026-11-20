@@ -4,7 +4,7 @@ import torch
 from torch import nn
 
 from learning.common.training.losses import build_composite_loss
-from learning.deep_pricing.representations import UnitSpotSliceModel
+from learning.fast_pricing.representations import UnitSpotSliceModel
 
 
 def test_gradient_loss_weights_named_coordinates_and_ignores_zero_weight():

@@ -2,6 +2,7 @@
 #pragma once
 
 #include "cuda/cuda_kernel_diagnostics.cuh"
+#include "monte_carlo/block_preparation_workspace.cuh"
 #include "monte_carlo/price_gradients/device_prepared_terminal_price_kernel.cuh"
 #include "equity/price_gradients/device_preparation.cuh"
 #include "monte_carlo/price_gradients/terminal_sensitivity_policy.cuh"
@@ -160,7 +161,8 @@ __global__ void kernel(
     pg::LaunchConfiguration launch,
     pg::Outputs outputs,
     DevicePreparedStencilOutputs<3U> stencil_outputs,
-    std::uint64_t base_seed
+    std::uint64_t base_seed,
+    BlockPreparationWorkspace workspace
 ) {
     __shared__ typename Policy::Nodes nodes;
     __shared__ typename Policy::Stencil stencil;
@@ -196,6 +198,10 @@ __global__ void kernel(
             __syncthreads();
             continue;
         }
+        if constexpr (requires { Policy::prepare_block(prepared, workspace.block(0U), workspace.stride); }) {
+            Policy::prepare_block(prepared,
+                workspace.block(blockIdx.y * gridDim.x + blockIdx.x), workspace.stride);
+        }
         if (computes_central_price) {
             evaluate_and_reduce<Policy, true, true, true>(
                 prepared, key, launch, outputs, row, sensitivity_index,
@@ -230,7 +236,8 @@ void launch_device_prepared_first_sensitivities(
     pg::Outputs outputs,
     DevicePreparedStencilOutputs<3U> stencil_outputs,
     const char* kernel_name,
-    const char* variant
+    const char* variant,
+    BlockPreparationWorkspace workspace = {}
 ) {
     if (plan.sensitivity_count == 0U) {
         if constexpr (requires { typename Policy::CentralPolicy; }) {
@@ -249,7 +256,7 @@ void launch_device_prepared_first_sensitivities(
             );
             function<<<blocks, configuration.threads_per_block, shared>>>(
                 inputs, plan, configuration, outputs, stencil_outputs,
-                configuration.base_seed
+                configuration.base_seed, workspace
             );
             check_cuda(cudaGetLastError(), kernel_name);
             return;
@@ -290,7 +297,7 @@ void launch_device_prepared_first_sensitivities(
         configuration,
         outputs,
         stencil_outputs,
-        configuration.base_seed
+        configuration.base_seed, workspace
     );
     check_cuda(cudaGetLastError(), kernel_name);
 }

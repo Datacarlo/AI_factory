@@ -1,6 +1,6 @@
 # Learning
 
-`learning/` contains Python readers, GAN training and deep-pricing training. It consumes generated datasets without changing the pricing kernels or their recipes.
+`learning/` contains Python readers, GAN training and fast-pricing training. It consumes generated datasets without changing the pricing kernels or their recipes.
 
 ## Terminal samples
 
@@ -16,16 +16,17 @@ python3 -m learning.gan.evaluate /path/to/gan-run /path/to/samples.json
 
 Terminal samples support terminal observables. A payoff requiring the full path needs a path dataset.
 
-## Deep pricing
+## Fast pricing
 
-`deep_pricing/` joins price rows to model, product and optional curve parameters. Its reader supports price-only and sensitivity datasets, content-addressed caches, fixed held-out splits, and uncertainty-weighted losses. The training engine supports supervised and Sobolev methods; the dataset decides which gradient coordinates are available.
+[`fast_pricing/`](fast_pricing/README.md) provides the shared price/Sobolev training
+engine and its catalogue of network recipes. Catalogue runs share data preparation,
+train-only normalization, grouped partitions, scheduling and checkpointing. Equity
+Sobolev recipes use RMS gradient balancing and Rj ≤ 0.04, without cell masks.
 
 ```sh
-python3 -m learning.deep_pricing.train \
-  --dataset /path/to/price_gradients.json \
-  --method sobolev --train-size 30000
-python3 -m learning.deep_pricing.train --config /path/to/training-config.yaml
-python3 -m learning.deep_pricing.compare /path/to/run-a /path/to/run-b
+python3 -m learning.fast_pricing.train --recipe /path/to/recipe.yaml
 ```
 
-By default, training runs and prepared caches are written under the Git-ignored `work/learning/` directory. Explicit run and cache paths can still be supplied. The source code under `learning/` contains no bundled generated datasets.
+Each leaf contains `training.py`, `recipe.yaml`, and, after successful training,
+`generation.yaml`. Generated weights, metrics, caches and checkpoints are stored
+under `work/learning/` by default. The datasets and pricing generators are unchanged.

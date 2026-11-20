@@ -47,6 +47,12 @@ struct BondBarrierFirstPolicy {
             return row;
         }
 
+        __device__ __forceinline__ static void prepare_block(
+            PreparedRow& row, unsigned char* data, std::size_t stride
+        ) requires requires { Pricing::prepare_block(row, data, stride); } {
+            Pricing::prepare_block(row, data, stride);
+        }
+
         __device__ __forceinline__ static float evaluate_path(
             const PreparedRow& row, philox::PhiloxKey key, std::size_t path
         ) {
@@ -75,6 +81,14 @@ struct BondBarrierFirstPolicy {
             row.pricing[node] = CentralPolicy::prepare((*nodes)[node], time);
         }
         return row;
+    }
+
+    __device__ __forceinline__ static void prepare_block(
+        PreparedRow& row, unsigned char* data, std::size_t stride
+    ) requires requires { Pricing::prepare_block(row.pricing[0], data, stride); } {
+        const std::size_t node_stride = stride / kNodeCapacity;
+        for (unsigned int node = 0U; node < row.node_count; ++node)
+            Pricing::prepare_block(row.pricing[node], data + node * node_stride, node_stride);
     }
 
     struct PathResult {

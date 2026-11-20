@@ -1,0 +1,26 @@
+schema_version: 4
+status: complete
+inputs:
+  model:
+    path: datasets/parameters/model/equity/rough/rough_stein_stein/parameters/rough_stein_stein_01.json
+    sha256: f825412964e8fca949e0a4cf4cf93a40a3a6105ebfd4c4eff46f9c774d0aeac0
+  product:
+    path: datasets/parameters/product/range_accrual/range_accruals_01_shard00.json
+    sha256: 4410b02bdbed74d7b1a8569c01f482f2d6cfb088883984e11386be5d62638f92
+output:
+  path: datasets/single_asset/equity/rough/rough_stein_stein/prices/range_accruals/rough_stein_stein_01__range_accruals_01__01_cartesian_shard00.json
+  sha256: 05ea4f768688da781fe25b4e08d99ff4e2d723344a1e65a08bd1627e4eca68e5
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Core(TM) Ultra 9 285K
+  name: NVIDIA GeForce RTX 5090
+  uuid: GPU-58db2f59-3fa0-ca58-6a4c-4acfbbe0d532
+  compute_capability: '12.0'
+  driver_version: 615.71.09
+software:
+  cmake: 3.31.6
+  cxx_compiler: GNU 14.2.0
+  cuda_compiler: 13.2.86
+  cuda_target_architectures: '120'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1

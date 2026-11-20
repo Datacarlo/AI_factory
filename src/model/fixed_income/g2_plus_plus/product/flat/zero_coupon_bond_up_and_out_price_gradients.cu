@@ -2,10 +2,10 @@
 #include "model/fixed_income/g2_plus_plus/product/flat/zero_coupon_bond_up_and_out_price_gradients.cuh"
 
 #include "equity/price_gradients/terminal_device_prepared_launcher.cuh"
-#include "fixed_income/price_gradients/bond_barrier_first_policy.cuh"
+#include "fixed_income/price_gradients/bond_barrier_launch.cuh"
 #include "monte_carlo/price_gradients/device_prepared_first_sensitivity_kernel.cuh"
 #include "price_gradients/device_prepared_stencil_launcher.cuh"
-#include "product/zero_coupon_bond_up_and_out/pricing_policy.cuh"
+#include "product/zero_coupon_bond_up_and_out/prepared_bond_policy.cuh"
 #include "model/fixed_income/g2_plus_plus/dynamics.cuh"
 #include "model/fixed_income/g2/dynamics_impl.cuh"
 #include "model/fixed_income/g2_plus_plus/flat/analytics_impl.cuh"
@@ -20,9 +20,8 @@ namespace mcpg = ::ai_factory::workbench::monte_carlo::price_gradients;
 namespace {
 using Schedule = simulation::FixedStepDenseSchedule<
     g2_plus_plus::joint::DynamicsPolicy>;
-using Pricing = product::FittedZeroCouponBondUpAndOutPricingPolicy<Schedule, FittedModelComposition>;
-using BarrierFirstPolicy = fipg::BondBarrierFirstPolicy<
-    Pricing, ZeroCouponBondUpAndOutPriceGradientPlan::Preparation>;
+using Pricing = product::PreparedBondBarrierPricingPolicy<
+    product::FittedZeroCouponBondUpAndOutPricingPolicy<Schedule, FittedModelComposition>, BermudanSwaptionAnalyticsPolicy>;
 }
 
 void prepare_zero_coupon_bond_up_and_out_price_gradient_stencils_cuda(
@@ -55,12 +54,11 @@ void launch_g2_plus_plus_flat_zero_coupon_bond_up_and_out_price_gradients_cuda(
     epg::validate_terminal_first_sensitivity_launch(
         host, device, stencil_outputs, configuration, outputs
     );
-    mcpg::launch_device_prepared_first_sensitivities<
-        BarrierFirstPolicy,
+    fipg::launch_bond_barrier_first_sensitivities<
+        Pricing,
         ZeroCouponBondUpAndOutPriceGradientPlan::Preparation
     >(
-        device,
-        mcpg::make_device_prepared_plan(host),
+        host, device,
         configuration,
         outputs,
         stencil_outputs,

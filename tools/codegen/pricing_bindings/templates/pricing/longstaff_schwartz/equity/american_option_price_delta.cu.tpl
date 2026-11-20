@@ -4,7 +4,7 @@
 #include "longstaff_schwartz/basis/laguerre.cuh"
 #include "longstaff_schwartz/small_linear_regressor.cuh"
 #include "model/equity/markovian/$model/$dynamics_header"
-#include "product/american_option/continuation_state.cuh"
+#include "product/american_option/continuation_state.cuh"$continuation_include
 #include "product/american_option/price_delta_policy.cuh"
 
 namespace ai_factory::workbench::model::equity::$model {
