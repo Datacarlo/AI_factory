@@ -19,7 +19,7 @@ int main() {
         "datasets/parameters/product/range_accrual/range_accruals_01_shard00.json",
         "datasets/single_asset/equity/markovian/kou/prices/range_accruals/kou_01__range_accruals_01__01_cartesian_shard00.json",
         "catalog/single_asset/equity/markovian/kou/prices/range_accruals/kou_01__range_accruals_01__01_cartesian_shard00/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/markovian/kou/prices/range_accruals/kou_01__range_accruals_01__01_cartesian_shard00.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/markovian/kou/prices/range_accruals/kou_01__range_accruals_01__01_cartesian_shard00.json",
         "Exact Kou increments",
         PriceConstruction::CartesianProduct,
     };

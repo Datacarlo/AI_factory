@@ -19,6 +19,7 @@ int main() {
         {"model.dividend_yield", {0.0005, pg::BumpScale::absolute}},
         {"product.strike", {0.005, pg::BumpScale::relative}}
             }}, {1.0f/504.0f, 2U}, false};
+        recipe.option_side = "call";
         constexpr auto exercise_replay =
             lspg::ExerciseReplayStrategy::frozen_exercise_time;
         recipe.exercise_replay = exercise_replay;

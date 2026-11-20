@@ -21,6 +21,15 @@ product_shard:
   selection: one seeded permutation position per contiguous ten-row block
   core_products: 90
   stress_products: 10
+quote_convention:
+  autocall_barrier:
+    mode: ratio_to_central_spot
+    unit: dimensionless
+    effective_level: autocall_barrier * S0
+  protection_barrier:
+    mode: ratio_to_central_spot
+    unit: dimensionless
+    effective_level: protection_barrier * S0
 numerical_method:
   engine: equity_volterra_fft
 time_grid:

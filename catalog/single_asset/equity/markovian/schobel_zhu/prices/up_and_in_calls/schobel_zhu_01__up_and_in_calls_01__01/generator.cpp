@@ -20,7 +20,7 @@ int main() {
         "datasets/parameters/product/up_and_in_option/up_and_in_options_01.json",
         "datasets/single_asset/equity/markovian/schobel_zhu/prices/up_and_in_calls/schobel_zhu_01__up_and_in_calls_01__01.json",
         "catalog/single_asset/equity/markovian/schobel_zhu/prices/up_and_in_calls/schobel_zhu_01__up_and_in_calls_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/markovian/schobel_zhu/prices/up_and_in_calls/schobel_zhu_01__up_and_in_calls_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/markovian/schobel_zhu/prices/up_and_in_calls/schobel_zhu_01__up_and_in_calls_01__01.json",
         "exact OU factor with log-spot Euler",
         PriceConstruction::Aligned,
     };

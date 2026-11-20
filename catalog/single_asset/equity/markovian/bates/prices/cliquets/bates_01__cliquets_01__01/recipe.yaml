@@ -13,6 +13,22 @@ outputs:
 - price
 - standard_error
 row_count: 1000
+quote_convention:
+  periodic_return:
+    mode: S(t_i)/S(t_{i-1}) - 1
+    unit: dimensionless
+  local_floor:
+    mode: periodic_return_bound
+    unit: dimensionless
+  local_cap:
+    mode: periodic_return_bound
+    unit: dimensionless
+  global_floor:
+    mode: cumulative_return_bound
+    unit: dimensionless
+  global_cap:
+    mode: cumulative_return_bound
+    unit: dimensionless
 numerical_method:
   engine: equity_markovian
 time_grid:
@@ -24,4 +40,5 @@ random_number_generator: philox
 seeds:
   dynamics: 11668826664581726208
 payoff:
-  periodic_return: R_i = S(t_i) / S(t_{i-1}) - 1; R_i = 0 when both spots are zero. The first loss into zero is retained. Local bounds apply afterwards.
+  periodic_return: R_i = S(t_i) / S(t_{i-1}) - 1; R_i = 0 when both spots are zero.
+    The first loss into zero is retained. Local bounds apply afterwards.

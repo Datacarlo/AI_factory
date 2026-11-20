@@ -17,6 +17,22 @@ product_shard:
   selection: one seeded permutation position per contiguous ten-row block
   core_products: 90
   stress_products: 10
+quote_convention:
+  periodic_return:
+    mode: S(t_i)/S(t_{i-1}) - 1
+    unit: dimensionless
+  local_floor:
+    mode: periodic_return_bound
+    unit: dimensionless
+  local_cap:
+    mode: periodic_return_bound
+    unit: dimensionless
+  global_floor:
+    mode: cumulative_return_bound
+    unit: dimensionless
+  global_cap:
+    mode: cumulative_return_bound
+    unit: dimensionless
 time_representation:
   kind: exact_schedule_transition
   contractual_days_per_year: 252

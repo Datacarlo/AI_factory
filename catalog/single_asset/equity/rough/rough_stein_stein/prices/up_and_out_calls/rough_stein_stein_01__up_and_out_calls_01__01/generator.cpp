@@ -17,7 +17,7 @@ int main() {
         "datasets/parameters/product/up_and_out_option/up_and_out_options_01.json",
         "datasets/single_asset/equity/rough/rough_stein_stein/prices/up_and_out_calls/rough_stein_stein_01__up_and_out_calls_01__01.json",
         "catalog/single_asset/equity/rough/rough_stein_stein/prices/up_and_out_calls/rough_stein_stein_01__up_and_out_calls_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/rough/rough_stein_stein/prices/up_and_out_calls/rough_stein_stein_01__up_and_out_calls_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/rough/rough_stein_stein/prices/up_and_out_calls/rough_stein_stein_01__up_and_out_calls_01__01.json",
         "fractional-resolvent hybrid FFT",
         PriceConstruction::Aligned,
     };

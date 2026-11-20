@@ -20,7 +20,7 @@ int main() {
         "datasets/parameters/product/geometric_asian_option/geometric_asian_options_01.json",
         "datasets/single_asset/equity/markovian/cev/prices/geometric_asian_calls/cev_01__geometric_asian_calls_01__01.json",
         "catalog/single_asset/equity/markovian/cev/prices/geometric_asian_calls/cev_01__geometric_asian_calls_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/markovian/cev/prices/geometric_asian_calls/cev_01__geometric_asian_calls_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/markovian/cev/prices/geometric_asian_calls/cev_01__geometric_asian_calls_01__01.json",
         "absorbed Milstein",
         PriceConstruction::Aligned,
     };

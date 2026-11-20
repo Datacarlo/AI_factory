@@ -19,7 +19,7 @@ int main() {
         "datasets/parameters/product/european_option/european_options_01.json",
         "datasets/single_asset/equity/markovian/kou/prices/european_puts/kou_01__european_puts_01__01.json",
         "catalog/single_asset/equity/markovian/kou/prices/european_puts/kou_01__european_puts_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/markovian/kou/prices/european_puts/kou_01__european_puts_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/markovian/kou/prices/european_puts/kou_01__european_puts_01__01.json",
         "Exact Kou increments",
         PriceConstruction::Aligned,
     };

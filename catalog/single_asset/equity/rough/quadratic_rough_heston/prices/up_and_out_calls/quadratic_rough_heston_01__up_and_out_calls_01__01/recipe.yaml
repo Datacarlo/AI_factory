@@ -14,6 +14,15 @@ outputs:
 - price
 - standard_error
 row_count: 1000
+quote_convention:
+  strike:
+    mode: ratio_to_central_spot
+    unit: dimensionless
+    effective_level: strike * S0
+  barrier:
+    mode: ratio_to_central_spot
+    unit: dimensionless
+    effective_level: barrier * S0
 numerical_method:
   engine: equity_n_factor
 time_grid:

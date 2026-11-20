@@ -25,6 +25,7 @@ int main() {
         {"model.jump_log_volatility", {0.005, pg::BumpScale::relative}},
         {"product.strike", {0.005, pg::BumpScale::relative}}
             }}, {1.0f/504.0f, 2U}, false};
+        recipe.option_side = "put";
         constexpr auto exercise_replay =
             lspg::ExerciseReplayStrategy::frozen_exercise_time;
         recipe.exercise_replay = exercise_replay;

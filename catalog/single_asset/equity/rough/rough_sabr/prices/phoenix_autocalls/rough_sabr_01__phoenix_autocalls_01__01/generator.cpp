@@ -17,7 +17,7 @@ int main() {
         "datasets/parameters/product/phoenix_autocall/phoenix_autocalls_01.json",
         "datasets/single_asset/equity/rough/rough_sabr/prices/phoenix_autocalls/rough_sabr_01__phoenix_autocalls_01__01.json",
         "catalog/single_asset/equity/rough/rough_sabr/prices/phoenix_autocalls/rough_sabr_01__phoenix_autocalls_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/rough/rough_sabr/prices/phoenix_autocalls/rough_sabr_01__phoenix_autocalls_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/rough/rough_sabr/prices/phoenix_autocalls/rough_sabr_01__phoenix_autocalls_01__01.json",
         "Bennedsen-Lunde-Pakkanen hybrid FFT with Lamperti spot",
         PriceConstruction::Aligned,
     };

@@ -20,7 +20,7 @@ int main() {
         "datasets/parameters/product/asian_option/asian_options_01.json",
         "datasets/single_asset/equity/markovian/cev/prices/asian_puts/cev_01__asian_puts_01__01.json",
         "catalog/single_asset/equity/markovian/cev/prices/asian_puts/cev_01__asian_puts_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/markovian/cev/prices/asian_puts/cev_01__asian_puts_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/markovian/cev/prices/asian_puts/cev_01__asian_puts_01__01.json",
         "absorbed Milstein",
         PriceConstruction::Aligned,
     };

@@ -20,7 +20,7 @@ int main() {
         "datasets/parameters/product/forward_start_option/forward_start_options_01.json",
         "datasets/single_asset/equity/markovian/bates/prices/forward_start_calls/bates_01__forward_start_calls_01__01.json",
         "catalog/single_asset/equity/markovian/bates/prices/forward_start_calls/bates_01__forward_start_calls_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/markovian/bates/prices/forward_start_calls/bates_01__forward_start_calls_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/markovian/bates/prices/forward_start_calls/bates_01__forward_start_calls_01__01.json",
         "Andersen QE-M with compound-Poisson lognormal jumps",
         PriceConstruction::Aligned,
     };

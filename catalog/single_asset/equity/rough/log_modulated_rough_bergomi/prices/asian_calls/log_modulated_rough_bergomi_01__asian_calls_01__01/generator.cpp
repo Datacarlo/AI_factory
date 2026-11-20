@@ -17,7 +17,7 @@ int main() {
         "datasets/parameters/product/asian_option/asian_options_01.json",
         "datasets/single_asset/equity/rough/log_modulated_rough_bergomi/prices/asian_calls/log_modulated_rough_bergomi_01__asian_calls_01__01.json",
         "catalog/single_asset/equity/rough/log_modulated_rough_bergomi/prices/asian_calls/log_modulated_rough_bergomi_01__asian_calls_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/rough/log_modulated_rough_bergomi/prices/asian_calls/log_modulated_rough_bergomi_01__asian_calls_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/rough/log_modulated_rough_bergomi/prices/asian_calls/log_modulated_rough_bergomi_01__asian_calls_01__01.json",
         "log-modulated hybrid FFT (kappa=1)",
         PriceConstruction::Aligned,
     };

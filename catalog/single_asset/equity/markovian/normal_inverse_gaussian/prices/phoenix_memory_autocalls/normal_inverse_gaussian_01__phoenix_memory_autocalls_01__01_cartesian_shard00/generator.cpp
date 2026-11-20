@@ -19,7 +19,7 @@ int main() {
         "datasets/parameters/product/phoenix_memory_autocall/phoenix_memory_autocalls_01_shard00.json",
         "datasets/single_asset/equity/markovian/normal_inverse_gaussian/prices/phoenix_memory_autocalls/normal_inverse_gaussian_01__phoenix_memory_autocalls_01__01_cartesian_shard00.json",
         "catalog/single_asset/equity/markovian/normal_inverse_gaussian/prices/phoenix_memory_autocalls/normal_inverse_gaussian_01__phoenix_memory_autocalls_01__01_cartesian_shard00/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/markovian/normal_inverse_gaussian/prices/phoenix_memory_autocalls/normal_inverse_gaussian_01__phoenix_memory_autocalls_01__01_cartesian_shard00.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/markovian/normal_inverse_gaussian/prices/phoenix_memory_autocalls/normal_inverse_gaussian_01__phoenix_memory_autocalls_01__01_cartesian_shard00.json",
         "Exact inverse-Gaussian subordination",
         PriceConstruction::CartesianProduct,
     };

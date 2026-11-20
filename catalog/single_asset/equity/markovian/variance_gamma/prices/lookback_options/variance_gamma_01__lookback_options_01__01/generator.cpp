@@ -20,7 +20,7 @@ int main() {
         "datasets/parameters/product/lookback_option/lookback_options_01.json",
         "datasets/single_asset/equity/markovian/variance_gamma/prices/lookback_options/variance_gamma_01__lookback_options_01__01.json",
         "catalog/single_asset/equity/markovian/variance_gamma/prices/lookback_options/variance_gamma_01__lookback_options_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/markovian/variance_gamma/prices/lookback_options/variance_gamma_01__lookback_options_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/markovian/variance_gamma/prices/lookback_options/variance_gamma_01__lookback_options_01__01.json",
         "Exact Gamma subordination",
         PriceConstruction::Aligned,
     };

@@ -23,7 +23,7 @@ int main() {
         "datasets/parameters/product/european_option/european_options_01.json",
         "datasets/single_asset/equity/rough/quadratic_rough_heston/prices/european_calls/quadratic_rough_heston_01__european_calls_01__01.json",
         "catalog/single_asset/equity/rough/quadratic_rough_heston/prices/european_calls/quadratic_rough_heston_01__european_calls_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/rough/quadratic_rough_heston/prices/european_calls/quadratic_rough_heston_01__european_calls_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/rough/quadratic_rough_heston/prices/european_calls/quadratic_rough_heston_01__european_calls_01__01.json",
         "7-factor Markovian lift",
         PriceConstruction::Aligned,
     };

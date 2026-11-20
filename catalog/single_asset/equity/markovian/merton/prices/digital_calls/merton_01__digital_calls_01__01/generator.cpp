@@ -19,7 +19,7 @@ int main() {
         "datasets/parameters/product/digital_option/digital_options_01.json",
         "datasets/single_asset/equity/markovian/merton/prices/digital_calls/merton_01__digital_calls_01__01.json",
         "catalog/single_asset/equity/markovian/merton/prices/digital_calls/merton_01__digital_calls_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/markovian/merton/prices/digital_calls/merton_01__digital_calls_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/markovian/merton/prices/digital_calls/merton_01__digital_calls_01__01.json",
         "Exact Merton increments",
         PriceConstruction::Aligned,
     };

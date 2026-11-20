@@ -17,6 +17,11 @@ product_shard:
   selection: one seeded permutation position per contiguous ten-row block
   core_products: 90
   stress_products: 10
+quote_convention:
+  barrier:
+    mode: ratio_to_central_spot
+    unit: dimensionless
+    effective_level: barrier * S0
 time_grid:
   steps_per_year: 504
   simulation_steps_per_day: 2

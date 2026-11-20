@@ -23,7 +23,7 @@ int main() {
         "datasets/parameters/product/lookback_option/lookback_options_01.json",
         "datasets/single_asset/equity/rough/rough_heston/prices/lookback_options/rough_heston_01__lookback_options_01__01.json",
         "catalog/single_asset/equity/rough/rough_heston/prices/lookback_options/rough_heston_01__lookback_options_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/rough/rough_heston/prices/lookback_options/rough_heston_01__lookback_options_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/rough/rough_heston/prices/lookback_options/rough_heston_01__lookback_options_01__01.json",
         "7-factor Markovian lift",
         PriceConstruction::Aligned,
     };

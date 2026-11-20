@@ -20,7 +20,7 @@ int main() {
         "datasets/parameters/product/up_one_touch/up_one_touches_01.json",
         "datasets/single_asset/equity/markovian/kou/prices/up_one_touches/kou_01__up_one_touches_01__01.json",
         "catalog/single_asset/equity/markovian/kou/prices/up_one_touches/kou_01__up_one_touches_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/markovian/kou/prices/up_one_touches/kou_01__up_one_touches_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/markovian/kou/prices/up_one_touches/kou_01__up_one_touches_01__01.json",
         "Exact Kou increments",
         PriceConstruction::Aligned,
     };

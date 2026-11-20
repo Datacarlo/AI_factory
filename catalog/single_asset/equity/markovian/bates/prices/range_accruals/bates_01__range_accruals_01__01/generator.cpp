@@ -20,7 +20,7 @@ int main() {
         "datasets/parameters/product/range_accrual/range_accruals_01.json",
         "datasets/single_asset/equity/markovian/bates/prices/range_accruals/bates_01__range_accruals_01__01.json",
         "catalog/single_asset/equity/markovian/bates/prices/range_accruals/bates_01__range_accruals_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/markovian/bates/prices/range_accruals/bates_01__range_accruals_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/markovian/bates/prices/range_accruals/bates_01__range_accruals_01__01.json",
         "Andersen QE-M with compound-Poisson lognormal jumps",
         PriceConstruction::Aligned,
     };

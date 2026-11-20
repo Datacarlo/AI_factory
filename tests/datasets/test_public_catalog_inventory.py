@@ -48,6 +48,18 @@ class PublicCatalogInventoryTest(unittest.TestCase):
                     generator = ROOT / row["catalogPath"] / "generator.cpp"
                     self.assertIn("ExerciseReplayStrategy::" + strategy, generator.read_text())
 
+    def test_pricing_quotes_match_their_product_recipe(self):
+        from tools.codegen.pricing_bindings.product_quote import quote_convention
+
+        for path in (ROOT / "catalog/single_asset").rglob("recipe.yaml"):
+            recipe = yaml.safe_load(path.read_text())
+            if recipe.get("kind") not in {"prices", "price_gradients"}:
+                continue
+            with self.subTest(recipe=str(path.relative_to(ROOT))):
+                self.assertEqual(recipe["quote_convention"],
+                                 quote_convention(recipe["inputs"]["product"]))
+                self.assertNotIn("source_price_recipe", recipe.get("sensitivity", {}))
+
     def test_fixed_income_prices_request_no_bumps(self):
         for generator in (ROOT / "catalog/single_asset/fixed_income").rglob("generator.cpp"):
             if "prices" not in generator.parts:

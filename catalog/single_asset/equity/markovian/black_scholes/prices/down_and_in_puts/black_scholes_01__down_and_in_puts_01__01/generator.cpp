@@ -20,7 +20,7 @@ int main() {
         "datasets/parameters/product/down_and_in_option/down_and_in_options_01.json",
         "datasets/single_asset/equity/markovian/black_scholes/prices/down_and_in_puts/black_scholes_01__down_and_in_puts_01__01.json",
         "catalog/single_asset/equity/markovian/black_scholes/prices/down_and_in_puts/black_scholes_01__down_and_in_puts_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/markovian/black_scholes/prices/down_and_in_puts/black_scholes_01__down_and_in_puts_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/markovian/black_scholes/prices/down_and_in_puts/black_scholes_01__down_and_in_puts_01__01.json",
         "Exact Gaussian log-price transitions",
         PriceConstruction::Aligned,
     };

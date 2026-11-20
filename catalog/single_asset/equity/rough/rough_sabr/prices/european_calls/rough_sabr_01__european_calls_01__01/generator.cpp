@@ -17,7 +17,7 @@ int main() {
         "datasets/parameters/product/european_option/european_options_01.json",
         "datasets/single_asset/equity/rough/rough_sabr/prices/european_calls/rough_sabr_01__european_calls_01__01.json",
         "catalog/single_asset/equity/rough/rough_sabr/prices/european_calls/rough_sabr_01__european_calls_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/rough/rough_sabr/prices/european_calls/rough_sabr_01__european_calls_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/rough/rough_sabr/prices/european_calls/rough_sabr_01__european_calls_01__01.json",
         "Bennedsen-Lunde-Pakkanen hybrid FFT with Lamperti spot",
         PriceConstruction::Aligned,
     };

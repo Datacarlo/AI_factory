@@ -14,6 +14,19 @@ outputs:
 - price
 - standard_error
 row_count: 1000
+quote_convention:
+  strike:
+    mode: ratio_to_central_spot
+    unit: dimensionless
+    effective_level: strike * S0
+  lower_barrier:
+    mode: ratio_to_central_spot
+    unit: dimensionless
+    effective_level: lower_barrier * S0
+  upper_barrier:
+    mode: ratio_to_central_spot
+    unit: dimensionless
+    effective_level: upper_barrier * S0
 numerical_method:
   engine: equity_volterra_fft
 time_grid:

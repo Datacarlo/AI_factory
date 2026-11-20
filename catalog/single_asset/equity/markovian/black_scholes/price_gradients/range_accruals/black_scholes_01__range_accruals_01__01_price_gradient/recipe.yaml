@@ -10,6 +10,15 @@ output:
   format: json
 row_layout: inline_parameters
 row_count: 1000
+quote_convention:
+  lower_barrier:
+    mode: ratio_to_initial_spot
+    unit: dimensionless
+    observation: S(t_i)/S(0)
+  upper_barrier:
+    mode: ratio_to_initial_spot
+    unit: dimensionless
+    observation: S(t_i)/S(0)
 time_representation:
   kind: exact_schedule_transition
   contractual_days_per_year: 252

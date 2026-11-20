@@ -13,7 +13,7 @@ import sys
 from string import Template
 
 import yaml
-from fixed_income_quote import quote_convention
+from product_quote import quote_convention
 from product_payoff import payoff_metadata
 
 from manifest import (
@@ -1679,8 +1679,7 @@ def _price_recipe_metadata(dataset, source: str) -> dict:
         "paths_per_price": 1_048_576 if stochastic else 0,
     }
     metadata.update(payoff_metadata(dataset.product))
-    if dataset.asset_class == "fixed_income":
-        metadata["quote_convention"] = quote_convention(dataset.product)
+    metadata["quote_convention"] = quote_convention(roles["product"])
     variant = dataset.variant or ""
     if "payer" in variant:
         metadata["option_side"] = "payer"
