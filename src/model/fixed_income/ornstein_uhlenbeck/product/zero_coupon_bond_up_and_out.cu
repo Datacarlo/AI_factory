@@ -3,12 +3,13 @@
 #include "model/fixed_income/ornstein_uhlenbeck/dynamics_impl.cuh"
 #include "model/fixed_income/ornstein_uhlenbeck/analytics_impl.cuh"
 #include "monte_carlo/monte_carlo_kernel.cuh"
-#include "product/zero_coupon_bond_up_and_out/pricing_policy.cuh"
+#include "product/zero_coupon_bond_up_and_out/prepared_bond_policy.cuh"
 
 namespace ai_factory::workbench::model::fixed_income::ornstein_uhlenbeck {
 namespace {
 using Schedule = simulation::FixedStepDenseSchedule<joint::DynamicsPolicy>;
-using Pricing = product::ZeroCouponBondUpAndOutPricingPolicy<Schedule>;
+using Pricing = product::PreparedBondBarrierPricingPolicy<
+    product::ZeroCouponBondUpAndOutPricingPolicy<Schedule>, BermudanSwaptionAnalyticsPolicy>;
 static_assert(monte_carlo::ScalarMonteCarloPricingPolicy<Pricing>);
 }  // namespace
 

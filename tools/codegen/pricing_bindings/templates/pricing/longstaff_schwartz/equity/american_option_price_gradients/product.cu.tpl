@@ -8,7 +8,7 @@
 #include "longstaff_schwartz/small_linear_regressor.cuh"
 #include "model/equity/markovian/${model}/dynamics_impl.cuh"
 #include "model/equity/markovian/${model}/price_gradients/coupled_dynamics_impl.cuh"
-#include "product/american_option/continuation_state.cuh"
+#include "product/american_option/continuation_state.cuh"${lsm_continuation_include}
 #include "product/american_option/price_gradients/device_prepared_frozen_replay_node_graph_kernel.cuh"
 #include "product/american_option/price_gradients/device_prepared_frozen_replay_mixed_node_graph_kernel.cuh"
 #include "product/american_option/price_gradients/device_prepared_pricing_policy.cuh"

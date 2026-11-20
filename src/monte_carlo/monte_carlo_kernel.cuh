@@ -2,6 +2,7 @@
 #pragma once
 
 #include "cuda/check_cuda.cuh"
+#include "monte_carlo/block_preparation_workspace.cuh"
 #include "cuda/cuda_kernel_diagnostics.cuh"
 #include "monte_carlo/concepts.cuh"
 #include "monte_carlo/reductions.cuh"
@@ -25,7 +26,8 @@ __global__ void monte_carlo_price_kernel(
     typename PricingPolicy::Schedule::TimeConfiguration time_configuration,
     std::uint64_t base_seed,
     float* __restrict__ prices,
-    float* __restrict__ standard_errors
+    float* __restrict__ standard_errors,
+    BlockPreparationWorkspace workspace = {}
 ) {
     static_assert(
         sizeof(typename PricingPolicy::PreparedRow)
@@ -55,6 +57,9 @@ __global__ void monte_carlo_price_kernel(
         }
         __syncthreads();
 
+        if constexpr (requires { PricingPolicy::prepare_block(prepared, workspace.block(0U), workspace.stride); }) {
+            PricingPolicy::prepare_block(prepared, workspace.block(blockIdx.x), workspace.stride);
+        }
         double sum = 0.0;
         double sumsq = 0.0;
         for (std::size_t path = threadIdx.x;
@@ -172,6 +177,12 @@ inline void launch_monte_carlo_cuda(
         device_standard_errors
     );
 
+    std::size_t preparation_stride = 0U;
+    if constexpr (requires { PricingPolicy::block_workspace_bytes(host_inputs.products, host_inputs.product_count, time_configuration.simulation_steps_per_day); }) {
+        preparation_stride = PricingPolicy::block_workspace_bytes(
+            host_inputs.products, host_inputs.product_count, time_configuration.simulation_steps_per_day);
+    }
+    BlockPreparationStorage preparation_storage(block_count, preparation_stride);
     const std::size_t shared_bytes =
         2U * (threads_per_block / 32U) * sizeof(double);
     int active_blocks_per_multiprocessor = 0;
@@ -210,7 +221,8 @@ inline void launch_monte_carlo_cuda(
         time_configuration,
         base_seed,
         device_prices,
-        device_standard_errors
+        device_standard_errors,
+        preparation_storage.view()
     );
     check_cuda(cudaGetLastError(), operation_name);
 }

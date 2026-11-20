@@ -2,10 +2,10 @@
 #include "model/fixed_income/${model}/product/${curve_prefix}zero_coupon_bond_up_and_out_price_gradients.cuh"
 
 #include "equity/price_gradients/terminal_device_prepared_launcher.cuh"
-#include "fixed_income/price_gradients/bond_barrier_first_policy.cuh"
+#include "fixed_income/price_gradients/bond_barrier_launch.cuh"
 #include "monte_carlo/price_gradients/device_prepared_first_sensitivity_kernel.cuh"
 #include "price_gradients/device_prepared_stencil_launcher.cuh"
-#include "product/zero_coupon_bond_up_and_out/pricing_policy.cuh"
+#include "product/zero_coupon_bond_up_and_out/prepared_bond_policy.cuh"
 ${barrier_dynamics_includes}
 #include <cmath>
 #include <stdexcept>
@@ -18,9 +18,8 @@ namespace mcpg = ::ai_factory::workbench::monte_carlo::price_gradients;
 namespace {
 using Schedule = simulation::FixedStepDenseSchedule<
     ${barrier_dynamics_namespace}::joint::DynamicsPolicy>;
-using Pricing = ${barrier_pricing_type};
-using BarrierFirstPolicy = fipg::BondBarrierFirstPolicy<
-    Pricing, ZeroCouponBondUpAndOutPriceGradientPlan::Preparation>;
+using Pricing = product::PreparedBondBarrierPricingPolicy<
+    ${barrier_pricing_type}, BermudanSwaptionAnalyticsPolicy>;
 }
 
 void prepare_zero_coupon_bond_up_and_out_price_gradient_stencils_cuda(
@@ -53,12 +52,11 @@ void launch_${function_prefix}_zero_coupon_bond_up_and_out_price_gradients_cuda(
     epg::validate_terminal_first_sensitivity_launch(
         host, device, stencil_outputs, configuration, outputs
     );
-    mcpg::launch_device_prepared_first_sensitivities<
-        BarrierFirstPolicy,
+    fipg::launch_bond_barrier_first_sensitivities<
+        Pricing,
         ZeroCouponBondUpAndOutPriceGradientPlan::Preparation
     >(
-        device,
-        mcpg::make_device_prepared_plan(host),
+        host, device,
         configuration,
         outputs,
         stencil_outputs,

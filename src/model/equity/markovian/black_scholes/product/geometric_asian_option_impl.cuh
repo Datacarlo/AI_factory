@@ -9,6 +9,7 @@
 #include "schedule/schedule.cuh"
 #include "model/equity/markovian/black_scholes/analytics_impl.cuh"
 
+#include <cmath>
 #include <stdexcept>
 
 namespace ai_factory::workbench::model::equity::black_scholes {
@@ -60,35 +61,17 @@ struct GeometricAsianOptionClosedFormPricingPolicy {
                 transition_count
             );
         }
-        const float n = static_cast<float>(transition_count);
-        const float observation_count = n + 1.0f;
-        const float fixed_time_sum =
-            time_configuration.dt * n * (n - 1.0f) * 0.5f;
-        const float covariance_sum =
-            time_configuration.dt
-                * n * (n - 1.0f) * (2.0f * n + 5.0f) / 6.0f
-            + maturity_years;
-        const auto analytics = prepare_analytics(model);
-        const float average_time =
-            (fixed_time_sum + maturity_years) / observation_count;
-        const float log_mean = analytics.log_spot
-            + (
-                analytics.risk_free_rate
-                - analytics.dividend_yield
-                - 0.5f * analytics.variance
-            ) * average_time;
-        const float log_variance = analytics.variance * covariance_sum
-            / (observation_count * observation_count);
-        const float discount_log_level =
-            -analytics.risk_free_rate * maturity_years;
-        return prepare_discounted_lognormal_option_values(
-            {
-                discount_log_level + log_mean + 0.5f * log_variance,
-                discount_log_level,
-                expf(discount_log_level),
-            },
-            sqrtf(log_variance),
-            product.strike
+        // Dense monitoring keeps dt fixed when T changes: the bumped node
+        // has its own observation count, including the initial spot.
+        const auto bumped_transition_count = static_cast<std::uint32_t>(
+            llround(static_cast<double>(maturity_years)
+                / static_cast<double>(time_configuration.dt))
+        );
+        return prepare_geometric_asian_option_values(
+            prepare_analytics(model),
+            product.strike,
+            maturity_years,
+            bumped_transition_count
         );
     }
 

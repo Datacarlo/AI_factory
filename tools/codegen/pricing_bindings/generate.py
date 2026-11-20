@@ -827,6 +827,12 @@ def generate_price_delta_bindings(output_root: Path) -> list[Path]:
                 if model == "schobel_zhu" else
                 f"product::SpotLogMoneynessContinuationState<{model}::DynamicsPolicy>"
             )
+            continuation_include = ""
+            if model in {"sabr", "heston_3_2"}:
+                continuation = f"{model}::AmericanOptionContinuationState"
+                continuation_include = (
+                    f'\n#include "model/equity/markovian/{model}/product/american_option_continuation.cuh"'
+                )
             frozen_path = (
                 "::ai_factory::workbench::equity::price_delta::MultiplicativeFrozenExercise"
                 if spec.path_strategy == "multiplicative" else
@@ -836,6 +842,7 @@ def generate_price_delta_bindings(output_root: Path) -> list[Path]:
             )
             values = {
                 "model": model, "schedule": schedule, "continuation": continuation,
+                "continuation_include": continuation_include,
                 "regression_refinement": "normal_residual" if model == "kou" else "none",
                 "frozen_path": frozen_path,
                 "dynamics_header": ("price_delta_dynamics_impl.cuh" if spec.path_strategy == "coupled"
@@ -2103,12 +2110,19 @@ def _repository_inventory_diagnostics(reference_root: Path) -> list[str]:
             source.read_text(), re.MULTILINE,
         ):
             rough_gradient_helpers.add(f"src/{include}")
+    # These two model-specific normalizations are handwritten adapters used
+    # by the generated American launchers, like the rough helpers above.
+    american_continuation_helpers = {
+        f"src/model/equity/markovian/{model}/product/american_option_continuation.cuh"
+        for model in ("sabr", "heston_3_2")
+    }
     inventory = (
         (
             "product binding",
             set(DECLARED_PRODUCT_BINDING_PATHS) | set(GENERATED_PRICE_DELTA_BINDING_PATHS)
             | set(GENERATED_PRICE_GRADIENT_BINDING_PATHS)
-            | set(GENERATED_CLOSED_FORM_POLICY_PATHS) | rough_gradient_helpers,
+            | set(GENERATED_CLOSED_FORM_POLICY_PATHS) | rough_gradient_helpers
+            | american_continuation_helpers,
             _relative_files(reference_root, "src/model/**/product/**/*.cu")
             | _relative_files(reference_root, "src/model/**/product/**/*.cuh"),
         ),

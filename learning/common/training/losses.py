@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
+import math
 from typing import Any, Protocol
 
 import torch
@@ -102,6 +103,29 @@ class _GradientMSE:
         return torch.sum(errors * weights.unsqueeze(0)) / (errors.shape[0] * weights.sum())
 
 
+class _RMSGradientMSE:
+    """Train-only RMS weights, retaining the original count after Rj filtering."""
+    requires_input_hessians = False
+
+    def __init__(self, specification):
+        self.weights = tuple(float(x) for x in specification['weights'])
+        if any(not math.isfinite(x) or x < 0 for x in self.weights):
+            raise ValueError('RMS weights must be finite and nonnegative')
+        self.requires_input_gradients = any(self.weights)
+        self._tensor = None
+
+    def __call__(self, context):
+        if not self.requires_input_gradients:
+            return context.normalized_predictions.new_zeros(())
+        prediction = context.normalized_predicted_gradients
+        target = context.normalized_target_gradients
+        if prediction is None or target is None or prediction.shape[1] != len(self.weights):
+            raise ValueError('RMS gradient dimension mismatch')
+        if self._tensor is None or self._tensor.device != prediction.device:
+            self._tensor = prediction.new_tensor(self.weights)
+        return ((prediction - target).square() * self._tensor).mean()
+
+
 class _DiagonalHessianMSE:
     requires_input_gradients = False
     requires_input_hessians = True
@@ -153,6 +177,11 @@ def _build_diagonal_hessian_mse(specification: dict[str, Any]) -> LossTerm:
     return _DiagonalHessianMSE()
 
 
+@register_loss('rms_gradient_mse')
+def _build_rms_gradient_mse(specification):
+    return _RMSGradientMSE(specification)
+
+
 @register_loss("l2_parameters")
 def _build_l2_parameters(specification: dict[str, Any]) -> LossTerm:
     return _L2Parameters(specification)
@@ -185,14 +214,14 @@ class CompositeLoss:
             for term in self.terms
         )
 
-    def __call__(self, context: LossContext) -> tuple[torch.Tensor, dict[str, float]]:
+    def __call__(self, context: LossContext, *, tensor_metrics=False):
         total = torch.zeros((), device=context.normalized_predictions.device)
         metrics: dict[str, float] = {}
         for weighted in self.terms:
             value = weighted.term(context)
             total = total + weighted.weight * value
-            metrics[weighted.name] = float(value.detach().cpu())
-        metrics["total"] = float(total.detach().cpu())
+            metrics[weighted.name] = value.detach() if tensor_metrics else float(value.detach().cpu())
+        metrics["total"] = total.detach() if tensor_metrics else float(total.detach().cpu())
         return total, metrics
 
 

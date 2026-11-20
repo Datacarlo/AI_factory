@@ -1156,6 +1156,8 @@ RNG_DOMAIN_SPECS = tuple(
                     (4 if dataset.model == "ornstein_uhlenbeck" else 5)
                     if dataset.product == "zero_coupon_bond_up_and_out" else 0,
                     6 if (dataset.model == "black_scholes"
+                          and dataset.product == "american_option") else 0,
+                    7 if (dataset.model in {"sabr", "heston_3_2"}
                           and dataset.product == "american_option") else 0),
                 _rng_sort_identity(dataset),
             ),
@@ -1820,22 +1822,22 @@ PRICE_GRADIENT_DATASET_VARIANTS = compose_price_gradient_datasets(
     AVAILABLE_DATASET_SPECS,
     PRICE_GRADIENT_BINDING_SPECS,
 )
-# The catalogue publishes one canonical derivative contract. More specialised
-# and full-Hessian variants remain code-generation capabilities and can be
-# materialised by experiments without multiplying public recipes.
+# The catalogue keeps explicit identities for both Bermudan replay contracts.
+# More specialised and full-Hessian variants remain code-generation capabilities.
 PRICE_GRADIENT_DATASET_SPECS = tuple(
     spec
     for spec in PRICE_GRADIENT_DATASET_VARIANTS
     if spec.sensitivity_orders == ("first",)
     and spec.construction == "aligned"
     and not spec.dataset_id.endswith("_price_gradient_spot")
-    # American datasets fix exercise dates; Bermudan datasets retain the
-    # frozen central regression policy selected for their LSM sensitivities.
+    # American datasets fix exercise dates. Bermudan leaves name either the
+    # frozen regression policy or frozen exercise times explicitly.
     and (spec.product != "american_option"
          or spec.exercise_replay == "frozen_exercise_time")
     and (spec.asset_class != "fixed_income"
          or spec.product != "bermudan_swaption"
-         or spec.exercise_replay == "frozen_regression_policy")
+         or spec.exercise_replay == "frozen_regression_policy"
+         or spec.dataset_id.endswith("_frozen_exercise"))
 )
 CARTESIAN_PRICE_GRADIENT_DATASET_SPECS = tuple(
     spec
@@ -1847,7 +1849,8 @@ CARTESIAN_PRICE_GRADIENT_DATASET_SPECS = tuple(
          or spec.exercise_replay == "frozen_exercise_time")
     and (spec.asset_class != "fixed_income"
          or spec.product != "bermudan_swaption"
-         or spec.exercise_replay == "frozen_regression_policy")
+         or spec.exercise_replay == "frozen_regression_policy"
+         or spec.dataset_id.endswith("_frozen_exercise"))
 )
 ALL_PRICE_GRADIENT_DATASET_SPECS = (
     *PRICE_GRADIENT_DATASET_SPECS,

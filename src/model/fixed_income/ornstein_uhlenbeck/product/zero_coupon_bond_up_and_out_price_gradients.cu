@@ -2,10 +2,10 @@
 #include "model/fixed_income/ornstein_uhlenbeck/product/zero_coupon_bond_up_and_out_price_gradients.cuh"
 
 #include "equity/price_gradients/terminal_device_prepared_launcher.cuh"
-#include "fixed_income/price_gradients/bond_barrier_first_policy.cuh"
+#include "fixed_income/price_gradients/bond_barrier_launch.cuh"
 #include "monte_carlo/price_gradients/device_prepared_first_sensitivity_kernel.cuh"
 #include "price_gradients/device_prepared_stencil_launcher.cuh"
-#include "product/zero_coupon_bond_up_and_out/pricing_policy.cuh"
+#include "product/zero_coupon_bond_up_and_out/prepared_bond_policy.cuh"
 #include "model/fixed_income/ornstein_uhlenbeck/dynamics_impl.cuh"
 #include "model/fixed_income/ornstein_uhlenbeck/analytics_impl.cuh"
 #include <cmath>
@@ -19,9 +19,8 @@ namespace mcpg = ::ai_factory::workbench::monte_carlo::price_gradients;
 namespace {
 using Schedule = simulation::FixedStepDenseSchedule<
     ornstein_uhlenbeck::joint::DynamicsPolicy>;
-using Pricing = product::ZeroCouponBondUpAndOutPricingPolicy<Schedule>;
-using BarrierFirstPolicy = fipg::BondBarrierFirstPolicy<
-    Pricing, ZeroCouponBondUpAndOutPriceGradientPlan::Preparation>;
+using Pricing = product::PreparedBondBarrierPricingPolicy<
+    product::ZeroCouponBondUpAndOutPricingPolicy<Schedule>, BermudanSwaptionAnalyticsPolicy>;
 }
 
 void prepare_zero_coupon_bond_up_and_out_price_gradient_stencils_cuda(
@@ -54,12 +53,11 @@ void launch_ornstein_uhlenbeck_zero_coupon_bond_up_and_out_price_gradients_cuda(
     epg::validate_terminal_first_sensitivity_launch(
         host, device, stencil_outputs, configuration, outputs
     );
-    mcpg::launch_device_prepared_first_sensitivities<
-        BarrierFirstPolicy,
+    fipg::launch_bond_barrier_first_sensitivities<
+        Pricing,
         ZeroCouponBondUpAndOutPriceGradientPlan::Preparation
     >(
-        device,
-        mcpg::make_device_prepared_plan(host),
+        host, device,
         configuration,
         outputs,
         stencil_outputs,

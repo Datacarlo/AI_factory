@@ -411,6 +411,11 @@ if(BUILD_TESTING)
         "numerical_robustness;asian" 30
     )
     add_cuda_workbench_test(
+        geometric_asian_maturity_cuda
+        tests/product/geometric_asian_maturity_kernel_cuda_test.cu
+        "numerical_robustness;asian;price_gradients" 30
+    )
+    add_cuda_workbench_test(
         volterra_hybrid_schedule_cuda tests/volterra/hybrid_schedule_kernel_cuda_test.cu
         "volterra;schedule;numerical_robustness" 30
     )
@@ -599,6 +604,12 @@ if(BUILD_TESTING)
         tests/model/fixed_income/ornstein_uhlenbeck_kernel_cuda_test.cu
         ornstein_uhlenbeck
         30
+    )
+    add_cuda_workbench_test(
+        bond_barrier_prepared_coefficients_cuda
+        tests/product/zero_coupon_bond_up_and_out/prepared_bond_kernel_cuda_test.cu
+        "bond_barrier;fixed_income;bitwise;cache"
+        120
     )
     add_cuda_workbench_test(
         ornstein_uhlenbeck_bond_barrier_cuda

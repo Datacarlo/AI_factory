@@ -659,6 +659,8 @@ def render_bindings(output_root, specifications, template_root, write_generated)
             "lsm_replay_header": lsm_metadata.get("replay_header", ""),
             "lsm_replay": lsm_metadata.get("replay", ""),
             "lsm_continuation": lsm_metadata.get("continuation", ""),
+            "lsm_continuation_include": ("\n" + lsm_metadata["continuation_include"]
+                if lsm_metadata.get("continuation_include") else ""),
             "lsm_refinement": lsm_metadata.get("refinement", ""),
             "maximum": str(spec.maximum_sensitivities),
             "mixed_maximum": str(

@@ -27,7 +27,7 @@ class PublicCatalogInventoryTest(unittest.TestCase):
                 self.assertEqual(recipe["generator"], generator.relative_to(ROOT).as_posix())
                 self.assertEqual(recipe["output"]["path"], row["output"])
 
-    def test_bermudan_gradients_declare_frozen_policy(self):
+    def test_bermudan_gradients_declare_their_replay_variant(self):
         manifest = json.loads((ROOT / "catalog/manifest.json").read_text())
         for row in manifest["datasets"]:
             if (row["kind"] == "price_gradients"
@@ -37,7 +37,16 @@ class PublicCatalogInventoryTest(unittest.TestCase):
                     recipe = yaml.safe_load(
                         (ROOT / row["catalogPath"] / "recipe.yaml").read_text()
                     )
-                    self.assertEqual(recipe["exercise_replay"], "frozen_regression_policy")
+                    variants = {
+                        "_frozen_policy": "frozen_regression_policy",
+                        "_frozen_exercise": "frozen_exercise_time",
+                    }
+                    suffix = next((s for s in variants if recipe["dataset_id"].endswith(s)), None)
+                    self.assertIsNotNone(suffix)
+                    strategy = variants[suffix]
+                    self.assertEqual(recipe["exercise_replay"], strategy)
+                    generator = ROOT / row["catalogPath"] / "generator.cpp"
+                    self.assertIn("ExerciseReplayStrategy::" + strategy, generator.read_text())
 
     def test_fixed_income_prices_request_no_bumps(self):
         for generator in (ROOT / "catalog/single_asset/fixed_income").rglob("generator.cpp"):

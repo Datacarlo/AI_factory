@@ -574,4 +574,25 @@ AMERICAN_RECIPE_SPECS = (
             "L1(spot / strike) * log(spot / strike)",
         ),
     ),
+    AmericanRecipeSpec(
+        "sabr", "SABR", "fixed",
+        "absorbed Lamperti spot transition with lognormal alpha",
+        "Two-factor Laguerre degree 2",
+        ("spot", "alpha"),
+        ("spot / strike", "alpha / alpha0"),
+        ("1", "L1(spot / strike)", "L2(spot / strike)",
+         "alpha / alpha0", "(alpha / alpha0)^2",
+         "L1(spot / strike) * (alpha / alpha0)"),
+    ),
+    AmericanRecipeSpec(
+        "heston_3_2", "Heston 3/2", "fixed",
+        "positive reciprocal-variance transition with log-spot Euler",
+        "Two-factor Laguerre degree 2",
+        ("spot", "reciprocal_variance"),
+        ("spot / strike", "reciprocal_variance * long_run_variance"),
+        ("1", "L1(spot / strike)", "L2(spot / strike)",
+         "reciprocal_variance * long_run_variance", "(reciprocal_variance * long_run_variance)^2",
+         "L1(spot / strike) * (reciprocal_variance * long_run_variance)"),
+    ),
+
 )

@@ -2,6 +2,7 @@
 #pragma once
 
 #include "cuda/cuda_kernel_diagnostics.cuh"
+#include "monte_carlo/block_preparation_workspace.cuh"
 #include "philox/distributions.cuh"
 #include "monte_carlo/price_gradients/coupled_terminal_simulation.cuh"
 #include "monte_carlo/price_gradients/terminal_sensitivity_policy.cuh"
@@ -84,7 +85,8 @@ __global__ void central_price_kernel(
     pg::LaunchConfiguration launch,
     pg::Outputs outputs,
     DevicePreparedStencilOutputs<3U> preparation_outputs,
-    std::uint64_t base_seed
+    std::uint64_t base_seed,
+    BlockPreparationWorkspace workspace = {}
 ) {
     __shared__ typename Policy::PreparedRow prepared;
     __shared__ philox::PhiloxKey key;
@@ -112,6 +114,9 @@ __global__ void central_price_kernel(
         if (!valid_row) {
             __syncthreads();
             continue;
+        }
+        if constexpr (requires { Policy::prepare_block(prepared, workspace.block(0U), workspace.stride); }) {
+            Policy::prepare_block(prepared, workspace.block(blockIdx.x), workspace.stride);
         }
         double sum = 0.0;
         double square = 0.0;
