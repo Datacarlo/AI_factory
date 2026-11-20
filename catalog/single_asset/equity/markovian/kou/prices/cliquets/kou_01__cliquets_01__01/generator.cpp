@@ -19,7 +19,7 @@ int main() {
         "datasets/parameters/product/cliquet/cliquets_01.json",
         "datasets/single_asset/equity/markovian/kou/prices/cliquets/kou_01__cliquets_01__01.json",
         "catalog/single_asset/equity/markovian/kou/prices/cliquets/kou_01__cliquets_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/markovian/kou/prices/cliquets/kou_01__cliquets_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/markovian/kou/prices/cliquets/kou_01__cliquets_01__01.json",
         "Exact Kou increments",
         PriceConstruction::Aligned,
     };

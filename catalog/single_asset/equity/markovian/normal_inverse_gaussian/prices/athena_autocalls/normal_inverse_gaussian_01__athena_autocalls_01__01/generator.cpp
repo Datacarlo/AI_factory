@@ -19,7 +19,7 @@ int main() {
         "datasets/parameters/product/athena_autocall/athena_autocalls_01.json",
         "datasets/single_asset/equity/markovian/normal_inverse_gaussian/prices/athena_autocalls/normal_inverse_gaussian_01__athena_autocalls_01__01.json",
         "catalog/single_asset/equity/markovian/normal_inverse_gaussian/prices/athena_autocalls/normal_inverse_gaussian_01__athena_autocalls_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/markovian/normal_inverse_gaussian/prices/athena_autocalls/normal_inverse_gaussian_01__athena_autocalls_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/markovian/normal_inverse_gaussian/prices/athena_autocalls/normal_inverse_gaussian_01__athena_autocalls_01__01.json",
         "Exact inverse-Gaussian subordination",
         PriceConstruction::Aligned,
     };

@@ -12,6 +12,15 @@ row_layout: inline_parameters
 outputs:
 - price
 row_count: 1000
+quote_convention:
+  lower_barrier:
+    mode: ratio_to_initial_spot
+    unit: dimensionless
+    observation: S(t_i)/S(0)
+  upper_barrier:
+    mode: ratio_to_initial_spot
+    unit: dimensionless
+    observation: S(t_i)/S(0)
 numerical_method:
   engine: equity_closed_form
 paths_per_price: 0

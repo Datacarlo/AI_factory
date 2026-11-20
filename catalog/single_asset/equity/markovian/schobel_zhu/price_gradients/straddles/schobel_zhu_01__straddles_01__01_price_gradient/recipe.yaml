@@ -10,6 +10,11 @@ output:
   format: json
 row_layout: inline_parameters
 row_count: 1000
+quote_convention:
+  strike:
+    mode: ratio_to_central_spot
+    unit: dimensionless
+    effective_level: strike * S0
 time_grid:
   steps_per_year: 504
   simulation_steps_per_day: 2

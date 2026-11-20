@@ -14,6 +14,11 @@ outputs:
 - price
 - standard_error
 row_count: 1000
+quote_convention:
+  moneyness:
+    mode: multiplier_of_reset_spot
+    unit: dimensionless
+    effective_level: moneyness * S(reset_time)
 numerical_method:
   engine: equity_markovian
 paths_per_price: 1048576

@@ -20,7 +20,7 @@ int main() {
         "datasets/parameters/product/digital_option/digital_options_01.json",
         "datasets/single_asset/equity/markovian/sabr/prices/digital_calls/sabr_01__digital_calls_01__01.json",
         "catalog/single_asset/equity/markovian/sabr/prices/digital_calls/sabr_01__digital_calls_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/markovian/sabr/prices/digital_calls/sabr_01__digital_calls_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/markovian/sabr/prices/digital_calls/sabr_01__digital_calls_01__01.json",
         "Lamperti SABR Euler",
         PriceConstruction::Aligned,
     };

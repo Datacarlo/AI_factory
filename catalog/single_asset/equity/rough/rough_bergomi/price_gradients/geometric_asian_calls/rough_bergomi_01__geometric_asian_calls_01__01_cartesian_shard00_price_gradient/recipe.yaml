@@ -18,6 +18,11 @@ product_shard:
   selection: one seeded permutation position per contiguous ten-row block
   core_products: 90
   stress_products: 10
+quote_convention:
+  strike:
+    mode: ratio_to_central_spot
+    unit: dimensionless
+    effective_level: strike * S0
 time_grid:
   steps_per_year: 504
   simulation_steps_per_day: 2
@@ -69,7 +74,6 @@ sensitivity:
     boundary: central_then_one_sided_order2
   spot_contract_rule: Spot bumps keep absolute strikes and barriers resolved at the
     central spot fixed; product gradients use quoted ratios.
-  source_price_recipe: catalog/single_asset/equity/rough/rough_bergomi/prices/geometric_asian_calls/rough_bergomi_01__geometric_asian_calls_01__01_cartesian_shard00/recipe.yaml
 sensitivity_strategy: node_graph
 standard_error_scope: paired Monte Carlo sampling error; excludes bump and discretization
   bias

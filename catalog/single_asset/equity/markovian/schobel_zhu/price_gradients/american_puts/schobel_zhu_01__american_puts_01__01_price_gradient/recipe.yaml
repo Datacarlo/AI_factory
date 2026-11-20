@@ -1,6 +1,7 @@
 schema_version: 1
 kind: price_gradients
 dataset_id: schobel_zhu_01__american_puts_01__01_price_gradient
+option_side: put
 generator: catalog/single_asset/equity/markovian/schobel_zhu/price_gradients/american_puts/schobel_zhu_01__american_puts_01__01_price_gradient/generator.cpp
 inputs:
   model: datasets/parameters/model/equity/markovian/schobel_zhu/parameters/schobel_zhu_01.json
@@ -10,6 +11,11 @@ output:
   format: json
 row_layout: inline_parameters
 row_count: 1000
+quote_convention:
+  strike:
+    mode: ratio_to_central_spot
+    unit: dimensionless
+    effective_level: strike * S0
 numerical_method:
   engine: equity_lsm_fixed
   algorithm: longstaff_schwartz

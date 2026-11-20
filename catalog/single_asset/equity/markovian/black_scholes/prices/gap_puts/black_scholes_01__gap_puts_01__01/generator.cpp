@@ -16,7 +16,7 @@ int main() {
         "datasets/parameters/product/gap_option/gap_put_options_01.json",
         "datasets/single_asset/equity/markovian/black_scholes/prices/gap_puts/black_scholes_01__gap_puts_01__01.json",
         "catalog/single_asset/equity/markovian/black_scholes/prices/gap_puts/black_scholes_01__gap_puts_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v1/model/equity/markovian/black_scholes/prices/gap_puts/black_scholes_01__gap_puts_01__01.json",
+        "https://datasets.ai-factory.example/v1/single_asset/equity/markovian/black_scholes/prices/gap_puts/black_scholes_01__gap_puts_01__01.json",
         "Black-Scholes closed-form gap-puts",
         PriceConstruction::Aligned,
     };

@@ -17,7 +17,7 @@ int main() {
         "datasets/parameters/product/asset_or_nothing_option/asset_or_nothing_options_01.json",
         "datasets/single_asset/equity/rough/rough_bergomi/prices/asset_or_nothing_calls/rough_bergomi_01__asset_or_nothing_calls_01__01.json",
         "catalog/single_asset/equity/rough/rough_bergomi/prices/asset_or_nothing_calls/rough_bergomi_01__asset_or_nothing_calls_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/rough/rough_bergomi/prices/asset_or_nothing_calls/rough_bergomi_01__asset_or_nothing_calls_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/rough/rough_bergomi/prices/asset_or_nothing_calls/rough_bergomi_01__asset_or_nothing_calls_01__01.json",
         "Bennedsen-Lunde-Pakkanen hybrid FFT (kappa=1)",
         PriceConstruction::Aligned,
     };

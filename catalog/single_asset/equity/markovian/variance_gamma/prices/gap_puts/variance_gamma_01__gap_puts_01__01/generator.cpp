@@ -19,7 +19,7 @@ int main() {
         "datasets/parameters/product/gap_option/gap_put_options_01.json",
         "datasets/single_asset/equity/markovian/variance_gamma/prices/gap_puts/variance_gamma_01__gap_puts_01__01.json",
         "catalog/single_asset/equity/markovian/variance_gamma/prices/gap_puts/variance_gamma_01__gap_puts_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/markovian/variance_gamma/prices/gap_puts/variance_gamma_01__gap_puts_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/markovian/variance_gamma/prices/gap_puts/variance_gamma_01__gap_puts_01__01.json",
         "Exact Gamma subordination",
         PriceConstruction::Aligned,
     };

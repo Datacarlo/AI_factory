@@ -13,6 +13,11 @@ outputs:
 - price
 - standard_error
 row_count: 1000
+quote_convention:
+  barrier:
+    mode: ratio_to_central_spot
+    unit: dimensionless
+    effective_level: barrier * S0
 numerical_method:
   engine: equity_volterra_fft
 time_grid:

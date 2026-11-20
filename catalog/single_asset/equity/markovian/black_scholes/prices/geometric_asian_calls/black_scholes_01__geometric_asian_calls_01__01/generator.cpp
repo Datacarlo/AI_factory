@@ -16,7 +16,7 @@ int main() {
         "datasets/parameters/product/geometric_asian_option/geometric_asian_options_01.json",
         "datasets/single_asset/equity/markovian/black_scholes/prices/geometric_asian_calls/black_scholes_01__geometric_asian_calls_01__01.json",
         "catalog/single_asset/equity/markovian/black_scholes/prices/geometric_asian_calls/black_scholes_01__geometric_asian_calls_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v1/model/equity/markovian/black_scholes/prices/geometric_asian_calls/black_scholes_01__geometric_asian_calls_01__01.json",
+        "https://datasets.ai-factory.example/v1/single_asset/equity/markovian/black_scholes/prices/geometric_asian_calls/black_scholes_01__geometric_asian_calls_01__01.json",
         "Black-Scholes closed-form geometric-asian-calls",
         PriceConstruction::Aligned,
     };

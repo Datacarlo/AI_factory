@@ -13,6 +13,15 @@ outputs:
 - price
 - standard_error
 row_count: 1000
+quote_convention:
+  lower_barrier:
+    mode: ratio_to_initial_spot
+    unit: dimensionless
+    observation: S(t_i)/S(0)
+  upper_barrier:
+    mode: ratio_to_initial_spot
+    unit: dimensionless
+    observation: S(t_i)/S(0)
 numerical_method:
   engine: equity_n_factor
 time_grid:

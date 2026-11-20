@@ -20,7 +20,7 @@ int main() {
         "datasets/parameters/product/cliquet/cliquets_01.json",
         "datasets/single_asset/equity/markovian/schobel_zhu/prices/cliquets/schobel_zhu_01__cliquets_01__01.json",
         "catalog/single_asset/equity/markovian/schobel_zhu/prices/cliquets/schobel_zhu_01__cliquets_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/markovian/schobel_zhu/prices/cliquets/schobel_zhu_01__cliquets_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/markovian/schobel_zhu/prices/cliquets/schobel_zhu_01__cliquets_01__01.json",
         "exact OU factor with log-spot Euler",
         PriceConstruction::Aligned,
     };

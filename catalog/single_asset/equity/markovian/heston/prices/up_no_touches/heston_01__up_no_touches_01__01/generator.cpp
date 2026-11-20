@@ -20,7 +20,7 @@ int main() {
         "datasets/parameters/product/up_no_touch/up_no_touches_01.json",
         "datasets/single_asset/equity/markovian/heston/prices/up_no_touches/heston_01__up_no_touches_01__01.json",
         "catalog/single_asset/equity/markovian/heston/prices/up_no_touches/heston_01__up_no_touches_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/markovian/heston/prices/up_no_touches/heston_01__up_no_touches_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/markovian/heston/prices/up_no_touches/heston_01__up_no_touches_01__01.json",
         "Andersen QE-M",
         PriceConstruction::Aligned,
     };

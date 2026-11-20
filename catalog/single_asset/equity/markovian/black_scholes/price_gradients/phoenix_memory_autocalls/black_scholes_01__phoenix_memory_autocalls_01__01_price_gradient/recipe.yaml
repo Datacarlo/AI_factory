@@ -10,6 +10,19 @@ output:
   format: json
 row_layout: inline_parameters
 row_count: 1000
+quote_convention:
+  autocall_barrier:
+    mode: ratio_to_central_spot
+    unit: dimensionless
+    effective_level: autocall_barrier * S0
+  coupon_barrier:
+    mode: ratio_to_central_spot
+    unit: dimensionless
+    effective_level: coupon_barrier * S0
+  protection_barrier:
+    mode: ratio_to_central_spot
+    unit: dimensionless
+    effective_level: protection_barrier * S0
 time_representation:
   kind: exact_schedule_transition
   contractual_days_per_year: 252

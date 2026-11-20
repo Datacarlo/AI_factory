@@ -17,7 +17,7 @@ from .manifest import (
     path_product_metadata,
 )
 from manifest import PRICE_VARIANTS
-from fixed_income_quote import quote_convention
+from product_quote import quote_convention
 from product_payoff import payoff_metadata
 from capability_manifest import CURVE_ASSIGNMENT
 
@@ -1431,8 +1431,8 @@ def render_recipes(
             },
         }
         metadata.update(payoff_metadata(spec.product))
+        metadata["quote_convention"] = quote_convention(product_input)
         if spec.asset_class == "fixed_income":
-            metadata["quote_convention"] = quote_convention(spec.product)
             if spec.product in {"rate_option", "european_swaption", "bermudan_swaption"}:
                 metadata["row_selection"] = {
                     "method": "resolved_rate_strike_above_minimum",

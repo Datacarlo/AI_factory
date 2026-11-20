@@ -16,7 +16,7 @@ int main() {
         "datasets/parameters/product/european_option/european_options_01.json",
         "datasets/single_asset/equity/markovian/black_scholes/prices/european_calls/black_scholes_01__european_calls_01__01.json",
         "catalog/single_asset/equity/markovian/black_scholes/prices/european_calls/black_scholes_01__european_calls_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v1/model/equity/markovian/black_scholes/prices/european_calls/black_scholes_01__european_calls_01__01.json",
+        "https://datasets.ai-factory.example/v1/single_asset/equity/markovian/black_scholes/prices/european_calls/black_scholes_01__european_calls_01__01.json",
         "Black-Scholes closed-form european-calls",
         PriceConstruction::Aligned,
     };

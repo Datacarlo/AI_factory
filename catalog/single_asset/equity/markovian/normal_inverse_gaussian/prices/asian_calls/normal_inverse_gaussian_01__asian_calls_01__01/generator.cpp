@@ -20,7 +20,7 @@ int main() {
         "datasets/parameters/product/asian_option/asian_options_01.json",
         "datasets/single_asset/equity/markovian/normal_inverse_gaussian/prices/asian_calls/normal_inverse_gaussian_01__asian_calls_01__01.json",
         "catalog/single_asset/equity/markovian/normal_inverse_gaussian/prices/asian_calls/normal_inverse_gaussian_01__asian_calls_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/markovian/normal_inverse_gaussian/prices/asian_calls/normal_inverse_gaussian_01__asian_calls_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/markovian/normal_inverse_gaussian/prices/asian_calls/normal_inverse_gaussian_01__asian_calls_01__01.json",
         "Exact inverse-Gaussian subordination",
         PriceConstruction::Aligned,
     };

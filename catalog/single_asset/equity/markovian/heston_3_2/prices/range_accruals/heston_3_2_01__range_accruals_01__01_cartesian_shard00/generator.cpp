@@ -20,7 +20,7 @@ int main() {
         "datasets/parameters/product/range_accrual/range_accruals_01_shard00.json",
         "datasets/single_asset/equity/markovian/heston_3_2/prices/range_accruals/heston_3_2_01__range_accruals_01__01_cartesian_shard00.json",
         "catalog/single_asset/equity/markovian/heston_3_2/prices/range_accruals/heston_3_2_01__range_accruals_01__01_cartesian_shard00/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/markovian/heston_3_2/prices/range_accruals/heston_3_2_01__range_accruals_01__01_cartesian_shard00.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/markovian/heston_3_2/prices/range_accruals/heston_3_2_01__range_accruals_01__01_cartesian_shard00.json",
         "full-truncation Euler 3/2 variance",
         PriceConstruction::CartesianProduct,
     };

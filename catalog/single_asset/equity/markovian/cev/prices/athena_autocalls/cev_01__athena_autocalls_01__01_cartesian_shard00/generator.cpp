@@ -20,7 +20,7 @@ int main() {
         "datasets/parameters/product/athena_autocall/athena_autocalls_01_shard00.json",
         "datasets/single_asset/equity/markovian/cev/prices/athena_autocalls/cev_01__athena_autocalls_01__01_cartesian_shard00.json",
         "catalog/single_asset/equity/markovian/cev/prices/athena_autocalls/cev_01__athena_autocalls_01__01_cartesian_shard00/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/markovian/cev/prices/athena_autocalls/cev_01__athena_autocalls_01__01_cartesian_shard00.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/markovian/cev/prices/athena_autocalls/cev_01__athena_autocalls_01__01_cartesian_shard00.json",
         "absorbed Milstein",
         PriceConstruction::CartesianProduct,
     };

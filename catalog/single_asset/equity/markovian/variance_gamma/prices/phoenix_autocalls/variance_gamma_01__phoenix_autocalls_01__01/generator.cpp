@@ -19,7 +19,7 @@ int main() {
         "datasets/parameters/product/phoenix_autocall/phoenix_autocalls_01.json",
         "datasets/single_asset/equity/markovian/variance_gamma/prices/phoenix_autocalls/variance_gamma_01__phoenix_autocalls_01__01.json",
         "catalog/single_asset/equity/markovian/variance_gamma/prices/phoenix_autocalls/variance_gamma_01__phoenix_autocalls_01__01/generation.yaml",
-        "https://datasets.ai-factory.example/v2/model/equity/markovian/variance_gamma/prices/phoenix_autocalls/variance_gamma_01__phoenix_autocalls_01__01.json",
+        "https://datasets.ai-factory.example/v2/single_asset/equity/markovian/variance_gamma/prices/phoenix_autocalls/variance_gamma_01__phoenix_autocalls_01__01.json",
         "Exact Gamma subordination",
         PriceConstruction::Aligned,
     };

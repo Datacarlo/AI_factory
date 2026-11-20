@@ -13,6 +13,11 @@ row_layout: inline_parameters
 outputs:
 - price
 row_count: 1000000
+quote_convention:
+  strike:
+    mode: ratio_to_central_spot
+    unit: dimensionless
+    effective_level: strike * S0
 numerical_method:
   engine: equity_closed_form
 paths_per_price: 0

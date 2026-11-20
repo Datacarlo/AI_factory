@@ -13,6 +13,11 @@ row_layout: inline_parameters
 outputs:
 - price
 row_count: 1000
+quote_convention:
+  moneyness:
+    mode: multiplier_of_reset_spot
+    unit: dimensionless
+    effective_level: moneyness * S(reset_time)
 numerical_method:
   engine: equity_closed_form
 paths_per_price: 0

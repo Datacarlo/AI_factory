@@ -11,6 +11,11 @@ output:
   format: json
 row_layout: inline_parameters
 row_count: 1000
+quote_convention:
+  moneyness:
+    mode: multiplier_of_reset_spot
+    unit: dimensionless
+    effective_level: moneyness * S(reset_time)
 time_grid:
   steps_per_year: 504
   simulation_steps_per_day: 2

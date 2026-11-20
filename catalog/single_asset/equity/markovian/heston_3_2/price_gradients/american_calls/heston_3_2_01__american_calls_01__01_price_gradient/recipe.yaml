@@ -11,6 +11,11 @@ output:
   format: json
 row_layout: inline_parameters
 row_count: 1000
+quote_convention:
+  strike:
+    mode: ratio_to_central_spot
+    unit: dimensionless
+    effective_level: strike * S0
 numerical_method:
   engine: equity_lsm_fixed
   algorithm: longstaff_schwartz
