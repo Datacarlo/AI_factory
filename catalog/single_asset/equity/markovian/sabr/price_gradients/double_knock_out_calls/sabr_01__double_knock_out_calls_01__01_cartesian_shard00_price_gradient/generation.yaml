@@ -6,10 +6,10 @@ inputs:
     sha256: c02e005bd3eb40858e3d9ade80a31cdcee309cc0d73540a5035405ae2b35382f
   product:
     path: datasets/parameters/product/double_knock_out_option/double_knock_out_options_01_shard00.json
-    sha256: 0893638738010e0481e4a6df961729ad51a300dcc4a8b976bb83aa2c1d7dcde6
+    sha256: 1c07809086c315b02c1e4ccbf6c00a77305291e9497d9f495bff4237989d8311
 output:
   path: datasets/single_asset/equity/markovian/sabr/price_gradients/double_knock_out_calls/sabr_01__double_knock_out_calls_01__01_cartesian_shard00_price_gradient.json
-  sha256: 9da3dcc0a74374b25e397c3a7b833593b17743ae635432c9ddb57babb8798032
+  sha256: 132af974e7a8a982d92bd6112cf8602d771516bd99e4b100b4778b8326757bbe
 hardware:
   device: gpu
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz

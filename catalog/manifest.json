@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "count": 2050,
+  "count": 2064,
   "datasets": [
     {
       "source": "multi_asset/basket_down_and_out_call/five_black_scholes_cir_basket_down_and_out_calls_100k_01",
@@ -437,6 +437,20 @@
       "originalOutput": "datasets/multi_asset/multi_asset_phoenix_autocall/five_heston_cir_phoenix_autocalls_100k_01.json"
     },
     {
+      "source": "multi_asset/multi_asset_phoenix_autocall/five_rough_bergomi_cir_phoenix_autocalls_100k_01",
+      "id": "five_rough_bergomi_cir_phoenix_autocalls_100k_01",
+      "kind": "prices",
+      "model": "rough_bergomi",
+      "collection": "prices",
+      "product": "multi_asset_phoenix_autocall",
+      "output": "datasets/multi_asset/multi_asset_phoenix_autocall/five_rough_bergomi_cir_phoenix_autocalls_100k_01.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/multi_asset/multi_asset_phoenix_autocall/five_rough_bergomi_cir_phoenix_autocalls_100k_01",
+      "originalOutput": "datasets/multi_asset/multi_asset_phoenix_autocall/five_rough_bergomi_cir_phoenix_autocalls_100k_01.json"
+    },
+    {
       "source": "multi_asset/multi_asset_phoenix_autocall/five_sabr_cir_phoenix_autocalls_100k_01",
       "id": "five_sabr_cir_phoenix_autocalls_100k_01",
       "kind": "prices",
@@ -477,6 +491,20 @@
       "recipeMatchesReceipt": true,
       "catalogPath": "catalog/multi_asset/multi_asset_phoenix_memory_autocall/five_heston_cir_phoenix_memory_autocalls_100k_01",
       "originalOutput": "datasets/multi_asset/multi_asset_phoenix_memory_autocall/five_heston_cir_phoenix_memory_autocalls_100k_01.json"
+    },
+    {
+      "source": "multi_asset/multi_asset_phoenix_memory_autocall/five_rough_bergomi_cir_phoenix_memory_autocalls_100k_01",
+      "id": "five_rough_bergomi_cir_phoenix_memory_autocalls_100k_01",
+      "kind": "prices",
+      "model": "rough_bergomi",
+      "collection": "prices",
+      "product": "multi_asset_phoenix_memory_autocall",
+      "output": "datasets/multi_asset/multi_asset_phoenix_memory_autocall/five_rough_bergomi_cir_phoenix_memory_autocalls_100k_01.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/multi_asset/multi_asset_phoenix_memory_autocall/five_rough_bergomi_cir_phoenix_memory_autocalls_100k_01",
+      "originalOutput": "datasets/multi_asset/multi_asset_phoenix_memory_autocall/five_rough_bergomi_cir_phoenix_memory_autocalls_100k_01.json"
     },
     {
       "source": "multi_asset/multi_asset_phoenix_memory_autocall/five_sabr_cir_phoenix_memory_autocalls_100k_01",
@@ -575,6 +603,20 @@
       "recipeMatchesReceipt": true,
       "catalogPath": "catalog/multi_asset/worst_of_option/five_heston_cir_worst_of_puts_100k_01",
       "originalOutput": "datasets/multi_asset/worst_of_option/five_heston_cir_worst_of_puts_100k_01.json"
+    },
+    {
+      "source": "multi_asset/worst_of_option/five_quadratic_rough_heston_cir_worst_of_calls_100k_01",
+      "id": "five_quadratic_rough_heston_cir_worst_of_calls_100k_01",
+      "kind": "prices",
+      "model": "quadratic_rough_heston",
+      "collection": "prices",
+      "product": "worst_of_option",
+      "output": "datasets/multi_asset/worst_of_option/five_quadratic_rough_heston_cir_worst_of_calls_100k_01.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/multi_asset/worst_of_option/five_quadratic_rough_heston_cir_worst_of_calls_100k_01",
+      "originalOutput": "datasets/multi_asset/worst_of_option/five_quadratic_rough_heston_cir_worst_of_calls_100k_01.json"
     },
     {
       "source": "multi_asset/worst_of_option/five_rough_bergomi_cir_worst_of_calls_100k_01",
@@ -1921,6 +1963,34 @@
       "originalOutput": "datasets/parameters/product/zero_coupon_bond_up_and_out/zero_coupon_bond_up_and_outs_01_shard00.json"
     },
     {
+      "source": "parameters/product/zero_coupon_bond_up_and_out/zero_coupon_bond_up_and_outs_02",
+      "id": "zero_coupon_bond_up_and_outs_02",
+      "kind": "product_parameters",
+      "model": null,
+      "collection": null,
+      "product": null,
+      "output": "datasets/parameters/product/zero_coupon_bond_up_and_out/zero_coupon_bond_up_and_outs_02.json",
+      "rowCount": 1000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/parameters/product/zero_coupon_bond_up_and_out/zero_coupon_bond_up_and_outs_02",
+      "originalOutput": "datasets/parameters/product/zero_coupon_bond_up_and_out/zero_coupon_bond_up_and_outs_02.json"
+    },
+    {
+      "source": "parameters/product/zero_coupon_bond_up_and_out/zero_coupon_bond_up_and_outs_02_shard00",
+      "id": "zero_coupon_bond_up_and_outs_02_shard00",
+      "kind": "product_parameters",
+      "model": null,
+      "collection": null,
+      "product": null,
+      "output": "datasets/parameters/product/zero_coupon_bond_up_and_out/zero_coupon_bond_up_and_outs_02_shard00.json",
+      "rowCount": 100,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/parameters/product/zero_coupon_bond_up_and_out/zero_coupon_bond_up_and_outs_02_shard00",
+      "originalOutput": "datasets/parameters/product/zero_coupon_bond_up_and_out/zero_coupon_bond_up_and_outs_02_shard00.json"
+    },
+    {
       "source": "samples/equity/markovian/bates/samples_01",
       "id": "samples_01",
       "kind": "samples",
@@ -2425,34 +2495,6 @@
       "originalOutput": "datasets/samples/fixed_income/cir/samples_02.json"
     },
     {
-      "source": "samples/fixed_income/cir_plus_plus/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "fixed_income/cir_plus_plus",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/fixed_income/cir_plus_plus/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/fixed_income/cir_plus_plus/samples_01",
-      "originalOutput": "datasets/samples/fixed_income/cir_plus_plus/samples_01.json"
-    },
-    {
-      "source": "samples/fixed_income/cir_plus_plus/samples_02",
-      "id": "samples_02",
-      "kind": "samples",
-      "model": "fixed_income/cir_plus_plus",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/fixed_income/cir_plus_plus/samples_02.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/fixed_income/cir_plus_plus/samples_02",
-      "originalOutput": "datasets/samples/fixed_income/cir_plus_plus/samples_02.json"
-    },
-    {
       "source": "samples/fixed_income/g2/samples_01",
       "id": "samples_01",
       "kind": "samples",
@@ -2479,62 +2521,6 @@
       "recipeMatchesReceipt": true,
       "catalogPath": "catalog/samples/fixed_income/g2/samples_02",
       "originalOutput": "datasets/samples/fixed_income/g2/samples_02.json"
-    },
-    {
-      "source": "samples/fixed_income/g2_plus_plus/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "fixed_income/g2_plus_plus",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/fixed_income/g2_plus_plus/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/fixed_income/g2_plus_plus/samples_01",
-      "originalOutput": "datasets/samples/fixed_income/g2_plus_plus/samples_01.json"
-    },
-    {
-      "source": "samples/fixed_income/g2_plus_plus/samples_02",
-      "id": "samples_02",
-      "kind": "samples",
-      "model": "fixed_income/g2_plus_plus",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/fixed_income/g2_plus_plus/samples_02.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/fixed_income/g2_plus_plus/samples_02",
-      "originalOutput": "datasets/samples/fixed_income/g2_plus_plus/samples_02.json"
-    },
-    {
-      "source": "samples/fixed_income/hull_white/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "fixed_income/hull_white",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/fixed_income/hull_white/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/fixed_income/hull_white/samples_01",
-      "originalOutput": "datasets/samples/fixed_income/hull_white/samples_01.json"
-    },
-    {
-      "source": "samples/fixed_income/hull_white/samples_02",
-      "id": "samples_02",
-      "kind": "samples",
-      "model": "fixed_income/hull_white",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/fixed_income/hull_white/samples_02.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/fixed_income/hull_white/samples_02",
-      "originalOutput": "datasets/samples/fixed_income/hull_white/samples_02.json"
     },
     {
       "source": "samples/fixed_income/ornstein_uhlenbeck/samples_01",
@@ -3151,6 +3137,20 @@
       "recipeMatchesReceipt": false,
       "catalogPath": "catalog/single_asset/equity/markovian/bates/price_gradients/geometric_asian_calls/bates_01__geometric_asian_calls_01__01_price_gradient",
       "originalOutput": "datasets/single_asset/equity/markovian/bates/price_gradients/geometric_asian_calls/bates_01__geometric_asian_calls_01__01_price_gradient.json"
+    },
+    {
+      "source": "single_asset/equity/markovian/bates/price_gradients/geometric_asian_puts/bates_01__geometric_asian_puts_01__01_cartesian_shard00_price_gradient",
+      "id": "bates_01__geometric_asian_puts_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "bates",
+      "collection": "price_gradients",
+      "product": "geometric_asian_puts",
+      "output": "datasets/single_asset/equity/markovian/bates/price_gradients/geometric_asian_puts/bates_01__geometric_asian_puts_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/single_asset/equity/markovian/bates/price_gradients/geometric_asian_puts/bates_01__geometric_asian_puts_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/single_asset/equity/markovian/bates/price_gradients/geometric_asian_puts/bates_01__geometric_asian_puts_01__01_cartesian_shard00_price_gradient.json"
     },
     {
       "source": "single_asset/equity/markovian/bates/price_gradients/geometric_asian_puts/bates_01__geometric_asian_puts_01__01_price_gradient",
@@ -13128,6 +13128,20 @@
       "originalOutput": "datasets/single_asset/equity/markovian/schobel_zhu/price_gradients/double_knock_out_calls/schobel_zhu_01__double_knock_out_calls_01__01_price_gradient.json"
     },
     {
+      "source": "single_asset/equity/markovian/schobel_zhu/price_gradients/double_knock_out_puts/schobel_zhu_01__double_knock_out_puts_01__01_cartesian_shard00_price_gradient",
+      "id": "schobel_zhu_01__double_knock_out_puts_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "schobel_zhu",
+      "collection": "price_gradients",
+      "product": "double_knock_out_puts",
+      "output": "datasets/single_asset/equity/markovian/schobel_zhu/price_gradients/double_knock_out_puts/schobel_zhu_01__double_knock_out_puts_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/single_asset/equity/markovian/schobel_zhu/price_gradients/double_knock_out_puts/schobel_zhu_01__double_knock_out_puts_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/single_asset/equity/markovian/schobel_zhu/price_gradients/double_knock_out_puts/schobel_zhu_01__double_knock_out_puts_01__01_cartesian_shard00_price_gradient.json"
+    },
+    {
       "source": "single_asset/equity/markovian/schobel_zhu/price_gradients/double_knock_out_puts/schobel_zhu_01__double_knock_out_puts_01__01_price_gradient",
       "id": "schobel_zhu_01__double_knock_out_puts_01__01_price_gradient",
       "kind": "price_gradients",
@@ -13142,6 +13156,20 @@
       "originalOutput": "datasets/single_asset/equity/markovian/schobel_zhu/price_gradients/double_knock_out_puts/schobel_zhu_01__double_knock_out_puts_01__01_price_gradient.json"
     },
     {
+      "source": "single_asset/equity/markovian/schobel_zhu/price_gradients/down_and_in_puts/schobel_zhu_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient",
+      "id": "schobel_zhu_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "schobel_zhu",
+      "collection": "price_gradients",
+      "product": "down_and_in_puts",
+      "output": "datasets/single_asset/equity/markovian/schobel_zhu/price_gradients/down_and_in_puts/schobel_zhu_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/single_asset/equity/markovian/schobel_zhu/price_gradients/down_and_in_puts/schobel_zhu_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/single_asset/equity/markovian/schobel_zhu/price_gradients/down_and_in_puts/schobel_zhu_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient.json"
+    },
+    {
       "source": "single_asset/equity/markovian/schobel_zhu/price_gradients/down_and_in_puts/schobel_zhu_01__down_and_in_puts_01__01_price_gradient",
       "id": "schobel_zhu_01__down_and_in_puts_01__01_price_gradient",
       "kind": "price_gradients",
@@ -13154,6 +13182,20 @@
       "recipeMatchesReceipt": false,
       "catalogPath": "catalog/single_asset/equity/markovian/schobel_zhu/price_gradients/down_and_in_puts/schobel_zhu_01__down_and_in_puts_01__01_price_gradient",
       "originalOutput": "datasets/single_asset/equity/markovian/schobel_zhu/price_gradients/down_and_in_puts/schobel_zhu_01__down_and_in_puts_01__01_price_gradient.json"
+    },
+    {
+      "source": "single_asset/equity/markovian/schobel_zhu/price_gradients/down_and_out_puts/schobel_zhu_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient",
+      "id": "schobel_zhu_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "schobel_zhu",
+      "collection": "price_gradients",
+      "product": "down_and_out_puts",
+      "output": "datasets/single_asset/equity/markovian/schobel_zhu/price_gradients/down_and_out_puts/schobel_zhu_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/single_asset/equity/markovian/schobel_zhu/price_gradients/down_and_out_puts/schobel_zhu_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/single_asset/equity/markovian/schobel_zhu/price_gradients/down_and_out_puts/schobel_zhu_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient.json"
     },
     {
       "source": "single_asset/equity/markovian/schobel_zhu/price_gradients/down_and_out_puts/schobel_zhu_01__down_and_out_puts_01__01_price_gradient",
@@ -20488,6 +20530,20 @@
       "originalOutput": "datasets/single_asset/equity/rough/rough_sabr/price_gradients/double_knock_out_calls/rough_sabr_01__double_knock_out_calls_01__01_price_gradient.json"
     },
     {
+      "source": "single_asset/equity/rough/rough_sabr/price_gradients/double_knock_out_puts/rough_sabr_01__double_knock_out_puts_01__01_cartesian_shard00_price_gradient",
+      "id": "rough_sabr_01__double_knock_out_puts_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "rough_sabr",
+      "collection": "price_gradients",
+      "product": "double_knock_out_puts",
+      "output": "datasets/single_asset/equity/rough/rough_sabr/price_gradients/double_knock_out_puts/rough_sabr_01__double_knock_out_puts_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/single_asset/equity/rough/rough_sabr/price_gradients/double_knock_out_puts/rough_sabr_01__double_knock_out_puts_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/single_asset/equity/rough/rough_sabr/price_gradients/double_knock_out_puts/rough_sabr_01__double_knock_out_puts_01__01_cartesian_shard00_price_gradient.json"
+    },
+    {
       "source": "single_asset/equity/rough/rough_sabr/price_gradients/double_knock_out_puts/rough_sabr_01__double_knock_out_puts_01__01_price_gradient",
       "id": "rough_sabr_01__double_knock_out_puts_01__01_price_gradient",
       "kind": "price_gradients",
@@ -20500,6 +20556,20 @@
       "recipeMatchesReceipt": false,
       "catalogPath": "catalog/single_asset/equity/rough/rough_sabr/price_gradients/double_knock_out_puts/rough_sabr_01__double_knock_out_puts_01__01_price_gradient",
       "originalOutput": "datasets/single_asset/equity/rough/rough_sabr/price_gradients/double_knock_out_puts/rough_sabr_01__double_knock_out_puts_01__01_price_gradient.json"
+    },
+    {
+      "source": "single_asset/equity/rough/rough_sabr/price_gradients/down_and_in_puts/rough_sabr_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient",
+      "id": "rough_sabr_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "rough_sabr",
+      "collection": "price_gradients",
+      "product": "down_and_in_puts",
+      "output": "datasets/single_asset/equity/rough/rough_sabr/price_gradients/down_and_in_puts/rough_sabr_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/single_asset/equity/rough/rough_sabr/price_gradients/down_and_in_puts/rough_sabr_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/single_asset/equity/rough/rough_sabr/price_gradients/down_and_in_puts/rough_sabr_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient.json"
     },
     {
       "source": "single_asset/equity/rough/rough_sabr/price_gradients/down_and_in_puts/rough_sabr_01__down_and_in_puts_01__01_price_gradient",
@@ -20516,6 +20586,20 @@
       "originalOutput": "datasets/single_asset/equity/rough/rough_sabr/price_gradients/down_and_in_puts/rough_sabr_01__down_and_in_puts_01__01_price_gradient.json"
     },
     {
+      "source": "single_asset/equity/rough/rough_sabr/price_gradients/down_and_out_puts/rough_sabr_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient",
+      "id": "rough_sabr_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "rough_sabr",
+      "collection": "price_gradients",
+      "product": "down_and_out_puts",
+      "output": "datasets/single_asset/equity/rough/rough_sabr/price_gradients/down_and_out_puts/rough_sabr_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/single_asset/equity/rough/rough_sabr/price_gradients/down_and_out_puts/rough_sabr_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/single_asset/equity/rough/rough_sabr/price_gradients/down_and_out_puts/rough_sabr_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient.json"
+    },
+    {
       "source": "single_asset/equity/rough/rough_sabr/price_gradients/down_and_out_puts/rough_sabr_01__down_and_out_puts_01__01_price_gradient",
       "id": "rough_sabr_01__down_and_out_puts_01__01_price_gradient",
       "kind": "price_gradients",
@@ -20528,6 +20612,20 @@
       "recipeMatchesReceipt": false,
       "catalogPath": "catalog/single_asset/equity/rough/rough_sabr/price_gradients/down_and_out_puts/rough_sabr_01__down_and_out_puts_01__01_price_gradient",
       "originalOutput": "datasets/single_asset/equity/rough/rough_sabr/price_gradients/down_and_out_puts/rough_sabr_01__down_and_out_puts_01__01_price_gradient.json"
+    },
+    {
+      "source": "single_asset/equity/rough/rough_sabr/price_gradients/european_calls/rough_sabr_01__european_calls_01__01_cartesian_shard00_price_gradient",
+      "id": "rough_sabr_01__european_calls_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "rough_sabr",
+      "collection": "price_gradients",
+      "product": "european_calls",
+      "output": "datasets/single_asset/equity/rough/rough_sabr/price_gradients/european_calls/rough_sabr_01__european_calls_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/single_asset/equity/rough/rough_sabr/price_gradients/european_calls/rough_sabr_01__european_calls_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/single_asset/equity/rough/rough_sabr/price_gradients/european_calls/rough_sabr_01__european_calls_01__01_cartesian_shard00_price_gradient.json"
     },
     {
       "source": "single_asset/equity/rough/rough_sabr/price_gradients/european_calls/rough_sabr_01__european_calls_01__01_price_gradient",
@@ -21497,6 +21595,20 @@
       "originalOutput": "datasets/single_asset/equity/rough/rough_stein_stein/price_gradients/digital_puts/rough_stein_stein_01__digital_puts_01__01_price_gradient.json"
     },
     {
+      "source": "single_asset/equity/rough/rough_stein_stein/price_gradients/double_knock_out_calls/rough_stein_stein_01__double_knock_out_calls_01__01_cartesian_shard00_price_gradient",
+      "id": "rough_stein_stein_01__double_knock_out_calls_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "rough_stein_stein",
+      "collection": "price_gradients",
+      "product": "double_knock_out_calls",
+      "output": "datasets/single_asset/equity/rough/rough_stein_stein/price_gradients/double_knock_out_calls/rough_stein_stein_01__double_knock_out_calls_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/single_asset/equity/rough/rough_stein_stein/price_gradients/double_knock_out_calls/rough_stein_stein_01__double_knock_out_calls_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/single_asset/equity/rough/rough_stein_stein/price_gradients/double_knock_out_calls/rough_stein_stein_01__double_knock_out_calls_01__01_cartesian_shard00_price_gradient.json"
+    },
+    {
       "source": "single_asset/equity/rough/rough_stein_stein/price_gradients/double_knock_out_calls/rough_stein_stein_01__double_knock_out_calls_01__01_price_gradient",
       "id": "rough_stein_stein_01__double_knock_out_calls_01__01_price_gradient",
       "kind": "price_gradients",
@@ -21509,6 +21621,20 @@
       "recipeMatchesReceipt": false,
       "catalogPath": "catalog/single_asset/equity/rough/rough_stein_stein/price_gradients/double_knock_out_calls/rough_stein_stein_01__double_knock_out_calls_01__01_price_gradient",
       "originalOutput": "datasets/single_asset/equity/rough/rough_stein_stein/price_gradients/double_knock_out_calls/rough_stein_stein_01__double_knock_out_calls_01__01_price_gradient.json"
+    },
+    {
+      "source": "single_asset/equity/rough/rough_stein_stein/price_gradients/double_knock_out_puts/rough_stein_stein_01__double_knock_out_puts_01__01_cartesian_shard00_price_gradient",
+      "id": "rough_stein_stein_01__double_knock_out_puts_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "rough_stein_stein",
+      "collection": "price_gradients",
+      "product": "double_knock_out_puts",
+      "output": "datasets/single_asset/equity/rough/rough_stein_stein/price_gradients/double_knock_out_puts/rough_stein_stein_01__double_knock_out_puts_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/single_asset/equity/rough/rough_stein_stein/price_gradients/double_knock_out_puts/rough_stein_stein_01__double_knock_out_puts_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/single_asset/equity/rough/rough_stein_stein/price_gradients/double_knock_out_puts/rough_stein_stein_01__double_knock_out_puts_01__01_cartesian_shard00_price_gradient.json"
     },
     {
       "source": "single_asset/equity/rough/rough_stein_stein/price_gradients/double_knock_out_puts/rough_stein_stein_01__double_knock_out_puts_01__01_price_gradient",
@@ -21525,6 +21651,20 @@
       "originalOutput": "datasets/single_asset/equity/rough/rough_stein_stein/price_gradients/double_knock_out_puts/rough_stein_stein_01__double_knock_out_puts_01__01_price_gradient.json"
     },
     {
+      "source": "single_asset/equity/rough/rough_stein_stein/price_gradients/down_and_in_puts/rough_stein_stein_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient",
+      "id": "rough_stein_stein_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "rough_stein_stein",
+      "collection": "price_gradients",
+      "product": "down_and_in_puts",
+      "output": "datasets/single_asset/equity/rough/rough_stein_stein/price_gradients/down_and_in_puts/rough_stein_stein_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/single_asset/equity/rough/rough_stein_stein/price_gradients/down_and_in_puts/rough_stein_stein_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/single_asset/equity/rough/rough_stein_stein/price_gradients/down_and_in_puts/rough_stein_stein_01__down_and_in_puts_01__01_cartesian_shard00_price_gradient.json"
+    },
+    {
       "source": "single_asset/equity/rough/rough_stein_stein/price_gradients/down_and_in_puts/rough_stein_stein_01__down_and_in_puts_01__01_price_gradient",
       "id": "rough_stein_stein_01__down_and_in_puts_01__01_price_gradient",
       "kind": "price_gradients",
@@ -21539,6 +21679,20 @@
       "originalOutput": "datasets/single_asset/equity/rough/rough_stein_stein/price_gradients/down_and_in_puts/rough_stein_stein_01__down_and_in_puts_01__01_price_gradient.json"
     },
     {
+      "source": "single_asset/equity/rough/rough_stein_stein/price_gradients/down_and_out_puts/rough_stein_stein_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient",
+      "id": "rough_stein_stein_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "rough_stein_stein",
+      "collection": "price_gradients",
+      "product": "down_and_out_puts",
+      "output": "datasets/single_asset/equity/rough/rough_stein_stein/price_gradients/down_and_out_puts/rough_stein_stein_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/single_asset/equity/rough/rough_stein_stein/price_gradients/down_and_out_puts/rough_stein_stein_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/single_asset/equity/rough/rough_stein_stein/price_gradients/down_and_out_puts/rough_stein_stein_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient.json"
+    },
+    {
       "source": "single_asset/equity/rough/rough_stein_stein/price_gradients/down_and_out_puts/rough_stein_stein_01__down_and_out_puts_01__01_price_gradient",
       "id": "rough_stein_stein_01__down_and_out_puts_01__01_price_gradient",
       "kind": "price_gradients",
@@ -21551,6 +21705,20 @@
       "recipeMatchesReceipt": false,
       "catalogPath": "catalog/single_asset/equity/rough/rough_stein_stein/price_gradients/down_and_out_puts/rough_stein_stein_01__down_and_out_puts_01__01_price_gradient",
       "originalOutput": "datasets/single_asset/equity/rough/rough_stein_stein/price_gradients/down_and_out_puts/rough_stein_stein_01__down_and_out_puts_01__01_price_gradient.json"
+    },
+    {
+      "source": "single_asset/equity/rough/rough_stein_stein/price_gradients/european_calls/rough_stein_stein_01__european_calls_01__01_cartesian_shard00_price_gradient",
+      "id": "rough_stein_stein_01__european_calls_01__01_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "rough_stein_stein",
+      "collection": "price_gradients",
+      "product": "european_calls",
+      "output": "datasets/single_asset/equity/rough/rough_stein_stein/price_gradients/european_calls/rough_stein_stein_01__european_calls_01__01_cartesian_shard00_price_gradient.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/single_asset/equity/rough/rough_stein_stein/price_gradients/european_calls/rough_stein_stein_01__european_calls_01__01_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/single_asset/equity/rough/rough_stein_stein/price_gradients/european_calls/rough_stein_stein_01__european_calls_01__01_cartesian_shard00_price_gradient.json"
     },
     {
       "source": "single_asset/equity/rough/rough_stein_stein/price_gradients/european_calls/rough_stein_stein_01__european_calls_01__01_price_gradient",
@@ -22576,6 +22744,20 @@
       "originalOutput": "datasets/single_asset/fixed_income/cir/price_gradients/zero_coupon_bond_up_and_out_calls/cir_01__zero_coupon_bond_up_and_out_calls_01__01_price_gradient.json"
     },
     {
+      "source": "single_asset/fixed_income/cir/price_gradients/zero_coupon_bond_up_and_out_calls/cir_01__zero_coupon_bond_up_and_out_calls_02__02_cartesian_shard00_price_gradient",
+      "id": "cir_01__zero_coupon_bond_up_and_out_calls_02__02_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "cir",
+      "collection": "price_gradients",
+      "product": "zero_coupon_bond_up_and_out_calls",
+      "output": "datasets/single_asset/fixed_income/cir/price_gradients/zero_coupon_bond_up_and_out_calls/cir_01__zero_coupon_bond_up_and_out_calls_02__02_cartesian_shard00_price_gradient.json",
+      "rowCount": 65734,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/single_asset/fixed_income/cir/price_gradients/zero_coupon_bond_up_and_out_calls/cir_01__zero_coupon_bond_up_and_out_calls_02__02_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/single_asset/fixed_income/cir/price_gradients/zero_coupon_bond_up_and_out_calls/cir_01__zero_coupon_bond_up_and_out_calls_02__02_cartesian_shard00_price_gradient.json"
+    },
+    {
       "source": "single_asset/fixed_income/cir/prices/bermudan_payer_swaptions/cir_01__bermudan_payer_swaptions_01__01",
       "id": "cir_01__bermudan_payer_swaptions_01__01",
       "kind": "prices",
@@ -23115,6 +23297,20 @@
       "recipeMatchesReceipt": false,
       "catalogPath": "catalog/single_asset/fixed_income/cir_plus_plus/price_gradients/flat/zero_coupon_bond_up_and_out_calls/cir_plus_plus_01__flat_01__zero_coupon_bond_up_and_out_calls_01__01_price_gradient",
       "originalOutput": "datasets/single_asset/fixed_income/cir_plus_plus/price_gradients/flat/zero_coupon_bond_up_and_out_calls/cir_plus_plus_01__flat_01__zero_coupon_bond_up_and_out_calls_01__01_price_gradient.json"
+    },
+    {
+      "source": "single_asset/fixed_income/cir_plus_plus/price_gradients/flat/zero_coupon_bond_up_and_out_calls/cir_plus_plus_01__flat_01__zero_coupon_bond_up_and_out_calls_02__02_cartesian_shard00_price_gradient",
+      "id": "cir_plus_plus_01__flat_01__zero_coupon_bond_up_and_out_calls_02__02_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "cir_plus_plus",
+      "collection": "price_gradients",
+      "product": "zero_coupon_bond_up_and_out_calls",
+      "output": "datasets/single_asset/fixed_income/cir_plus_plus/price_gradients/flat/zero_coupon_bond_up_and_out_calls/cir_plus_plus_01__flat_01__zero_coupon_bond_up_and_out_calls_02__02_cartesian_shard00_price_gradient.json",
+      "rowCount": 67503,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/single_asset/fixed_income/cir_plus_plus/price_gradients/flat/zero_coupon_bond_up_and_out_calls/cir_plus_plus_01__flat_01__zero_coupon_bond_up_and_out_calls_02__02_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/single_asset/fixed_income/cir_plus_plus/price_gradients/flat/zero_coupon_bond_up_and_out_calls/cir_plus_plus_01__flat_01__zero_coupon_bond_up_and_out_calls_02__02_cartesian_shard00_price_gradient.json"
     },
     {
       "source": "single_asset/fixed_income/cir_plus_plus/price_gradients/nelson_siegel/bermudan_payer_swaptions/cir_plus_plus_01__nelson_siegel_01__bermudan_payer_swaptions_01__01_cartesian_shard00_price_gradient_frozen_exercise",

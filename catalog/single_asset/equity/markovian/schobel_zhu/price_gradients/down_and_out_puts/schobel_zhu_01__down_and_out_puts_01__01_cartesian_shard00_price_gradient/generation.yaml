@@ -1,0 +1,26 @@
+schema_version: 4
+status: complete
+inputs:
+  model:
+    path: datasets/parameters/model/equity/markovian/schobel_zhu/parameters/schobel_zhu_01.json
+    sha256: 661c88ef80a938cd9ddcddcbaa6f408cfa7f706b1580313cbf8636a0c8281e57
+  product:
+    path: datasets/parameters/product/down_and_out_option/down_and_out_options_01_shard00.json
+    sha256: 33b1cfb377c6e29dc0a8a6d549cf021d29d708c534e015a005b652796987017a
+output:
+  path: datasets/single_asset/equity/markovian/schobel_zhu/price_gradients/down_and_out_puts/schobel_zhu_01__down_and_out_puts_01__01_cartesian_shard00_price_gradient.json
+  sha256: 0d96f953f1a1127a18aa63d7a208c341f6b6a83fc3ab0266c9dbd4bd3bf0de29
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
+  name: NVIDIA A100 80GB PCIe
+  uuid: GPU-5102f6b2-92ef-1ca5-849f-649cb3851bf6
+  compute_capability: '8.0'
+  driver_version: 590.48.01
+software:
+  cmake: 3.31.6
+  cxx_compiler: GNU 14.2.0
+  cuda_compiler: 12.9.41
+  cuda_target_architectures: '80'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1

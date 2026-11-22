@@ -40,7 +40,7 @@ int main() {
 
     write_spot_relative_equity_product_dataset(
         "double_knock_out_options_01",
-        "Double-Knock-Out Calls",
+        "Double-Knock-Out Options",
         dataset_path,
         catalog_path,
         url,

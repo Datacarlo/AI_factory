@@ -1,0 +1,31 @@
+schema_version: 1
+status: complete
+inputs:
+  dataset:
+    path: datasets/single_asset/equity/markovian/black_scholes/price_gradients/up_and_in_calls/black_scholes_01__up_and_in_calls_01__01_cartesian_shard00_price_gradient.json
+    sha256: d6c9028fd5be6b2ae2daf05dc8c6b9d13cb1b17f5295ecb41ed59867b2451575
+  model:
+    path: datasets/parameters/model/equity/markovian/black_scholes/parameters/black_scholes_01.json
+    sha256: ee10ae56e0b040ea8215a306d78de38332bf0a091ce6161814620a8b19ce96a3
+  product:
+    path: datasets/parameters/product/up_and_in_option/up_and_in_options_01_shard00.json
+    sha256: 11e3f292c8ad5dfbdf15ccd21f8a4834636eacad68de2557eb388fdca40cf8a7
+output:
+  model:
+    path: fast_pricers/single_asset/equity/markovian/black_scholes/price_gradients/up_and_in_calls/black_scholes_01__up_and_in_calls_01__01_cartesian_shard00_price_gradient/medium/sobolev_lambda_0.1/model.pt
+    sha256: e9f0f606a298f28e3b4d45cae1a36b381491913b6466189f7c86a336a1bb1ea0
+  metrics:
+    path: fast_pricers/single_asset/equity/markovian/black_scholes/price_gradients/up_and_in_calls/black_scholes_01__up_and_in_calls_01__01_cartesian_shard00_price_gradient/medium/sobolev_lambda_0.1/metrics.json
+    sha256: 0ee886b2cddf7b554541e13281a1a41cad1ccdd1b1b708e6f9999a2c9452cbd2
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+  name: Tesla V100-SXM2-32GB
+  compute_capability: '7.0'
+software:
+  python: 3.13.5
+  pytorch: 2.7.1+cu126
+  cuda: '12.6'
+  cudnn: 90501
+  numpy: 2.2.6
+  pyyaml: 6.0.3

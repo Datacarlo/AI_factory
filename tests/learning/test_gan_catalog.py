@@ -83,7 +83,8 @@ def test_training_exports_inference_model_metrics_and_receipt(tiny):
     assert checkpoint['transform']['condition_mean'][0]==pytest.approx(.85)  # train only
     metrics=json.loads(collection_path(root,recipe['output']['metrics'],'gan').read_text())
     assert metrics['test']['sample_count']==32 and metrics['test']['grouped_condition_count']==2
-    assert not (root/'gan/published').exists()
+    assert model.is_relative_to(root/'GANS/unpublished')
+    assert not (root/'gan').exists()
 
 
 def test_catalogue_entrypoints_and_dataset_scanner(tmp_path):

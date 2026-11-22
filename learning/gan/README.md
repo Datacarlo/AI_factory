@@ -2,7 +2,7 @@
 
 One training engine consumes terminal samples. Network recipes live in
 [`catalog/gan/`](../../catalog/gan/README.md). Completed models are exported under
-`gan/unpublished/`; the sibling `gan/published/` is for externally distributed
+`GANS/unpublished/`; the sibling `GANS/published/` is for externally distributed
 models. These collections are local, like `datasets/` and `fast_pricers/`.
 
 ## One dataset, one pipeline
@@ -17,7 +17,7 @@ The dataset command creates a missing catalogue leaf and native reference sample
 then calls the same preparation, training and export routine as the leaf.
 Existing recipes and supplied reference archives are reused. `--prepare-only`
 checks and caches inputs without training; `--resume` restores the exact saved
-training state. `--output-root PATH` puts exports under `PATH/gan/` and resumable
+training state. `--output-root PATH` puts exports under `PATH/GANS/` and resumable
 runs under `PATH/runs/`. Logical output paths are unchanged.
 
 Training requires Python, NumPy, PyYAML and PyTorch with the appropriate CUDA
@@ -123,7 +123,7 @@ reuse the archive. Reference sampling conventions are explicit in each recipe.
 ## Use an exported GAN
 
 ```sh
-python -m learning.gan.sample gan/unpublished/equity/markovian/heston/samples_02/model.pt \
+python -m learning.gan.sample GANS/unpublished/equity/markovian/heston/samples_02/model.pt \
   conditions.json --samples-per-condition 8192 --output samples.json
 ```
 

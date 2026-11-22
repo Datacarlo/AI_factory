@@ -1,0 +1,31 @@
+schema_version: 1
+status: complete
+inputs:
+  dataset:
+    path: datasets/single_asset/equity/markovian/cev/prices/athena_autocalls/cev_01__athena_autocalls_01__01_cartesian_shard00.json
+    sha256: ada2ad26d6c1536d0c736808050f3768e18b73df5652fdc91f2978ab1b16f1b2
+  model:
+    path: datasets/parameters/model/equity/markovian/cev/parameters/cev_01.json
+    sha256: eb601cf70e94d2484c5e63fb8579cb5766943c79384454c40bea7d0d8006f3c9
+  product:
+    path: datasets/parameters/product/athena_autocall/athena_autocalls_01_shard00.json
+    sha256: 44a06d021eba31d46753a81617b9d6f28da6f5ef85b00ca6f9be4f67d7eefd0b
+output:
+  model:
+    path: fast_pricers/single_asset/equity/markovian/cev/prices/athena_autocalls/cev_01__athena_autocalls_01__01_cartesian_shard00/small/price/model.pt
+    sha256: 7b962698abcaa4c18e5c4e144ce37c66f53cef8ec7b6cfbd4dbcc4d52cd70991
+  metrics:
+    path: fast_pricers/single_asset/equity/markovian/cev/prices/athena_autocalls/cev_01__athena_autocalls_01__01_cartesian_shard00/small/price/metrics.json
+    sha256: 840bff11bc6e4738b447332b03207718852a5f81da7149937aa8660c0cc5f470
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+  name: Tesla V100-SXM2-32GB
+  compute_capability: '7.0'
+software:
+  python: 3.13.5
+  pytorch: 2.7.1+cu126
+  cuda: '12.6'
+  cudnn: 90501
+  numpy: 2.2.6
+  pyyaml: 6.0.3

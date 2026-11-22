@@ -5,7 +5,7 @@ generator: catalog/parameters/product/double_knock_out_option/double_knock_out_o
 output:
   path: datasets/parameters/product/double_knock_out_option/double_knock_out_options_01.json
   format: json
-product_family: Double-Knock-Out Calls
+product_family: Double-Knock-Out Options
 row_count: 1000
 time_convention:
   unit: business_day
