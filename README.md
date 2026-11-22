@@ -19,7 +19,9 @@ The [capability manifest](tools/codegen/pricing_bindings/capability_manifest.py)
 
 The [fast-pricer catalogue](catalog/fast_pricers/README.md) contains one training
 script and recipe per network, backed by the shared `learning/fast_pricing` engine.
-Trained weights are distributed separately from the source code.
+The [GAN catalogue](catalog/gan/README.md) similarly provides conditional terminal
+generators backed by `learning/gan`. Trained weights are distributed separately
+from the source code.
 
 ## Build
 

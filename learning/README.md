@@ -6,13 +6,21 @@
 
 [`common/terminal_samples.py`](common/terminal_samples.py) streams the large sample JSON and preserves groups of paths sharing one parameter row when assigning training, validation and test splits. `maturity_days` is an explicit condition. Model-specific observable names and units come from the sample recipe.
 
-`gan/` provides conditional terminal generators, critics, preprocessing, monitoring and evaluation. A configured run can be started and inspected with:
+[`gan/`](gan/README.md) provides one conditional terminal-GAN pipeline. Network
+leaves live in [`catalog/gan/`](../catalog/gan/README.md), with `training.py`,
+`recipe.yaml` and a `generation.yaml` after successful export. Weights, metrics and
+fixed-condition reference samples live in the local `gan/unpublished/` collection.
 
 ```sh
-python3 -m learning.gan.train --config /path/to/gan-config.yaml
-python3 -m learning.gan.watch /path/to/gan-run
-python3 -m learning.gan.evaluate /path/to/gan-run /path/to/samples.json
+python3 -m learning.gan.train --dataset datasets/samples/equity/markovian/heston/samples_02.json
+python3 -m learning.gan.train --recipe catalog/gan/equity/markovian/heston/samples_02/recipe.yaml
 ```
+
+The common 3M protocol uses a logistic GAN, three hidden layers of 256 neurons,
+LR 1e-4, and validation-driven patiences 2/6. Heston, Bates, rough Heston and CIR
+have completed the initial evaluation; the registry also supports the remaining
+available curve-free sample families. Independent repeated samples
+at fixed parameters and maturity are required for distributional validation.
 
 Terminal samples support terminal observables. A payoff requiring the full path needs a path dataset.
 

@@ -1,8 +1,9 @@
-"""Resumable conditional WGAN-GP training for terminal distributions."""
+"""Resumable conditional GAN training for terminal distributions."""
 
 from __future__ import annotations
 
 import copy
+import math
 from dataclasses import dataclass
 import hashlib
 import importlib
@@ -125,6 +126,18 @@ def _scheduler(optimizer, training: dict[str, Any], epochs: int):
     name = training["scheduler"]
     if name == "constant":
         return None
+    if name == "plateau":
+        return torch.optim.lr_scheduler.ReduceLROnPlateau(
+            optimizer,
+            mode="min",
+            factor=training["plateau_factor"],
+            # PyTorch reduces after > patience bad events; expose an exact count.
+            patience=training["plateau_patience"] - 1,
+            threshold=training["validation_min_delta"],
+            threshold_mode="abs",
+            cooldown=training["plateau_cooldown"],
+            min_lr=training["minimum_learning_rate"],
+        )
     if name == "cosine":
         return torch.optim.lr_scheduler.CosineAnnealingLR(
             optimizer, T_max=epochs
@@ -132,6 +145,29 @@ def _scheduler(optimizer, training: dict[str, Any], epochs: int):
     return torch.optim.lr_scheduler.ExponentialLR(
         optimizer, gamma=float(training["scheduler_gamma"])
     )
+
+
+def _should_stop(
+    history: list[dict[str, Any]], training: dict[str, Any]
+) -> bool:
+    """Derive plateau state from checkpointed history, including after resume."""
+    patience = int(training.get("early_stopping_patience", 0))
+    if (
+        not patience or not history
+        or history[-1]["epoch"] < training.get("minimum_epochs", 0)
+    ):
+        return False
+    best, stale = float("inf"), 0
+    delta = float(training.get("validation_min_delta", 0.0))
+    for record in history:
+        if "validation" not in record:
+            continue
+        score = float(record["validation"]["selection_score"])
+        if score < best - delta:
+            best, stale = score, 0
+        else:
+            stale += 1
+    return stale >= patience
 
 
 def _loader(
@@ -533,6 +569,8 @@ def train_experiment(
 
     try:
         for epoch in range(completed_epoch + 1, epochs + 1):
+            if _should_stop(history, training):
+                break
             train_loader = _loader(
                 prepared,
                 selection.train_indices,
@@ -790,9 +828,15 @@ def train_experiment(
                         run_directory / "state.json", state
                     )
 
-            if generator_scheduler is not None:
+            if (
+                generator_scheduler is not None
+                and training["scheduler"] != "plateau"
+            ):
                 generator_scheduler.step()
-            if critic_scheduler is not None:
+            if (
+                critic_scheduler is not None
+                and training["scheduler"] != "plateau"
+            ):
                 critic_scheduler.step()
             train_seconds = time.time() - epoch_started
             epoch_record: dict[str, Any] = {
@@ -836,6 +880,17 @@ def train_experiment(
                 score = float(
                     validation_metrics["selection_score"]
                 )
+                if not math.isfinite(score):
+                    raise ValueError("Non-finite GAN validation score")
+                if training["scheduler"] == "plateau":
+                    generator_scheduler.step(score)
+                    critic_scheduler.step(score)
+                    epoch_record["generator_learning_rate"] = (
+                        generator_optimizer.param_groups[0]["lr"]
+                    )
+                    epoch_record["critic_learning_rate"] = (
+                        critic_optimizer.param_groups[0]["lr"]
+                    )
                 if (
                     best_validation_score is None
                     or score < best_validation_score
@@ -939,14 +994,17 @@ def train_experiment(
             device,
             evaluation,
         )
-        test_metrics = evaluate_generator(
-            ema_generator,
-            test_loader,
-            prepared.schema,
-            transform,
-            device,
-            {**evaluation, "seed": int(evaluation["seed"]) + 1},
-        )
+        # Campaign screens reserve test evaluation for the selected configuration.
+        test_metrics = None
+        if evaluation.get("evaluate_test", True):
+            test_metrics = evaluate_generator(
+                ema_generator,
+                test_loader,
+                prepared.schema,
+                transform,
+                device,
+                {**evaluation, "seed": int(evaluation["seed"]) + 1},
+            )
         elapsed = previous_elapsed + time.time() - started
         training_seconds = sum(
             float(record["train_seconds"])
@@ -955,7 +1013,7 @@ def train_experiment(
         _atomic_torch_save(
             run_directory / "last_model.pt",
             {
-                "epoch": epochs,
+                "epoch": int(history[-1]["epoch"]),
                 "generator_state_dict": generator.state_dict(),
                 "ema_generator_state_dict": last_ema_state_dict,
                 "critic_state_dict": critic.state_dict(),
@@ -1014,7 +1072,11 @@ def train_experiment(
         state.update(
             {
                 "status": "completed",
-                "completed_epochs": epochs,
+                "completed_epochs": int(history[-1]["epoch"]),
+                "stop_reason": (
+                    "validation_plateau" if _should_stop(history, training)
+                    else "epoch_budget"
+                ),
                 "elapsed_seconds": elapsed,
             }
         )

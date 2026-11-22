@@ -1,0 +1,19 @@
+schema_version: 4
+status: complete
+inputs: {}
+output:
+  path: datasets/samples/equity/rough/rough_stein_stein/samples_02.json
+  sha256: 0133fc05f600e80451e6287e897c0d807450a98b5b36c8c90ce14f77c7b7f800
+hardware:
+  device: gpu
+  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
+  name: NVIDIA GeForce RTX 4090 Laptop GPU
+  uuid: GPU-214a7d0d-e7b0-ded2-983c-0c960ec5bcd4
+  compute_capability: '8.9'
+  driver_version: '616.87'
+software:
+  cxx_compiler: g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
+  cuda_compiler: Cuda compilation tools, release 13.3, V13.3.73
+  cuda_target_architectures: '89'
+  nlohmann_json: 3.10.5-2
+  mathdx: 26.06.1

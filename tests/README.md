@@ -23,3 +23,14 @@ distributed factor datasets are unavailable. To inspect and run a configured bui
 ctest --test-dir build -N
 ctest --test-dir build --output-on-failure
 ```
+
+Python learning contracts can be run without a CUDA build (install PyTorch,
+NumPy, PyYAML, pytest and jsonschema):
+
+```sh
+python -m pytest tests/learning/test_gan_catalog.py tests/learning/test_fast_pricer_catalog.py
+```
+
+The GAN contract includes a tiny CPU training/export, fixed-condition reference
+preparation, input leakage checks and a catalogue entry point outside the checkout.
+Full dataset replays and native simulator comparisons remain local audit evidence.

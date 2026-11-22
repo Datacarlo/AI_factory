@@ -1,0 +1,83 @@
+schema_version: 1
+kind: terminal_gan
+id: log_modulated_rough_bergomi__samples_01__gan_256
+model: log_modulated_rough_bergomi
+training: catalog/gan/equity/rough/log_modulated_rough_bergomi/samples_01/training.py
+dataset:
+  id: samples_01
+  path: datasets/samples/equity/rough/log_modulated_rough_bergomi/samples_01.json
+inputs:
+  conditions:
+  - xi_0
+  - eta
+  - hurst_exponent
+  - rho
+  - log_modulation_scale
+  - log_modulation_power
+  - T
+  fixed:
+    spot: 1.0
+  time_convention:
+    days_per_year: 252
+    T: maturity_days / 252
+observable:
+  name: spot
+  transform:
+    name: log_shift
+    offset: 1.0e-12
+reference:
+  path: gan/equity/rough/log_modulated_rough_bergomi/samples_02/reference.npz
+  conditions_dataset:
+    id: samples_01
+    path: datasets/samples/equity/rough/log_modulated_rough_bergomi/samples_01.json
+  groups_per_split: 128
+  paths_per_condition: 8192
+  selection: stored_in_archive
+  selection_seed: 2026112091
+  simulation_seed: 2026112091827
+  method: Source Volterra FFT terminal sample pipeline, dt=1/504
+data:
+  training_rows: exclude_reference_parameters
+  normalization: training_only
+network:
+  hidden_sizes:
+  - 256
+  - 256
+  - 256
+  activation: softplus
+  softplus_beta: 10
+  embedding_size: 150
+  latent_dimension: 5
+  latent_distribution: uniform_0_1
+objective: logistic
+training_options:
+  seed: 1701
+  epochs: 53
+  batch_size: 2000
+  critic_steps: 5
+  generator_learning_rate: 0.0001
+  critic_learning_rate: 0.0001
+  adam_betas:
+  - 0.5
+  - 0.9
+  scheduler: plateau
+  plateau_patience: 2
+  plateau_factor: 0.5
+  minimum_learning_rate: 1.0e-06
+  validation_min_delta: 0.001
+  early_stopping_patience: 6
+  minimum_epochs: 9
+  ema_decay: 0.99
+  validation_interval: 1
+  log_interval: 50
+  deterministic: true
+  num_workers: 0
+  device: cuda
+evaluation:
+  validation_seed: 941
+  test_seed: 942
+  select: validation
+  score: mean(W1 / reference_std + 0.1 * abs(log(generated_std / reference_std)))
+output:
+  model: gan/equity/rough/log_modulated_rough_bergomi/samples_01/model.pt
+  metrics: gan/equity/rough/log_modulated_rough_bergomi/samples_01/metrics.json

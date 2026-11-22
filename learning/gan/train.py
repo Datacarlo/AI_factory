@@ -1,4 +1,4 @@
-"""Prepare terminal samples and train one conditional WGAN-GP."""
+"""Train conditional terminal GANs with common catalogue recipes or experimental configs."""
 
 from __future__ import annotations
 
@@ -136,5 +136,47 @@ def main() -> int:
     return 0
 
 
+def recipe_main(default_recipe=None):
+    """One command accepts a leaf recipe or a sample dataset."""
+    from learning.common.io import repository_root
+    from .catalogue import create_leaf
+    from .references import create_reference
+    from .recipes import run_recipe
+    from .data import prepare
+    import yaml
+    parser=argparse.ArgumentParser(description='Train a common conditional GAN from a recipe or dataset')
+    parser.add_argument('--recipe',type=Path,default=default_recipe)
+    parser.add_argument('--dataset',type=Path)
+    parser.add_argument('--root',type=Path)
+    parser.add_argument('--output-root',type=Path)
+    parser.add_argument('--cache-root',type=Path)
+    parser.add_argument('--resume',action='store_true')
+    parser.add_argument('--prepare-only',action='store_true')
+    parser.add_argument('--create-reference',action='store_true',
+        help='Create missing native reference samples (requires CUDA compiler); changes holdouts if original archive is unavailable')
+    parser.add_argument('--nvcc',default='nvcc')
+    parser.add_argument('--architecture',help='CUDA SM for native references; default is current GPU')
+    args=parser.parse_args()
+    root=(args.root or repository_root(Path(__file__))).resolve()
+    if args.dataset:
+        if args.recipe is not None: parser.error('Choose --dataset or --recipe')
+        args.recipe=create_leaf(root,args.dataset)
+        args.create_reference=True
+    if args.recipe is None: parser.error('--dataset or --recipe is required')
+    recipe_path=args.recipe.resolve()
+    recipe=yaml.safe_load(recipe_path.read_text())
+    if args.create_reference:
+        create_reference(root,recipe,nvcc=args.nvcc,architecture=args.architecture)
+    if args.prepare_only:
+        data=prepare(root,recipe,cache_root=args.cache_root)
+        print('Prepared:',data.directory)
+        return 0
+    run_recipe(recipe_path,root,cache_root=args.cache_root,output_root=args.output_root,resume=args.resume)
+    print('Completed:',recipe['output']['model'])
+    return 0
+
+
 if __name__ == "__main__":
-    raise SystemExit(main())
+    import sys
+    # Keep explicit experimental configurations available; catalogue is the default.
+    raise SystemExit(main() if '--config' in sys.argv else recipe_main())

@@ -70,12 +70,12 @@ def validate_path(path: Path, kind: str) -> None:
 
 
 def catalogue_documents(root: Path) -> Iterable[tuple[str, Path]]:
-    """Enumerate dataset metadata; network recipes belong to learning.fast_pricing."""
+    """Enumerate dataset metadata; network recipes have their own catalogues."""
 
     for kind in ("recipe", "generation"):
         folder = root / "catalog"
         yield from ((kind, path) for path in sorted(folder.rglob(f"{kind}.yaml"))
-                    if path.relative_to(folder).parts[0] != "fast_pricers")
+                    if path.relative_to(folder).parts[0] not in {"fast_pricers", "gan"})
 
 
 def validate_repository(

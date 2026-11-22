@@ -56,6 +56,11 @@ __device__ __noinline__ int prepare_row(
     if (row_valid) {
         *nodes = task.nodes;
         *stencil = task.stencil;
+        // A path policy may refine the preparation's conservative requirement.
+        // Preserve the default for policies that need the central state/payoff.
+        if constexpr (requires { Policy::central_requirement(task.stencil); }) {
+            task.central_requirement = Policy::central_requirement(task.stencil);
+        }
         *central_requirement = computes_central_price
             ? pg::CentralRequirement::payoff
             : task.central_requirement;

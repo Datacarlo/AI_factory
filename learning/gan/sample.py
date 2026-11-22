@@ -61,7 +61,7 @@ def main() -> int:
     if arguments.batch_size <= 0:
         parser.error("--batch-size must be positive")
 
-    checkpoint_path = arguments.run_directory / (
+    checkpoint_path = arguments.run_directory if arguments.run_directory.is_file() else arguments.run_directory / (
         "best_model.pt"
         if arguments.checkpoint == "best"
         else "last_model.pt"

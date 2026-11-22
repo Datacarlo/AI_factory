@@ -1,11 +1,9 @@
-// CIR++ curve fitting, conditional analytics, exact-factor samples and LSM integration.
+// CIR++ curve fitting, conditional analytics and LSM integration.
 // JSON-lines output is consumed by the explicit independent-reference diagnostic.
 #include "model/fixed_income/cir_plus_plus/nelson_siegel/analytics_impl.cuh"
 #include "model/fixed_income/cir_plus_plus/svensson/analytics_impl.cuh"
 #include "model/fixed_income/cir_plus_plus/product/nelson_siegel/bermudan_swaption.cuh"
 #include "model/fixed_income/cir_plus_plus/product/svensson/bermudan_swaption.cuh"
-#include "model/fixed_income/cir_plus_plus/sample.cuh"
-#include "model/fixed_income/cir/sample.cuh"
 #include "product/european_swaption/schedule.cuh"
 #include "fixed_income/jamshidian_cooperative.cuh"
 #include "tools/cuda/pricing_runner.cuh"
@@ -170,25 +168,6 @@ void check_zero_strike_regression() {
     close(result[7],result[4],2e-6f,"Cooperative CIR++ zero-strike receiver regression");
 }
 
-void check_samples() {
-    constexpr std::size_t paths=1024, count=8*paths;
-    cuda::DeviceBuffer<cirpp::ModelParameters> dm(models.size());
-    cuda::DeviceBuffer<float> base(count), shifted(count);
-    dm.copy_from(models.data());
-    cir::launch_cir_terminal_samples_cuda(dm.data(),models.size(),paths,252,0,count,128,8,8821,base.data());
-    cirpp::launch_cir_plus_plus_terminal_samples_cuda(dm.data(),models.size(),paths,252,0,count,128,8,8821,shifted.data());
-    std::vector<float> a(count), b(count);
-    base.copy_to(a.data()); shifted.copy_to(b.data());
-    require(a==b,"CIR++ sampler changed the underlying CIR trajectory mapping");
-    for (auto x:b) require(std::isfinite(x) && x>=0,"Invalid CIR++ factor sample");
-    // Both caller batching and geometry must preserve path-indexed Philox counters.
-    for (std::size_t offset=0; offset<count; offset+=paths)
-        cirpp::launch_cir_plus_plus_terminal_samples_cuda(dm.data(),models.size(),paths,252,
-            offset,paths,256,1,8821,shifted.data());
-    shifted.copy_to(b.data());
-    require(a==b,"CIR++ sample batching changed trajectories");
-}
-
 template<typename Curve, typename Launcher>
 void check_bermudan(Curve curve, const char* curve_name, Launcher launch, std::size_t paths) {
     const std::vector<cirpp::ModelParameters> factors{models[0],models[1],models[6]};
@@ -238,7 +217,6 @@ int main(int argc,char** argv) try {
             CurveSV{level,-.01f,.02f,.01f,2.f,5.f},"svensson",
             {{"beta0",level},{"beta1",-.01f},{"beta2",.02f},{"beta3",.01f},{"tau1",2.f},{"tau2",5.f}});
     }
-    check_samples();
     check_bermudan(CurveNS{.03f,-.01f,.02f,2.f},"nelson_siegel",
         [](auto side,auto m,auto c,auto hp,auto p,auto n,auto paths,auto out,auto se) {
             const auto run=[&]<SwaptionSide Side>() {

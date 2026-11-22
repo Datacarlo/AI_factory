@@ -1,6 +1,5 @@
 """A compact recipe per network; one shared preparation and training engine."""
 from __future__ import annotations
-import platform
 from pathlib import Path
 
 import numpy as np
@@ -10,6 +9,7 @@ import yaml
 from learning.common.data.transforms import fit_standardization
 from .data import prepare_equity, split_dataset
 from .engine import train_experiment
+from learning.common.environment import environment
 from .io import pricer_output_path, sha256, write_json, write_yaml
 from .supervision import gradient_statistics
 
@@ -79,20 +79,6 @@ def configuration(recipe, prepared, selection):
         raise ValueError('Unknown training objective')
     config['loss'] = {'terms': terms}
     return config
-
-
-def environment():
-    cpu = platform.processor() or platform.machine()
-    if Path('/proc/cpuinfo').exists():
-        cpu = next((s.split(':', 1)[1].strip() for s in Path('/proc/cpuinfo').read_text().splitlines()
-                    if s.startswith('model name')), cpu)
-    hardware = dict(device='gpu' if torch.cuda.is_available() else 'cpu', cpu_model=cpu)
-    if torch.cuda.is_available():
-        hardware.update(name=torch.cuda.get_device_name(),
-                        compute_capability='.'.join(map(str, torch.cuda.get_device_capability())))
-    return dict(hardware=hardware, software=dict(python=platform.python_version(),
-        pytorch=str(torch.__version__), cuda=torch.version.cuda,
-        cudnn=torch.backends.cudnn.version(), numpy=np.__version__, pyyaml=yaml.__version__))
 
 
 def run_recipe(recipe_path: Path, root: Path, *, cache_root=None, prepared=None,

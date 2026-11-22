@@ -1,0 +1,28 @@
+schema_version: 1
+status: complete
+inputs:
+  dataset:
+    path: datasets/samples/equity/markovian/sabr/samples_02.json
+    sha256: 75cd1eb4b297503e08a9dcccd9f791dc862a7c623b24a55fd0f79a8efc0c664b
+  reference:
+    path: gan/equity/markovian/sabr/samples_02/reference.npz
+    sha256: 0dda06d9774c53aec41adaedd2596e848a9c873c5642cd8e082ee7fb1c305962
+output:
+  model:
+    path: gan/equity/markovian/sabr/samples_02/model.pt
+    sha256: d06683bed04080ca7749e20d9c66ef999451e1da83e3a9ea422cf39bf8cd451b
+  metrics:
+    path: gan/equity/markovian/sabr/samples_02/metrics.json
+    sha256: 8631288fa82eeb33125baefcb2520d714c27058b1acf8e7e5355c054d6e274b4
+hardware:
+  device: gpu
+  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
+  name: NVIDIA GeForce RTX 4090 Laptop GPU
+  compute_capability: '8.9'
+software:
+  python: 3.11.15
+  pytorch: 2.12.1+cu130
+  cuda: '13.0'
+  cudnn: 92000
+  numpy: 2.4.6
+  pyyaml: 6.0.3
