@@ -6,10 +6,10 @@ inputs:
     sha256: 5b4c16d54d626795b3484982ee1195528ab7b2da42154c0e8084563cb7764843
   product:
     path: datasets/parameters/product/double_knock_out_option/double_knock_out_options_01_shard00.json
-    sha256: 0893638738010e0481e4a6df961729ad51a300dcc4a8b976bb83aa2c1d7dcde6
+    sha256: 1c07809086c315b02c1e4ccbf6c00a77305291e9497d9f495bff4237989d8311
 output:
   path: datasets/single_asset/equity/rough/rough_sabr/price_gradients/double_knock_out_calls/rough_sabr_01__double_knock_out_calls_01__01_cartesian_shard00_price_gradient.json
-  sha256: 29aac24bf9dee1a1b7cdb2c345c28314bb2367e4ed600a28f40c94b82405086c
+  sha256: 11545b292a09e82e248ac61c8bb978aad51e8462ffef54ce483aa1e6755fb87d
 hardware:
   device: gpu
   cpu_model: Intel(R) Core(TM) Ultra 9 285K

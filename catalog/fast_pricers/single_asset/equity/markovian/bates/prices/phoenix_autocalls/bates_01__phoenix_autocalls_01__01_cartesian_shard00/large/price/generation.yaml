@@ -1,0 +1,31 @@
+schema_version: 1
+status: complete
+inputs:
+  dataset:
+    path: datasets/single_asset/equity/markovian/bates/prices/phoenix_autocalls/bates_01__phoenix_autocalls_01__01_cartesian_shard00.json
+    sha256: 58df0e303f07e797e20980251b78411f2c2007daa90f6224fc0ce29c6b1b1402
+  model:
+    path: datasets/parameters/model/equity/markovian/bates/parameters/bates_01.json
+    sha256: 84eeb1797d0f77b4c56baac0d8f1eedf35130bc91bdfcbcdf2877fea02b991d5
+  product:
+    path: datasets/parameters/product/phoenix_autocall/phoenix_autocalls_01_shard00.json
+    sha256: a8c37d370c1eef4cd4b931bee8eb0cac71479995b8e001eaf032b91193752297
+output:
+  model:
+    path: fast_pricers/single_asset/equity/markovian/bates/prices/phoenix_autocalls/bates_01__phoenix_autocalls_01__01_cartesian_shard00/large/price/model.pt
+    sha256: c9eacc9a0ec66b8c5e99e3214e7871287a1a6d42cbd94e2ad710c40886319095
+  metrics:
+    path: fast_pricers/single_asset/equity/markovian/bates/prices/phoenix_autocalls/bates_01__phoenix_autocalls_01__01_cartesian_shard00/large/price/metrics.json
+    sha256: 05496e1d8a9c9d80d43bc79449888db0737088cd38f1710608d16fc37f39db58
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+  name: Tesla V100-SXM2-32GB
+  compute_capability: '7.0'
+software:
+  python: 3.13.5
+  pytorch: 2.7.1+cu126
+  cuda: '12.6'
+  cudnn: 90501
+  numpy: 2.2.6
+  pyyaml: 6.0.3

@@ -19,6 +19,8 @@ python catalog/gan/equity/markovian/heston/samples_02/training.py
 The source sample JSON and the supplied `reference.npz` are required for exact
 training reproduction. Logical paths start with `datasets/` or `gan/`; the loader
 checks `unpublished/`, then `published/`, then the direct collection path.
+The logical `gan/` namespace resolves to the physical `GANS/` export folder;
+public download URLs use `GANS/`.
 The source JSON's parameter and maturity values are read without changing the
 simulation data. The reference archive contains independent repeated samples at
 fixed conditions, used for validation, test and a simulator-versus-simulator check.
@@ -27,7 +29,7 @@ It is an input to training, not a learned model.
 Completed files are local and distributed separately from Git:
 
 ```text
-gan/
+GANS/
   published/
   unpublished/
     <same relative leaf>/

@@ -40,6 +40,9 @@ def collection_path(root: Path, relative: str, collection: str, *, output=False,
     if path.is_absolute() or '..' in path.parts or path.parts[:1] != (collection,) or len(path.parts) < 2:
         raise ValueError(f'Expected a logical {collection}/... path')
     suffix = Path(*path.parts[1:])
+    # Keep the logical catalogue namespace compatible with existing training runs.
+    collection = 'GANS' if collection == 'gan' else collection
+    path = Path(collection) / suffix
     if output_root is not None:
         return Path(output_root) / path
     if output:

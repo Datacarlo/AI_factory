@@ -1,0 +1,26 @@
+schema_version: 4
+status: complete
+inputs:
+  model:
+    path: datasets/parameters/model/equity/rough/rough_sabr/parameters/rough_sabr_01.json
+    sha256: 5b4c16d54d626795b3484982ee1195528ab7b2da42154c0e8084563cb7764843
+  product:
+    path: datasets/parameters/product/european_option/european_options_01_shard00.json
+    sha256: 0c4160b6db1799a7e4c704ee84224e2e0f33f31918be2d9f645b38bf46695329
+output:
+  path: datasets/single_asset/equity/rough/rough_sabr/price_gradients/european_calls/rough_sabr_01__european_calls_01__01_cartesian_shard00_price_gradient.json
+  sha256: ee49bce3cb6f1a11a14c330777142f11490d2bb700c6925c10cfa6192cb95321
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Core(TM) Ultra 9 285K
+  name: NVIDIA GeForce RTX 5090
+  uuid: GPU-11b9a6f1-3f11-a2b5-400c-0eee5c2089c6
+  compute_capability: '12.0'
+  driver_version: 615.71.09
+software:
+  cmake: 3.31.6
+  cxx_compiler: GNU 14.2.0
+  cuda_compiler: 13.2.86
+  cuda_target_architectures: '120'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1

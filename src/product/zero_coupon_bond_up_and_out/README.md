@@ -27,8 +27,8 @@ models add the deterministic curve shift to both bond analytics and the rate
 integral. OU, Vasicek, G2, Hull–White and G2++ use exact Gaussian joint
 factor/integral increments. CIR and CIR++ use exact noncentral chi-square
 factor transitions with a trapezoidal approximation to the stochastic rate
-integral. All catalogue recipes use one observation per business day and
-65,536 Philox paths per row; the CIR-family prices therefore have an additional
+integral. Current catalogue recipes use two observations per business day (`dt = 1/504`)
+and 1,048,576 Philox paths per row; the CIR-family prices therefore have an additional
 rate-integral time-step bias.
 
 **The catalogue price is an approximation to the continuously monitored

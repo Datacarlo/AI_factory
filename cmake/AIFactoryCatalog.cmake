@@ -239,3 +239,15 @@ endforeach()
 foreach(source IN LISTS AI_FACTORY_MANIFEST_SAMPLE_GENERATOR_SOURCES)
     ai_factory_register_catalog_generator("${source}" sample)
 endforeach()
+
+# Published calibrated bond-barrier revision. These frozen recipe bodies reuse
+# the existing libraries; the original product revision remains available.
+foreach(recipe IN ITEMS zero_coupon_bond_up_and_outs_02 zero_coupon_bond_up_and_outs_02_shard00)
+    ai_factory_register_catalog_generator(
+        "catalog/parameters/product/zero_coupon_bond_up_and_out/${recipe}/generator.cpp" parameter)
+endforeach()
+foreach(source IN ITEMS
+    "catalog/single_asset/fixed_income/cir/price_gradients/zero_coupon_bond_up_and_out_calls/cir_01__zero_coupon_bond_up_and_out_calls_02__02_cartesian_shard00_price_gradient/generator.cpp"
+    "catalog/single_asset/fixed_income/cir_plus_plus/price_gradients/flat/zero_coupon_bond_up_and_out_calls/cir_plus_plus_01__flat_01__zero_coupon_bond_up_and_out_calls_02__02_cartesian_shard00_price_gradient/generator.cpp")
+    ai_factory_register_catalog_generator("${source}" price)
+endforeach()

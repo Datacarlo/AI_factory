@@ -1,0 +1,31 @@
+schema_version: 1
+status: complete
+inputs:
+  dataset:
+    path: datasets/single_asset/equity/markovian/bates/price_gradients/digital_puts/bates_01__digital_puts_01__01_cartesian_shard00_price_gradient.json
+    sha256: a2264baa5a01ac31d0f0c18b2573ef34d86354658144e0718bc7c5a4302cc62e
+  model:
+    path: datasets/parameters/model/equity/markovian/bates/parameters/bates_01.json
+    sha256: 84eeb1797d0f77b4c56baac0d8f1eedf35130bc91bdfcbcdf2877fea02b991d5
+  product:
+    path: datasets/parameters/product/digital_option/digital_options_01_shard00.json
+    sha256: c627548acf44681c61e8bf91a1cca8b662e8b4597fae1139dce8cf40647fcb41
+output:
+  model:
+    path: fast_pricers/single_asset/equity/markovian/bates/price_gradients/digital_puts/bates_01__digital_puts_01__01_cartesian_shard00_price_gradient/large/sobolev_lambda_10/model.pt
+    sha256: fba72640e89190ba2a5c424bd47e880994538f02d46f555ab8733e560a6790d1
+  metrics:
+    path: fast_pricers/single_asset/equity/markovian/bates/price_gradients/digital_puts/bates_01__digital_puts_01__01_cartesian_shard00_price_gradient/large/sobolev_lambda_10/metrics.json
+    sha256: 928cb733e5b4bebe30e85bc6f2b139a80d601b883111ec3988651babdfa4e507
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+  name: Tesla V100-SXM2-32GB
+  compute_capability: '7.0'
+software:
+  python: 3.13.5
+  pytorch: 2.7.1+cu126
+  cuda: '12.6'
+  cudnn: 90501
+  numpy: 2.2.6
+  pyyaml: 6.0.3

@@ -1,0 +1,31 @@
+schema_version: 1
+status: complete
+inputs:
+  dataset:
+    path: datasets/single_asset/equity/markovian/cev/prices/european_calls/cev_01__european_calls_01__01_cartesian_shard00.json
+    sha256: 6c24e329368baaf78cebfecb2af029f9046143325e6025e611e7bb0d50cba6ca
+  model:
+    path: datasets/parameters/model/equity/markovian/cev/parameters/cev_01.json
+    sha256: eb601cf70e94d2484c5e63fb8579cb5766943c79384454c40bea7d0d8006f3c9
+  product:
+    path: datasets/parameters/product/european_option/european_options_01_shard00.json
+    sha256: 0c4160b6db1799a7e4c704ee84224e2e0f33f31918be2d9f645b38bf46695329
+output:
+  model:
+    path: fast_pricers/single_asset/equity/markovian/cev/prices/european_calls/cev_01__european_calls_01__01_cartesian_shard00/large/price/model.pt
+    sha256: edfd213a7341223beedb7ae97c6d99da9a88d1853fa8a1672e8928515cbc53ca
+  metrics:
+    path: fast_pricers/single_asset/equity/markovian/cev/prices/european_calls/cev_01__european_calls_01__01_cartesian_shard00/large/price/metrics.json
+    sha256: 184503a1674a3b5f9bd0f6317e428cff663c269507d0e5fa4e0c9c49a074fbb8
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+  name: Tesla V100-SXM2-32GB
+  compute_capability: '7.0'
+software:
+  python: 3.13.5
+  pytorch: 2.7.1+cu126
+  cuda: '12.6'
+  cudnn: 90501
+  numpy: 2.2.6
+  pyyaml: 6.0.3

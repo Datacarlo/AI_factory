@@ -9,7 +9,7 @@
 [`gan/`](gan/README.md) provides one conditional terminal-GAN pipeline. Network
 leaves live in [`catalog/gan/`](../catalog/gan/README.md), with `training.py`,
 `recipe.yaml` and a `generation.yaml` after successful export. Weights, metrics and
-fixed-condition reference samples live in the local `gan/unpublished/` collection.
+fixed-condition reference samples live in the local `GANS/unpublished/` collection.
 
 ```sh
 python3 -m learning.gan.train --dataset datasets/samples/equity/markovian/heston/samples_02.json
