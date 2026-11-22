@@ -1,38 +1,6 @@
-"""Small, shared I/O helpers for recipes, checkpoints and preparation caches."""
-from __future__ import annotations
-
-import hashlib
-import json
-import os
+"""Fast-pricer collection paths; shared I/O lives in learning.common."""
 from pathlib import Path
-
-import yaml
-
-
-def sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open('rb') as stream:
-        for chunk in iter(lambda: stream.read(4 << 20), b''):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
-def fingerprint(value: object) -> str:
-    return hashlib.sha256(json.dumps(value, sort_keys=True, allow_nan=False).encode()).hexdigest()
-
-
-def write_json(path: Path, value: object) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + '.tmp')
-    temporary.write_text(json.dumps(value, indent=2, allow_nan=False) + '\n')
-    os.replace(temporary, path)
-
-
-def write_yaml(path: Path, value: object) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + '.tmp')
-    temporary.write_text(yaml.safe_dump(value, sort_keys=False, allow_unicode=True))
-    os.replace(temporary, path)
+from learning.common.io import sha256, fingerprint, write_json, write_yaml
 
 
 def repository_root(path: Path) -> Path:

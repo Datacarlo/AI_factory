@@ -76,6 +76,11 @@ G2_CORE_DERIVED_LAWS = (
 )
 
 
+# These model contracts also supply pricing metadata and historical RNG slots.
+# Retiring samples must not remove their models or renumber those slots.
+RETIRED_SAMPLE_MODELS = frozenset({"cir_plus_plus", "hull_white", "g2_plus_plus"})
+
+
 SAMPLE_MODELS = (
     SampleModelSpec(
         "bates", "Bates", "equity", "markovian", "markovian", "fixed",

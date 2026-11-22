@@ -23,7 +23,7 @@ from manifest import (
     ROUGH_VOLTERRA_MODELS,
     EquityProductBinding,
 )
-from sample_manifest import SAMPLE_MODELS
+from sample_manifest import SAMPLE_MODELS, RETIRED_SAMPLE_MODELS
 
 
 SCHEMA_VERSION = 2
@@ -656,7 +656,7 @@ MODEL_SPECS = tuple(
             if model.asset_class == "equity"
             else "sample_fixed_income"
         ),
-        sample_binding_status="available",
+        sample_binding_status=("retired" if model.name in RETIRED_SAMPLE_MODELS else "available"),
         sample_recipe_status="available",
         transition_contract=_model_transition_contract(model),
         analytics_contract=model.analytics_contract,
@@ -1979,7 +1979,9 @@ RETIRED_CATALOG_MODELS = frozenset({"stein_stein"})
 
 def _active_catalog_datasets(specs):
     return tuple(spec for spec in specs
-                 if spec.model not in RETIRED_CATALOG_MODELS)
+                 if spec.model not in RETIRED_CATALOG_MODELS
+                 and not (spec.dataset_kind == "samples"
+                          and spec.model in RETIRED_SAMPLE_MODELS))
 
 
 DATASET_SPECS = _active_catalog_datasets(
@@ -2016,6 +2018,12 @@ ALL_PRICE_GRADIENT_DATASET_SPECS = _active_catalog_datasets(
     ALL_PRICE_GRADIENT_DATASET_SPECS
 )
 # Source aliases and RNG domains retain retired reservations for replay.
+MODEL_SPECS = tuple(
+    replace(model, sample_recipe_status="retired", sample_engine=None)
+    if model.name in RETIRED_SAMPLE_MODELS else model
+    for model in MODEL_SPECS
+)
+MODEL_BY_NAME = {model.name: model for model in MODEL_SPECS}
 
 GENERATED_PRODUCT_BINDING_SPECS = tuple(
     spec for spec in PRODUCT_BINDING_SPECS if spec.owner == "generated"

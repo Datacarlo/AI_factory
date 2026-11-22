@@ -31,3 +31,5 @@ The public catalogue includes aligned and selected Cartesian recipes. Price-only
 ## Retired catalogue models
 
 `RETIRED_CATALOG_MODELS` in `capability_manifest.py` excludes retired models from parameter, sample and pricing offerings after historical Philox reservations have been assigned. Keep those reservations and replay aliases: removing them would change other datasets’ seeds. Numerical bindings can remain available for historical replay. The zero-mean correlated `stein_stein` specialization is retired from the catalogue; `schobel_zhu` and `rough_stein_stein` remain available.
+
+`RETIRED_SAMPLE_MODELS` removes CIR++, Hull–White and G2++ samples, bindings and catalogue leaves. These curve-fitted models remain available for pricing. Their historical Philox reservations are retained so existing datasets keep the same seeds. Fixed-income samples cover standalone parametric processes.

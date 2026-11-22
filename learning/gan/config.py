@@ -279,9 +279,10 @@ def load_config(
         "constant",
         "cosine",
         "exponential",
+        "plateau",
     }:
         raise ValueError(
-            "training.scheduler must be constant, cosine or exponential"
+            "training.scheduler must be constant, cosine, exponential or plateau"
         )
     scheduler_gamma = float(training.get("scheduler_gamma", 0.99))
     if "scheduler_gamma" in training or (
@@ -295,6 +296,44 @@ def load_config(
         raise ValueError(
             "training.scheduler_gamma must lie in (0, 1]"
         )
+
+    # Patience counts validation evaluations, not epochs.
+    if training["scheduler"] == "plateau":
+        for name, default, minimum in (
+            ("plateau_patience", 6, 1), ("plateau_cooldown", 0, 0)
+        ):
+            value = training.get(name, default)
+            if int(value) != value or int(value) < minimum:
+                raise ValueError(f"training.{name} must be a valid integer count")
+            training[name] = int(value)
+        factor = float(training.get("plateau_factor", 0.5))
+        if not 0 < factor < 1:
+            raise ValueError("training.plateau_factor must lie in (0, 1)")
+        training["plateau_factor"] = factor
+        minimum_lr = _positive(
+            training.get("minimum_learning_rate", 1e-6),
+            "training.minimum_learning_rate",
+        )
+        if minimum_lr > min(
+            training["generator_learning_rate"], training["critic_learning_rate"]
+        ):
+            raise ValueError("minimum_learning_rate exceeds an initial learning rate")
+        training["minimum_learning_rate"] = minimum_lr
+    if (
+        training.get("early_stopping_patience", 0)
+        or training["scheduler"] == "plateau"
+    ):
+        for name, default in (
+            ("early_stopping_patience", 0), ("minimum_epochs", 0)
+        ):
+            value = training.get(name, default)
+            if int(value) != value or int(value) < 0:
+                raise ValueError(f"training.{name} must be a nonnegative integer")
+            training[name] = int(value)
+        delta = float(training.get("validation_min_delta", 0.001))
+        if not math.isfinite(delta) or delta < 0:
+            raise ValueError("validation_min_delta must be finite and nonnegative")
+        training["validation_min_delta"] = delta
 
     evaluation = config["evaluation"]
     for name in (

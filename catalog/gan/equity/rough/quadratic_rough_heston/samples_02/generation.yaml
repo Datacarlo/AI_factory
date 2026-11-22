@@ -1,0 +1,28 @@
+schema_version: 1
+status: complete
+inputs:
+  dataset:
+    path: datasets/samples/equity/rough/quadratic_rough_heston/samples_02.json
+    sha256: e30f1326de0a24ed63c86f53ca68b922b7f6f4de22d3cab5e0378d605f01104b
+  reference:
+    path: gan/equity/rough/quadratic_rough_heston/samples_02/reference.npz
+    sha256: 3fa9813a14c77a360610d9531dc070e6405e6890c8fc0cfb27e28b74da598df4
+output:
+  model:
+    path: gan/equity/rough/quadratic_rough_heston/samples_02/model.pt
+    sha256: 12ad8823d8548c00b3ff8d61a598c26280789d39d99acd8023f0758111ed0386
+  metrics:
+    path: gan/equity/rough/quadratic_rough_heston/samples_02/metrics.json
+    sha256: af73df63dee32728b0d2962b797d0cd4d4e85fc3f9787985db35c50df3d18e8c
+hardware:
+  device: gpu
+  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
+  name: NVIDIA GeForce RTX 4090 Laptop GPU
+  compute_capability: '8.9'
+software:
+  python: 3.11.15
+  pytorch: 2.12.1+cu130
+  cuda: '13.0'
+  cudnn: 92000
+  numpy: 2.4.6
+  pyyaml: 6.0.3

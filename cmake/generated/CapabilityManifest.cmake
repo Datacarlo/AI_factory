@@ -1193,7 +1193,6 @@ set(AI_FACTORY_GENERATED_FIXED_INCOME_UNITS
     cir_plus_plus/product/svensson/zero_coupon_bond_option_price_gradients
     cir_plus_plus/product/svensson/zero_coupon_bond_up_and_out
     cir_plus_plus/product/svensson/zero_coupon_bond_up_and_out_price_gradients
-    cir_plus_plus/sample
     g2/product/bermudan_swaption
     g2/product/bermudan_swaption_price_gradients
     g2/product/european_swaption
@@ -1235,7 +1234,6 @@ set(AI_FACTORY_GENERATED_FIXED_INCOME_UNITS
     g2_plus_plus/product/svensson/zero_coupon_bond_option_price_gradients
     g2_plus_plus/product/svensson/zero_coupon_bond_up_and_out
     g2_plus_plus/product/svensson/zero_coupon_bond_up_and_out_price_gradients
-    g2_plus_plus/sample
     hull_white/product/flat/bermudan_swaption
     hull_white/product/flat/bermudan_swaption_price_gradients
     hull_white/product/flat/european_swaption
@@ -1266,7 +1264,6 @@ set(AI_FACTORY_GENERATED_FIXED_INCOME_UNITS
     hull_white/product/svensson/zero_coupon_bond_option_price_gradients
     hull_white/product/svensson/zero_coupon_bond_up_and_out
     hull_white/product/svensson/zero_coupon_bond_up_and_out_price_gradients
-    hull_white/sample
     ornstein_uhlenbeck/product/bermudan_swaption
     ornstein_uhlenbeck/product/bermudan_swaption_price_gradients
     ornstein_uhlenbeck/product/european_swaption
@@ -3993,14 +3990,8 @@ set(AI_FACTORY_MANIFEST_SAMPLE_GENERATOR_SOURCES
     catalog/samples/equity/rough/rough_stein_stein/samples_02/generator.cpp
     catalog/samples/fixed_income/cir/samples_01/generator.cpp
     catalog/samples/fixed_income/cir/samples_02/generator.cpp
-    catalog/samples/fixed_income/cir_plus_plus/samples_01/generator.cpp
-    catalog/samples/fixed_income/cir_plus_plus/samples_02/generator.cpp
     catalog/samples/fixed_income/g2/samples_01/generator.cpp
     catalog/samples/fixed_income/g2/samples_02/generator.cpp
-    catalog/samples/fixed_income/g2_plus_plus/samples_01/generator.cpp
-    catalog/samples/fixed_income/g2_plus_plus/samples_02/generator.cpp
-    catalog/samples/fixed_income/hull_white/samples_01/generator.cpp
-    catalog/samples/fixed_income/hull_white/samples_02/generator.cpp
     catalog/samples/fixed_income/ornstein_uhlenbeck/samples_01/generator.cpp
     catalog/samples/fixed_income/ornstein_uhlenbeck/samples_02/generator.cpp
     catalog/samples/fixed_income/vasicek/samples_01/generator.cpp

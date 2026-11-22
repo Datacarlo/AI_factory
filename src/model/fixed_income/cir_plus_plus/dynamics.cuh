@@ -1,4 +1,4 @@
-// Public CIR++ dynamics contract: samples contain the unshifted CIR factor state y.
+// Public CIR++ dynamics contract: the stochastic state is the unshifted CIR factor y.
 // Reuse the exact CIR transition and Philox consumption; r(t)=y(t)+phi(t).
 #pragma once
 

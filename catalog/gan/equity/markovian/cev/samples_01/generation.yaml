@@ -1,0 +1,28 @@
+schema_version: 1
+status: complete
+inputs:
+  dataset:
+    path: datasets/samples/equity/markovian/cev/samples_01.json
+    sha256: b0f7d64fc9f7ddb22e6e7473271e8a69e961ce66f535f571c733ccf78f2c5782
+  reference:
+    path: gan/equity/markovian/cev/samples_02/reference.npz
+    sha256: 96d8cb4dacaa6b81a77c88e47d456b687998038856c6bf46e699fe0e1d7dd613
+output:
+  model:
+    path: gan/equity/markovian/cev/samples_01/model.pt
+    sha256: c7726d233d6b73a218c8aaf28a7d2a0c7bfaeb21c98b680db4018473bc51ce1f
+  metrics:
+    path: gan/equity/markovian/cev/samples_01/metrics.json
+    sha256: dc9fcaf697a136bdd8119636be04e98c0891f0b22982f81ec37dbc534ced5563
+hardware:
+  device: gpu
+  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
+  name: NVIDIA GeForce RTX 4090 Laptop GPU
+  compute_capability: '8.9'
+software:
+  python: 3.11.15
+  pytorch: 2.12.1+cu130
+  cuda: '13.0'
+  cudnn: 92000
+  numpy: 2.4.6
+  pyyaml: 6.0.3

@@ -157,6 +157,7 @@ def grouped_distribution_metrics(
     _, groups = np.unique(conditions, axis=0, return_inverse=True)
     w1, ks, log_std, collapsed = [], [], [], []
     call_errors = []
+    correlation_errors = []
     group_count = 0
     if call_strikes and real.shape[1] != 1:
         raise ValueError("Call diagnostics require one spot observable")
@@ -165,6 +166,13 @@ def grouped_distribution_metrics(
         if mask.sum() < 16:
             continue
         group_count += 1
+        if real.shape[1] > 1:
+            # Marginal distances alone do not detect a lost factor correlation.
+            x, y = real[mask].astype(np.float64), generated[mask].astype(np.float64)
+            x = (x-x.mean(axis=0))/np.maximum(x.std(axis=0),1e-12)
+            y = (y-y.mean(axis=0))/np.maximum(y.std(axis=0),1e-12)
+            upper = np.triu_indices(real.shape[1],k=1)
+            correlation_errors.extend(np.abs((x.T@x-y.T@y)/len(x))[upper].tolist())
         for column in range(real.shape[1]):
             x = np.sort(real[mask, column])
             y = np.sort(generated[mask, column])
@@ -191,6 +199,8 @@ def grouped_distribution_metrics(
         "grouped_abs_log_std_ratio_mean": float(np.mean(log_std)),
         "grouped_collapsed_fraction": float(np.mean(collapsed)),
     }
+    if correlation_errors:
+        result['grouped_correlation_mae'] = float(np.mean(correlation_errors))
     if call_errors:
         result["grouped_call_rmse"] = float(np.sqrt(np.mean(np.square(call_errors))))
         result["grouped_call_mae"] = float(np.mean(np.abs(call_errors)))

@@ -68,7 +68,7 @@ from capability_manifest import (
     resolve_rng_domain,
     rng_mapping_version,
 )
-from sample_manifest import SAMPLE_MODELS, SAMPLE_MODEL_BY_NAME, SampleModelSpec
+from sample_manifest import SAMPLE_MODELS, SAMPLE_MODEL_BY_NAME, SampleModelSpec, RETIRED_SAMPLE_MODELS
 from price_gradients.render import render_bindings as render_price_gradient_bindings
 from price_gradients.manifest import default_sensitivities
 from price_gradients.render import render_recipes as render_price_gradient_recipes
@@ -551,6 +551,8 @@ def _sample_recipe_metadata(
 def generate_samples(output_root: Path) -> list[Path]:
     generated: list[Path] = []
     for model in SAMPLE_MODELS:
+        if model.name in RETIRED_SAMPLE_MODELS:
+            continue
         source_directory = output_root / "src" / "model" / model.source_folder
         source_directory.mkdir(parents=True, exist_ok=True)
         header = source_directory / "sample.cuh"

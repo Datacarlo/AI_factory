@@ -29,6 +29,7 @@ catalog/
   single_asset/{equity,fixed_income}/
   multi_asset/
   fast_pricers/
+  gan/
 ```
 
 Each dataset `datasets/<path>/<id>.json` has its generator and recipe under
@@ -42,7 +43,15 @@ metadata are exported to the separate local `fast_pricers/` collection. Dataset
 and training inventories remain distinct: `manifest.json` lists datasets, while
 `fast_pricers/manifest.json` lists networks grouped by their source dataset.
 
+The [GAN catalogue](gan/README.md) uses the same three-file leaf convention.
+Its `gan/manifest.json` lists conditional terminal generators, with trained
+weights and reusable validation references in the separate local `gan/` collection.
+
 ### Sample observations
+
+Fixed-income samples cover standalone parametric processes (CIR, G2,
+Ornstein–Uhlenbeck and Vasicek). Curve-fitted CIR++, Hull–White and G2++
+remain pricing models; they do not publish standalone samples.
 
 Sample JSON files contain `database_id`, `model_family`, `row_count`,
 `time_convention` (`days_per_year: 252`) and a `results` array. Each observation

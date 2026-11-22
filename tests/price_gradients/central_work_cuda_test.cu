@@ -2,6 +2,7 @@
 #include "equity/price_gradients/terminal_device_prepared_launcher.cuh"
 #include "equity/price_gradients/terminal_device_prepared_plan.hpp"
 #include "equity/path_product_policy.cuh"
+#include "fixed_income/price_gradients/bond_barrier_launch.cuh"
 #include "tests/price_gradients/cuda_test_support.cuh"
 
 #include <array>
@@ -184,6 +185,32 @@ using Plan = epg::TerminalDevicePreparedPlan<
     ProductPreparation
 >;
 
+// Use the production bond policy and launcher with an instrumented path pricer.
+// This checks central ownership independently of the numerical bond models.
+struct CountedBondPricing {
+    using TimeConfiguration = pg::TimeConfiguration;
+    struct PreparedRow { Model model; Product product; float maturity_years; };
+    __device__ static PreparedRow prepare_row(
+        Model model, Product product, TimeConfiguration
+    ) {
+        atomicAdd(&work_counts[2], 1U);
+        return {model, product, 0.0f};
+    }
+    __device__ static float evaluate_path(
+        const PreparedRow& row, philox::PhiloxKey, std::size_t path
+    ) {
+        atomicAdd(&work_counts[0], 1U);
+        const auto model = row.model;
+        if (model.spot == 1.0f && model.coefficient == 0.5f
+            && model.boundary_coefficient == 0.0f && row.product.strike == 1.0f) {
+            atomicAdd(&work_counts[1], 1U);
+        }
+        return model.spot * (1.0f + (model.coefficient + model.boundary_coefficient)
+            * static_cast<float>(1U + path % 3U)) - row.product.strike;
+    }
+};
+
+template<bool Bond = false>
 void run(std::size_t block_count) {
     constexpr std::size_t rows = 2U;
     constexpr std::size_t sensitivity_count = 4U;
@@ -254,7 +281,12 @@ void run(std::size_t block_count) {
         cudaMemcpyToSymbol(work_counts, zero, sizeof(zero)),
         "reset compact work counters"
     );
-    epg::launch_terminal_first_sensitivities<Dynamics, Payoff>(
+    if constexpr (Bond) {
+        fixed_income::price_gradients::launch_bond_barrier_first_sensitivities<
+            CountedBondPricing, Plan::Preparation>(
+                plan, inputs, launch, outputs, stencil_outputs,
+                "test.bond_barrier.central_work", "centered+one_sided");
+    } else epg::launch_terminal_first_sensitivities<Dynamics, Payoff>(
         plan,
         inputs,
         stencil_outputs,
@@ -272,15 +304,15 @@ void run(std::size_t block_count) {
         "read compact work counters"
     );
     require(
-        counts[0] == 7U * paths * rows,
+        counts[0] == (Bond ? 10U : 7U) * paths * rows,
         "Compact kernel performed redundant or missing transitions."
     );
     require(
-        counts[1] == 3U * paths * rows,
+        counts[1] == (Bond ? 2U : 3U) * paths * rows,
         "Compact kernel performed redundant or missing central transitions."
     );
     require(
-        counts[2] == 10U * paths * rows,
+        counts[2] == 10U * (Bond ? 1U : paths) * rows,
         "Compact kernel performed redundant or missing payoff evaluations."
     );
 
@@ -332,6 +364,8 @@ int main() {
         }
         run(4U);
         run(8U);
+        run<true>(4U);
+        run<true>(8U);
         std::cout
             << "Compact central-work ownership and grid-stride reuse passed\n";
         return 0;

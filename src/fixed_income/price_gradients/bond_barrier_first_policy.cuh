@@ -60,24 +60,35 @@ struct BondBarrierFirstPolicy {
         }
     };
 
+    // Centered first differences use only the two endpoints. The launcher
+    // still requests the central payoff from the first sensitivity block.
+    __host__ __device__ static pg::CentralRequirement central_requirement(
+        const Stencil& stencil
+    ) {
+        return stencil.kind == pg::StencilKind::centered
+            ? pg::CentralRequirement::none : pg::CentralRequirement::payoff;
+    }
+
     struct PreparedRow {
         typename Pricing::PreparedRow pricing[kNodeCapacity];
         const Stencil* stencil;
         std::uint8_t node_count;
+        std::uint8_t first_node;
     };
 
     __device__ __forceinline__ static PreparedRow prepare(
         const Nodes* nodes,
         const Stencil* stencil,
         pg::TimeConfiguration time,
-        bool
+        bool include_central
     ) {
         PreparedRow row{};
         row.stencil = stencil;
+        row.first_node = include_central ? 0U : 1U;
         row.node_count = static_cast<std::uint8_t>(
             pg::active_node_count(*stencil)
         );
-        for (unsigned int node = 0U; node < row.node_count; ++node) {
+        for (unsigned int node = row.first_node; node < row.node_count; ++node) {
             row.pricing[node] = CentralPolicy::prepare((*nodes)[node], time);
         }
         return row;
@@ -87,7 +98,7 @@ struct BondBarrierFirstPolicy {
         PreparedRow& row, unsigned char* data, std::size_t stride
     ) requires requires { Pricing::prepare_block(row.pricing[0], data, stride); } {
         const std::size_t node_stride = stride / kNodeCapacity;
-        for (unsigned int node = 0U; node < row.node_count; ++node)
+        for (unsigned int node = row.first_node; node < row.node_count; ++node)
             Pricing::prepare_block(row.pricing[node], data + node * node_stride, node_stride);
     }
 
@@ -104,7 +115,7 @@ struct BondBarrierFirstPolicy {
     ) {
         static_assert(IncludeCentral || !IncludePayoff);
         pg::SensitivityValues<kNodeCapacity> values{};
-        for (unsigned int node = 0U; node < row.node_count; ++node) {
+        for (unsigned int node = IncludeCentral ? 0U : 1U; node < row.node_count; ++node) {
             values[node] = Pricing::evaluate_path(
                 row.pricing[node], key, path
             );
