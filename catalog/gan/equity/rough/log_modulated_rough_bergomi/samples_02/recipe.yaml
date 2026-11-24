@@ -27,13 +27,9 @@ observable:
     offset: 1.0e-12
 reference:
   path: gan/equity/rough/log_modulated_rough_bergomi/samples_02/reference.npz
-  conditions_dataset:
-    id: samples_01
-    path: datasets/samples/equity/rough/log_modulated_rough_bergomi/samples_01.json
   groups_per_split: 128
   paths_per_condition: 8192
-  selection: random_parameter_groups_disjoint_from_training
-  selection_seed: 2026112091
+  selection: stored_in_archive
   simulation_seed: 2026112091827
   method: Source Volterra FFT terminal sample pipeline, dt=1/504
 data:

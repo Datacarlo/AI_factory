@@ -26,13 +26,9 @@ observable:
     offset: 1.0e-12
 reference:
   path: gan/equity/markovian/kou/samples_02/reference.npz
-  conditions_dataset:
-    id: samples_01
-    path: datasets/samples/equity/markovian/kou/samples_01.json
   groups_per_split: 128
   paths_per_condition: 8192
-  selection: random_parameter_groups_disjoint_from_training
-  selection_seed: 2026112091
+  selection: stored_in_archive
   simulation_seed: 2026112091827
   method: Exact terminal transition
 data:

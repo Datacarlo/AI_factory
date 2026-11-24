@@ -13,8 +13,9 @@ python -m learning.gan.train --dataset datasets/samples/equity/markovian/heston/
 python catalog/gan/equity/markovian/heston/samples_02/training.py
 ```
 
-The dataset command creates a missing catalogue leaf and native reference samples,
-then calls the same preparation, training and export routine as the leaf.
+The dataset command creates a missing IID catalogue leaf, then calls the same
+preparation, training and export routine as the leaf. The supplied reference
+archive is required to preserve its validation/test conditions.
 Existing recipes and supplied reference archives are reused. `--prepare-only`
 checks and caches inputs without training; `--resume` restores the exact saved
 training state. `--output-root PATH` puts exports under `PATH/GANS/` and resumable
@@ -63,15 +64,12 @@ price path-dependent payoffs from their terminal output alone.
 | Budget | At most 53 epochs |
 | Significant improvement | Absolute score decrease greater than 0.001 |
 
-All IID training rows are used. Grouped `samples_01` use the same engine and
-hyperparameters, with row-wise shuffling of their packs of 250. When paired with
-an existing IID GAN, they reuse its exact validation/test archive. Entire packs
-whose model tuple occurs in that archive are excluded from training, even if
-maturity differs. This is declared as `training_rows: exclude_reference_parameters`.
-Source JSON files are unchanged. Counts and exclusions are recorded in the
-prepared manifest and exported selection metadata. Typically 256 reserved packs
-leave 2,936,000 training rows versus 3,000,000 IID rows; this small budget difference
-must be reported when interpreting comparisons. Holdouts are never training data.
+All three million IID training rows are used. The public catalogue offers one
+trained model per financial model. Reference archives contain their own fixed
+conditions and independent simulations; no grouped training dataset is needed.
+They must be downloaded alongside the weights for exact training reproduction.
+The generic sample launchers and training data utilities still support multiple
+paths per parameter for experiments outside the public catalogue.
 
 The qualified production datasets have 3 million
 rows, giving 1,500 generator updates per epoch. Smaller/larger datasets can use the

@@ -21,17 +21,9 @@ def create_leaf(root, dataset):
     reader=iter_terminal_samples(actual,limit=1)
     try: schema,_=next(reader)
     finally: reader.close()
-    if schema.paths_per_parameter < 1:
-        raise ValueError('Samples must declare a positive number of paths per parameter')
-    recipe=make_recipe(model,schema.database_id,dataset_name=logical.stem,
-                       paths_per_parameter=schema.paths_per_parameter)
-    if schema.paths_per_parameter > 1:
-        # Reuse the IID holdouts when available: a paired evaluation, no duplicate archive.
-        iid_recipe=root/'catalog/gan'/spec.path/'samples_02/recipe.yaml'
-        if iid_recipe.exists():
-            reference=yaml.safe_load(iid_recipe.read_text())['reference']
-            if collection_path(root,reference['path'],'gan').exists():
-                recipe['reference']={**reference, 'selection':'stored_in_archive'}
+    if schema.paths_per_parameter != 1:
+        raise ValueError('The public GAN catalogue uses IID samples: one path per parameter')
+    recipe=make_recipe(model,schema.database_id,dataset_name=logical.stem)
     path=root/Path(recipe['training']).with_name('recipe.yaml')
     if path.exists():
         existing=yaml.safe_load(path.read_text())

@@ -6,12 +6,11 @@ Each leaf contains a short `training.py`, a `recipe.yaml`, and a
 [`manifest.json`](manifest.json) lists the network recipes, independently of the
 dataset and fast-pricer inventories.
 
-Leaves follow `equity/{markovian,rough}/<model>/samples_01/` or `samples_02/`,
-and the corresponding `fixed_income/<model>/` paths. `samples_01` train on
-grouped observations; `samples_02` train on IID observations. The manifest lists all scheduled models.
-Heston, Bates, rough Heston and CIR have completed the initial evaluation. Other
-leaves specify the common training protocol; they receive `generation.yaml`
-only after successful training and export.
+The public offering has one trained model per financial model, using all three
+million IID sample rows and the same training procedure. Leaves follow
+`equity/{markovian,rough}/<model>/samples_02/` and
+`fixed_income/<model>/samples_02/`. The existing dataset identifiers and RNG
+domains are retained. The manifest lists these IID recipes only.
 ```sh
 python catalog/gan/equity/markovian/heston/samples_02/training.py
 ```
@@ -35,7 +34,7 @@ GANS/
     <same relative leaf>/
       model.pt
       metrics.json
-      reference.npz  # may be shared with the paired leaf; see recipe.reference.path
+      reference.npz  # self-contained validation/test conditions and native simulations
 ```
 
 `model.pt` includes the best EMA generator, coordinate order and fitted
@@ -48,7 +47,7 @@ Cached arrays, logs and resumable optimizer checkpoints remain under
 `work/learning/gan/`. Deleting these does not remove the trained GAN collection or
 its reference archive. Downloading only `model.pt` is sufficient for inference.
 
-Grouped/IID comparisons share the exact reference archive when available. Grouped
-training excludes complete parameter packs appearing in validation or test,
-ignoring maturity. The recipe describes this exclusion and the exported metrics
-record the effective training size. Architecture and optimizer are unchanged.
+Reference archives are self-contained and supplied with each trained model.
+Training does not require any other sample dataset. The recipe declares
+`selection: stored_in_archive`: if the archive is missing, download it alongside
+the model before reproducing training. This preserves the original holdouts.

@@ -428,12 +428,12 @@ def _render_sample_recipe_source(
     model: SampleModelSpec,
     recipe_index: int,
 ) -> str:
-    if recipe_index == 1:
-        parameter_count, paths_per_parameter = "12'000U", "250U"
-        sample_kind = "conditional"
-    else:
-        parameter_count, paths_per_parameter = "3'000'000U", "1U"
-        sample_kind = "unconditional"
+    # Keep the existing IID identity and RNG domains; grouped sampling remains
+    # available through the common launchers but is not a public dataset recipe.
+    if recipe_index != 2:
+        raise ValueError("The public sample catalogue contains only the IID recipe")
+    parameter_count, paths_per_parameter = "3'000'000U", "1U"
+    sample_kind = "unconditional"
     recipe_path = (
         f"catalog/samples/{model.source_folder}/"
         f"samples_{recipe_index:02d}/generator.cpp"
@@ -461,9 +461,7 @@ def _sample_recipe_metadata(
     recipe_index: int,
     dataset,
 ) -> dict:
-    parameter_count, paths_per_parameter = (
-        (12_000, 250) if recipe_index == 1 else (3_000_000, 1)
-    )
+    parameter_count, paths_per_parameter = 3_000_000, 1
     domain = resolve_rng_domain(dataset)
     descriptions = dict(model.observable_descriptions)
     return {
@@ -573,7 +571,7 @@ def generate_samples(output_root: Path) -> list[Path]:
         generated.append(helper)
         if model.name in RETIRED_CATALOG_MODELS:
             continue
-        for recipe_index in (1, 2):
+        for recipe_index in (2,):
             recipe = (
                 output_root / layout_relative(
                     f"catalog/samples/{model.source_folder}/"
