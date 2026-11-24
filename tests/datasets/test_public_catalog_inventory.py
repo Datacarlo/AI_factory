@@ -27,6 +27,17 @@ class PublicCatalogInventoryTest(unittest.TestCase):
                 self.assertEqual(recipe["generator"], generator.relative_to(ROOT).as_posix())
                 self.assertEqual(recipe["output"]["path"], row["output"])
 
+    def test_public_samples_are_iid_only(self):
+        manifest = json.loads((ROOT / "catalog/manifest.json").read_text())
+        samples = [row for row in manifest['datasets'] if row['kind'] == 'samples']
+        self.assertTrue(samples)
+        for row in samples:
+            recipe = yaml.safe_load((ROOT / row['catalogPath'] / 'recipe.yaml').read_text())
+            self.assertEqual(recipe['shape']['paths_per_parameter'], 1)
+            self.assertEqual(recipe['shape']['parameter_count'], 3_000_000)
+            self.assertEqual(row['id'], 'samples_02')
+        self.assertFalse(list((ROOT / 'catalog/samples').rglob('samples_01')))
+
     def test_bermudan_gradients_declare_their_replay_variant(self):
         manifest = json.loads((ROOT / "catalog/manifest.json").read_text())
         for row in manifest["datasets"]:

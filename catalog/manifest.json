@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "count": 2064,
+  "count": 2043,
   "datasets": [
     {
       "source": "multi_asset/basket_down_and_out_call/five_black_scholes_cir_basket_down_and_out_calls_100k_01",
@@ -1991,20 +1991,6 @@
       "originalOutput": "datasets/parameters/product/zero_coupon_bond_up_and_out/zero_coupon_bond_up_and_outs_02_shard00.json"
     },
     {
-      "source": "samples/equity/markovian/bates/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "equity/markovian/bates",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/equity/markovian/bates/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/equity/markovian/bates/samples_01",
-      "originalOutput": "datasets/samples/equity/markovian/bates/samples_01.json"
-    },
-    {
       "source": "samples/equity/markovian/bates/samples_02",
       "id": "samples_02",
       "kind": "samples",
@@ -2017,20 +2003,6 @@
       "recipeMatchesReceipt": true,
       "catalogPath": "catalog/samples/equity/markovian/bates/samples_02",
       "originalOutput": "datasets/samples/equity/markovian/bates/samples_02.json"
-    },
-    {
-      "source": "samples/equity/markovian/black_scholes/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "equity/markovian/black_scholes",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/equity/markovian/black_scholes/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/equity/markovian/black_scholes/samples_01",
-      "originalOutput": "datasets/samples/equity/markovian/black_scholes/samples_01.json"
     },
     {
       "source": "samples/equity/markovian/black_scholes/samples_02",
@@ -2047,20 +2019,6 @@
       "originalOutput": "datasets/samples/equity/markovian/black_scholes/samples_02.json"
     },
     {
-      "source": "samples/equity/markovian/cev/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "equity/markovian/cev",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/equity/markovian/cev/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/equity/markovian/cev/samples_01",
-      "originalOutput": "datasets/samples/equity/markovian/cev/samples_01.json"
-    },
-    {
       "source": "samples/equity/markovian/cev/samples_02",
       "id": "samples_02",
       "kind": "samples",
@@ -2073,20 +2031,6 @@
       "recipeMatchesReceipt": true,
       "catalogPath": "catalog/samples/equity/markovian/cev/samples_02",
       "originalOutput": "datasets/samples/equity/markovian/cev/samples_02.json"
-    },
-    {
-      "source": "samples/equity/markovian/heston/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "equity/markovian/heston",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/equity/markovian/heston/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/equity/markovian/heston/samples_01",
-      "originalOutput": "datasets/samples/equity/markovian/heston/samples_01.json"
     },
     {
       "source": "samples/equity/markovian/heston/samples_02",
@@ -2103,20 +2047,6 @@
       "originalOutput": "datasets/samples/equity/markovian/heston/samples_02.json"
     },
     {
-      "source": "samples/equity/markovian/heston_3_2/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "equity/markovian/heston_3_2",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/equity/markovian/heston_3_2/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/equity/markovian/heston_3_2/samples_01",
-      "originalOutput": "datasets/samples/equity/markovian/heston_3_2/samples_01.json"
-    },
-    {
       "source": "samples/equity/markovian/heston_3_2/samples_02",
       "id": "samples_02",
       "kind": "samples",
@@ -2129,20 +2059,6 @@
       "recipeMatchesReceipt": true,
       "catalogPath": "catalog/samples/equity/markovian/heston_3_2/samples_02",
       "originalOutput": "datasets/samples/equity/markovian/heston_3_2/samples_02.json"
-    },
-    {
-      "source": "samples/equity/markovian/kou/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "equity/markovian/kou",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/equity/markovian/kou/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/equity/markovian/kou/samples_01",
-      "originalOutput": "datasets/samples/equity/markovian/kou/samples_01.json"
     },
     {
       "source": "samples/equity/markovian/kou/samples_02",
@@ -2159,20 +2075,6 @@
       "originalOutput": "datasets/samples/equity/markovian/kou/samples_02.json"
     },
     {
-      "source": "samples/equity/markovian/merton/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "equity/markovian/merton",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/equity/markovian/merton/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/equity/markovian/merton/samples_01",
-      "originalOutput": "datasets/samples/equity/markovian/merton/samples_01.json"
-    },
-    {
       "source": "samples/equity/markovian/merton/samples_02",
       "id": "samples_02",
       "kind": "samples",
@@ -2185,20 +2087,6 @@
       "recipeMatchesReceipt": true,
       "catalogPath": "catalog/samples/equity/markovian/merton/samples_02",
       "originalOutput": "datasets/samples/equity/markovian/merton/samples_02.json"
-    },
-    {
-      "source": "samples/equity/markovian/normal_inverse_gaussian/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "equity/markovian/normal_inverse_gaussian",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/equity/markovian/normal_inverse_gaussian/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/equity/markovian/normal_inverse_gaussian/samples_01",
-      "originalOutput": "datasets/samples/equity/markovian/normal_inverse_gaussian/samples_01.json"
     },
     {
       "source": "samples/equity/markovian/normal_inverse_gaussian/samples_02",
@@ -2215,20 +2103,6 @@
       "originalOutput": "datasets/samples/equity/markovian/normal_inverse_gaussian/samples_02.json"
     },
     {
-      "source": "samples/equity/markovian/sabr/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "equity/markovian/sabr",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/equity/markovian/sabr/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/equity/markovian/sabr/samples_01",
-      "originalOutput": "datasets/samples/equity/markovian/sabr/samples_01.json"
-    },
-    {
       "source": "samples/equity/markovian/sabr/samples_02",
       "id": "samples_02",
       "kind": "samples",
@@ -2241,20 +2115,6 @@
       "recipeMatchesReceipt": true,
       "catalogPath": "catalog/samples/equity/markovian/sabr/samples_02",
       "originalOutput": "datasets/samples/equity/markovian/sabr/samples_02.json"
-    },
-    {
-      "source": "samples/equity/markovian/schobel_zhu/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "equity/markovian/schobel_zhu",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/equity/markovian/schobel_zhu/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/equity/markovian/schobel_zhu/samples_01",
-      "originalOutput": "datasets/samples/equity/markovian/schobel_zhu/samples_01.json"
     },
     {
       "source": "samples/equity/markovian/schobel_zhu/samples_02",
@@ -2271,20 +2131,6 @@
       "originalOutput": "datasets/samples/equity/markovian/schobel_zhu/samples_02.json"
     },
     {
-      "source": "samples/equity/markovian/variance_gamma/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "equity/markovian/variance_gamma",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/equity/markovian/variance_gamma/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/equity/markovian/variance_gamma/samples_01",
-      "originalOutput": "datasets/samples/equity/markovian/variance_gamma/samples_01.json"
-    },
-    {
       "source": "samples/equity/markovian/variance_gamma/samples_02",
       "id": "samples_02",
       "kind": "samples",
@@ -2297,20 +2143,6 @@
       "recipeMatchesReceipt": true,
       "catalogPath": "catalog/samples/equity/markovian/variance_gamma/samples_02",
       "originalOutput": "datasets/samples/equity/markovian/variance_gamma/samples_02.json"
-    },
-    {
-      "source": "samples/equity/rough/log_modulated_rough_bergomi/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "equity/rough/log_modulated_rough_bergomi",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/equity/rough/log_modulated_rough_bergomi/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/equity/rough/log_modulated_rough_bergomi/samples_01",
-      "originalOutput": "datasets/samples/equity/rough/log_modulated_rough_bergomi/samples_01.json"
     },
     {
       "source": "samples/equity/rough/log_modulated_rough_bergomi/samples_02",
@@ -2327,20 +2159,6 @@
       "originalOutput": "datasets/samples/equity/rough/log_modulated_rough_bergomi/samples_02.json"
     },
     {
-      "source": "samples/equity/rough/quadratic_rough_heston/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "equity/rough/quadratic_rough_heston",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/equity/rough/quadratic_rough_heston/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/equity/rough/quadratic_rough_heston/samples_01",
-      "originalOutput": "datasets/samples/equity/rough/quadratic_rough_heston/samples_01.json"
-    },
-    {
       "source": "samples/equity/rough/quadratic_rough_heston/samples_02",
       "id": "samples_02",
       "kind": "samples",
@@ -2353,20 +2171,6 @@
       "recipeMatchesReceipt": true,
       "catalogPath": "catalog/samples/equity/rough/quadratic_rough_heston/samples_02",
       "originalOutput": "datasets/samples/equity/rough/quadratic_rough_heston/samples_02.json"
-    },
-    {
-      "source": "samples/equity/rough/rough_bergomi/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "equity/rough/rough_bergomi",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/equity/rough/rough_bergomi/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/equity/rough/rough_bergomi/samples_01",
-      "originalOutput": "datasets/samples/equity/rough/rough_bergomi/samples_01.json"
     },
     {
       "source": "samples/equity/rough/rough_bergomi/samples_02",
@@ -2383,20 +2187,6 @@
       "originalOutput": "datasets/samples/equity/rough/rough_bergomi/samples_02.json"
     },
     {
-      "source": "samples/equity/rough/rough_heston/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "equity/rough/rough_heston",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/equity/rough/rough_heston/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/equity/rough/rough_heston/samples_01",
-      "originalOutput": "datasets/samples/equity/rough/rough_heston/samples_01.json"
-    },
-    {
       "source": "samples/equity/rough/rough_heston/samples_02",
       "id": "samples_02",
       "kind": "samples",
@@ -2409,20 +2199,6 @@
       "recipeMatchesReceipt": true,
       "catalogPath": "catalog/samples/equity/rough/rough_heston/samples_02",
       "originalOutput": "datasets/samples/equity/rough/rough_heston/samples_02.json"
-    },
-    {
-      "source": "samples/equity/rough/rough_sabr/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "equity/rough/rough_sabr",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/equity/rough/rough_sabr/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/equity/rough/rough_sabr/samples_01",
-      "originalOutput": "datasets/samples/equity/rough/rough_sabr/samples_01.json"
     },
     {
       "source": "samples/equity/rough/rough_sabr/samples_02",
@@ -2439,20 +2215,6 @@
       "originalOutput": "datasets/samples/equity/rough/rough_sabr/samples_02.json"
     },
     {
-      "source": "samples/equity/rough/rough_stein_stein/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "equity/rough/rough_stein_stein",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/equity/rough/rough_stein_stein/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/equity/rough/rough_stein_stein/samples_01",
-      "originalOutput": "datasets/samples/equity/rough/rough_stein_stein/samples_01.json"
-    },
-    {
       "source": "samples/equity/rough/rough_stein_stein/samples_02",
       "id": "samples_02",
       "kind": "samples",
@@ -2465,20 +2227,6 @@
       "recipeMatchesReceipt": true,
       "catalogPath": "catalog/samples/equity/rough/rough_stein_stein/samples_02",
       "originalOutput": "datasets/samples/equity/rough/rough_stein_stein/samples_02.json"
-    },
-    {
-      "source": "samples/fixed_income/cir/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "fixed_income/cir",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/fixed_income/cir/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/fixed_income/cir/samples_01",
-      "originalOutput": "datasets/samples/fixed_income/cir/samples_01.json"
     },
     {
       "source": "samples/fixed_income/cir/samples_02",
@@ -2495,20 +2243,6 @@
       "originalOutput": "datasets/samples/fixed_income/cir/samples_02.json"
     },
     {
-      "source": "samples/fixed_income/g2/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "fixed_income/g2",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/fixed_income/g2/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/fixed_income/g2/samples_01",
-      "originalOutput": "datasets/samples/fixed_income/g2/samples_01.json"
-    },
-    {
       "source": "samples/fixed_income/g2/samples_02",
       "id": "samples_02",
       "kind": "samples",
@@ -2523,20 +2257,6 @@
       "originalOutput": "datasets/samples/fixed_income/g2/samples_02.json"
     },
     {
-      "source": "samples/fixed_income/ornstein_uhlenbeck/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "fixed_income/ornstein_uhlenbeck",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/fixed_income/ornstein_uhlenbeck/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/fixed_income/ornstein_uhlenbeck/samples_01",
-      "originalOutput": "datasets/samples/fixed_income/ornstein_uhlenbeck/samples_01.json"
-    },
-    {
       "source": "samples/fixed_income/ornstein_uhlenbeck/samples_02",
       "id": "samples_02",
       "kind": "samples",
@@ -2549,20 +2269,6 @@
       "recipeMatchesReceipt": true,
       "catalogPath": "catalog/samples/fixed_income/ornstein_uhlenbeck/samples_02",
       "originalOutput": "datasets/samples/fixed_income/ornstein_uhlenbeck/samples_02.json"
-    },
-    {
-      "source": "samples/fixed_income/vasicek/samples_01",
-      "id": "samples_01",
-      "kind": "samples",
-      "model": "fixed_income/vasicek",
-      "collection": "samples",
-      "product": null,
-      "output": "datasets/samples/fixed_income/vasicek/samples_01.json",
-      "rowCount": 3000000,
-      "ready": true,
-      "recipeMatchesReceipt": true,
-      "catalogPath": "catalog/samples/fixed_income/vasicek/samples_01",
-      "originalOutput": "datasets/samples/fixed_income/vasicek/samples_01.json"
     },
     {
       "source": "samples/fixed_income/vasicek/samples_02",

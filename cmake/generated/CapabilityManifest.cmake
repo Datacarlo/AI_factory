@@ -3954,58 +3954,33 @@ set(AI_FACTORY_MANIFEST_PRICE_GENERATOR_SOURCES
 )
 
 set(AI_FACTORY_MANIFEST_SAMPLE_GENERATOR_SOURCES
-    catalog/samples/equity/markovian/bates/samples_01/generator.cpp
     catalog/samples/equity/markovian/bates/samples_02/generator.cpp
-    catalog/samples/equity/markovian/black_scholes/samples_01/generator.cpp
     catalog/samples/equity/markovian/black_scholes/samples_02/generator.cpp
-    catalog/samples/equity/markovian/cev/samples_01/generator.cpp
     catalog/samples/equity/markovian/cev/samples_02/generator.cpp
-    catalog/samples/equity/markovian/heston/samples_01/generator.cpp
     catalog/samples/equity/markovian/heston/samples_02/generator.cpp
-    catalog/samples/equity/markovian/heston_3_2/samples_01/generator.cpp
     catalog/samples/equity/markovian/heston_3_2/samples_02/generator.cpp
-    catalog/samples/equity/markovian/kou/samples_01/generator.cpp
     catalog/samples/equity/markovian/kou/samples_02/generator.cpp
-    catalog/samples/equity/markovian/merton/samples_01/generator.cpp
     catalog/samples/equity/markovian/merton/samples_02/generator.cpp
-    catalog/samples/equity/markovian/normal_inverse_gaussian/samples_01/generator.cpp
     catalog/samples/equity/markovian/normal_inverse_gaussian/samples_02/generator.cpp
-    catalog/samples/equity/markovian/sabr/samples_01/generator.cpp
     catalog/samples/equity/markovian/sabr/samples_02/generator.cpp
-    catalog/samples/equity/markovian/schobel_zhu/samples_01/generator.cpp
     catalog/samples/equity/markovian/schobel_zhu/samples_02/generator.cpp
-    catalog/samples/equity/markovian/variance_gamma/samples_01/generator.cpp
     catalog/samples/equity/markovian/variance_gamma/samples_02/generator.cpp
-    catalog/samples/equity/rough/log_modulated_rough_bergomi/samples_01/generator.cpp
     catalog/samples/equity/rough/log_modulated_rough_bergomi/samples_02/generator.cpp
-    catalog/samples/equity/rough/quadratic_rough_heston/samples_01/generator.cpp
     catalog/samples/equity/rough/quadratic_rough_heston/samples_02/generator.cpp
-    catalog/samples/equity/rough/rough_bergomi/samples_01/generator.cpp
     catalog/samples/equity/rough/rough_bergomi/samples_02/generator.cpp
-    catalog/samples/equity/rough/rough_heston/samples_01/generator.cpp
     catalog/samples/equity/rough/rough_heston/samples_02/generator.cpp
-    catalog/samples/equity/rough/rough_sabr/samples_01/generator.cpp
     catalog/samples/equity/rough/rough_sabr/samples_02/generator.cpp
-    catalog/samples/equity/rough/rough_stein_stein/samples_01/generator.cpp
     catalog/samples/equity/rough/rough_stein_stein/samples_02/generator.cpp
-    catalog/samples/fixed_income/cir/samples_01/generator.cpp
     catalog/samples/fixed_income/cir/samples_02/generator.cpp
-    catalog/samples/fixed_income/g2/samples_01/generator.cpp
     catalog/samples/fixed_income/g2/samples_02/generator.cpp
-    catalog/samples/fixed_income/ornstein_uhlenbeck/samples_01/generator.cpp
     catalog/samples/fixed_income/ornstein_uhlenbeck/samples_02/generator.cpp
-    catalog/samples/fixed_income/vasicek/samples_01/generator.cpp
     catalog/samples/fixed_income/vasicek/samples_02/generator.cpp
 )
 
 set(AI_FACTORY_MANIFEST_MATHDX_GENERATOR_SOURCES
-    catalog/samples/equity/rough/log_modulated_rough_bergomi/samples_01/generator.cpp
     catalog/samples/equity/rough/log_modulated_rough_bergomi/samples_02/generator.cpp
-    catalog/samples/equity/rough/rough_bergomi/samples_01/generator.cpp
     catalog/samples/equity/rough/rough_bergomi/samples_02/generator.cpp
-    catalog/samples/equity/rough/rough_sabr/samples_01/generator.cpp
     catalog/samples/equity/rough/rough_sabr/samples_02/generator.cpp
-    catalog/samples/equity/rough/rough_stein_stein/samples_01/generator.cpp
     catalog/samples/equity/rough/rough_stein_stein/samples_02/generator.cpp
     catalog/single_asset/equity/rough/log_modulated_rough_bergomi/price_gradients/asian_calls/log_modulated_rough_bergomi_01__asian_calls_01__01_price_gradient/generator.cpp
     catalog/single_asset/equity/rough/log_modulated_rough_bergomi/price_gradients/asian_puts/log_modulated_rough_bergomi_01__asian_puts_01__01_price_gradient/generator.cpp

@@ -95,6 +95,10 @@ def test_catalogue_entrypoints_and_dataset_scanner(tmp_path):
         assert path.with_name('training.py').read_text()==ENTRYPOINT
         assert ROOT/recipe['training']==path.with_name('training.py')
         assert 'work/' not in path.read_text()
+        assert recipe['dataset']['id']=='samples_02'
+        assert recipe['data']['training_rows']=='all'
+        assert recipe['reference']['selection']=='stored_in_archive'
+        assert 'conditions_dataset' not in recipe['reference']
     leaf=ROOT/manifest['networks'][0]['recipe']
     process=subprocess.run([sys.executable,str(leaf.with_name('training.py')),'--help'],cwd=tmp_path,
                             capture_output=True,text=True,timeout=60)
@@ -188,3 +192,21 @@ def test_grouped_samples_reserve_whole_packs_and_reuse_iid_holdouts(tiny):
     checkpoint=torch.load(collection_path(root,recipe['output']['model'],'gan'),weights_only=False)
     assert checkpoint['transform']['condition_mean'][0]==pytest.approx(.9)
     assert prepare(root,recipe).fingerprint==data.fingerprint
+
+
+def test_public_gan_catalogue_rejects_grouped_source(tiny):
+    from learning.gan.catalogue import create_leaf
+    root,path,recipe,ref=tiny
+    dataset=collection_path(root,recipe['dataset']['path'],'datasets')
+    write_yaml(dataset.with_suffix('.recipe.yaml'), {'shape':{'parameter_count':4,
+        'paths_per_parameter':2,'row_order':'parameter-major, then path-major'}})
+    with pytest.raises(ValueError, match='one path per parameter'):
+        create_leaf(root,dataset)
+
+
+def test_missing_stored_reference_has_no_deleted_dataset_dependency(tiny):
+    from learning.gan.references import create_reference
+    root,path,recipe,ref=tiny
+    ref.unlink()
+    with pytest.raises(FileNotFoundError,match='reference archive'):
+        create_reference(root,recipe)

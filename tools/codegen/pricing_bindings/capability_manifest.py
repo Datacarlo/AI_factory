@@ -1981,7 +1981,8 @@ def _active_catalog_datasets(specs):
     return tuple(spec for spec in specs
                  if spec.model not in RETIRED_CATALOG_MODELS
                  and not (spec.dataset_kind == "samples"
-                          and spec.model in RETIRED_SAMPLE_MODELS))
+                          and (spec.model in RETIRED_SAMPLE_MODELS
+                               or spec.dataset_id == "samples_01")))
 
 
 DATASET_SPECS = _active_catalog_datasets(
@@ -2017,7 +2018,8 @@ CARTESIAN_PRICE_GRADIENT_DATASET_SPECS = _active_catalog_datasets(
 ALL_PRICE_GRADIENT_DATASET_SPECS = _active_catalog_datasets(
     ALL_PRICE_GRADIENT_DATASET_SPECS
 )
-# Source aliases and RNG domains retain retired reservations for replay.
+# Source aliases and RNG domains retain retired reservations for replay,
+# including grouped samples: removing their slots would change the IID seeds.
 MODEL_SPECS = tuple(
     replace(model, sample_recipe_status="retired", sample_engine=None)
     if model.name in RETIRED_SAMPLE_MODELS else model
