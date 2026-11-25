@@ -1,0 +1,31 @@
+schema_version: 1
+status: complete
+inputs:
+  dataset:
+    path: datasets/single_asset/equity/markovian/sabr/price_gradients/forward_start_calls/sabr_01__forward_start_calls_01__01_cartesian_shard00_price_gradient.json
+    sha256: f165c80b204222515316dc27ebd51c038c222e97985de8b5611f350b2c0a64dc
+  model:
+    path: datasets/parameters/model/equity/markovian/sabr/parameters/sabr_01.json
+    sha256: c02e005bd3eb40858e3d9ade80a31cdcee309cc0d73540a5035405ae2b35382f
+  product:
+    path: datasets/parameters/product/forward_start_option/forward_start_options_01_shard00.json
+    sha256: 9f270b7eee9773154f03af684fedec6654a6f603dbadea42378ae60885763220
+output:
+  model:
+    path: fast_pricers/single_asset/equity/markovian/sabr/price_gradients/forward_start_calls/sabr_01__forward_start_calls_01__01_cartesian_shard00_price_gradient/medium/sobolev_lambda_1/model.pt
+    sha256: 3b4683d090f7af6fe13647ce6a3e4bf1d52319a4f2cc5c5cc3044d022600e610
+  metrics:
+    path: fast_pricers/single_asset/equity/markovian/sabr/price_gradients/forward_start_calls/sabr_01__forward_start_calls_01__01_cartesian_shard00_price_gradient/medium/sobolev_lambda_1/metrics.json
+    sha256: 9a1ffc3da59e88d62fe6c520123f1ecfb6e78e4b50795fcfbcdd96de9b3244e2
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+  name: Tesla V100-SXM2-32GB
+  compute_capability: '7.0'
+software:
+  python: 3.13.5
+  pytorch: 2.7.1+cu126
+  cuda: '12.6'
+  cudnn: 90501
+  numpy: 2.2.6
+  pyyaml: 6.0.3

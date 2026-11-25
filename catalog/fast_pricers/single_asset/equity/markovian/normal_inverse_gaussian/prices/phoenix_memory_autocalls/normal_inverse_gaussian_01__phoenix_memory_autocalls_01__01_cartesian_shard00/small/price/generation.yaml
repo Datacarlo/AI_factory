@@ -1,0 +1,31 @@
+schema_version: 1
+status: complete
+inputs:
+  dataset:
+    path: datasets/single_asset/equity/markovian/normal_inverse_gaussian/prices/phoenix_memory_autocalls/normal_inverse_gaussian_01__phoenix_memory_autocalls_01__01_cartesian_shard00.json
+    sha256: bb6e20fde3be6172ccc3214361a2e9a082ec19f3bb98e7c6bdf4d123d3c07db6
+  model:
+    path: datasets/parameters/model/equity/markovian/normal_inverse_gaussian/parameters/normal_inverse_gaussian_01.json
+    sha256: 0371ced4f1f4f3e240a3059ee3f6476d1a6045f2cd70f076f54c16ad7e3a72df
+  product:
+    path: datasets/parameters/product/phoenix_memory_autocall/phoenix_memory_autocalls_01_shard00.json
+    sha256: 9edcf57db30fdc39263abda60bfe734981cd146002d1fd7dc6b323d69694b500
+output:
+  model:
+    path: fast_pricers/single_asset/equity/markovian/normal_inverse_gaussian/prices/phoenix_memory_autocalls/normal_inverse_gaussian_01__phoenix_memory_autocalls_01__01_cartesian_shard00/small/price/model.pt
+    sha256: e859da9864f9ffd9d8375f9b00794dcabf21b942e43d273201e1e961c3d6c009
+  metrics:
+    path: fast_pricers/single_asset/equity/markovian/normal_inverse_gaussian/prices/phoenix_memory_autocalls/normal_inverse_gaussian_01__phoenix_memory_autocalls_01__01_cartesian_shard00/small/price/metrics.json
+    sha256: c51c699f430e5a3a365914e1150ff03e21f7cb40783a5303e66b24c03b1986bd
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+  name: Tesla V100-SXM2-32GB
+  compute_capability: '7.0'
+software:
+  python: 3.13.5
+  pytorch: 2.7.1+cu126
+  cuda: '12.6'
+  cudnn: 90501
+  numpy: 2.2.6
+  pyyaml: 6.0.3

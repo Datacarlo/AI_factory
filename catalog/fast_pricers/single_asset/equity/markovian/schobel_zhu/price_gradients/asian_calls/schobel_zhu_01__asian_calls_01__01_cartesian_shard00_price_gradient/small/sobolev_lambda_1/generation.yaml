@@ -1,0 +1,31 @@
+schema_version: 1
+status: complete
+inputs:
+  dataset:
+    path: datasets/single_asset/equity/markovian/schobel_zhu/price_gradients/asian_calls/schobel_zhu_01__asian_calls_01__01_cartesian_shard00_price_gradient.json
+    sha256: c3c92d2b17d9ecc44629bd174f42fbd83000b0b045ba01fcdad9b493f3c32c75
+  model:
+    path: datasets/parameters/model/equity/markovian/schobel_zhu/parameters/schobel_zhu_01.json
+    sha256: 661c88ef80a938cd9ddcddcbaa6f408cfa7f706b1580313cbf8636a0c8281e57
+  product:
+    path: datasets/parameters/product/asian_option/asian_options_01_shard00.json
+    sha256: 9584d010e48494ca8a6e9466f4b92b563d3472ee78f6b0b3b00cb08b593a93ce
+output:
+  model:
+    path: fast_pricers/single_asset/equity/markovian/schobel_zhu/price_gradients/asian_calls/schobel_zhu_01__asian_calls_01__01_cartesian_shard00_price_gradient/small/sobolev_lambda_1/model.pt
+    sha256: f882993d67ff128ae38928d7bd1bf0b9f563ce8b793d921ed477960e67e38178
+  metrics:
+    path: fast_pricers/single_asset/equity/markovian/schobel_zhu/price_gradients/asian_calls/schobel_zhu_01__asian_calls_01__01_cartesian_shard00_price_gradient/small/sobolev_lambda_1/metrics.json
+    sha256: 5d13839f35a3309cb1437d9511632af05ac3c6e9c99bea615b32fc1e1c99cf31
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+  name: Tesla V100-SXM2-32GB
+  compute_capability: '7.0'
+software:
+  python: 3.13.5
+  pytorch: 2.7.1+cu126
+  cuda: '12.6'
+  cudnn: 90501
+  numpy: 2.2.6
+  pyyaml: 6.0.3

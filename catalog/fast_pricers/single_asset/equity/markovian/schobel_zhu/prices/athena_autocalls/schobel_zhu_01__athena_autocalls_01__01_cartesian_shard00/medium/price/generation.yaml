@@ -1,0 +1,31 @@
+schema_version: 1
+status: complete
+inputs:
+  dataset:
+    path: datasets/single_asset/equity/markovian/schobel_zhu/prices/athena_autocalls/schobel_zhu_01__athena_autocalls_01__01_cartesian_shard00.json
+    sha256: a8f52618f88641fc0988851ededd8dcbf4b96c283c48504c312ba36fb5f07206
+  model:
+    path: datasets/parameters/model/equity/markovian/schobel_zhu/parameters/schobel_zhu_01.json
+    sha256: 661c88ef80a938cd9ddcddcbaa6f408cfa7f706b1580313cbf8636a0c8281e57
+  product:
+    path: datasets/parameters/product/athena_autocall/athena_autocalls_01_shard00.json
+    sha256: 44a06d021eba31d46753a81617b9d6f28da6f5ef85b00ca6f9be4f67d7eefd0b
+output:
+  model:
+    path: fast_pricers/single_asset/equity/markovian/schobel_zhu/prices/athena_autocalls/schobel_zhu_01__athena_autocalls_01__01_cartesian_shard00/medium/price/model.pt
+    sha256: 08994db09d30438ef3d54379bbac7550f8f169350b94f2ba63ed88ddd952e857
+  metrics:
+    path: fast_pricers/single_asset/equity/markovian/schobel_zhu/prices/athena_autocalls/schobel_zhu_01__athena_autocalls_01__01_cartesian_shard00/medium/price/metrics.json
+    sha256: 8d79aeb8ffa5396577268017d2a5fb538b7044d5275a44e87b494d6f91528d5d
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+  name: Tesla V100-SXM2-32GB
+  compute_capability: '7.0'
+software:
+  python: 3.13.5
+  pytorch: 2.7.1+cu126
+  cuda: '12.6'
+  cudnn: 90501
+  numpy: 2.2.6
+  pyyaml: 6.0.3

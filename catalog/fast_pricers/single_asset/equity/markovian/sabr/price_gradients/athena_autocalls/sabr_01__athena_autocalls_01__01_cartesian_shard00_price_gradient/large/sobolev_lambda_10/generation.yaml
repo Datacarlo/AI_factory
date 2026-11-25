@@ -1,0 +1,31 @@
+schema_version: 1
+status: complete
+inputs:
+  dataset:
+    path: datasets/single_asset/equity/markovian/sabr/price_gradients/athena_autocalls/sabr_01__athena_autocalls_01__01_cartesian_shard00_price_gradient.json
+    sha256: 797a807efd6bbb05d94cb81d8ba95ded1b02afd02dca4aedefcffdc4d76c97a4
+  model:
+    path: datasets/parameters/model/equity/markovian/sabr/parameters/sabr_01.json
+    sha256: c02e005bd3eb40858e3d9ade80a31cdcee309cc0d73540a5035405ae2b35382f
+  product:
+    path: datasets/parameters/product/athena_autocall/athena_autocalls_01_shard00.json
+    sha256: 44a06d021eba31d46753a81617b9d6f28da6f5ef85b00ca6f9be4f67d7eefd0b
+output:
+  model:
+    path: fast_pricers/single_asset/equity/markovian/sabr/price_gradients/athena_autocalls/sabr_01__athena_autocalls_01__01_cartesian_shard00_price_gradient/large/sobolev_lambda_10/model.pt
+    sha256: c97e0721849fed688e33f42b9fc1c102f9f64838660a5a54dab4d889628a0be9
+  metrics:
+    path: fast_pricers/single_asset/equity/markovian/sabr/price_gradients/athena_autocalls/sabr_01__athena_autocalls_01__01_cartesian_shard00_price_gradient/large/sobolev_lambda_10/metrics.json
+    sha256: 1525220b984df7f81e2a267b209277e0f481ee934b70cbc1ab1a74a0fcaec545
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+  name: Tesla V100-SXM2-32GB
+  compute_capability: '7.0'
+software:
+  python: 3.13.5
+  pytorch: 2.7.1+cu126
+  cuda: '12.6'
+  cudnn: 90501
+  numpy: 2.2.6
+  pyyaml: 6.0.3
