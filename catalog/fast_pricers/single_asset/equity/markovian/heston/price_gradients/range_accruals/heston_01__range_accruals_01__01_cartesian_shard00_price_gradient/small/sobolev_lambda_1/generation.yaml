@@ -1,0 +1,31 @@
+schema_version: 1
+status: complete
+inputs:
+  dataset:
+    path: datasets/single_asset/equity/markovian/heston/price_gradients/range_accruals/heston_01__range_accruals_01__01_cartesian_shard00_price_gradient.json
+    sha256: 29e905a42507045f0869c08615942613e946d5e6f1ab4362512a3a26490b2a20
+  model:
+    path: datasets/parameters/model/equity/markovian/heston/parameters/heston_01.json
+    sha256: 8255401c973dbf12f75d08788a68ae1aed4a95ac6329bfa313f233e51621e730
+  product:
+    path: datasets/parameters/product/range_accrual/range_accruals_01_shard00.json
+    sha256: 4410b02bdbed74d7b1a8569c01f482f2d6cfb088883984e11386be5d62638f92
+output:
+  model:
+    path: fast_pricers/single_asset/equity/markovian/heston/price_gradients/range_accruals/heston_01__range_accruals_01__01_cartesian_shard00_price_gradient/small/sobolev_lambda_1/model.pt
+    sha256: b20a88a7758a10ae54b8d4c3c8120314173c4add3afc7b62b36ab3fcb963d13a
+  metrics:
+    path: fast_pricers/single_asset/equity/markovian/heston/price_gradients/range_accruals/heston_01__range_accruals_01__01_cartesian_shard00_price_gradient/small/sobolev_lambda_1/metrics.json
+    sha256: 56f4751449dc729b1c1d2612b74a4eb5bd58a608577c57d0678f6454ee5d3f32
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+  name: Tesla V100-SXM2-32GB
+  compute_capability: '7.0'
+software:
+  python: 3.13.5
+  pytorch: 2.7.1+cu126
+  cuda: '12.6'
+  cudnn: 90501
+  numpy: 2.2.6
+  pyyaml: 6.0.3

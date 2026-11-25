@@ -248,6 +248,7 @@ foreach(recipe IN ITEMS zero_coupon_bond_up_and_outs_02 zero_coupon_bond_up_and_
 endforeach()
 foreach(source IN ITEMS
     "catalog/single_asset/fixed_income/cir/price_gradients/zero_coupon_bond_up_and_out_calls/cir_01__zero_coupon_bond_up_and_out_calls_02__02_cartesian_shard00_price_gradient/generator.cpp"
-    "catalog/single_asset/fixed_income/cir_plus_plus/price_gradients/flat/zero_coupon_bond_up_and_out_calls/cir_plus_plus_01__flat_01__zero_coupon_bond_up_and_out_calls_02__02_cartesian_shard00_price_gradient/generator.cpp")
+    "catalog/single_asset/fixed_income/cir_plus_plus/price_gradients/flat/zero_coupon_bond_up_and_out_calls/cir_plus_plus_01__flat_01__zero_coupon_bond_up_and_out_calls_02__02_cartesian_shard00_price_gradient/generator.cpp"
+    "catalog/single_asset/fixed_income/cir_plus_plus/price_gradients/nelson_siegel/zero_coupon_bond_up_and_out_calls/cir_plus_plus_01__nelson_siegel_01__zero_coupon_bond_up_and_out_calls_02__02_cartesian_shard00_price_gradient/generator.cpp")
     ai_factory_register_catalog_generator("${source}" price)
 endforeach()

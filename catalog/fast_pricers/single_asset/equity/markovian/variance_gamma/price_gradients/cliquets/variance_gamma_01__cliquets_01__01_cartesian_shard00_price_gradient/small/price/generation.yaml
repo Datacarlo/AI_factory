@@ -1,0 +1,31 @@
+schema_version: 1
+status: complete
+inputs:
+  dataset:
+    path: datasets/single_asset/equity/markovian/variance_gamma/price_gradients/cliquets/variance_gamma_01__cliquets_01__01_cartesian_shard00_price_gradient.json
+    sha256: 152db080aae7a2bfec98f88e43c548e0d6c4ae67e872dbc174582a542f2a3e72
+  model:
+    path: datasets/parameters/model/equity/markovian/variance_gamma/parameters/variance_gamma_01.json
+    sha256: ac15d0efe70e1d173a0ec7dcbc2d7390a4dd419715a675804e76ed5de4a5a92f
+  product:
+    path: datasets/parameters/product/cliquet/cliquets_01_shard00.json
+    sha256: 3bb4e2b8acc9783638f27e69874db5c9d9b76c54207ad8e5e8ab82fe9cc194e5
+output:
+  model:
+    path: fast_pricers/single_asset/equity/markovian/variance_gamma/price_gradients/cliquets/variance_gamma_01__cliquets_01__01_cartesian_shard00_price_gradient/small/price/model.pt
+    sha256: 4372519aecb1842c9657214a43d3904288a18a041527013ca2ec5f71d1a85686
+  metrics:
+    path: fast_pricers/single_asset/equity/markovian/variance_gamma/price_gradients/cliquets/variance_gamma_01__cliquets_01__01_cartesian_shard00_price_gradient/small/price/metrics.json
+    sha256: 7101a1e72b8c258c63f71654211e3ed15ea5484532ce1f109457c842f94e4ee3
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+  name: Tesla V100-SXM2-32GB
+  compute_capability: '7.0'
+software:
+  python: 3.13.5
+  pytorch: 2.7.1+cu126
+  cuda: '12.6'
+  cudnn: 90501
+  numpy: 2.2.6
+  pyyaml: 6.0.3

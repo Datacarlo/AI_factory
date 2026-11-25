@@ -1,0 +1,31 @@
+schema_version: 1
+status: complete
+inputs:
+  dataset:
+    path: datasets/single_asset/equity/markovian/kou/prices/american_puts/kou_01__american_puts_01__01_cartesian_shard00.json
+    sha256: e6daa118fe41d0eab4a5bdf6350b003852d08ac5ed8653f6fb6a041fddac6e73
+  model:
+    path: datasets/parameters/model/equity/markovian/kou/parameters/kou_01.json
+    sha256: 3353abca9238231c7ffca99205097933c7be025a9935b556bf1e63b46b93eea5
+  product:
+    path: datasets/parameters/product/american_option/american_options_01_shard00.json
+    sha256: 960008a1a9f4eb3d6f016f8661382aec2cb73cc2b75d4ac7ed3df89a59d8af03
+output:
+  model:
+    path: fast_pricers/single_asset/equity/markovian/kou/prices/american_puts/kou_01__american_puts_01__01_cartesian_shard00/large/price/model.pt
+    sha256: 48a068257f9f42d6fe0a004e58bc84f70c956206a14fbe3220c3cdb071d46178
+  metrics:
+    path: fast_pricers/single_asset/equity/markovian/kou/prices/american_puts/kou_01__american_puts_01__01_cartesian_shard00/large/price/metrics.json
+    sha256: 28187216790dfb80f36c15b3bb88c69b2d0a0fe2def120ae68b50b74528130bb
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+  name: Tesla V100-SXM2-32GB
+  compute_capability: '7.0'
+software:
+  python: 3.13.5
+  pytorch: 2.7.1+cu126
+  cuda: '12.6'
+  cudnn: 90501
+  numpy: 2.2.6
+  pyyaml: 6.0.3

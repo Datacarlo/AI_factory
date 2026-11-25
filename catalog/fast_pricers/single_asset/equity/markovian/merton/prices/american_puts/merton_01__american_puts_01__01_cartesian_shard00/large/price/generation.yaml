@@ -1,0 +1,31 @@
+schema_version: 1
+status: complete
+inputs:
+  dataset:
+    path: datasets/single_asset/equity/markovian/merton/prices/american_puts/merton_01__american_puts_01__01_cartesian_shard00.json
+    sha256: 9fe7291f56340d923af2a931190b7ec53c8cc2a88b594054c9bf1db2de100fe2
+  model:
+    path: datasets/parameters/model/equity/markovian/merton/parameters/merton_01.json
+    sha256: 2966ece633b6b03463b0f87c98b77301cd8cdc3c496bf8255d90dd6936a10f67
+  product:
+    path: datasets/parameters/product/american_option/american_options_01_shard00.json
+    sha256: 960008a1a9f4eb3d6f016f8661382aec2cb73cc2b75d4ac7ed3df89a59d8af03
+output:
+  model:
+    path: fast_pricers/single_asset/equity/markovian/merton/prices/american_puts/merton_01__american_puts_01__01_cartesian_shard00/large/price/model.pt
+    sha256: 9b3964c7f169ecb59c5cfebd6b62bfbed6f5725723e79f21018bc87448ec56ab
+  metrics:
+    path: fast_pricers/single_asset/equity/markovian/merton/prices/american_puts/merton_01__american_puts_01__01_cartesian_shard00/large/price/metrics.json
+    sha256: 62482a00ad6b0b2aa4dbf9bf38236822aa7b89b64498cb3b41dd9526c7425411
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+  name: Tesla V100-SXM2-32GB
+  compute_capability: '7.0'
+software:
+  python: 3.13.5
+  pytorch: 2.7.1+cu126
+  cuda: '12.6'
+  cudnn: 90501
+  numpy: 2.2.6
+  pyyaml: 6.0.3

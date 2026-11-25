@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "count": 2043,
+  "count": 2047,
   "datasets": [
     {
       "source": "multi_asset/basket_down_and_out_call/five_black_scholes_cir_basket_down_and_out_calls_100k_01",
@@ -295,6 +295,34 @@
       "recipeMatchesReceipt": true,
       "catalogPath": "catalog/multi_asset/best_of_option/five_heston_cir_best_of_puts_100k_01",
       "originalOutput": "datasets/multi_asset/best_of_option/five_heston_cir_best_of_puts_100k_01.json"
+    },
+    {
+      "source": "multi_asset/best_of_option/five_quadratic_rough_heston_cir_best_of_calls_100k_01",
+      "id": "five_quadratic_rough_heston_cir_best_of_calls_100k_01",
+      "kind": "prices",
+      "model": "quadratic_rough_heston",
+      "collection": "prices",
+      "product": "best_of_option",
+      "output": "datasets/multi_asset/best_of_option/five_quadratic_rough_heston_cir_best_of_calls_100k_01.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/multi_asset/best_of_option/five_quadratic_rough_heston_cir_best_of_calls_100k_01",
+      "originalOutput": "datasets/multi_asset/best_of_option/five_quadratic_rough_heston_cir_best_of_calls_100k_01.json"
+    },
+    {
+      "source": "multi_asset/best_of_option/five_quadratic_rough_heston_cir_best_of_puts_100k_01",
+      "id": "five_quadratic_rough_heston_cir_best_of_puts_100k_01",
+      "kind": "prices",
+      "model": "quadratic_rough_heston",
+      "collection": "prices",
+      "product": "best_of_option",
+      "output": "datasets/multi_asset/best_of_option/five_quadratic_rough_heston_cir_best_of_puts_100k_01.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/multi_asset/best_of_option/five_quadratic_rough_heston_cir_best_of_puts_100k_01",
+      "originalOutput": "datasets/multi_asset/best_of_option/five_quadratic_rough_heston_cir_best_of_puts_100k_01.json"
     },
     {
       "source": "multi_asset/best_of_option/five_rough_bergomi_cir_best_of_calls_100k_01",
@@ -617,6 +645,20 @@
       "recipeMatchesReceipt": true,
       "catalogPath": "catalog/multi_asset/worst_of_option/five_quadratic_rough_heston_cir_worst_of_calls_100k_01",
       "originalOutput": "datasets/multi_asset/worst_of_option/five_quadratic_rough_heston_cir_worst_of_calls_100k_01.json"
+    },
+    {
+      "source": "multi_asset/worst_of_option/five_quadratic_rough_heston_cir_worst_of_puts_100k_01",
+      "id": "five_quadratic_rough_heston_cir_worst_of_puts_100k_01",
+      "kind": "prices",
+      "model": "quadratic_rough_heston",
+      "collection": "prices",
+      "product": "worst_of_option",
+      "output": "datasets/multi_asset/worst_of_option/five_quadratic_rough_heston_cir_worst_of_puts_100k_01.json",
+      "rowCount": 100000,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/multi_asset/worst_of_option/five_quadratic_rough_heston_cir_worst_of_puts_100k_01",
+      "originalOutput": "datasets/multi_asset/worst_of_option/five_quadratic_rough_heston_cir_worst_of_puts_100k_01.json"
     },
     {
       "source": "multi_asset/worst_of_option/five_rough_bergomi_cir_worst_of_calls_100k_01",
@@ -23297,6 +23339,20 @@
       "recipeMatchesReceipt": false,
       "catalogPath": "catalog/single_asset/fixed_income/cir_plus_plus/price_gradients/nelson_siegel/zero_coupon_bond_up_and_out_calls/cir_plus_plus_01__nelson_siegel_01__zero_coupon_bond_up_and_out_calls_01__01_price_gradient",
       "originalOutput": "datasets/single_asset/fixed_income/cir_plus_plus/price_gradients/nelson_siegel/zero_coupon_bond_up_and_out_calls/cir_plus_plus_01__nelson_siegel_01__zero_coupon_bond_up_and_out_calls_01__01_price_gradient.json"
+    },
+    {
+      "source": "single_asset/fixed_income/cir_plus_plus/price_gradients/nelson_siegel/zero_coupon_bond_up_and_out_calls/cir_plus_plus_01__nelson_siegel_01__zero_coupon_bond_up_and_out_calls_02__02_cartesian_shard00_price_gradient",
+      "id": "cir_plus_plus_01__nelson_siegel_01__zero_coupon_bond_up_and_out_calls_02__02_cartesian_shard00_price_gradient",
+      "kind": "price_gradients",
+      "model": "cir_plus_plus",
+      "collection": "price_gradients",
+      "product": "zero_coupon_bond_up_and_out_calls",
+      "output": "datasets/single_asset/fixed_income/cir_plus_plus/price_gradients/nelson_siegel/zero_coupon_bond_up_and_out_calls/cir_plus_plus_01__nelson_siegel_01__zero_coupon_bond_up_and_out_calls_02__02_cartesian_shard00_price_gradient.json",
+      "rowCount": 68301,
+      "ready": true,
+      "recipeMatchesReceipt": true,
+      "catalogPath": "catalog/single_asset/fixed_income/cir_plus_plus/price_gradients/nelson_siegel/zero_coupon_bond_up_and_out_calls/cir_plus_plus_01__nelson_siegel_01__zero_coupon_bond_up_and_out_calls_02__02_cartesian_shard00_price_gradient",
+      "originalOutput": "datasets/single_asset/fixed_income/cir_plus_plus/price_gradients/nelson_siegel/zero_coupon_bond_up_and_out_calls/cir_plus_plus_01__nelson_siegel_01__zero_coupon_bond_up_and_out_calls_02__02_cartesian_shard00_price_gradient.json"
     },
     {
       "source": "single_asset/fixed_income/cir_plus_plus/price_gradients/svensson/bermudan_payer_swaptions/cir_plus_plus_01__svensson_01__bermudan_payer_swaptions_01__01_cartesian_shard00_price_gradient_frozen_exercise",

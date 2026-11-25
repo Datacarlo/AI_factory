@@ -1,0 +1,31 @@
+schema_version: 1
+status: complete
+inputs:
+  dataset:
+    path: datasets/single_asset/equity/markovian/variance_gamma/price_gradients/european_calls/variance_gamma_01__european_calls_01__01_cartesian_shard00_price_gradient.json
+    sha256: 2214d95af0dddeaf53e79f9f356c91009a9cce8e88a3b6efb439d2d9cddee642
+  model:
+    path: datasets/parameters/model/equity/markovian/variance_gamma/parameters/variance_gamma_01.json
+    sha256: ac15d0efe70e1d173a0ec7dcbc2d7390a4dd419715a675804e76ed5de4a5a92f
+  product:
+    path: datasets/parameters/product/european_option/european_options_01_shard00.json
+    sha256: 0c4160b6db1799a7e4c704ee84224e2e0f33f31918be2d9f645b38bf46695329
+output:
+  model:
+    path: fast_pricers/single_asset/equity/markovian/variance_gamma/price_gradients/european_calls/variance_gamma_01__european_calls_01__01_cartesian_shard00_price_gradient/small/sobolev_lambda_10/model.pt
+    sha256: 1a365a509785f5f5549622bb2ce0dadd52df2df7b0af5180a4a905dadaa19367
+  metrics:
+    path: fast_pricers/single_asset/equity/markovian/variance_gamma/price_gradients/european_calls/variance_gamma_01__european_calls_01__01_cartesian_shard00_price_gradient/small/sobolev_lambda_10/metrics.json
+    sha256: 88bba6ca94cb1e50fd5e7bb4806cc73ac6212c5d723f502b98e734d78f1910e6
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+  name: Tesla V100-SXM2-32GB
+  compute_capability: '7.0'
+software:
+  python: 3.13.5
+  pytorch: 2.7.1+cu126
+  cuda: '12.6'
+  cudnn: 90501
+  numpy: 2.2.6
+  pyyaml: 6.0.3

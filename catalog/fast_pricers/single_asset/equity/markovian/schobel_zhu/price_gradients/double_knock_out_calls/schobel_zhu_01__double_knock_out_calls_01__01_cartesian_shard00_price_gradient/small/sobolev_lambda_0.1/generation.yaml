@@ -1,0 +1,31 @@
+schema_version: 1
+status: complete
+inputs:
+  dataset:
+    path: datasets/single_asset/equity/markovian/schobel_zhu/price_gradients/double_knock_out_calls/schobel_zhu_01__double_knock_out_calls_01__01_cartesian_shard00_price_gradient.json
+    sha256: aa78a087cb22e00bbfe4c5cdd3859928d61dda0cbf8ad9f9fb973c033f523efc
+  model:
+    path: datasets/parameters/model/equity/markovian/schobel_zhu/parameters/schobel_zhu_01.json
+    sha256: 661c88ef80a938cd9ddcddcbaa6f408cfa7f706b1580313cbf8636a0c8281e57
+  product:
+    path: datasets/parameters/product/double_knock_out_option/double_knock_out_options_01_shard00.json
+    sha256: 1c07809086c315b02c1e4ccbf6c00a77305291e9497d9f495bff4237989d8311
+output:
+  model:
+    path: fast_pricers/single_asset/equity/markovian/schobel_zhu/price_gradients/double_knock_out_calls/schobel_zhu_01__double_knock_out_calls_01__01_cartesian_shard00_price_gradient/small/sobolev_lambda_0.1/model.pt
+    sha256: ca3634ae5031500f2716bb49392630791d9f49840b8cb85a3edcce4f6ba2a7bb
+  metrics:
+    path: fast_pricers/single_asset/equity/markovian/schobel_zhu/price_gradients/double_knock_out_calls/schobel_zhu_01__double_knock_out_calls_01__01_cartesian_shard00_price_gradient/small/sobolev_lambda_0.1/metrics.json
+    sha256: 33e2dc54778e8008616e6c748d049c6c136c4e686f13b49c91360c7e93f3140a
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+  name: Tesla V100-SXM2-32GB
+  compute_capability: '7.0'
+software:
+  python: 3.13.5
+  pytorch: 2.7.1+cu126
+  cuda: '12.6'
+  cudnn: 90501
+  numpy: 2.2.6
+  pyyaml: 6.0.3
