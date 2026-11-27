@@ -1,0 +1,19 @@
+schema_version: 4
+status: complete
+inputs:
+  source_model:
+    path: datasets/parameters/model/fixed_income/vasicek/parameters/vasicek_01.json
+    sha256: 193a3732c42d36f5fb0fbd2cd3d50ec0b0cc2cdad88175404867dada6e4c4dc8
+output:
+  path: datasets/parameters/model/fixed_income/vasicek/factor_parameters/vasicek_multi100_core_01.json
+  sha256: 894df35f5a2e8f2bada6d4eabf38ad74035985e44449e7e05b98baece557f69d
+hardware:
+  device: cpu
+  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
+software:
+  cmake: 3.22.1
+  cxx_compiler: GNU 14.3.0
+  cuda_compiler: 12.9.41
+  cuda_target_architectures: '89'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1

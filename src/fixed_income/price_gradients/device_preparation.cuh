@@ -46,6 +46,8 @@ __host__ __device__ bool prepare_terminal_time(
         && maturity_years > 0.0f;
 }
 
+// On GPU, FP64 avoids rounding the maturity-to-step ratio to FP32 before
+// choosing the integer step count, despite lower throughput on most devices.
 template<typename ProductPreparation, typename Scenario>
 __host__ __device__ bool apply_terminal_time(
     float endpoint,

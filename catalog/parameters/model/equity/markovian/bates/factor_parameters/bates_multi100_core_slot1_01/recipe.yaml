@@ -1,0 +1,136 @@
+schema_version: 1
+kind: model_parameters
+dataset_id: bates_multi100_core_slot1_01
+generator: catalog/parameters/model/equity/markovian/bates/factor_parameters/bates_multi100_core_slot1_01/generator.cpp
+output:
+  path: datasets/parameters/model/equity/markovian/bates/factor_parameters/bates_multi100_core_slot1_01.json
+  format: json
+model_family: Bates
+row_count: 100
+parameterization: factorized
+inputs:
+  source_model: datasets/parameters/model/equity/markovian/bates/parameters/bates_01.json
+parameters:
+  spot: Fixed to one for equal initial asset weights.
+  dividend_yield: Model factor parameter.
+  initial_variance: Model factor parameter.
+  kappa: Model factor parameter.
+  theta: Model factor parameter.
+  jump_intensity: Model factor parameter.
+  jump_log_mean: Model factor parameter.
+  jump_log_volatility: Model factor parameter.
+  gamma: Model factor parameter.
+dynamics:
+  source_model_dataset: datasets/parameters/model/equity/markovian/bates/parameters/bates_01.json
+construction:
+  method: seeded sample without replacement from core prefix
+  source_model_dataset: datasets/parameters/model/equity/markovian/bates/parameters/bates_01.json
+  source_core_prefix_rows: 900
+  sample_seed: 202611270105
+  source_row_indices:
+  - 496
+  - 473
+  - 887
+  - 760
+  - 894
+  - 121
+  - 91
+  - 325
+  - 856
+  - 806
+  - 614
+  - 711
+  - 552
+  - 642
+  - 688
+  - 706
+  - 27
+  - 328
+  - 122
+  - 373
+  - 819
+  - 441
+  - 456
+  - 97
+  - 83
+  - 168
+  - 287
+  - 734
+  - 40
+  - 570
+  - 793
+  - 766
+  - 818
+  - 250
+  - 845
+  - 551
+  - 244
+  - 380
+  - 286
+  - 560
+  - 171
+  - 823
+  - 790
+  - 708
+  - 638
+  - 8
+  - 598
+  - 595
+  - 831
+  - 484
+  - 422
+  - 491
+  - 604
+  - 655
+  - 99
+  - 114
+  - 311
+  - 202
+  - 571
+  - 60
+  - 591
+  - 547
+  - 707
+  - 54
+  - 659
+  - 516
+  - 377
+  - 352
+  - 824
+  - 207
+  - 111
+  - 331
+  - 846
+  - 488
+  - 150
+  - 195
+  - 393
+  - 214
+  - 879
+  - 736
+  - 273
+  - 871
+  - 603
+  - 282
+  - 42
+  - 229
+  - 249
+  - 474
+  - 835
+  - 105
+  - 789
+  - 264
+  - 270
+  - 382
+  - 46
+  - 799
+  - 564
+  - 231
+  - 884
+  - 226
+  excluded:
+  - risk_free_rate
+  - rho
+  - correlation
+  spot_override: 1.0
+  selection_offset: 100

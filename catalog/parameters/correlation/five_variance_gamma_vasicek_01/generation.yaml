@@ -1,0 +1,16 @@
+schema_version: 4
+status: complete
+inputs: {}
+output:
+  path: datasets/parameters/correlation/five_variance_gamma_vasicek_01.json
+  sha256: 4bfa9952f86b4e4c7979272ac0ed2d777de6932b47ff78530d11ceb63ed91f97
+hardware:
+  device: cpu
+  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
+software:
+  cmake: 3.22.1
+  cxx_compiler: GNU 14.3.0
+  cuda_compiler: 12.9.41
+  cuda_target_architectures: '89'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1

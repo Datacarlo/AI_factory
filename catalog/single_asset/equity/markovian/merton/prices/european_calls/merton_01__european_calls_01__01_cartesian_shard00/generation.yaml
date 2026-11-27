@@ -9,7 +9,7 @@ inputs:
     sha256: 0c4160b6db1799a7e4c704ee84224e2e0f33f31918be2d9f645b38bf46695329
 output:
   path: datasets/single_asset/equity/markovian/merton/prices/european_calls/merton_01__european_calls_01__01_cartesian_shard00.json
-  sha256: 2b5b6634de4d11e111fd48344f5950f25ec7a63fc5ed19d652dca9ea938a2fce
+  sha256: 524c8c543f2a46a2c6498ecec68da89e143c1a1c070a77ec41107b1d5446649d
 hardware:
   device: gpu
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
@@ -17,9 +17,11 @@ hardware:
   uuid: GPU-5102f6b2-92ef-1ca5-849f-649cb3851bf6
   compute_capability: '8.0'
   driver_version: 590.48.01
+  implied_volatility_gpu: NVIDIA GeForce RTX 4090 Laptop GPU (SM 8.9)
 software:
   cmake: cmake version 3.31.6
   cxx_compiler: g++-14 (Debian 14.2.0-19) 14.2.0
   cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
+  implied_volatility_cuda: 12.9.41

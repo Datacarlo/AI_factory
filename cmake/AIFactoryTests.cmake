@@ -226,6 +226,11 @@ if(BUILD_TESTING)
     # Python dataset-generation contract checks.
     find_package(Python3 COMPONENTS Interpreter QUIET)
     if(Python3_Interpreter_FOUND)
+        add_dependencies(common_cuda_tests enrich_european_dataset)
+        add_test(NAME european_implied_volatility
+            COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/datasets/european_implied_volatility.py
+                    $<TARGET_FILE:enrich_european_dataset>)
+        set_tests_properties(european_implied_volatility PROPERTIES LABELS "workbench;cuda;dataset")
         foreach(stage IN ITEMS
                 artifact_publication
                 catalog_generation

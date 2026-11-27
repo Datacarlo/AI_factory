@@ -1,0 +1,26 @@
+schema_version: 4
+status: complete
+inputs:
+  model:
+    path: datasets/parameters/model/equity/rough/rough_sabr/parameters/rough_sabr_01.json
+    sha256: 5b4c16d54d626795b3484982ee1195528ab7b2da42154c0e8084563cb7764843
+  product:
+    path: datasets/parameters/product/gap_option/gap_put_options_01_shard00.json
+    sha256: 263090a180c1bf482495c4b50734f80e84cb4492259b271e1e88176c2e643ca8
+output:
+  path: datasets/single_asset/equity/rough/rough_sabr/price_gradients/gap_puts/rough_sabr_01__gap_puts_01__01_cartesian_shard00_price_gradient.json
+  sha256: a7c9a9126e49e4ee5beeade884f8fbafb7743a4e47cfd67e058851e7301c2a5d
+hardware:
+  device: gpu
+  cpu_model: Intel(R) Core(TM) Ultra 9 285K
+  name: NVIDIA GeForce RTX 5090
+  uuid: GPU-11b9a6f1-3f11-a2b5-400c-0eee5c2089c6
+  compute_capability: '12.0'
+  driver_version: 615.71.09
+software:
+  cmake: 3.31.6
+  cxx_compiler: GNU 14.2.0
+  cuda_compiler: 13.2.86
+  cuda_target_architectures: '120'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1

@@ -13,6 +13,8 @@ struct CorrelatedTwoFactorGaussianRateState {
     float x, y, integral;
 };
 
+// FP64 limits roundoff in the residual covariances and Cholesky pivots,
+// despite lower throughput on most GPUs during coefficient preparation.
 __device__ __forceinline__ CorrelatedTwoFactorGaussianRateStep
 prepare_correlated_two_factor_gaussian_rate(
     float ax,float sx,float x0,float ay,float sy,float y0,float rho,float dt) {

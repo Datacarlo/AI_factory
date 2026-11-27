@@ -78,6 +78,14 @@ parameter objects, gradient objects and calendar arrays written compactly.
 their existing meanings. The writer streams observations to a temporary file
 and replaces the destination only after the complete JSON has been written.
 
+Outside the Black–Scholes model, European vanilla equity calls and puts include annualized Black–Scholes
+`implied_volatility` in decimal units. The inversion uses the reported central
+price, continuous rates and dividend yield, the effective strike, and contractual
+maturity in years. At expiry or at/below the discounted intrinsic value the
+published volatility is zero. At/above the upper bound the solver uses the
+largest FP32 price strictly below it. These conventions apply only to IV;
+the reported option price is preserved.
+
 Multi-asset datasets retain their separate format.
 
 ### JSON header order

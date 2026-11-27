@@ -27,6 +27,8 @@ struct SampleDevicePreparer {
         }
     }
 
+    // FP64 limits roundoff in the lift fit and its matrix exponential.
+    // We accept lower FP64 throughput on most GPUs during parameter preparation.
     __device__ __forceinline__ static Prepared prepare(
         const ModelParameters& model,
         const Configuration& config

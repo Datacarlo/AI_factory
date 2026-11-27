@@ -11,6 +11,8 @@ namespace ai_factory::workbench::volterra {
 // its inverse CDF z(u)=sin(pi*alpha*u)/sin(pi*alpha*(1-u)). Substituting u=t^4
 // resolves the endpoint contribution; composite Gauss quadrature is refined
 // before the final FP32 cast. This function must not run inside path loops.
+// On GPU, FP64 resolves small series terms and differences between quadrature
+// refinements, despite lower throughput on most devices.
 __host__ __device__ inline float fractional_relaxation(double alpha, double x) {
     if (x == 0.0) return 1.0f;
     if (alpha == 1.0) return static_cast<float>(exp(-x));

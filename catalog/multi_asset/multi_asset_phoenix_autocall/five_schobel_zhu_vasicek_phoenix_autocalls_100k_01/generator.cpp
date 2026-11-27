@@ -1,0 +1,14 @@
+#include "model/equity/markovian/schobel_zhu/dynamics_impl.cuh"
+#include "model/equity/markovian/schobel_zhu/dataset.hpp"
+#include "product/multi_asset_autocall/dataset.hpp"
+#include "product/multi_asset_autocall/pricing_policy.cuh"
+#include "tools/pricing/homogeneous_equity_cir_generation.cuh"
+int main(int argc,char** argv) {
+    namespace wb=ai_factory::workbench;
+    return wb::offline::pricing::generate_homogeneous_equity_cir_prices<
+        wb::offline::pricing::FiveMarkov<wb::model::equity::schobel_zhu::DynamicsPolicy>, wb::simulation::MultiRoughPack<>, wb::product::MultiAssetPhoenixAutocallPathPolicy, 1U, wb::model::fixed_income::vasicek::CorrelatedRatePolicy>(
+        argc,argv,wb::model::equity::schobel_zhu::load_models,wb::product::load_multi_asset_phoenix_autocalls,
+        "equity/markovian/schobel_zhu","schobel_zhu",{"spot","volatility"},
+        "datasets/parameters/product/multi_asset_phoenix_autocall/phoenix_autocalls_multi_01.json","datasets/multi_asset/multi_asset_phoenix_autocall/five_schobel_zhu_vasicek_phoenix_autocalls_100k_01.json","catalog/multi_asset/multi_asset_phoenix_autocall/five_schobel_zhu_vasicek_phoenix_autocalls_100k_01/generation.yaml","",202611270800ULL,
+        wb::offline::pricing::CrossAssetBatchGeometry{128U,0U,256U,1U,1U,1U},8192U);
+}

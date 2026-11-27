@@ -201,7 +201,8 @@ void launch_device_prepared_terminal_prices(
         configuration,
         outputs,
         preparation_outputs,
-        configuration.base_seed
+        configuration.base_seed,
+        BlockPreparationWorkspace{}
     );
     check_cuda(cudaGetLastError(), kernel_name);
 }

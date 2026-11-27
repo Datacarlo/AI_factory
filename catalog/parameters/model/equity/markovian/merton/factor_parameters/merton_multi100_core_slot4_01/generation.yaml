@@ -1,0 +1,19 @@
+schema_version: 4
+status: complete
+inputs:
+  source_model:
+    path: datasets/parameters/model/equity/markovian/merton/parameters/merton_01.json
+    sha256: 2966ece633b6b03463b0f87c98b77301cd8cdc3c496bf8255d90dd6936a10f67
+output:
+  path: datasets/parameters/model/equity/markovian/merton/factor_parameters/merton_multi100_core_slot4_01.json
+  sha256: 6cb08b14ead3a810c96f77b00e10709725f8f3d085b04ae22f44b95d570d6be5
+hardware:
+  device: cpu
+  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
+software:
+  cmake: 3.22.1
+  cxx_compiler: GNU 14.3.0
+  cuda_compiler: 12.9.41
+  cuda_target_architectures: '89'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1

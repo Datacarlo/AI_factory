@@ -49,6 +49,8 @@ __device__ __forceinline__ float correlated_brownian_factor(
 
 // Internal model correlations are recovered once per price from the same
 // Cholesky rows that drive its shocks.
+// Accumulate the Cholesky row dot product in FP64 to limit cancellation
+// when recovering rho, despite lower FP64 throughput on most GPUs.
 __device__ __forceinline__ float factor_correlation(
     const float* packed_lower, std::size_t first, std::size_t second
 ) {

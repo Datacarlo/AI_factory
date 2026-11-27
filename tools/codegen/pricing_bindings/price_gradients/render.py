@@ -1184,7 +1184,7 @@ def render_recipes(
                 ),
                 "zero_coupon_bond_up_and_out": (
                     "datasets/parameters/product/zero_coupon_bond_up_and_out/"
-                    "zero_coupon_bond_up_and_outs_01.json"
+                    "zero_coupon_bond_up_and_outs_02.json"
                 ),
             }
             product_input = fixed_income_product_inputs[spec.product]

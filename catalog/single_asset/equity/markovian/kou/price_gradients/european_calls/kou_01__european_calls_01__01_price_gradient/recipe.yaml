@@ -10,6 +10,9 @@ output:
   path: datasets/single_asset/equity/markovian/kou/price_gradients/european_calls/kou_01__european_calls_01__01_price_gradient.json
   format: json
 row_layout: inline_parameters
+implied_volatility: Annualized Black-Scholes volatility. Zero at expiry or at/below
+  the discounted intrinsic value. At/above the upper bound, invert the nearest FP32
+  price below it.
 row_count: 1000
 quote_convention:
   strike:

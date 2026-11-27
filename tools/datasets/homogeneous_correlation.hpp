@@ -11,7 +11,7 @@
 namespace ai_factory::workbench::datasets {
 inline void write_homogeneous_correlations(
     const std::string& model, const std::vector<std::string>& asset_factors,
-    const std::string& id
+    const std::string& id, const std::string& rate_name = "cir"
 ) {
     if(asset_factors.size()!=1U && asset_factors.size()!=2U)
         throw std::invalid_argument("Expected one or two factors per equity");
@@ -20,7 +20,7 @@ inline void write_homogeneous_correlations(
     for(unsigned i=0;i<5;++i)
         for(const auto& f:asset_factors)
             names.push_back(model+"_"+std::to_string(i)+"."+f);
-    names.push_back("cir.rate");
+    names.push_back(rate_name+".rate");
     constexpr std::array<std::array<double,5>,10> a{{
         {0,0,0,0,0},{.30,.30,.30,.30,.30},{.55,-.55,.55,-.55,.55},
         {.75,.75,.75,.75,.75},{.85,.68,-.55,-.35,.10},

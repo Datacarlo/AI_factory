@@ -28,7 +28,7 @@ set(AI_FACTORY_PRODUCT_SHARD_GENERATOR_SOURCES
     catalog/parameters/product/up_no_touch/up_no_touches_01_shard00/generator.cpp
     catalog/parameters/product/up_one_touch/up_one_touches_01_shard00/generator.cpp
     catalog/parameters/product/zero_coupon_bond_option/zero_coupon_bond_options_01_shard00/generator.cpp
-    catalog/parameters/product/zero_coupon_bond_up_and_out/zero_coupon_bond_up_and_outs_01_shard00/generator.cpp
+    catalog/parameters/product/zero_coupon_bond_up_and_out/zero_coupon_bond_up_and_outs_02_shard00/generator.cpp
 )
 foreach(source IN LISTS AI_FACTORY_PRODUCT_SHARD_GENERATOR_SOURCES)
     ai_factory_register_catalog_generator("${source}" parameter)

@@ -1,0 +1,129 @@
+schema_version: 1
+kind: model_parameters
+dataset_id: vasicek_multi100_core_01
+generator: catalog/parameters/model/fixed_income/vasicek/factor_parameters/vasicek_multi100_core_01/generator.cpp
+output:
+  path: datasets/parameters/model/fixed_income/vasicek/factor_parameters/vasicek_multi100_core_01.json
+  format: json
+model_family: Vasicek short rate
+row_count: 100
+parameterization: factorized
+inputs:
+  source_model: datasets/parameters/model/fixed_income/vasicek/parameters/vasicek_01.json
+parameters:
+  mean_reversion: Model factor parameter.
+  long_term_mean: Model factor parameter.
+  volatility: Model factor parameter.
+  initial_state: Model factor parameter.
+dynamics:
+  source_model_dataset: datasets/parameters/model/fixed_income/vasicek/parameters/vasicek_01.json
+construction:
+  method: seeded sample without replacement from core prefix
+  source_model_dataset: datasets/parameters/model/fixed_income/vasicek/parameters/vasicek_01.json
+  source_core_prefix_rows: 900
+  sample_seed: 202611270106
+  source_row_indices:
+  - 78
+  - 155
+  - 286
+  - 28
+  - 540
+  - 487
+  - 542
+  - 21
+  - 329
+  - 615
+  - 319
+  - 465
+  - 198
+  - 25
+  - 727
+  - 202
+  - 691
+  - 847
+  - 457
+  - 818
+  - 320
+  - 285
+  - 715
+  - 394
+  - 32
+  - 626
+  - 794
+  - 142
+  - 124
+  - 745
+  - 786
+  - 367
+  - 865
+  - 496
+  - 180
+  - 266
+  - 664
+  - 424
+  - 176
+  - 75
+  - 240
+  - 284
+  - 270
+  - 463
+  - 619
+  - 660
+  - 187
+  - 805
+  - 570
+  - 189
+  - 96
+  - 423
+  - 533
+  - 210
+  - 692
+  - 601
+  - 728
+  - 743
+  - 208
+  - 13
+  - 430
+  - 688
+  - 404
+  - 193
+  - 592
+  - 548
+  - 661
+  - 830
+  - 353
+  - 690
+  - 43
+  - 280
+  - 224
+  - 260
+  - 116
+  - 643
+  - 832
+  - 175
+  - 846
+  - 181
+  - 819
+  - 558
+  - 659
+  - 767
+  - 896
+  - 671
+  - 170
+  - 39
+  - 168
+  - 336
+  - 502
+  - 512
+  - 287
+  - 259
+  - 693
+  - 26
+  - 152
+  - 623
+  - 530
+  - 586
+  excluded:
+  - risk_free_rate
+  - rho
+  - correlation

@@ -9,7 +9,7 @@ inputs:
     sha256: 0c4160b6db1799a7e4c704ee84224e2e0f33f31918be2d9f645b38bf46695329
 output:
   path: datasets/single_asset/equity/markovian/sabr/price_gradients/european_calls/sabr_01__european_calls_01__01_cartesian_shard00_price_gradient.json
-  sha256: 3773e65c39db7d1e20d86b233c2044e5e2ff194a71c70ca228a3036f07b64759
+  sha256: 7a7c4adc9622ca9c1f8fb120c7be6f47ddfb735bc149161642c19e4796e70b9a
 hardware:
   device: gpu
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
@@ -17,6 +17,7 @@ hardware:
   uuid: GPU-c2c5b606-4c26-00bb-857d-e5e0eb7eda00
   compute_capability: '7.0'
   driver_version: 580.178.04
+  implied_volatility_gpu: NVIDIA GeForce RTX 4090 Laptop GPU (SM 8.9)
 software:
   cmake: 3.31.6
   cxx_compiler: GNU 14.2.0
@@ -24,3 +25,4 @@ software:
   cuda_target_architectures: '70'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
+  implied_volatility_cuda: 12.9.41

@@ -26,6 +26,8 @@ struct SampleDevicePreparer {
         }
     }
 
+    // The lift fit compares candidate kernels in FP64 before storing FP32 coefficients.
+    // We accept lower FP64 throughput on most GPUs during parameter preparation.
     __device__ __forceinline__ static Prepared prepare(
         const ModelParameters& model,
         const Configuration& config

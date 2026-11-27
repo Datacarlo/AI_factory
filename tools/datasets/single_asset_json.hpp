@@ -2,6 +2,7 @@
 #pragma once
 
 #include "tools/datasets/json_header.hpp"
+#include "tools/datasets/european_implied_volatility.hpp"
 #include <cstddef>
 #include <filesystem>
 #include <fstream>
@@ -64,8 +65,20 @@ void write_single_asset_json(
         std::ofstream stream(temporary);
         if (!stream) throw std::runtime_error("Cannot open " + temporary.string());
         write_single_asset_header(stream, header);
-        for (std::size_t index = 0U; index < count; ++index) {
-            write_single_asset_observation(stream, make_row(index), index + 1U == count);
+        if (has_european_volatility(header)) {
+            constexpr size_t batch_size = 4096;
+            for (size_t first = 0; first < count; first += batch_size) {
+                std::vector<nlohmann::ordered_json> rows;
+                const size_t size = std::min(batch_size, count - first);
+                rows.reserve(size);
+                for (size_t i = 0; i < size; ++i) rows.push_back(make_row(first + i));
+                enrich_european_rows(header, rows);
+                for (size_t i = 0; i < size; ++i)
+                    write_single_asset_observation(stream, rows[i], first + i + 1 == count);
+            }
+        } else {
+            for (size_t i = 0; i < count; ++i)
+                write_single_asset_observation(stream, make_row(i), i + 1 == count);
         }
         stream << "  ]\n}\n";
         stream.close();

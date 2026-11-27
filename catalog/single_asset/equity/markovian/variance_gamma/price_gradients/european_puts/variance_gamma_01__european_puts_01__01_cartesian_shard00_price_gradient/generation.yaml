@@ -9,7 +9,7 @@ inputs:
     sha256: 0c4160b6db1799a7e4c704ee84224e2e0f33f31918be2d9f645b38bf46695329
 output:
   path: datasets/single_asset/equity/markovian/variance_gamma/price_gradients/european_puts/variance_gamma_01__european_puts_01__01_cartesian_shard00_price_gradient.json
-  sha256: cafcf992c3084906ae54eaf0f4e4fd6b0a82ad4efdaaffbfb242cb0c5ca88058
+  sha256: 5ba546deb5cedf4246d591d848fa7b8f77a28e843adfd7161b08fefa29bb1707
 hardware:
   device: gpu
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
@@ -17,9 +17,11 @@ hardware:
   uuid: GPU-c2c5b606-4c26-00bb-857d-e5e0eb7eda00
   compute_capability: '7.0'
   driver_version: 580.178.04
+  implied_volatility_gpu: NVIDIA GeForce RTX 4090 Laptop GPU (SM 8.9)
 software:
   cmake: cmake version 3.31.6
   cxx_compiler: g++-14 (Debian 14.2.0-19) 14.2.0
   cuda_compiler: Cuda compilation tools, release 12.9, V12.9.41
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
+  implied_volatility_cuda: 12.9.41

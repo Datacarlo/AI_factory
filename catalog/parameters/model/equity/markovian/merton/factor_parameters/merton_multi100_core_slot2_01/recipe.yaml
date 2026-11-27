@@ -1,0 +1,133 @@
+schema_version: 1
+kind: model_parameters
+dataset_id: merton_multi100_core_slot2_01
+generator: catalog/parameters/model/equity/markovian/merton/factor_parameters/merton_multi100_core_slot2_01/generator.cpp
+output:
+  path: datasets/parameters/model/equity/markovian/merton/factor_parameters/merton_multi100_core_slot2_01.json
+  format: json
+model_family: Merton jump diffusion
+row_count: 100
+parameterization: factorized
+inputs:
+  source_model: datasets/parameters/model/equity/markovian/merton/parameters/merton_01.json
+parameters:
+  spot: Fixed to one for equal initial asset weights.
+  dividend_yield: Model factor parameter.
+  volatility: Model factor parameter.
+  jump_intensity: Model factor parameter.
+  jump_log_mean: Model factor parameter.
+  jump_log_volatility: Model factor parameter.
+dynamics:
+  source_model_dataset: datasets/parameters/model/equity/markovian/merton/parameters/merton_01.json
+construction:
+  method: seeded sample without replacement from core prefix
+  source_model_dataset: datasets/parameters/model/equity/markovian/merton/parameters/merton_01.json
+  source_core_prefix_rows: 900
+  sample_seed: 202611270102
+  source_row_indices:
+  - 703
+  - 574
+  - 242
+  - 659
+  - 673
+  - 436
+  - 548
+  - 569
+  - 394
+  - 539
+  - 2
+  - 227
+  - 488
+  - 606
+  - 898
+  - 21
+  - 6
+  - 892
+  - 334
+  - 721
+  - 748
+  - 271
+  - 77
+  - 125
+  - 183
+  - 144
+  - 544
+  - 75
+  - 109
+  - 82
+  - 732
+  - 730
+  - 96
+  - 822
+  - 795
+  - 269
+  - 576
+  - 46
+  - 414
+  - 368
+  - 775
+  - 42
+  - 288
+  - 785
+  - 572
+  - 14
+  - 427
+  - 854
+  - 452
+  - 477
+  - 842
+  - 218
+  - 176
+  - 266
+  - 30
+  - 654
+  - 564
+  - 618
+  - 690
+  - 765
+  - 91
+  - 152
+  - 565
+  - 738
+  - 282
+  - 830
+  - 121
+  - 316
+  - 855
+  - 92
+  - 446
+  - 656
+  - 306
+  - 538
+  - 236
+  - 504
+  - 66
+  - 97
+  - 642
+  - 403
+  - 720
+  - 133
+  - 648
+  - 327
+  - 711
+  - 483
+  - 388
+  - 13
+  - 851
+  - 448
+  - 328
+  - 159
+  - 603
+  - 746
+  - 792
+  - 737
+  - 844
+  - 203
+  - 60
+  - 662
+  excluded:
+  - risk_free_rate
+  - rho
+  - correlation
+  spot_override: 1.0
+  selection_offset: 200

@@ -1,0 +1,33 @@
+schema_version: 1
+kind: model_parameters
+dataset_id: quadratic_rough_heston_02
+generator: catalog/parameters/model/equity/rough/quadratic_rough_heston/parameters/quadratic_rough_heston_02/generator.cpp
+output:
+  path: datasets/parameters/model/equity/rough/quadratic_rough_heston/parameters/quadratic_rough_heston_02.json
+  format: json
+model_family: quadratic rough Heston
+row_count: 1000
+parameters:
+  spot: Initial spot; fixed to 1.
+  risk_free_rate: Continuously compounded risk-free rate.
+  dividend_yield: Continuously compounded dividend yield.
+  initial_feedback: Initial feedback factor Z0.
+  quadratic_scale: Positive coefficient a.
+  quadratic_shift: Quadratic center b.
+  variance_floor: Strictly positive floor c.
+  feedback_rate: Feedback rate lambda.
+  feedback_volatility: Feedback volatility eta.
+  hurst_exponent: Fractional roughness H.
+dynamics:
+  variance: V=a(Z-b)^2+c.
+  feedback: Z=Z0-lambda K*Z dt+lambda eta K*sqrt(V)dW.
+  spot: dS/S=(r-q)dt+sqrt(V)dW with the same W.
+  simulation: Positive exponential N-factor lift.
+construction:
+  method: Latin hypercube in initial volatility, feedback fraction, scale, H, rate,
+    vol of feedback, center, risk-free rate and dividend yield
+  core_rows: 900
+  stress_rows: 100
+  seeds:
+  - 261126
+  - 261127

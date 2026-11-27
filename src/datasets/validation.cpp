@@ -424,6 +424,13 @@ void validate_compact_price_dataset(const nlohmann::json& document) {
                 || row.at("id").get<std::size_t>() != observation_index))
             reject("Price", id, "observation id must match its zero-based result index.");
         ++observation_index;
+        if (row.contains("implied_volatility")) {
+            const auto& vol = row.at("implied_volatility");
+            if (multi_asset || document.at("product_family") != "European Options"
+                || document.at("model_family") == "Black-Scholes"
+                || !vol.is_number() || !std::isfinite(vol.get<double>()) || vol.get<double>() < 0.)
+                reject("Price", id, "invalid or misplaced implied volatility.");
+        }
         for (const auto& [name, value] : row.items()) {
             if (!multi_asset && (name == "model_parameters"
                 || name == "product_parameters" || name == "curve_parameters")) {
