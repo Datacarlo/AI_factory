@@ -9,16 +9,18 @@ inputs:
     sha256: 0c4160b6db1799a7e4c704ee84224e2e0f33f31918be2d9f645b38bf46695329
 output:
   path: datasets/single_asset/equity/markovian/variance_gamma/price_gradients/european_calls/variance_gamma_01__european_calls_01__01_cartesian_shard00_price_gradient.json
-  sha256: 2214d95af0dddeaf53e79f9f356c91009a9cce8e88a3b6efb439d2d9cddee642
+  sha256: 702e4d73d29102d912da1c4bf5061e302ae8690cb9363293c33daa4983cefcf5
 hardware:
   device: gpu
   name: Tesla V100-SXM2-32GB
   uuid: GPU-c2c5b606-4c26-00bb-857d-e5e0eb7eda00
   compute_capability: '7.0'
   driver_version: 580.178.04
+  implied_volatility_gpu: NVIDIA GeForce RTX 4090 Laptop GPU (SM 8.9)
 software:
   cmake: 3.31.6
   cxx_compiler: GNU 14.2.0
   cuda_compiler: 12.9.41
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
+  implied_volatility_cuda: 12.9.41

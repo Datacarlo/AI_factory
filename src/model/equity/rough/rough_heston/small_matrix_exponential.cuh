@@ -67,6 +67,8 @@ __host__ __device__ SmallMatrix<Dimension> multiply(
 }
 
 // Scaling and squaring with a converged Taylor series for Dimension <= 8.
+// On GPU, FP64 limits accumulated roundoff in the series and repeated squaring,
+// at the cost of lower throughput on most devices.
 template<std::size_t Dimension>
 __host__ __device__ SmallMatrix<Dimension> matrix_exponential(
     SmallMatrix<Dimension> matrix

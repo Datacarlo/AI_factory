@@ -773,7 +773,7 @@ PRODUCT_SPECS = derive_equity_product_specs() + (
     ProductSpec(
         "zero_coupon_bond_up_and_out",
         "fixed_income",
-        ("zero_coupon_bond_up_and_outs_01",),
+        ("zero_coupon_bond_up_and_outs_02",),
         "ZeroCouponBondUpAndOutPricingPolicy",
         "every numerical grid point from 0 through option expiry",
         "zero-coupon bond P(t,U), exact Gaussian rate integral",
@@ -1019,7 +1019,9 @@ def _fixed_income_price_dataset_specs() -> tuple[DatasetSpec, ...]:
             components = [f"{capability.model}_01"]
             if capability.curve is not None:
                 components.append(f"{capability.curve}_01")
-            components.extend((f"{variant}_01", "01"))
+            product = PRODUCT_BY_NAME[("fixed_income", FIXED_INCOME_VARIANTS[variant])]
+            revision = product.parameter_dataset_ids[0].rsplit("_", 1)[1]
+            components.extend((f"{variant}_{revision}", revision))
             dataset_id = "__".join(components)
             curve_path = (
                 f"{capability.curve}/"

@@ -9,7 +9,7 @@ inputs:
     sha256: 0c4160b6db1799a7e4c704ee84224e2e0f33f31918be2d9f645b38bf46695329
 output:
   path: datasets/single_asset/equity/rough/quadratic_rough_heston/price_gradients/european_calls/quadratic_rough_heston_01__european_calls_01__01_cartesian_shard00_price_gradient.json
-  sha256: b13d4b0a48d619999aaee16022e016e43328fee26c38b40ad7c7522254c1657a
+  sha256: 56e5917542e6556cb57228b8edada384fd7067eb5cdc8c138f138055b672c4a3
 hardware:
   device: gpu
   cpu_model: Intel(R) Core(TM) Ultra 9 285K
@@ -17,6 +17,7 @@ hardware:
   uuid: GPU-11b9a6f1-3f11-a2b5-400c-0eee5c2089c6
   compute_capability: '12.0'
   driver_version: 615.71.09
+  implied_volatility_gpu: NVIDIA GeForce RTX 4090 Laptop GPU (SM 8.9)
 software:
   cmake: 3.31.6
   cxx_compiler: GNU 14.2.0
@@ -24,3 +25,4 @@ software:
   cuda_target_architectures: '120'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
+  implied_volatility_cuda: 12.9.41

@@ -1,0 +1,132 @@
+schema_version: 1
+kind: model_parameters
+dataset_id: variance_gamma_multi100_core_slot2_01
+generator: catalog/parameters/model/equity/markovian/variance_gamma/factor_parameters/variance_gamma_multi100_core_slot2_01/generator.cpp
+output:
+  path: datasets/parameters/model/equity/markovian/variance_gamma/factor_parameters/variance_gamma_multi100_core_slot2_01.json
+  format: json
+model_family: Variance-Gamma
+row_count: 100
+parameterization: factorized
+inputs:
+  source_model: datasets/parameters/model/equity/markovian/variance_gamma/parameters/variance_gamma_01.json
+parameters:
+  spot: Fixed to one for equal initial asset weights.
+  dividend_yield: Model factor parameter.
+  sigma: Model factor parameter.
+  nu: Model factor parameter.
+  theta: Model factor parameter.
+dynamics:
+  source_model_dataset: datasets/parameters/model/equity/markovian/variance_gamma/parameters/variance_gamma_01.json
+construction:
+  method: seeded sample without replacement from core prefix
+  source_model_dataset: datasets/parameters/model/equity/markovian/variance_gamma/parameters/variance_gamma_01.json
+  source_core_prefix_rows: 900
+  sample_seed: 202611270103
+  source_row_indices:
+  - 810
+  - 738
+  - 295
+  - 150
+  - 92
+  - 756
+  - 5
+  - 639
+  - 813
+  - 122
+  - 335
+  - 781
+  - 702
+  - 677
+  - 1
+  - 466
+  - 668
+  - 430
+  - 269
+  - 42
+  - 349
+  - 219
+  - 176
+  - 388
+  - 58
+  - 894
+  - 395
+  - 569
+  - 140
+  - 386
+  - 44
+  - 620
+  - 105
+  - 501
+  - 174
+  - 835
+  - 369
+  - 440
+  - 368
+  - 13
+  - 412
+  - 265
+  - 818
+  - 491
+  - 666
+  - 773
+  - 759
+  - 486
+  - 659
+  - 597
+  - 49
+  - 880
+  - 2
+  - 803
+  - 118
+  - 635
+  - 533
+  - 720
+  - 730
+  - 642
+  - 282
+  - 799
+  - 180
+  - 329
+  - 513
+  - 283
+  - 245
+  - 240
+  - 355
+  - 225
+  - 103
+  - 873
+  - 772
+  - 712
+  - 444
+  - 361
+  - 476
+  - 214
+  - 879
+  - 68
+  - 653
+  - 840
+  - 100
+  - 19
+  - 93
+  - 304
+  - 896
+  - 580
+  - 460
+  - 195
+  - 91
+  - 515
+  - 540
+  - 242
+  - 531
+  - 327
+  - 689
+  - 489
+  - 734
+  - 9
+  excluded:
+  - risk_free_rate
+  - rho
+  - correlation
+  spot_override: 1.0
+  selection_offset: 200

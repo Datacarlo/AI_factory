@@ -1,0 +1,19 @@
+schema_version: 4
+status: complete
+inputs:
+  source_model:
+    path: datasets/parameters/model/equity/markovian/bates/parameters/bates_01.json
+    sha256: 84eeb1797d0f77b4c56baac0d8f1eedf35130bc91bdfcbcdf2877fea02b991d5
+output:
+  path: datasets/parameters/model/equity/markovian/bates/factor_parameters/bates_multi100_core_slot3_01.json
+  sha256: 7a92a4ddafb6d1184b96b89c69bdfcc2f6f19cd643e593bc496dea6db9e8477e
+hardware:
+  device: cpu
+  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
+software:
+  cmake: 3.22.1
+  cxx_compiler: GNU 14.3.0
+  cuda_compiler: 12.9.41
+  cuda_target_architectures: '89'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1

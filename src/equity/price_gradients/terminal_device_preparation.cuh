@@ -293,6 +293,8 @@ struct ScenarioDevicePreparation {
         }
     }
 
+    // On GPU, FP64 avoids rounding the maturity-to-step ratio to FP32 before
+    // choosing the integer step count, despite lower throughput on most devices.
     __host__ __device__ static bool apply_parameter(
         Parameter parameter,
         float endpoint,

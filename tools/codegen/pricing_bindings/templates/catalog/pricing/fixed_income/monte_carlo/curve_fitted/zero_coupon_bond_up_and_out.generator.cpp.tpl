@@ -11,7 +11,7 @@ int main() {
     namespace fitted = rates::${curve};
     const datasets::ZeroCouponBondUpAndOutRecipe recipe{
         "datasets/parameters/model/fixed_income/${model}/parameters/${model}_01.json",
-        "datasets/parameters/product/zero_coupon_bond_up_and_out/zero_coupon_bond_up_and_outs_01.json",
+        "datasets/parameters/product/zero_coupon_bond_up_and_out/zero_coupon_bond_up_and_outs_02.json",
         "${price_dataset_path}", "${catalog_path}", "${url}",
         ${dynamics_seed}ULL, ${launch_identity}, PriceConstruction::${construction},
         1'048'576U, 1U, "datasets/parameters/curve/${curve}/${curve}_01.json",

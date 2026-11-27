@@ -9,7 +9,7 @@ inputs:
     sha256: 0c4160b6db1799a7e4c704ee84224e2e0f33f31918be2d9f645b38bf46695329
 output:
   path: datasets/single_asset/equity/markovian/bates/price_gradients/european_puts/bates_01__european_puts_01__01_cartesian_shard00_price_gradient.json
-  sha256: 86b843830d6fa76b4f773a999baa02c9a48008bd08cedbc33260d084f647183e
+  sha256: 876eb97af261b876c008d395fde0ce277128956950bc2fecdc57a9f16c5be293
 hardware:
   device: gpu
   cpu_model: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
@@ -17,6 +17,7 @@ hardware:
   uuid: GPU-c0388c6e-7fcc-dde8-96c3-dc94f06ca5f6
   compute_capability: '7.0'
   driver_version: 580.178.04
+  implied_volatility_gpu: NVIDIA GeForce RTX 4090 Laptop GPU (SM 8.9)
 software:
   cmake: 3.31.6
   cxx_compiler: GNU 14.2.0
@@ -24,3 +25,4 @@ software:
   cuda_target_architectures: '70'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
+  implied_volatility_cuda: 12.9.41

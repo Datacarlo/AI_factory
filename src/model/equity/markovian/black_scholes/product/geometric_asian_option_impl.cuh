@@ -41,6 +41,8 @@ struct GeometricAsianOptionClosedFormPricingPolicy {
         );
     }
 
+    // On GPU, FP64 avoids rounding the maturity-to-step ratio to FP32 before
+    // choosing the integer step count, despite lower throughput on most devices.
     __device__ __forceinline__ static PreparedRow prepare_sensitivity_row(
         const ModelParameters& model,
         const product::GeometricAsianOptionParameters& product,

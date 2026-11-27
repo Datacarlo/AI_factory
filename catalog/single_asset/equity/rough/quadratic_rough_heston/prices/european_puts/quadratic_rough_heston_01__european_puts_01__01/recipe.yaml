@@ -13,6 +13,10 @@ row_layout: inline_parameters
 outputs:
 - price
 - standard_error
+- implied_volatility
+implied_volatility: Annualized Black-Scholes volatility. Zero at expiry or at/below
+  the discounted intrinsic value. At/above the upper bound, invert the nearest FP32
+  price below it.
 row_count: 1000
 quote_convention:
   strike:

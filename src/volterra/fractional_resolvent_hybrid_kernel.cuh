@@ -87,6 +87,8 @@ struct FractionalResolventHybridKernelPolicy {
         return sum.value();
     }
 
+    // Compute the relaxation argument in FP64 to avoid rounding it before evaluation.
+    // Lower FP64 throughput on most GPUs is paid during grid preparation.
     __host__ __device__ static float mean_response(
         const PreparedKernel& kernel, float time_years
     ) {

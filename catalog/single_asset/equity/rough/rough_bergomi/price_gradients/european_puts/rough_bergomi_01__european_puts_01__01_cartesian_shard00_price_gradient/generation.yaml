@@ -9,7 +9,7 @@ inputs:
     sha256: 0c4160b6db1799a7e4c704ee84224e2e0f33f31918be2d9f645b38bf46695329
 output:
   path: datasets/single_asset/equity/rough/rough_bergomi/price_gradients/european_puts/rough_bergomi_01__european_puts_01__01_cartesian_shard00_price_gradient.json
-  sha256: eef864b85ec7272b3c15fa02de0d67265c7160cb45162b68919183bd8808e9fa
+  sha256: d34f9ba72c68212d6a112d2f0142e5cec9c6b5ce94e1bae0e566614e7591c292
 hardware:
   device: gpu
   cpu_model: Intel(R) Core(TM) Ultra 9 285K
@@ -17,6 +17,7 @@ hardware:
   uuid: GPU-58db2f59-3fa0-ca58-6a4c-4acfbbe0d532
   compute_capability: '12.0'
   driver_version: 615.71.09
+  implied_volatility_gpu: NVIDIA GeForce RTX 4090 Laptop GPU (SM 8.9)
 software:
   cmake: 3.31.6
   cxx_compiler: GNU 14.2.0
@@ -24,3 +25,4 @@ software:
   cuda_target_architectures: '120'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
+  implied_volatility_cuda: 12.9.41

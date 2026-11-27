@@ -10,7 +10,7 @@ import yaml
 
 RECIPE_ORDER = (
     'schema_version', 'kind', 'dataset_id', 'option_side', 'generator',
-    'inputs', 'output', 'row_layout', 'outputs',
+    'inputs', 'output', 'row_layout', 'outputs', 'implied_volatility',
     'row_count', 'candidate_row_count', 'construction', 'product_shard',
     'curve_assignment', 'row_selection', 'quote_convention',
     'numerical_method', 'central_price_engine', 'time_grid', 'time_representation',
@@ -35,6 +35,22 @@ def normalize_recipe(document):
     result = deepcopy(document)
     if result.get('kind') not in {'prices', 'price_gradients', 'price_delta'}:
         return result
+    output = result.get('output', {}).get('path', '')
+    parts = output.split('/')
+    if (parts[:3] == ['datasets', 'single_asset', 'equity']
+            and len(parts) > 5 and parts[-2] in {'european_calls', 'european_puts'}):
+        if 'outputs' in result:
+            result['outputs'] = [field for field in result['outputs']
+                                 if field not in {'implied_volatility', 'implied_volatility_status'}]
+        if parts[4] == 'black_scholes':
+            result.pop('implied_volatility', None)
+        else:
+            result['implied_volatility'] = (
+                'Annualized Black-Scholes volatility. Zero at expiry or at/below the discounted '
+                'intrinsic value. At/above the upper bound, invert the nearest FP32 price below it.'
+            )
+            if 'outputs' in result:
+                result['outputs'].append('implied_volatility')
     # Historical multi-asset recipes used different names for the same settings.
     legacy = result.pop('pricing', None)
     if legacy is not None:

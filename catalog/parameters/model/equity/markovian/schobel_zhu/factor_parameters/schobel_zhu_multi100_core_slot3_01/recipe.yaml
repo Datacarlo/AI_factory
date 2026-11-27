@@ -1,0 +1,133 @@
+schema_version: 1
+kind: model_parameters
+dataset_id: schobel_zhu_multi100_core_slot3_01
+generator: catalog/parameters/model/equity/markovian/schobel_zhu/factor_parameters/schobel_zhu_multi100_core_slot3_01/generator.cpp
+output:
+  path: datasets/parameters/model/equity/markovian/schobel_zhu/factor_parameters/schobel_zhu_multi100_core_slot3_01.json
+  format: json
+model_family: Schobel-Zhu
+row_count: 100
+parameterization: factorized
+inputs:
+  source_model: datasets/parameters/model/equity/markovian/schobel_zhu/parameters/schobel_zhu_01.json
+parameters:
+  spot: Fixed to one for equal initial asset weights.
+  dividend_yield: Model factor parameter.
+  initial_volatility: Model factor parameter.
+  mean_reversion: Model factor parameter.
+  long_run_volatility: Model factor parameter.
+  volatility_of_volatility: Model factor parameter.
+dynamics:
+  source_model_dataset: datasets/parameters/model/equity/markovian/schobel_zhu/parameters/schobel_zhu_01.json
+construction:
+  method: seeded sample without replacement from core prefix
+  source_model_dataset: datasets/parameters/model/equity/markovian/schobel_zhu/parameters/schobel_zhu_01.json
+  source_core_prefix_rows: 900
+  sample_seed: 202611270101
+  source_row_indices:
+  - 369
+  - 737
+  - 322
+  - 816
+  - 469
+  - 452
+  - 112
+  - 640
+  - 147
+  - 165
+  - 884
+  - 473
+  - 357
+  - 630
+  - 153
+  - 385
+  - 746
+  - 579
+  - 281
+  - 543
+  - 870
+  - 220
+  - 211
+  - 689
+  - 463
+  - 632
+  - 91
+  - 568
+  - 526
+  - 471
+  - 179
+  - 420
+  - 343
+  - 232
+  - 66
+  - 392
+  - 231
+  - 339
+  - 42
+  - 709
+  - 162
+  - 137
+  - 258
+  - 467
+  - 389
+  - 246
+  - 161
+  - 120
+  - 427
+  - 318
+  - 127
+  - 677
+  - 138
+  - 419
+  - 108
+  - 541
+  - 830
+  - 65
+  - 416
+  - 850
+  - 253
+  - 774
+  - 668
+  - 572
+  - 885
+  - 637
+  - 250
+  - 27
+  - 144
+  - 226
+  - 254
+  - 682
+  - 124
+  - 356
+  - 2
+  - 814
+  - 8
+  - 745
+  - 661
+  - 118
+  - 743
+  - 29
+  - 159
+  - 92
+  - 289
+  - 704
+  - 4
+  - 131
+  - 887
+  - 233
+  - 401
+  - 324
+  - 892
+  - 805
+  - 96
+  - 301
+  - 732
+  - 620
+  - 728
+  - 653
+  excluded:
+  - risk_free_rate
+  - rho
+  - correlation
+  spot_override: 1.0
+  selection_offset: 300

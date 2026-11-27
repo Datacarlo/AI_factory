@@ -65,6 +65,8 @@ __device__ __forceinline__ void record_error(
 struct RegularEndpoint {
     float central;
 
+    // On GPU, FP64 forms the bumped endpoint before a single rounding to FP32,
+    // despite lower FP64 throughput on most devices.
     __host__ __device__ float operator()(int multiple, float h) const {
         return static_cast<float>(
             static_cast<double>(central)
@@ -85,6 +87,8 @@ struct MaturityEndpoint {
     }
 };
 
+// FP64 limits roundoff in the weight solve for closely spaced nodes,
+// despite lower FP64 throughput on most GPUs.
 template<std::size_t NodeCapacity>
 __host__ __device__ inline bool finite_difference_weights(
     const float* nodes,
@@ -145,6 +149,8 @@ __host__ __device__ inline bool finite_difference_weights(
     return true;
 }
 
+// On GPU, one-sided weights use FP64 differences between the actual nodes
+// to limit cancellation, despite lower throughput on most devices.
 template<pg::SensitivityOrders Orders, typename Preparation, typename Endpoint>
 __host__ __device__ inline bool prepare_stencil(
     float central,
@@ -258,6 +264,8 @@ __host__ __device__ inline bool prepare_stencil(
     return false;
 }
 
+// On GPU, FP64 keeps the maturity bump in grid units precise until integer
+// rounding, despite lower FP64 throughput on most devices.
 template<pg::SensitivityOrders Orders, typename Preparation>
 __host__ __device__ inline bool build_stencil(
     const typename Preparation::Scenario& central,
@@ -344,6 +352,8 @@ __host__ __device__ inline bool build_stencil(
     return true;
 }
 
+// On GPU, FP64 limits roundoff in bridge weights for nearby endpoint times,
+// despite lower FP64 throughput on most devices.
 template<std::size_t NodeCapacity>
 __host__ __device__ inline void brownian_endpoint_weights(
     const float (&input_times)[NodeCapacity],

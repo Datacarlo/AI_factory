@@ -89,6 +89,10 @@ target_link_libraries(
 ai_factory_add_offline_library(
     ai_factory_price_dataset tools/datasets/price_dataset.cpp
 )
+ai_factory_add_offline_library(ai_factory_implied_volatility src/implied_volatility/european_kernel.cu)
+add_executable(enrich_european_dataset EXCLUDE_FROM_ALL tools/datasets/enrich_european_dataset.cpp)
+target_link_libraries(enrich_european_dataset PRIVATE ai_factory_implied_volatility)
+target_link_libraries(ai_factory_price_dataset PUBLIC ai_factory_implied_volatility)
 target_sources(ai_factory_price_dataset PRIVATE tools/datasets/price_delta_dataset.cpp)
 target_link_libraries(
     ai_factory_price_dataset PUBLIC

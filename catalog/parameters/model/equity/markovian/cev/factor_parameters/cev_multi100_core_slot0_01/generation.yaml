@@ -1,0 +1,19 @@
+schema_version: 4
+status: complete
+inputs:
+  source_model:
+    path: datasets/parameters/model/equity/markovian/cev/parameters/cev_01.json
+    sha256: eb601cf70e94d2484c5e63fb8579cb5766943c79384454c40bea7d0d8006f3c9
+output:
+  path: datasets/parameters/model/equity/markovian/cev/factor_parameters/cev_multi100_core_slot0_01.json
+  sha256: b49e62dd0173433bc35294af138824d679b759beffb41814ec84e022ff1cdef8
+hardware:
+  device: cpu
+  cpu_model: 13th Gen Intel(R) Core(TM) i9-13900HK
+software:
+  cmake: 3.22.1
+  cxx_compiler: GNU 14.3.0
+  cuda_compiler: 12.9.41
+  cuda_target_architectures: '89'
+  nlohmann_json: 3.10.5
+  mathdx: 25.12.1

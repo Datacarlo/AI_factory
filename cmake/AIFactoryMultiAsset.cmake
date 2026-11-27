@@ -186,3 +186,4 @@ if(AI_FACTORY_ENABLE_LOCAL_EXPERIMENTS
 endif()
 
 include(${CMAKE_SOURCE_DIR}/cmake/AIFactoryHomogeneousMultiAsset.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/AIFactoryMultiAssetNovember27.cmake)

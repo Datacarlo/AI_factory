@@ -9,7 +9,7 @@ inputs:
     sha256: 0c4160b6db1799a7e4c704ee84224e2e0f33f31918be2d9f645b38bf46695329
 output:
   path: datasets/single_asset/equity/rough/rough_heston/prices/european_calls/rough_heston_01__european_calls_01__01_cartesian_shard00.json
-  sha256: 0c06efa9630f855dfcfb87e85cc80427f64300fee064f3a805924b6fa70cad9e
+  sha256: 329c1ae40134bac8e428290686e926d5eb2137918bd3584b049da9db8320a75b
 hardware:
   device: gpu
   cpu_model: Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
@@ -17,6 +17,7 @@ hardware:
   uuid: GPU-5102f6b2-92ef-1ca5-849f-649cb3851bf6
   compute_capability: '8.0'
   driver_version: 590.48.01
+  implied_volatility_gpu: NVIDIA GeForce RTX 4090 Laptop GPU (SM 8.9)
 software:
   cmake: cmake version 3.31.6
   cxx_compiler: g++-14 (Debian 14.2.0-19) 14.2.0
@@ -24,3 +25,4 @@ software:
   cuda_target_architectures: '80'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
+  implied_volatility_cuda: 12.9.41

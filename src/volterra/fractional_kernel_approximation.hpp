@@ -274,6 +274,8 @@ __host__ __device__ ExponentialKernel<FactorCount> optimize_positive_rule(
 // rough-Heston scheme and is therefore not traded for an unconstrained fit.
 // Host validation precedes the shared fit; device callers validate parameter
 // bounds before launch, so each thread can run the same numerical fit directly.
+// The device fit compares candidate L2 errors in FP64 to resolve small improvements,
+// despite lower throughput on most GPUs. The fitted kernel stores FP32 nodes and weights.
 template<std::size_t FactorCount>
 __host__ __device__ ExponentialKernel<FactorCount>
 fit_positive_fractional_kernel_l2_unchecked(

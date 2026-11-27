@@ -9,16 +9,18 @@ inputs:
     sha256: 0c4160b6db1799a7e4c704ee84224e2e0f33f31918be2d9f645b38bf46695329
 output:
   path: datasets/single_asset/equity/rough/rough_heston/price_gradients/european_puts/rough_heston_01__european_puts_01__01_cartesian_shard00_price_gradient.json
-  sha256: a93167bad31430bc5aa5a8da20ac401a782bcb65dc7692c8a05eafb207ad51ff
+  sha256: e8acd69075bc2dc63588c8e1adb96f18b0d4bae56d227f5e46d3b5522852c542
 hardware:
   device: gpu
   name: NVIDIA GeForce RTX 5090
   uuid: GPU-11b9a6f1-3f11-a2b5-400c-0eee5c2089c6
   compute_capability: '12.0'
   driver_version: 615.71.09
+  implied_volatility_gpu: NVIDIA GeForce RTX 4090 Laptop GPU (SM 8.9)
 software:
   cmake: cmake version 3.31.6
   cxx_compiler: g++-14 (Debian 14.2.0-19) 14.2.0
   cuda_compiler: Cuda compilation tools, release 13.2, V13.2.86
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
+  implied_volatility_cuda: 12.9.41

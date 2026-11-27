@@ -54,6 +54,8 @@ struct HybridBridgeTraits<HomogeneousRoughPack<Policy,Count>> {
 template<typename Pack> struct FractionalHybridBridge {
     using Traits=HybridBridgeTraits<Pack>;
     typename Pack::Inputs models;
+    // FP64 limits cancellation in the Cholesky pivots for strongly correlated
+    // factors, despite lower FP64 throughput on most GPUs.
     __device__ unsigned prepare(unsigned row,unsigned factor,const float* lower,
                                 float* coefficients) const {
         if constexpr(Traits::count<=1 || !Traits::supported) return 0;

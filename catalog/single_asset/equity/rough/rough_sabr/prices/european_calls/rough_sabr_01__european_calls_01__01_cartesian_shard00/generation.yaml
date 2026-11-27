@@ -9,7 +9,7 @@ inputs:
     sha256: 0c4160b6db1799a7e4c704ee84224e2e0f33f31918be2d9f645b38bf46695329
 output:
   path: datasets/single_asset/equity/rough/rough_sabr/prices/european_calls/rough_sabr_01__european_calls_01__01_cartesian_shard00.json
-  sha256: a2de37be616009faf85e0384b55dac4fed468cfad7e3996628a3ada8e0a01977
+  sha256: 2d16cb8112b2016ec1f4e4d539bb76c750ef20a18eb84da40b2b7bda0699ebcd
 hardware:
   device: gpu
   cpu_model: Intel(R) Core(TM) Ultra 9 285K
@@ -17,6 +17,7 @@ hardware:
   uuid: GPU-11b9a6f1-3f11-a2b5-400c-0eee5c2089c6
   compute_capability: '12.0'
   driver_version: 615.71.09
+  implied_volatility_gpu: NVIDIA GeForce RTX 4090 Laptop GPU (SM 8.9)
 software:
   cmake: cmake version 3.31.6
   cxx_compiler: g++-14 (Debian 14.2.0-19) 14.2.0
@@ -24,3 +25,4 @@ software:
   cuda_target_architectures: '120'
   nlohmann_json: 3.10.5
   mathdx: 25.12.1
+  implied_volatility_cuda: 12.9.41

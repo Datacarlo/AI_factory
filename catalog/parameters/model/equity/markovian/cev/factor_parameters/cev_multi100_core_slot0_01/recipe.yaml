@@ -1,0 +1,130 @@
+schema_version: 1
+kind: model_parameters
+dataset_id: cev_multi100_core_slot0_01
+generator: catalog/parameters/model/equity/markovian/cev/factor_parameters/cev_multi100_core_slot0_01/generator.cpp
+output:
+  path: datasets/parameters/model/equity/markovian/cev/factor_parameters/cev_multi100_core_slot0_01.json
+  format: json
+model_family: CEV
+row_count: 100
+parameterization: factorized
+inputs:
+  source_model: datasets/parameters/model/equity/markovian/cev/parameters/cev_01.json
+parameters:
+  spot: Fixed to one for equal initial asset weights.
+  dividend_yield: Model factor parameter.
+  sigma: Model factor parameter.
+  beta: Model factor parameter.
+dynamics:
+  source_model_dataset: datasets/parameters/model/equity/markovian/cev/parameters/cev_01.json
+construction:
+  method: seeded sample without replacement from core prefix
+  source_model_dataset: datasets/parameters/model/equity/markovian/cev/parameters/cev_01.json
+  source_core_prefix_rows: 900
+  sample_seed: 202611270104
+  source_row_indices:
+  - 634
+  - 211
+  - 814
+  - 153
+  - 524
+  - 334
+  - 129
+  - 658
+  - 691
+  - 684
+  - 395
+  - 670
+  - 568
+  - 188
+  - 687
+  - 719
+  - 45
+  - 462
+  - 2
+  - 241
+  - 37
+  - 893
+  - 648
+  - 792
+  - 372
+  - 715
+  - 806
+  - 620
+  - 43
+  - 77
+  - 376
+  - 371
+  - 360
+  - 470
+  - 92
+  - 183
+  - 535
+  - 224
+  - 795
+  - 707
+  - 67
+  - 258
+  - 103
+  - 368
+  - 148
+  - 116
+  - 141
+  - 878
+  - 135
+  - 126
+  - 546
+  - 412
+  - 539
+  - 709
+  - 690
+  - 267
+  - 694
+  - 810
+  - 128
+  - 428
+  - 83
+  - 441
+  - 788
+  - 633
+  - 84
+  - 290
+  - 68
+  - 526
+  - 237
+  - 378
+  - 70
+  - 646
+  - 758
+  - 15
+  - 194
+  - 575
+  - 631
+  - 729
+  - 656
+  - 605
+  - 13
+  - 623
+  - 44
+  - 488
+  - 431
+  - 567
+  - 593
+  - 603
+  - 186
+  - 474
+  - 747
+  - 365
+  - 584
+  - 160
+  - 340
+  - 466
+  - 644
+  - 800
+  - 505
+  - 663
+  excluded:
+  - risk_free_rate
+  - rho
+  - correlation
+  spot_override: 1.0

@@ -30,6 +30,8 @@ struct CorrelatedGaussianRateStep {
 
 // The shared normal is Delta W / sqrt(dt). Two independent bridge normals
 // complete the exact joint Gaussian law of (r(t+dt), integral_t^{t+dt} r).
+// FP64 limits cancellation in conditional variances when mean reversion times dt is small.
+// The lower throughput on most GPUs applies to coefficient preparation.
 __device__ __forceinline__ CorrelatedGaussianRateStep
 prepare_correlated_gaussian_rate(float mean_reversion, float long_run_mean,
                                  float volatility, float initial_rate,
